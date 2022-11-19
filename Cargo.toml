@@ -1,0 +1,13 @@
+[package]
+name = "Granite2"
+description = "Find Deadlocks in Rust code with Petri net model checking"
+repository = "https://github.com/hlisdero/Granite2"
+homepage = "https://github.com/hlisdero/Granite2"
+authors = ["Horacio Lisdero Scaffino <hlisdero@users.noreply.github.com>"]
+readme = "README.md"
+license = "MIT OR Apache-2.0"
+keywords = ["petri-net", "deadlock-detection", "rustc-plugin"]
+categories = ["command-line-utilities"]
+edition = "2021"
+
+[dependencies]
