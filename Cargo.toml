@@ -1,5 +1,6 @@
 [package]
-name = "Granite2"
+name = "granite2"
+version = "0.1.0"
 description = "Find Deadlocks in Rust code with Petri net model checking"
 repository = "https://github.com/hlisdero/Granite2"
 homepage = "https://github.com/hlisdero/Granite2"
@@ -11,3 +12,12 @@ categories = ["command-line-utilities"]
 edition = "2021"
 
 [dependencies]
+anyhow = "1.0.66"
+clap = { version = "4.0.24", features = ["derive"] }
+env_logger = "0.9.3"
+log = "0.4.17"
+
+[dev-dependencies]
+assert_cmd = "2.0.6"
+assert_fs = "1.0.9"
+predicates = "2.1.3"

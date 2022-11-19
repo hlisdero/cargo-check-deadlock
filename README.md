@@ -1,4 +1,4 @@
-# Granite2
+# granite2
 
 Find Deadlocks in Rust code with Petri net model checking.
 
