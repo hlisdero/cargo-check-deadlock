@@ -24,6 +24,7 @@ extern crate rustc_errors;
 extern crate rustc_hash;
 extern crate rustc_hir;
 extern crate rustc_interface;
+extern crate rustc_middle;
 
 mod compiler_config;
 mod sysroot;
@@ -38,32 +39,45 @@ pub fn run() -> Result<(), &'static str> {
     let config = compiler_config::prepare_rustc_config(sysroot);
 
     rustc_interface::run_compiler(config, |compiler| {
-        compiler.enter(|queries| {
-            // Analyze the crate and inspect the types under the cursor.
-            queries.global_ctxt().unwrap().take().enter(|tcx| {
-                // Every compilation contains a single crate.
-                let hir_krate = tcx.hir();
-                // Iterate over the top-level items in the crate, looking for the main function.
-                for id in hir_krate.items() {
-                    let item = hir_krate.item(id);
-                    // Use pattern-matching to find a specific node inside the main function.
-                    if let rustc_hir::ItemKind::Fn(_, _, body_id) = item.kind {
-                        let expr = &tcx.hir().body(body_id).value;
-                        if let rustc_hir::ExprKind::Block(block, _) = expr.kind {
-                            if let rustc_hir::StmtKind::Local(local) = block.stmts[0].kind {
-                                if let Some(expr) = local.init {
-                                    let hir_id = expr.hir_id; // hir_id identifies the string "Hello, world!"
-                                    let def_id = tcx.hir().local_def_id(item.hir_id()); // def_id identifies the main function
-                                    let ty = tcx.typeck(def_id).node_type(hir_id);
-                                    println!("{expr:#?}: {ty:?}");
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        });
+        compiler.enter(compiler_query);
     });
 
     Ok(())
+}
+
+/// The query to the compiler
+/// The reference to the query lives as long as the query itself.
+fn compiler_query<'a>(queries: &'a rustc_interface::Queries<'a>) {
+    // Get the global query context, i.e, the root of the crate.
+    let Ok(query) = queries.global_ctxt() else {
+        panic!("Unable to get the global query context")
+    };
+
+    // Analyze the crate and inspect the types under the cursor.
+    query.take().enter(|tcx| {
+        // Every compilation contains a single crate.
+        let hir_krate = tcx.hir();
+        print_all_expr_hir(tcx, hir_krate);
+    });
+}
+
+// Iterate over the top-level items in the crate, looking for the main function.
+fn print_all_expr_hir(tcx: rustc_middle::ty::TyCtxt, hir_krate: rustc_middle::hir::map::Map) {
+    for id in hir_krate.items() {
+        let item = hir_krate.item(id);
+        // Use pattern-matching to find a specific node inside the main function.
+        if let rustc_hir::ItemKind::Fn(_, _, body_id) = item.kind {
+            let expr = &tcx.hir().body(body_id).value;
+            if let rustc_hir::ExprKind::Block(block, _) = expr.kind {
+                if let rustc_hir::StmtKind::Local(local) = block.stmts[0].kind {
+                    if let Some(expr) = local.init {
+                        let hir_id = expr.hir_id; // hir_id identifies the string "Hello, world!"
+                        let def_id = tcx.hir().local_def_id(item.hir_id()); // def_id identifies the main function
+                        let ty = tcx.typeck(def_id).node_type(hir_id);
+                        println!("{expr:#?}: {ty:?}");
+                    }
+                }
+            }
+        }
+    }
 }
