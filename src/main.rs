@@ -41,7 +41,6 @@ fn main() -> Result<()> {
     let _file = File::open(&args.path)
         .with_context(|| format!("Could not open file `{}`", args.path.display()))?;
 
-    println!("CLI args: {:?}", args);
-
+    granite2::run()?;
     Ok(())
 }
