@@ -1,0 +1,4 @@
+// Configure the rust-analyzer to autodiscover sysroot and the rustc-dev component.
+// For more information check the list of possible settings in the Feature Contributions tab
+// in the VS Code settings for the rust-analyzer extension.
+{ "rust-analyzer.rustc.source": "discover" }
