@@ -48,9 +48,10 @@ pub fn run() -> Result<(), &'static str> {
 /// The query to the compiler
 /// The reference to the query lives as long as the query itself.
 fn compiler_query<'a>(queries: &'a rustc_interface::Queries<'a>) {
-    // Get the global query context, i.e, the root of the crate.
+    // Get the global typing context (tcx or TyCtxt), which is the central data structure in the compiler.
+    // <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/ty/struct.TyCtxt.html>
     let Ok(query) = queries.global_ctxt() else {
-        panic!("Unable to get the global query context")
+        panic!("Unable to get the global typing context")
     };
 
     // Analyze the crate and inspect the types under the cursor.
