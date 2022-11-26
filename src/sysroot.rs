@@ -18,19 +18,19 @@ use std::path::PathBuf;
 use std::process::Command;
 use std::str;
 
-use anyhow::{Context, Result};
-
 /// Get the current sysroot from running the rustc compiler.
-pub fn get_from_rustc() -> Result<PathBuf> {
+pub fn get_from_rustc() -> Result<PathBuf, &'static str> {
     // Run rustc --print=sysroot and get the stdout.
-    let out = Command::new("rustc")
+    let Ok(out) = Command::new("rustc")
         .arg("--print=sysroot")
         .current_dir(".")
         .output()
-        .with_context(|| "Could not run rustc to get the sysroot: Make sure you can run `rustc --print=sysroot` in a terminal".to_string())?;
+        else {
+        return Err("Could not run rustc to get the sysroot: Make sure you can run `rustc --print=sysroot` in a terminal");
+    };
     // Convert the stdout to a str.
-    let sysroot = str::from_utf8(&out.stdout)
-        .with_context(|| "Could not parse stdout to get the sysroot: Make sure you can run `rustc --print=sysroot` in a terminal".to_string())?;
-
+    let Ok(sysroot) = str::from_utf8(&out.stdout) else {
+        return Err("Could not parse stdout to get the sysroot: Make sure you can run `rustc --print=sysroot` in a terminal");
+    };
     Ok(PathBuf::from(sysroot.trim()))
 }

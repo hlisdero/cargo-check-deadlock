@@ -1,4 +1,3 @@
-use anyhow::{Context, Result};
 use clap::{Parser, ValueEnum};
 use log::info;
 use std::fs::File;
@@ -32,14 +31,15 @@ struct CliArgs {
     mir_dump: bool,
 }
 
-fn main() -> Result<()> {
+fn main() -> Result<(), &'static str> {
     env_logger::init();
 
     info!("Parsing arguments");
     let args = CliArgs::parse();
     info!("Opening file");
-    let _file = File::open(&args.path)
-        .with_context(|| format!("Could not open file `{}`", args.path.display()))?;
+    let Ok(_file) = File::open(&args.path) else {
+        return Err("Could not open file");
+    };
 
     granite2::run()?;
     Ok(())

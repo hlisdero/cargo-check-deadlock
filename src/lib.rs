@@ -28,14 +28,12 @@ extern crate rustc_interface;
 mod compiler_config;
 mod sysroot;
 
-use anyhow::{Ok, Result};
-
 /// Entry point for the translation of the Rust code to a Petri net.
 ///
 /// # Errors
 ///
 /// If the `sysroot` cannot be found, then an error is returned.
-pub fn run() -> Result<()> {
+pub fn run() -> Result<(), &'static str> {
     let sysroot = sysroot::get_from_rustc()?;
     let config = compiler_config::prepare_rustc_config(sysroot);
 
