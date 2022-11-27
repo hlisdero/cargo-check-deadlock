@@ -29,6 +29,7 @@ extern crate rustc_session;
 extern crate rustc_span;
 
 mod compiler_config;
+mod stack;
 mod sysroot;
 mod translator;
 
