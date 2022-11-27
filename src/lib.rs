@@ -39,31 +39,30 @@ use netcrab::petri_net::PetriNet;
 /// # Errors
 ///
 /// If the `sysroot` cannot be found, then an error is returned.
+/// If the global typing context `TyCtxt` cannot be found, then an error is returned.
+/// If the translation fails, then an error with the corresponding description is returned.
 pub fn run(_source_file: std::fs::File) -> Result<PetriNet, &'static str> {
     let sysroot = sysroot::get_from_rustc()?;
     let config = compiler_config::prepare_rustc_config(sysroot);
+    let mut translator = translator::Translator::new();
 
     rustc_interface::run_compiler(config, |compiler| {
-        compiler.enter(compiler_query);
+        compiler.enter(|queries| {
+            // Get the global typing context (tcx or TyCtxt), which is the central data structure in the compiler.
+            // <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/ty/struct.TyCtxt.html>
+            let Ok(query) = queries.global_ctxt() else {
+                translator.set_err_str("Unable to get the global typing context");
+                return;
+            };
+
+            // Analyze the crate and inspect the types under the cursor.
+            query.take().enter(|tcx| {
+                // Every compilation contains a single crate.
+                let hir_krate = tcx.hir();
+                translator.print_all_expr_hir(tcx, hir_krate);
+            });
+        });
     });
 
-    Ok(PetriNet::new())
-}
-
-/// The query to the compiler
-/// The reference to the query lives as long as the query itself.
-fn compiler_query<'a>(queries: &'a rustc_interface::Queries<'a>) {
-    // Get the global typing context (tcx or TyCtxt), which is the central data structure in the compiler.
-    // <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/ty/struct.TyCtxt.html>
-    let Ok(query) = queries.global_ctxt() else {
-        panic!("Unable to get the global typing context")
-    };
-
-    // Analyze the crate and inspect the types under the cursor.
-    query.take().enter(|tcx| {
-        // Every compilation contains a single crate.
-        let hir_krate = tcx.hir();
-        let translator = translator::Translator::new(tcx);
-        translator.print_all_expr_hir(hir_krate);
-    });
+    translator.get_result()
 }
