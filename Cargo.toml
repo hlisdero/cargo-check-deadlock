@@ -15,6 +15,7 @@ edition = "2021"
 clap = { version = "4.0.24", features = ["derive"] }
 env_logger = "0.9.3"
 log = "0.4.17"
+netcrab = { path = "../netcrab" }
 
 [dev-dependencies]
 assert_cmd = "2.0.6"

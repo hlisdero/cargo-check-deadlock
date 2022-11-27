@@ -13,7 +13,7 @@ fn file_does_not_exist() {
         .arg("--output-format=pnml");
     cmd.assert()
         .failure()
-        .stderr(predicate::str::contains("Could not open file"));
+        .stderr(predicate::str::contains("Could not open source code file"));
 }
 
 #[test]

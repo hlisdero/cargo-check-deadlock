@@ -29,12 +29,14 @@ extern crate rustc_middle;
 mod compiler_config;
 mod sysroot;
 
+use netcrab::petri_net::PetriNet;
+
 /// Entry point for the translation of the Rust code to a Petri net.
 ///
 /// # Errors
 ///
 /// If the `sysroot` cannot be found, then an error is returned.
-pub fn run() -> Result<(), &'static str> {
+pub fn run(_source_file: std::fs::File) -> Result<PetriNet, &'static str> {
     let sysroot = sysroot::get_from_rustc()?;
     let config = compiler_config::prepare_rustc_config(sysroot);
 
@@ -42,7 +44,7 @@ pub fn run() -> Result<(), &'static str> {
         compiler.enter(compiler_query);
     });
 
-    Ok(())
+    Ok(PetriNet::new())
 }
 
 /// The query to the compiler

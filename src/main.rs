@@ -1,6 +1,13 @@
+use std::fmt;
+use std::fs::File;
+
 use clap::{Parser, ValueEnum};
 use log::info;
-use std::fs::File;
+use netcrab::petri_net::PetriNet;
+
+const ERR_SOURCE_FILE_NOT_FOUND: i32 = 1;
+const ERR_TRANSLATION: i32 = 2;
+const ERR_OUTPUT_FILE_GENERATION: i32 = 3;
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, ValueEnum)]
 enum OutputFormat {
@@ -10,6 +17,16 @@ enum OutputFormat {
     Lola,
     /// DOT (graph description language)
     Dot,
+}
+
+impl fmt::Display for OutputFormat {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            OutputFormat::Dot => write!(f, "dot"),
+            OutputFormat::Lola => write!(f, "lola"),
+            OutputFormat::Pnml => write!(f, "pnml"),
+        }
+    }
 }
 
 /// Convert a Rust source code file into a Petri net and export
@@ -31,16 +48,43 @@ struct CliArgs {
     mir_dump: bool,
 }
 
-fn main() -> Result<(), &'static str> {
+fn main() {
     env_logger::init();
 
     info!("Parsing arguments");
     let args = CliArgs::parse();
     info!("Opening file");
-    let Ok(_file) = File::open(&args.path) else {
-        return Err("Could not open file");
+    let Ok(file) = File::open(&args.path) else {
+        eprintln!("Could not open source code file at {}", &args.path.to_string_lossy());
+        std::process::exit(ERR_SOURCE_FILE_NOT_FOUND);
     };
 
-    granite2::run()?;
+    let petri_net = match granite2::run(file) {
+        Ok(petri_net) => petri_net,
+        Err(err_str) => {
+            eprintln!("{}", err_str);
+            std::process::exit(ERR_TRANSLATION);
+        }
+    };
+
+    if let Err(err_str) = create_output_files(&petri_net, &args.output_format) {
+        eprintln!("{}", err_str);
+        std::process::exit(ERR_OUTPUT_FILE_GENERATION);
+    }
+}
+
+fn create_output_files(
+    petri_net: &PetriNet,
+    output_format: &Vec<OutputFormat>,
+) -> Result<(), std::io::Error> {
+    for format in output_format {
+        let filename = format!("net.{}", format);
+        let mut file = std::fs::File::create(filename)?;
+        match format {
+            OutputFormat::Dot => petri_net.to_dot(&mut file)?,
+            OutputFormat::Lola => petri_net.to_lola(&mut file)?,
+            OutputFormat::Pnml => petri_net.to_pnml(&mut file)?,
+        }
+    }
     Ok(())
 }
