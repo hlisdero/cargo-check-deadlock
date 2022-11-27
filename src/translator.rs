@@ -1,15 +1,30 @@
 use netcrab::petri_net::PetriNet;
 use rustc_middle::ty::TyCtxt;
 
+const PROGRAM_START: &'static str = "PROGRAM_START";
+const PROGRAM_END: &'static str = "PROGRAM_END";
+const PROGRAM_PANIC: &'static str = "PROGRAM_PANIC";
+
 pub struct Translator {
     net: PetriNet,
     err_str: Option<&'static str>,
 }
 
 impl Translator {
+    /// Create a new `Translator`.
+    /// The initial Petri net contains three places representing the program start state,
+    /// the program end state and the abnormal end state after `panic!()`.
     pub fn new() -> Self {
+        let mut net = PetriNet::new();
+        net.add_place(PROGRAM_PANIC);
+        net.add_place(PROGRAM_END);
+        let program_start = net.add_place(PROGRAM_START);
+        net.add_token(&program_start, 1).expect(
+            "BUG: Adding initial token to empty PROGRAM_START place should not cause an overflow",
+        );
+
         Self {
-            net: PetriNet::new(),
+            net: net,
             err_str: None,
         }
     }
