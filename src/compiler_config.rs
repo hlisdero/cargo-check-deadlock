@@ -5,12 +5,6 @@
 //!
 //! It includes command-line options as well as internal rustc options.
 
-// Compiler crates need to be imported in this way because they are not published on crates.io.
-// These crates are only available when using the nightly toolchain.
-extern crate rustc_interface;
-extern crate rustc_session;
-extern crate rustc_span;
-
 use rustc_errors::registry;
 use rustc_session::config::{self, CheckCfg};
 use rustc_span::source_map;

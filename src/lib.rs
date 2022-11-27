@@ -25,9 +25,12 @@ extern crate rustc_hash;
 extern crate rustc_hir;
 extern crate rustc_interface;
 extern crate rustc_middle;
+extern crate rustc_session;
+extern crate rustc_span;
 
 mod compiler_config;
 mod sysroot;
+mod translator;
 
 use netcrab::petri_net::PetriNet;
 
@@ -60,27 +63,7 @@ fn compiler_query<'a>(queries: &'a rustc_interface::Queries<'a>) {
     query.take().enter(|tcx| {
         // Every compilation contains a single crate.
         let hir_krate = tcx.hir();
-        print_all_expr_hir(tcx, hir_krate);
+        let translator = translator::Translator::new(tcx);
+        translator.print_all_expr_hir(hir_krate);
     });
-}
-
-// Iterate over the top-level items in the crate, looking for the main function.
-fn print_all_expr_hir(tcx: rustc_middle::ty::TyCtxt, hir_krate: rustc_middle::hir::map::Map) {
-    for id in hir_krate.items() {
-        let item = hir_krate.item(id);
-        // Use pattern-matching to find a specific node inside the main function.
-        if let rustc_hir::ItemKind::Fn(_, _, body_id) = item.kind {
-            let expr = &tcx.hir().body(body_id).value;
-            if let rustc_hir::ExprKind::Block(block, _) = expr.kind {
-                if let rustc_hir::StmtKind::Local(local) = block.stmts[0].kind {
-                    if let Some(expr) = local.init {
-                        let hir_id = expr.hir_id; // hir_id identifies the string "Hello, world!"
-                        let def_id = tcx.hir().local_def_id(item.hir_id()); // def_id identifies the main function
-                        let ty = tcx.typeck(def_id).node_type(hir_id);
-                        println!("{expr:#?}: {ty:?}");
-                    }
-                }
-            }
-        }
-    }
 }
