@@ -25,7 +25,7 @@ fn output_format_is_not_valid() {
         .expect("Could not write test file contents");
 
     let Ok(mut cmd) = Command::cargo_bin("granite2") else {
-            panic!("Command not found");
+        panic!("Command not found");
     };
 
     cmd.arg("valid_file.rs")
