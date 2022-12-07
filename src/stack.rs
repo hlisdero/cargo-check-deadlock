@@ -2,7 +2,7 @@
 //!
 //! It is used to implement the call stack for the source code translation.
 
-struct Stack<T> {
+pub struct Stack<T> {
     stack: Vec<T>,
 }
 
