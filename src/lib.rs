@@ -40,30 +40,34 @@ use netcrab::petri_net::PetriNet;
 /// # Errors
 ///
 /// If the `sysroot` cannot be found, then an error is returned.
-/// If the global typing context `TyCtxt` cannot be found, then an error is returned.
 /// If the translation fails, then an error with the corresponding description is returned.
+///
+/// # Panics
+///
+/// If the global typing context `rustc_middle::ty::TyCtxt` cannot be found, then the function panics.
+/// If the translation failed due to a bug, then the function panics.
 pub fn run(_source_file: std::fs::File) -> Result<PetriNet, &'static str> {
     let sysroot = sysroot::get_from_rustc()?;
     let config = compiler_config::prepare_rustc_config(sysroot);
-    let mut translator = translator::Translator::new();
+    let mut translation_result: Result<PetriNet, &'static str> = Err("Translation did not run");
 
     rustc_interface::run_compiler(config, |compiler| {
         compiler.enter(|queries| {
-            // Get the global typing context (tcx or TyCtxt), which is the central data structure in the compiler.
+            // Get the global typing context (tcx: TyCtxt), which is the central data structure in the compiler.
             // <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/ty/struct.TyCtxt.html>
             let Ok(query) = queries.global_ctxt() else {
-                translator.set_err_str("Unable to get the global typing context");
-                return;
+                panic!("BUG: Unable to get the global typing context needed for the Translator");
             };
 
-            // Analyze the crate and inspect the types under the cursor.
+            // Run the translator as a query to the compiler.
+            // <https://rustc-dev-guide.rust-lang.org/rustc-driver.html>
             query.take().enter(|tcx| {
-                // Every compilation contains a single crate.
-                let hir_krate = tcx.hir();
-                translator.print_all_expr_hir(tcx, hir_krate);
+                let mut translator = translator::Translator::new(tcx);
+                translator.print_all_expr_hir();
+                translation_result = translator.get_result();
             });
         });
     });
 
-    translator.get_result()
+    translation_result
 }

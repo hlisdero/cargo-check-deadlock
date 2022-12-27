@@ -16,9 +16,8 @@ use crate::translator::naming::{
 use crate::translator::special_function::SUPPORTED_SPECIAL_FUNCTIONS;
 use netcrab::petri_net::{PetriNet, PlaceRef};
 
-use rustc_middle::ty::TyCtxt;
-
-pub struct Translator {
+pub struct Translator<'tcx> {
+    tcx: rustc_middle::ty::TyCtxt<'tcx>,
     err_str: Option<&'static str>,
     net: PetriNet,
     program_start: PlaceRef,
@@ -28,11 +27,12 @@ pub struct Translator {
     mutex_manager: MutexManager,
 }
 
-impl Translator {
-    /// Create a new `Translator`.
+impl<'tcx> Translator<'tcx> {
+    /// Creates a new `Translator`.
+    /// Requires a global typing context `rustc_middle::ty::TyCtxt`, the main data structure of the compiler.
     /// The initial Petri net contains three places representing the program start state,
     /// the program end state and the abnormal end state after `panic!()`.
-    pub fn new() -> Self {
+    pub fn new(tcx: rustc_middle::ty::TyCtxt<'tcx>) -> Self {
         let mut net = PetriNet::new();
         let program_panic = net.add_place(PROGRAM_PANIC);
         let program_end = net.add_place(PROGRAM_END);
@@ -42,6 +42,7 @@ impl Translator {
         );
 
         Self {
+            tcx,
             err_str: None,
             net,
             program_start,
@@ -88,14 +89,13 @@ impl Translator {
     /// # Errors
     ///
     /// If the translation fails, then an error message is set.
-    pub fn run<'tcx>(&mut self, tcx: TyCtxt<'tcx>) {
-        let Some((main_function_id, _)) = tcx.entry_fn(()) else {
+    pub fn run(&mut self) {
+        let Some((main_function_id, _)) = self.tcx.entry_fn(()) else {
             self.set_err_str("No main function found in the given source code");
             return;
         };
         let main_return_value = Local::new();
         self.translate_function(
-            tcx,
             main_function_id,
             Vec::new(),
             main_return_value,
@@ -104,16 +104,15 @@ impl Translator {
         )
     }
 
-    fn translate_function<'tcx>(
+    fn translate_function(
         &mut self,
-        tcx: TyCtxt<'tcx>,
         function_id: rustc_hir::def_id::DefId,
         function_args: Vec<Local>,
         function_return_value: Local,
         start_place: PlaceRef,
         end_place: PlaceRef,
     ) {
-        let function_name = tcx.def_path_str(function_id);
+        let function_name = self.tcx.def_path_str(function_id);
         self.net.add_place(&function_name);
         if Self::is_special_function(&function_name) {
             self.translate_special_function(
@@ -180,23 +179,22 @@ impl Translator {
     }
 
     /// Example translation
+    /// <https://rustc-dev-guide.rust-lang.org/rustc-driver-interacting-with-the-ast.html>
     /// Iterate over the top-level items in the crate, looking for the main function.
-    pub fn print_all_expr_hir<'tcx>(
-        &self,
-        tcx: TyCtxt<'tcx>,
-        hir_krate: rustc_middle::hir::map::Map,
-    ) {
+    pub fn print_all_expr_hir(&self) {
+        // Every compilation contains a single crate.
+        let hir_krate = self.tcx.hir();
         for id in hir_krate.items() {
             let item = hir_krate.item(id);
             // Use pattern-matching to find a specific node inside the main function.
             if let rustc_hir::ItemKind::Fn(_, _, body_id) = item.kind {
-                let expr = tcx.hir().body(body_id).value;
+                let expr = self.tcx.hir().body(body_id).value;
                 if let rustc_hir::ExprKind::Block(block, _) = expr.kind {
                     if let rustc_hir::StmtKind::Local(local) = block.stmts[0].kind {
                         if let Some(expr) = local.init {
                             let hir_id = expr.hir_id; // hir_id identifies the string "Hello, world!"
-                            let def_id = tcx.hir().local_def_id(item.hir_id()); // def_id identifies the main function
-                            let ty = tcx.typeck(def_id).node_type(hir_id);
+                            let def_id = self.tcx.hir().local_def_id(item.hir_id()); // def_id identifies the main function
+                            let ty = self.tcx.typeck(def_id).node_type(hir_id);
                             println!("{expr:#?}: {ty:?}");
                         }
                     }
