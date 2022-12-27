@@ -88,39 +88,66 @@ impl<'tcx> Translator<'tcx> {
     ///
     /// # Errors
     ///
-    /// If the translation fails, then an error message is set.
+    /// If the translation fails due to a recoverable error, then an error message is set.
+    ///
+    /// # Panics
+    ///
+    /// If the translation fails due to an unsupported feature present in the code, then the function panics.
     pub fn run(&mut self) {
         let Some((main_function_id, _)) = self.tcx.entry_fn(()) else {
             self.set_err_str("No main function found in the given source code");
             return;
         };
         let main_return_value = Local::new();
-        self.translate_function(
+        self.push_function_to_call_stack(
             main_function_id,
-            Vec::new(),
             main_return_value,
+            // TODO: Arguments to the main function are not supported
+            Vec::new(),
             self.program_start.clone(),
             self.program_end.clone(),
-        )
+        );
+        self.translate();
     }
 
-    fn translate_function(
+    /// Pushes a new function frame to the call stack.
+    /// The call stack is the main method to pass information between methods.
+    fn push_function_to_call_stack(
         &mut self,
         function_id: rustc_hir::def_id::DefId,
-        function_args: Vec<Local>,
-        function_return_value: Local,
+        return_value: Local,
+        args: Vec<Local>,
         start_place: PlaceRef,
         end_place: PlaceRef,
     ) {
         let function_name = self.tcx.def_path_str(function_id);
-        self.net.add_place(&function_name);
-        if Self::is_special_function(&function_name) {
+        let function = Function::new(
+            function_name,
+            return_value,
+            args,
+            start_place,
+            end_place,
+            &mut self.net,
+        );
+        self.call_stack.push(function)
+    }
+
+    /// Main translation loop
+    /// Translate functions from the call stack until it is empty.
+    fn translate(&mut self) {
+        while let Some(function) = self.call_stack.pop() {
+            self.translate_function(function)
+        }
+    }
+
+    fn translate_function(&mut self, function: Function) {
+        if Self::is_special_function(&function.name) {
             self.translate_special_function(
-                function_args,
-                function_return_value,
-                start_place,
-                end_place,
-                &function_name,
+                &function.name,
+                function.args,
+                function.return_value,
+                function.start_place,
+                function.end_place,
             );
         } else {
             self.set_err_str("Translation of default function not implemented yet");
@@ -130,11 +157,11 @@ impl<'tcx> Translator<'tcx> {
 
     fn translate_special_function(
         &mut self,
+        function_name: &str,
         function_args: Vec<Local>,
         function_return_value: Local,
         start_place: PlaceRef,
         end_place: PlaceRef,
-        function_name: &str,
     ) {
         // Create a transition that represents the function call and connect through it the start and end places.
         let transition_ref = self
