@@ -8,6 +8,7 @@ use crate::translator::naming::function_transition_label_from_function_name;
 use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
 
 pub struct Function {
+    pub def_id: rustc_hir::def_id::DefId,
     pub name: String,
     pub return_value: Local,
     pub args: Vec<Local>,
@@ -18,6 +19,7 @@ pub struct Function {
 
 impl Function {
     pub fn new(
+        def_id: rustc_hir::def_id::DefId,
         name: String,
         return_value: Local,
         args: Vec<Local>,
@@ -37,6 +39,7 @@ impl Function {
             );
 
         Self {
+            def_id,
             name,
             return_value,
             args,

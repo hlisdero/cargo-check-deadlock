@@ -7,24 +7,17 @@
 
 use rustc_errors::registry;
 use rustc_session::config::{self, CheckCfg};
-use rustc_span::source_map;
 
-pub fn prepare_rustc_config(sysroot: std::path::PathBuf) -> rustc_interface::Config {
+pub fn prepare_rustc_config(
+    sysroot: std::path::PathBuf,
+    source_file_path: std::path::PathBuf,
+) -> rustc_interface::Config {
     rustc_interface::Config {
         opts: config::Options {
             maybe_sysroot: Some(sysroot),
             ..config::Options::default()
         },
-        input: config::Input::Str {
-            name: source_map::FileName::Custom("main.rs".to_string()),
-            input: r#"
-fn main() {
-    let message = "Hello, World!";
-    println!("{message}");
-}
-"#
-            .to_string(),
-        },
+        input: config::Input::File(source_file_path),
         crate_cfg: rustc_hash::FxHashSet::default(),
         crate_check_cfg: CheckCfg::default(),
         input_path: None,

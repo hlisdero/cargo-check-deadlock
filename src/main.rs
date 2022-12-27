@@ -9,7 +9,7 @@ const ERR_SOURCE_FILE_NOT_FOUND: i32 = 1;
 const ERR_TRANSLATION: i32 = 2;
 const ERR_OUTPUT_FILE_GENERATION: i32 = 3;
 
-#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, ValueEnum)]
+#[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, ValueEnum)]
 enum OutputFormat {
     /// Petri Net Markup Language - <https://www.pnml.org/>
     Pnml,
@@ -31,7 +31,7 @@ impl fmt::Display for OutputFormat {
 
 /// Convert a Rust source code file into a Petri net and export
 /// the resulting net in one of the supported formats.
-#[derive(Parser, Debug)]
+#[derive(Parser)]
 #[command(author, version, long_about = None)]
 #[command(about = "Convert a Rust source code file into a Petri net \
     and export the resulting net in one of the supported formats.")]
@@ -53,13 +53,9 @@ fn main() {
 
     info!("Parsing arguments");
     let args = CliArgs::parse();
-    info!("Opening file");
-    let Ok(file) = File::open(&args.path) else {
-        eprintln!("Could not open source code file at {}", &args.path.to_string_lossy());
-        std::process::exit(ERR_SOURCE_FILE_NOT_FOUND);
-    };
 
-    let petri_net = match granite2::run(file) {
+    info!("Starting compiler");
+    let petri_net = match granite2::run(args.path) {
         Ok(petri_net) => petri_net,
         Err(err_str) => {
             eprintln!("{err_str}");

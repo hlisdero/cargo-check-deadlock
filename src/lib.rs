@@ -46,9 +46,9 @@ use netcrab::petri_net::PetriNet;
 ///
 /// If the global typing context `rustc_middle::ty::TyCtxt` cannot be found, then the function panics.
 /// If the translation failed due to a bug, then the function panics.
-pub fn run(_source_file: std::fs::File) -> Result<PetriNet, &'static str> {
+pub fn run(source_file_path: std::path::PathBuf) -> Result<PetriNet, &'static str> {
     let sysroot = sysroot::get_from_rustc()?;
-    let config = compiler_config::prepare_rustc_config(sysroot);
+    let config = compiler_config::prepare_rustc_config(sysroot, source_file_path);
     let mut translation_result: Result<PetriNet, &'static str> = Err("Translation did not run");
 
     rustc_interface::run_compiler(config, |compiler| {
@@ -63,7 +63,7 @@ pub fn run(_source_file: std::fs::File) -> Result<PetriNet, &'static str> {
             // <https://rustc-dev-guide.rust-lang.org/rustc-driver.html>
             query.take().enter(|tcx| {
                 let mut translator = translator::Translator::new(tcx);
-                translator.print_all_expr_hir();
+                translator.run();
                 translation_result = translator.get_result();
             });
         });

@@ -1,6 +1,7 @@
 //! Submodule for the main translation logic.
 mod function;
 mod local;
+mod mir_visitor;
 mod mutex;
 mod mutex_manager;
 mod naming;
@@ -10,11 +11,10 @@ use crate::stack::Stack;
 use crate::translator::function::Function;
 use crate::translator::local::Local;
 use crate::translator::mutex_manager::MutexManager;
-use crate::translator::naming::{
-    function_transition_label_from_function_name, PROGRAM_END, PROGRAM_PANIC, PROGRAM_START,
-};
+use crate::translator::naming::{PROGRAM_END, PROGRAM_PANIC, PROGRAM_START};
 use crate::translator::special_function::SUPPORTED_SPECIAL_FUNCTIONS;
 use netcrab::petri_net::{PetriNet, PlaceRef};
+use rustc_middle::mir::visit::Visitor;
 
 pub struct Translator<'tcx> {
     tcx: rustc_middle::ty::TyCtxt<'tcx>,
@@ -68,8 +68,8 @@ impl<'tcx> Translator<'tcx> {
     }
 
     /// Set the error string explicitly.
-    /// This can be used from outside when the errors happen before the `Translator` is called.
-    pub fn set_err_str(&mut self, err_str: &'static str) {
+    /// This is only used internally during the translation process.
+    fn set_err_str(&mut self, err_str: &'static str) {
         self.err_str = Some(err_str);
     }
 
@@ -114,95 +114,37 @@ impl<'tcx> Translator<'tcx> {
     /// The call stack is the main method to pass information between methods.
     fn push_function_to_call_stack(
         &mut self,
-        function_id: rustc_hir::def_id::DefId,
-        return_value: Local,
-        args: Vec<Local>,
+        function_def_id: rustc_hir::def_id::DefId,
+        function_return_value: Local,
+        function_args: Vec<Local>,
         start_place: PlaceRef,
         end_place: PlaceRef,
     ) {
-        let function_name = self.tcx.def_path_str(function_id);
+        let function_name = self.tcx.def_path_str(function_def_id);
         let function = Function::new(
+            function_def_id,
             function_name,
-            return_value,
-            args,
+            function_return_value,
+            function_args,
             start_place,
             end_place,
             &mut self.net,
         );
-        self.call_stack.push(function)
+        self.call_stack.push(function);
     }
 
-    /// Main translation loop
+    /// Main translation loop.
     /// Translate functions from the call stack until it is empty.
     fn translate(&mut self) {
-        while let Some(function) = self.call_stack.pop() {
-            self.translate_function(function)
+        while let Some(function) = self.call_stack.peek_mut() {
+            // Translate the function to a Petri net from the MIR representation.
+            let body = self.tcx.optimized_mir(function.def_id);
+            // Visit the MIR body of the function using the methods of `rustc_middle::mir::visit::Visitor`.
+            // <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/mir/visit/trait.Visitor.html>
+            self.visit_body(body);
+            // Finished processing this function.
+            self.call_stack.pop();
         }
-    }
-
-    fn translate_function(&mut self, function: Function) {
-        if Self::is_special_function(&function.name) {
-            self.translate_special_function(
-                &function.name,
-                function.args,
-                function.return_value,
-                function.start_place,
-                function.end_place,
-            );
-        } else {
-            self.set_err_str("Translation of default function not implemented yet");
-            return;
-        }
-    }
-
-    fn translate_special_function(
-        &mut self,
-        function_name: &str,
-        function_args: Vec<Local>,
-        function_return_value: Local,
-        start_place: PlaceRef,
-        end_place: PlaceRef,
-    ) {
-        // Create a transition that represents the function call and connect through it the start and end places.
-        let transition_ref = self
-            .net
-            .add_transition(&function_transition_label_from_function_name(function_name));
-        self.net
-            .add_arc_place_transition(&start_place, &transition_ref)
-            .expect("BUG: Adding an arc should not fail");
-        self.net
-            .add_arc_transition_place(&transition_ref, &end_place)
-            .expect("BUG: Adding an arc should not fail");
-
-        match function_name {
-            "std::sync::Mutex::<T>::new" => {
-                // The return value of this function (a `Local`)
-                // should be linked to the mutex.
-                // Double check this, since there is nothing else to do.
-                if let Err(err_str) = self
-                    .mutex_manager
-                    .get_mutex_from_local(&function_return_value)
-                {
-                    panic!("{err_str}");
-                };
-            }
-            "std::sync::Mutex::<T>::lock" => {
-                // The first argument to this function is the mutex to be locked.
-                // The function return value is a new variable with a MutexGuard.
-                if let Err(err_str) = self.mutex_manager.add_lock_guard(
-                    function_return_value,
-                    function_args[0].clone(),
-                    transition_ref,
-                    &mut self.net,
-                ) {
-                    panic!("{err_str}");
-                }
-            }
-            "std::sync::Mutex::<T>::try_lock" => {
-                todo!("std::sync::Mutex::<T>::try_lock cannot be translated yet");
-            }
-            _ => unimplemented!("BUG: Unhandled unique function"),
-        };
     }
 
     /// Example translation
