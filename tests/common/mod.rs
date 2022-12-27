@@ -17,7 +17,7 @@ pub fn assert_output_file(
 ) {
     let mut cmd = Command::cargo_bin("granite2").expect("Command not found");
 
-    // Current work dir is always the project root folder
+    // Current workdir is always the project root folder
     cmd.arg(source_code_file)
         .arg(format!("--output-format={output_format}"));
     cmd.assert().success();
@@ -28,4 +28,5 @@ pub fn assert_output_file(
         .expect("Could not read output file");
 
     assert_eq!(file_contents, expected_file_contents);
+    std::fs::remove_file(output_filename).expect("Could not delete output file");
 }
