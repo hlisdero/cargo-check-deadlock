@@ -73,17 +73,6 @@ impl<'tcx> Translator<'tcx> {
         self.err_str = Some(err_str);
     }
 
-    /// Check whether the function name corresponds to one of the functions
-    /// that needs to be translated separately, e.g, mutex functions.
-    fn is_special_function(function_name: &str) -> bool {
-        for name in SUPPORTED_SPECIAL_FUNCTIONS {
-            if function_name == name {
-                return true;
-            }
-        }
-        false
-    }
-
     /// Translate the source code to a Petri net.
     ///
     /// # Errors
