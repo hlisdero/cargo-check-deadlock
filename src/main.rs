@@ -1,6 +1,3 @@
-use std::fmt;
-use std::fs::File;
-
 use clap::{Parser, ValueEnum};
 use log::info;
 use netcrab::petri_net::PetriNet;
@@ -19,8 +16,8 @@ enum OutputFormat {
     Dot,
 }
 
-impl fmt::Display for OutputFormat {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+impl std::fmt::Display for OutputFormat {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self {
             OutputFormat::Dot => write!(f, "dot"),
             OutputFormat::Lola => write!(f, "lola"),
@@ -54,6 +51,17 @@ fn main() {
     info!("Parsing arguments");
     let args = CliArgs::parse();
 
+    info!("Checking that the source code file exists");
+    // Double check that the file exists before starting the compiler
+    // to generate an error message independent of the rustc output.
+    if !args.path.exists() {
+        eprintln!(
+            "Source code file at {} does not exist",
+            &args.path.to_string_lossy()
+        );
+        std::process::exit(ERR_SOURCE_FILE_NOT_FOUND);
+    };
+
     info!("Starting compiler");
     let petri_net = match granite2::run(args.path) {
         Ok(petri_net) => petri_net,
@@ -63,6 +71,7 @@ fn main() {
         }
     };
 
+    info!("Generating output files");
     if let Err(err_str) = create_output_files(&petri_net, &args.output_format) {
         eprintln!("{}", err_str);
         std::process::exit(ERR_OUTPUT_FILE_GENERATION);

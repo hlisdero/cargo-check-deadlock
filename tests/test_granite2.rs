@@ -11,9 +11,9 @@ fn file_does_not_exist() {
 
     cmd.arg("test/file/doesnt/exist")
         .arg("--output-format=pnml");
-    cmd.assert()
-        .failure()
-        .stderr(predicate::str::contains("Could not open source code file"));
+    cmd.assert().failure().stderr(predicate::str::contains(
+        "Source code file at test/file/doesnt/exist does not exist",
+    ));
 }
 
 #[test]
