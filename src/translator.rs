@@ -12,7 +12,6 @@ use crate::translator::function::Function;
 use crate::translator::local::Local;
 use crate::translator::mutex_manager::MutexManager;
 use crate::translator::naming::{PROGRAM_END, PROGRAM_PANIC, PROGRAM_START};
-use crate::translator::special_function::SUPPORTED_SPECIAL_FUNCTIONS;
 use netcrab::petri_net::{PetriNet, PlaceRef};
 use rustc_middle::mir::visit::Visitor;
 
