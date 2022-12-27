@@ -5,9 +5,7 @@ use std::process::Command; // Run programs
 
 #[test]
 fn file_does_not_exist() {
-    let Ok(mut cmd) = Command::cargo_bin("granite2") else {
-        panic!("Command not found");
-    };
+    let mut cmd = Command::cargo_bin("granite2").expect("Command not found");
 
     cmd.arg("test/file/doesnt/exist")
         .arg("--output-format=pnml");
@@ -18,15 +16,12 @@ fn file_does_not_exist() {
 
 #[test]
 fn output_format_is_not_valid() {
-    let Ok(file) = assert_fs::NamedTempFile::new("valid_file.rs") else {
-        panic!("Could not create temporary file for test");
-    };
+    let file = assert_fs::NamedTempFile::new("valid_file.rs")
+        .expect("Could not create temporary file for test");
     file.write_str("fn main {}")
         .expect("Could not write test file contents");
 
-    let Ok(mut cmd) = Command::cargo_bin("granite2") else {
-        panic!("Command not found");
-    };
+    let mut cmd = Command::cargo_bin("granite2").expect("Command not found");
 
     cmd.arg("valid_file.rs")
         .arg("--output-format=INVALID_FORMAT");
