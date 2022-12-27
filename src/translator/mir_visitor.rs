@@ -1,7 +1,8 @@
 //! Implement the trait `rustc_middle::mir::visit::Visitor` for Translator
 //! <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/mir/visit/trait.Visitor.html>
 //!
-//! This trait requires implementing a method for every possible MIR element.
+//! This trait defines a method for visiting every possible MIR element.
+//! It is not required to implement every method, only for the elements we care about.
 //! For an introduction to MIR see:
 //! <https://rustc-dev-guide.rust-lang.org/mir/index.html>
 use crate::translator::Translator;
