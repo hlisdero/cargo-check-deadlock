@@ -62,7 +62,7 @@ fn main() {
     let petri_net = match granite2::run(file) {
         Ok(petri_net) => petri_net,
         Err(err_str) => {
-            eprintln!("{}", err_str);
+            eprintln!("{err_str}");
             std::process::exit(ERR_TRANSLATION);
         }
     };
@@ -78,7 +78,7 @@ fn create_output_files(
     output_format: &Vec<OutputFormat>,
 ) -> Result<(), std::io::Error> {
     for format in output_format {
-        let filename = format!("net.{}", format);
+        let filename = format!("net.{format}");
         let mut file = std::fs::File::create(filename)?;
         match format {
             OutputFormat::Dot => petri_net.to_dot(&mut file)?,
