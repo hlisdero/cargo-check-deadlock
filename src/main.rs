@@ -19,9 +19,9 @@ enum OutputFormat {
 impl std::fmt::Display for OutputFormat {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self {
-            OutputFormat::Dot => write!(f, "dot"),
-            OutputFormat::Lola => write!(f, "lola"),
-            OutputFormat::Pnml => write!(f, "pnml"),
+            Self::Dot => write!(f, "dot"),
+            Self::Lola => write!(f, "lola"),
+            Self::Pnml => write!(f, "pnml"),
         }
     }
 }
@@ -69,7 +69,7 @@ fn main() {
 
     info!("Generating output files");
     if let Err(err_str) = create_output_files(&petri_net, &args.output_format) {
-        eprintln!("{}", err_str);
+        eprintln!("{err_str}");
         std::process::exit(ERR_OUTPUT_FILE_GENERATION);
     }
 }

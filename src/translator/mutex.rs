@@ -28,11 +28,13 @@ impl Mutex {
     /// If the stored place reference is invalid for the given Petri net, the function panics.
     /// If the place contains a number of tokens that is not 1 or 0, the function panics.
     pub fn is_locked(&self, net: &PetriNet) -> bool {
-        match net.marking(&self.place_ref) {
-            Ok(1) => true,
-            Ok(0) => false,
-            Ok(_) => panic!("BUG: The mutex's place may only have 1 or 0 tokens"),
-            Err(_) => panic!("BUG: The mutex's place reference should be valid for the net"),
+        let marking = net
+            .marking(&self.place_ref)
+            .expect("BUG: The mutex's place reference should be valid for the net");
+        match marking {
+            1 => true,
+            0 => false,
+            _ => panic!("BUG: The mutex's place may only have 1 or 0 tokens"),
         }
     }
 

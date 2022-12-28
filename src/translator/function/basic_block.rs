@@ -21,7 +21,7 @@ impl BasicBlock {
     pub fn new(start_place: PlaceRef, net: &mut PetriNet) -> Self {
         let end_place = net.add_place(BASIC_BLOCK_END_PLACE);
 
-        BasicBlock {
+        Self {
             start_place,
             end_place,
             statements: Vec::new(),
@@ -32,7 +32,7 @@ impl BasicBlock {
     pub fn add_statement(&mut self, statement: &rustc_middle::mir::Statement, net: &mut PetriNet) {
         let start_place = self.prepare_start_place_next_statement(net);
         self.statements
-            .push(Statement::new(statement, start_place, net));
+            .push(Statement::new(statement, &start_place, net));
     }
 
     /// Connects the last statement transition to the end place of this basic block.
@@ -51,12 +51,12 @@ impl BasicBlock {
     /// is the same as the start place of the statement.
     /// Otherwise the end place of the last statement corresponds to
     /// the start place of the new statement, forming a chain of statements.
+    #[inline]
     fn prepare_start_place_next_statement(&self, net: &mut PetriNet) -> PlaceRef {
-        if let Some(statement) = self.statements.last() {
-            statement.create_end_place(net)
-        } else {
-            self.start_place.clone()
-        }
+        self.statements.last().map_or_else(
+            || self.start_place.clone(),
+            |statement| statement.create_end_place(net),
+        )
     }
 
     /// Creates an extra transition and connects the start and end place through it.

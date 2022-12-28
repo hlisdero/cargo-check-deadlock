@@ -20,8 +20,8 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
         block: rustc_middle::mir::BasicBlock,
         data: &rustc_middle::mir::BasicBlockData<'tcx>,
     ) {
-        println!("VISIT_BASIC_BLOCK_DATA: {:?} {:?}", block, data);
-        self.super_basic_block_data(block, data)
+        println!("VISIT_BASIC_BLOCK_DATA: {block:?} {data:?}");
+        self.super_basic_block_data(block, data);
     }
 
     fn visit_assign(
@@ -30,7 +30,7 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
         rvalue: &rustc_middle::mir::Rvalue<'tcx>,
         location: rustc_middle::mir::Location,
     ) {
-        println!("VISIT_ASSIGN: {:?} {:?} {:?}", place, rvalue, location);
+        println!("VISIT_ASSIGN: {place:?} {rvalue:?} {location:?}");
         self.super_assign(place, rvalue, location);
     }
 }

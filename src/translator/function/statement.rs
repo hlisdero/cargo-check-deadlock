@@ -19,13 +19,13 @@ impl Statement {
     /// Creates a new statement and adds its representation to the Petri net.
     pub fn new(
         statement: &rustc_middle::mir::Statement,
-        start_place: PlaceRef,
+        start_place: &PlaceRef,
         net: &mut PetriNet,
     ) -> Self {
         let label = statement_transition_label_from_statement_kind(&statement.kind);
         let transition = net.add_transition(&label);
 
-        net.add_arc_place_transition(&start_place, &transition)
+        net.add_arc_place_transition(start_place, &transition)
             .expect(
             "BUG: Adding an arc from the start place to the statement transition should not fail",
         );

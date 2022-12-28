@@ -41,5 +41,5 @@ pub fn function_transition_label_from_function_name(function_name: &str) -> Stri
 pub fn statement_transition_label_from_statement_kind(
     statement_kind: &rustc_middle::mir::StatementKind,
 ) -> String {
-    format!("STATEMENT {:?}", statement_kind)
+    format!("STATEMENT {statement_kind:?}")
 }

@@ -9,14 +9,14 @@ pub struct Stack<T> {
 impl<T> Stack<T> {
     /// Create a new empty stack.
     #[must_use]
-    pub fn new() -> Self {
-        Stack { stack: Vec::new() }
+    pub const fn new() -> Self {
+        Self { stack: Vec::new() }
     }
 
     /// Push an element to the top of the stack.
     #[inline]
     pub fn push(&mut self, item: T) {
-        self.stack.push(item)
+        self.stack.push(item);
     }
 
     /// Remove and return the top element of the stack.

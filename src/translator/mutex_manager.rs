@@ -69,11 +69,11 @@ impl MutexManager {
     pub fn add_lock_guard(
         &mut self,
         guard: Local,
-        local_with_mutex: Local,
-        transition_lock: TransitionRef,
+        local_with_mutex: &Local,
+        transition_lock: &TransitionRef,
         net: &mut PetriNet,
     ) -> Result<(), &str> {
-        let Some(mutex_ref) = self.links.get(&local_with_mutex) else {
+        let Some(mutex_ref) = self.links.get(local_with_mutex) else {
             return Err("The local variable is not associated to a mutex");
         };
         self.guards.insert(guard, mutex_ref.clone());
@@ -82,7 +82,7 @@ impl MutexManager {
             Ok(mutex) => mutex,
             Err(err_str) => return Err(err_str),
         };
-        mutex.add_lock_guard(&transition_lock, net);
+        mutex.add_lock_guard(transition_lock, net);
         Ok(())
     }
 
