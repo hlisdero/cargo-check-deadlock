@@ -3,6 +3,9 @@
 //! The `Function` stores one reference to the start and end place in the Petri net.
 //! The function is modelled a single transition.
 //! Any mutexes will be connected to this transition to model the locking and unlocking behavior.
+mod basic_block;
+mod statement;
+
 use crate::translator::local::Local;
 use crate::translator::naming::function_transition_label_from_function_name;
 use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};

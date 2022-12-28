@@ -9,10 +9,23 @@
 //! See the reference for more information:
 //! <https://doc.rust-lang.org/stable/reference/attributes/codegen.html>
 
-/// Names of the basic places present in every generated Petri net.
+/// Name of the place that models the program start state.
+/// It is present in every generated Petri net.
 pub const PROGRAM_START: &str = "PROGRAM_START";
+/// Name of the place that models the normal program end state.
+/// It is present in every generated Petri net.
 pub const PROGRAM_END: &str = "PROGRAM_END";
+/// Name of the place that models the program end state after a `panic!`.
+/// It is present in every generated Petri net.
 pub const PROGRAM_PANIC: &str = "PROGRAM_PANIC";
+
+/// Name of the transition for an empty `BasicBlock` with no statements.
+pub const BASIC_BLOCK_EMPTY: &str = "BASIC_BLOCK_EMPTY";
+/// Name of the end place of any `BasicBlock`.
+pub const BASIC_BLOCK_END_PLACE: &str = "BASIC_BLOCK_END_PLACE";
+
+/// Name of the end place of any `Statement`.
+pub const STATEMENT_END: &str = "STATEMENT_END";
 
 #[inline]
 pub fn mutex_place_label_from_index(index: usize) -> String {
@@ -22,4 +35,11 @@ pub fn mutex_place_label_from_index(index: usize) -> String {
 #[inline]
 pub fn function_transition_label_from_function_name(function_name: &str) -> String {
     format!("RUN_{function_name}")
+}
+
+#[inline]
+pub fn statement_transition_label_from_statement_kind(
+    statement_kind: &rustc_middle::mir::StatementKind,
+) -> String {
+    format!("STATEMENT {:?}", statement_kind)
 }
