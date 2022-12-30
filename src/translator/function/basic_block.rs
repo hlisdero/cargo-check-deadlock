@@ -56,8 +56,8 @@ impl BasicBlock {
             &to.start_place,
             net,
             BASIC_BLOCK_GOTO,
-            "BUG: Adding an arc from the end place of the active basic block to the goto transition should not fail", 
-            "BUG: Adding an arc from the goto transition to the next block start place should not fail"
+            "goto transition",
+            "to block start place",
         );
     }
 
@@ -67,8 +67,8 @@ impl BasicBlock {
             &target.start_place,
             net,
             &function_switch_int_transition_label_from_block_index(index),
-            "BUG: Adding an arc from the end place of the active basic block to the switch int transition should not fail", 
-            "BUG: Adding an arc from the switch int transition to the target block start place should not fail"
+            "switch int transition",
+            "target block start place",
         );
     }
 
@@ -78,8 +78,8 @@ impl BasicBlock {
             &unwind_place,
             net,
             BASIC_BLOCK_UNWIND,
-            "BUG: Adding an arc from the end place of the active basic block to the unwind transition should not fail", 
-            "BUG: Adding an arc from the unwind transition to the unwind place should not fail"
+            "unwind transition",
+            "unwind place",
         );
     }
 
@@ -89,8 +89,8 @@ impl BasicBlock {
             &target.start_place,
             net,
             BASIC_BLOCK_DROP,
-            "BUG: Adding an arc from the end place of the active basic block to the drop transition should not fail", 
-            "BUG: Adding an arc from the drop transition to the target block start place should not fail"
+            "drop transition",
+            "target block start place",
         );
     }
 
@@ -100,8 +100,8 @@ impl BasicBlock {
             &unwind.start_place,
             net,
             BASIC_BLOCK_DROP_UNWIND,
-            "BUG: Adding an arc from the end place of the active basic block to the drop unwind transition should not fail", 
-            "BUG: Adding an arc from the drop unwind transition to the unwind block start place should not fail"
+            "drop unwind transition",
+            "unwind block start place",
         );
     }
 
@@ -111,8 +111,8 @@ impl BasicBlock {
             &target.start_place,
             net,
             BASIC_BLOCK_ASSERT,
-            "BUG: Adding an arc from the end place of the active basic block to the assert transition should not fail", 
-            "BUG: Adding an arc from the assert transition to the target block start place should not fail"
+            "assert transition",
+            "target block start place",
         );
     }
 
@@ -122,8 +122,8 @@ impl BasicBlock {
             &cleanup.start_place,
             net,
             BASIC_BLOCK_ASSERT_CLEANUP,
-            "BUG: Adding an arc from the end place of the active basic block to the assert cleanup transition should not fail", 
-            "BUG: Adding an arc from the assert cleanup transition to the cleanup block start place should not fail"
+            "assert cleanup transition",
+            "cleanup block start place",
         );
     }
 
@@ -134,14 +134,26 @@ impl BasicBlock {
         next_place: &PlaceRef,
         net: &mut PetriNet,
         transition_label: &str,
-        err_str_first_arc: &str,
-        err_str_second_arc: &str,
+        transition_name: &str,
+        next_place_name: &str,
     ) {
         let transition_cleanup = net.add_transition(transition_label);
         net.add_arc_place_transition(&self.end_place, &transition_cleanup)
-            .expect(err_str_first_arc);
+            .expect(&Self::format_err_str_arc_creation(
+                "end place of the block",
+                transition_name,
+            ));
         net.add_arc_transition_place(&transition_cleanup, &next_place)
-            .expect(err_str_second_arc);
+            .expect(&Self::format_err_str_arc_creation(
+                transition_name,
+                next_place_name,
+            ));
+    }
+
+    /// Format the error string used every time that an arc is created.
+    #[inline]
+    fn format_err_str_arc_creation(start_place_name: &str, end_place_name: &str) -> String {
+        format!("BUG: Adding an arc from the {start_place_name} to the {end_place_name} should not fail")
     }
 
     /// Prepares the start place for the next statement.
@@ -162,11 +174,15 @@ impl BasicBlock {
     fn handle_basic_block_with_no_statements(&self, net: &mut PetriNet) {
         // if there is only a terminator (no statement) we have to connect start and end place of the block
         let transition_empty = net.add_transition(BASIC_BLOCK_EMPTY);
-        net.add_arc_place_transition(&self.start_place, &transition_empty).expect(
-            "BUG: Adding an arc from the start place to the empty basic block transition should not fail",
-        );
-        net.add_arc_transition_place(&transition_empty, &self.end_place).expect(
-            "BUG: Adding an arc from the empty basic block transition to the end place should not fail",
-        );
+        net.add_arc_place_transition(&self.start_place, &transition_empty)
+            .expect(&Self::format_err_str_arc_creation(
+                "start place",
+                "empty basic block transition",
+            ));
+        net.add_arc_transition_place(&transition_empty, &self.end_place)
+            .expect(&Self::format_err_str_arc_creation(
+                "empty basic block transition",
+                "end place",
+            ));
     }
 }
