@@ -21,6 +21,18 @@ pub const PROGRAM_PANIC: &str = "PROGRAM_PANIC";
 
 /// Name of the transition for an empty `BasicBlock` with no statements.
 pub const BASIC_BLOCK_EMPTY: &str = "BASIC_BLOCK_EMPTY";
+/// Name of the transition that represents a goto terminator to another `BasicBlock`.
+pub const BASIC_BLOCK_GOTO: &str = "GOTO";
+/// Name of the transition that represents an unwind terminator to the general `PROGRAM_PANIC` place.
+pub const BASIC_BLOCK_UNWIND: &str = "UNWIND";
+/// Name of the transition that represents a drop terminator.
+pub const BASIC_BLOCK_DROP: &str = "DROP";
+/// Name of the transition that represents the (optional) unwind path of a drop terminator.
+pub const BASIC_BLOCK_DROP_UNWIND: &str = "DROP_UNWIND";
+/// Name of the transition that represents an assert terminator.
+pub const BASIC_BLOCK_ASSERT: &str = "ASSERT";
+/// Name of the transition that represents the (optional) unwind path of an assert terminator.
+pub const BASIC_BLOCK_ASSERT_CLEANUP: &str = "ASSERT_UNWIND";
 /// Name of the end place of any `BasicBlock`.
 pub const BASIC_BLOCK_END_PLACE: &str = "BASIC_BLOCK_END_PLACE";
 
@@ -33,8 +45,18 @@ pub fn mutex_place_label_from_index(index: usize) -> String {
 }
 
 #[inline]
-pub fn function_transition_label_from_function_name(function_name: &str) -> String {
-    format!("RUN_{function_name}")
+pub fn function_switch_int_transition_label_from_block_index(index: usize) -> String {
+    format!("SWITCH_INT_{index}")
+}
+
+#[inline]
+pub fn function_return_transition_label_from_function_name(function_name: &str) -> String {
+    format!("RETURN_{function_name}")
+}
+
+#[inline]
+pub fn basic_block_start_place_label_from_block_index(index: usize) -> String {
+    format!("BASIC_BLOCK_{index}")
 }
 
 #[inline]

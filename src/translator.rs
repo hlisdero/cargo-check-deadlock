@@ -6,10 +6,10 @@ mod mutex;
 mod mutex_manager;
 mod naming;
 mod special_function;
+mod virtual_memory;
 
 use crate::stack::Stack;
 use crate::translator::function::Function;
-use crate::translator::local::Local;
 use crate::translator::mutex_manager::MutexManager;
 use crate::translator::naming::{PROGRAM_END, PROGRAM_PANIC, PROGRAM_START};
 use netcrab::petri_net::{PetriNet, PlaceRef};
@@ -86,12 +86,8 @@ impl<'tcx> Translator<'tcx> {
             self.set_err_str("No main function found in the given source code");
             return;
         };
-        let main_return_value = Local::new();
         self.push_function_to_call_stack(
             main_function_id,
-            main_return_value,
-            // TODO: Arguments to the main function are not supported
-            Vec::new(),
             self.program_start.clone(),
             self.program_end.clone(),
         );
@@ -103,20 +99,16 @@ impl<'tcx> Translator<'tcx> {
     fn push_function_to_call_stack(
         &mut self,
         function_def_id: rustc_hir::def_id::DefId,
-        function_return_value: Local,
-        function_args: Vec<Local>,
         start_place: PlaceRef,
         end_place: PlaceRef,
     ) {
-        let function_name = self.tcx.def_path_str(function_def_id);
         let function = Function::new(
             function_def_id,
-            function_name,
-            function_return_value,
-            function_args,
             start_place,
             end_place,
+            &mut self.mutex_manager,
             &mut self.net,
+            &mut self.tcx,
         );
         self.call_stack.push(function);
     }
