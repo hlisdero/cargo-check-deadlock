@@ -7,9 +7,6 @@ use crate::translator::mutex_manager::MutexManager;
 use crate::translator::naming::{
     basic_block_start_place_label_from_block_index,
     function_return_transition_label_from_function_name,
-    function_switch_int_transition_label_from_block_index, BASIC_BLOCK_ASSERT,
-    BASIC_BLOCK_ASSERT_CLEANUP, BASIC_BLOCK_DROP, BASIC_BLOCK_DROP_UNWIND, BASIC_BLOCK_GOTO,
-    BASIC_BLOCK_UNWIND,
 };
 use netcrab::petri_net::{PetriNet, PlaceRef};
 use std::collections::HashMap;
@@ -249,15 +246,7 @@ impl Function {
     /// If there is no active basic block set, then the function panics.
     pub fn goto(&mut self, to: rustc_middle::mir::BasicBlock, net: &mut PetriNet) {
         let (active_block, to) = self.get_pair_active_block_target_block(to, net);
-
-        let transition = net.add_transition(BASIC_BLOCK_GOTO);
-        net.add_arc_place_transition(&active_block.end_place, &transition)
-            .expect(
-                "BUG: Adding an arc from the end place of the active basic block to the goto transition should not fail",
-            );
-        net.add_arc_transition_place(&transition, &to.start_place).expect(
-            "BUG: Adding an arc from the goto transition to the next block start place should not fail",
-        );
+        active_block.goto(to, net);
     }
 
     /// Connects the active basic block to all the possible basic block targets in the switch int statement.
@@ -273,16 +262,7 @@ impl Function {
             let (active_block, target_block) =
                 self.get_pair_active_block_target_block(basic_block, net);
             let index = basic_block.index();
-
-            let transition = net.add_transition(
-                &function_switch_int_transition_label_from_block_index(index),
-            );
-            net.add_arc_place_transition(&active_block.end_place, &transition).expect(
-                "BUG: Adding an arc from the end place of the active basic block to the switch int transition should not fail",
-            );
-            net.add_arc_transition_place(&transition, &target_block.start_place).expect(
-                "BUG: Adding an arc from the switch int transition to the target block start place should not fail",
-            );
+            active_block.switch_int(target_block, index, net);
         }
     }
 
@@ -293,15 +273,7 @@ impl Function {
     /// If there is no active basic block set, then the function panics.
     pub fn unwind(&mut self, unwind_place: PlaceRef, net: &mut PetriNet) {
         let active_block = self.get_active_block();
-
-        let transition = net.add_transition(BASIC_BLOCK_UNWIND);
-        net.add_arc_place_transition(&active_block.end_place, &transition).expect(
-            "BUG: Adding an arc from the end place of the active basic block to the unwind transition should not fail",
-        );
-        net.add_arc_transition_place(&transition, &unwind_place)
-            .expect(
-                "BUG: Adding an arc from the unwind transition to the unwind place should not fail",
-            );
+        active_block.unwind(unwind_place, net);
     }
 
     /// Connects the active basic block to the next basic block identified as the argument `target`
@@ -320,25 +292,11 @@ impl Function {
         net: &mut PetriNet,
     ) {
         let (active_block, target_block) = self.get_pair_active_block_target_block(target, net);
-
-        let transition = net.add_transition(BASIC_BLOCK_DROP);
-        net.add_arc_place_transition(&active_block.end_place, &transition).expect(
-            "BUG: Adding an arc from the end place of the active basic block to the drop transition should not fail",
-        );
-        net.add_arc_transition_place(&transition, &target_block.start_place)
-            .expect(
-                "BUG: Adding an arc from the drop transition to the target block start place should not fail",
-            );
+        active_block.drop(target_block, net);
 
         if let Some(unwind) = unwind {
             let (active_block, unwind_block) = self.get_pair_active_block_target_block(unwind, net);
-            let transition_unwind = net.add_transition(BASIC_BLOCK_DROP_UNWIND);
-            net.add_arc_place_transition(&active_block.end_place, &transition_unwind).expect(
-                "BUG: Adding an arc from the end place of the active basic block to the drop unwind transition should not fail",
-            );
-            net.add_arc_transition_place(&transition_unwind, &unwind_block.start_place).expect(
-                "BUG: Adding an arc from the drop unwind transition to the unwind block start place should not fail",
-            );
+            active_block.drop_unwind(unwind_block, net);
         };
     }
 
@@ -358,26 +316,12 @@ impl Function {
         net: &mut PetriNet,
     ) {
         let (active_block, target_block) = self.get_pair_active_block_target_block(target, net);
-
-        let transition = net.add_transition(BASIC_BLOCK_ASSERT);
-        net.add_arc_place_transition(&active_block.end_place, &transition).expect(
-            "BUG: Adding an arc from the end place of the active basic block to the assert transition should not fail",
-        );
-        net.add_arc_transition_place(&transition, &target_block.start_place)
-            .expect(
-                "BUG: Adding an arc from the assert transition to the target block start place should not fail",
-            );
+        active_block.assert(target_block, net);
 
         if let Some(cleanup) = cleanup {
             let (active_block, cleanup_block) =
                 self.get_pair_active_block_target_block(cleanup, net);
-            let transition_cleanup = net.add_transition(BASIC_BLOCK_ASSERT_CLEANUP);
-            net.add_arc_place_transition(&active_block.end_place, &transition_cleanup).expect(
-                "BUG: Adding an arc from the end place of the active basic block to the assert cleanup transition should not fail",
-            );
-            net.add_arc_transition_place(&transition_cleanup, &cleanup_block.start_place).expect(
-                "BUG: Adding an arc from the assert cleanup transition to the cleanup block start place should not fail",
-            );
+            active_block.assert_cleanup(cleanup_block, net);
         };
     }
 
