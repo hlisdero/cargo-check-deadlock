@@ -1,4 +1,5 @@
 //! Submodule for the main translation logic.
+mod error_handling;
 mod function;
 mod local;
 mod mir_visitor;

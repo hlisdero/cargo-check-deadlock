@@ -5,6 +5,7 @@
 //!
 //! If the place has a token, the mutex is unlocked.
 //! If the place does not have a token, the mutex is locked.
+use crate::translator::error_handling::format_err_str_add_arc;
 use crate::translator::naming::mutex_place_label_from_index;
 use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
 
@@ -43,6 +44,6 @@ impl Mutex {
     /// fire if the mutex is unlocked.
     pub fn add_lock_guard(&self, transition_lock: &TransitionRef, net: &mut PetriNet) {
         net.add_arc_place_transition(&self.place_ref, transition_lock)
-            .expect("BUG: Adding an arc from the mutex's place to the lock guard should not fail");
+            .expect(&format_err_str_add_arc("mutex's place", "lock guard"));
     }
 }

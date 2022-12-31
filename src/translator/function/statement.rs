@@ -8,6 +8,7 @@
 //! place of the previous statement.
 //! The transition points to the start place of the next statement or
 //! the end of the current basic block.
+use crate::translator::error_handling::format_err_str_add_arc;
 use crate::translator::naming::{statement_transition_label_from_statement_kind, STATEMENT_END};
 use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
 
@@ -26,9 +27,10 @@ impl Statement {
         let transition = net.add_transition(&label);
 
         net.add_arc_place_transition(start_place, &transition)
-            .expect(
-            "BUG: Adding an arc from the start place to the statement transition should not fail",
-        );
+            .expect(&format_err_str_add_arc(
+                "start place",
+                "statement transition",
+            ));
 
         Self { transition }
     }
@@ -38,17 +40,16 @@ impl Statement {
     pub fn create_end_place(&self, net: &mut PetriNet) -> PlaceRef {
         let place = net.add_place(STATEMENT_END);
         net.add_arc_transition_place(&self.transition, &place)
-            .expect(
-                "BUG: Adding an arc from the statement transition to its end place should not fail",
-            );
+            .expect(&format_err_str_add_arc("statement transition", "end place"));
         place
     }
 
     /// Connects the statement transition to the given end place.
     pub fn connect_to_end_place(&self, end_place: &PlaceRef, net: &mut PetriNet) {
         net.add_arc_transition_place(&self.transition, end_place)
-            .expect(
-                "BUG: Adding an arc from the statement transition to the given end place should not fail",
-            );
+            .expect(&format_err_str_add_arc(
+                "statement transition",
+                "given end place",
+            ));
     }
 }

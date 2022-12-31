@@ -4,6 +4,7 @@
 //!
 //! The `BasicBlock` stores one reference to the start and end place in the Petri net.
 //! It also stores a vector of `Statement` which form a chain of places and transitions.
+use crate::translator::error_handling::format_err_str_add_arc;
 use crate::translator::function::statement::Statement;
 use crate::translator::naming::{
     function_switch_int_transition_label_from_block_index, BASIC_BLOCK_ASSERT,
@@ -139,21 +140,12 @@ impl BasicBlock {
     ) {
         let transition_cleanup = net.add_transition(transition_label);
         net.add_arc_place_transition(&self.end_place, &transition_cleanup)
-            .expect(&Self::format_err_str_arc_creation(
+            .expect(&format_err_str_add_arc(
                 "end place of the block",
                 transition_name,
             ));
         net.add_arc_transition_place(&transition_cleanup, &next_place)
-            .expect(&Self::format_err_str_arc_creation(
-                transition_name,
-                next_place_name,
-            ));
-    }
-
-    /// Format the error string used every time that an arc is created.
-    #[inline]
-    fn format_err_str_arc_creation(start_place_name: &str, end_place_name: &str) -> String {
-        format!("BUG: Adding an arc from the {start_place_name} to the {end_place_name} should not fail")
+            .expect(&format_err_str_add_arc(transition_name, next_place_name));
     }
 
     /// Prepares the start place for the next statement.
@@ -175,12 +167,12 @@ impl BasicBlock {
         // if there is only a terminator (no statement) we have to connect start and end place of the block
         let transition_empty = net.add_transition(BASIC_BLOCK_EMPTY);
         net.add_arc_place_transition(&self.start_place, &transition_empty)
-            .expect(&Self::format_err_str_arc_creation(
+            .expect(&format_err_str_add_arc(
                 "start place",
                 "empty basic block transition",
             ));
         net.add_arc_transition_place(&transition_empty, &self.end_place)
-            .expect(&Self::format_err_str_arc_creation(
+            .expect(&format_err_str_add_arc(
                 "empty basic block transition",
                 "end place",
             ));
