@@ -329,7 +329,7 @@ impl Function {
     /// Connects the active basic block to the end place of the function.
     /// This corresponds to the return statement that exits from this function.
     /// <https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/enum.TerminatorKind.html#variant.Return>
-    pub fn function_return(&mut self, net: &mut PetriNet) {
+    pub fn return_statement(&mut self, net: &mut PetriNet) {
         let start_place = self.prepare_start_place_for_return_statement();
         let label = function_return_transition_label_from_function_name(&self.name);
 
