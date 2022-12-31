@@ -10,6 +10,7 @@ mod special_function;
 mod virtual_memory;
 
 use crate::stack::Stack;
+use crate::translator::error_handling::EMPTY_CALL_STACK;
 use crate::translator::function::Function;
 use crate::translator::mutex_manager::MutexManager;
 use crate::translator::naming::{PROGRAM_END, PROGRAM_PANIC, PROGRAM_START};
@@ -92,7 +93,7 @@ impl<'tcx> Translator<'tcx> {
             self.program_start.clone(),
             self.program_end.clone(),
         );
-        self.translate();
+        self.translate_top_call_stack();
     }
 
     /// Pushes a new function frame to the call stack.
@@ -115,16 +116,56 @@ impl<'tcx> Translator<'tcx> {
     }
 
     /// Main translation loop.
-    /// Translate functions from the call stack until it is empty.
-    fn translate(&mut self) {
-        while let Some(function) = self.call_stack.peek_mut() {
-            // Translate the function to a Petri net from the MIR representation.
-            let body = self.tcx.optimized_mir(function.def_id);
-            // Visit the MIR body of the function using the methods of `rustc_middle::mir::visit::Visitor`.
-            // <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/mir/visit/trait.Visitor.html>
-            self.visit_body(body);
-            // Finished processing this function.
-            self.call_stack.pop();
+    /// Translate the function from the top of the call stack.
+    /// Inside the MIR Visitor, when a call to another function happens this method will be called again
+    /// to jump to the new function. Eventually a "leaf function" will be reached, the functions will exit and the
+    /// elements from the stack will be popped in order.
+    fn translate_top_call_stack(&mut self) {
+        let function = self.call_stack.peek_mut().expect(EMPTY_CALL_STACK);
+        // Translate the function to a Petri net from the MIR representation.
+        let body = self.tcx.optimized_mir(function.def_id);
+        // Visit the MIR body of the function using the methods of `rustc_middle::mir::visit::Visitor`.
+        // <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/mir/visit/trait.Visitor.html>
+        self.visit_body(body);
+        // Finished processing this function.
+        self.call_stack.pop();
+    }
+
+    /// Extracts the function call ID from the `rustc_middle::mir::Operand`.
+    ///
+    /// First obtains the type (`rustc_middle::ty::Ty`) of the operand for every possible case.
+    /// <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/mir/enum.Operand.html>
+    ///
+    /// Then checks that the type is a function definition (`rustc_middle::ty::TyKind::FnDef`)
+    /// <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/ty/enum.TyKind.html>
+    ///
+    /// This method is used to know which function will be called as part of the `Call` MIR Terminator.
+    /// <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/mir/syntax/enum.TerminatorKind.html#variant.Call>
+    fn extract_def_id_of_called_function_from_operand(
+        operand: &rustc_middle::mir::Operand<'tcx>,
+        caller_function_def_id: rustc_hir::def_id::DefId,
+        tcx: rustc_middle::ty::TyCtxt<'tcx>,
+    ) -> rustc_hir::def_id::DefId {
+        let function_type = match operand {
+            rustc_middle::mir::Operand::Copy(place) | rustc_middle::mir::Operand::Move(place) => {
+                // Find the type through the local declarations of the caller function.
+                // The place should be declared there and we can query its type.
+                let body = tcx.optimized_mir(caller_function_def_id);
+                let place_ty = place.ty(&body.local_decls, tcx);
+                place_ty.ty
+            }
+            rustc_middle::mir::Operand::Constant(constant) => constant.ty(),
+        };
+        match function_type.kind() {
+            rustc_middle::ty::TyKind::FnPtr(_) => {
+                unimplemented!(
+                    "TyKind::FnPtr not implemented yet. Function pointers are present in the MIR"
+                );
+            }
+            rustc_middle::ty::TyKind::FnDef(def_id, _) => *def_id,
+            _ => {
+                panic!("TyKind::FnDef, a function definition, but got: {function_type:?}")
+            }
         }
     }
 }

@@ -194,19 +194,18 @@ impl Function {
         self.active_block = Some(block);
     }
 
-    /// Returns the end place of the currently active basic block.
-    pub fn get_active_block_end_place(&self) -> &PlaceRef {
-        let active_block = self.get_active_block();
-        &active_block.end_place
-    }
-
-    /// Returns the start place of block with the given block number.
-    /// Adds it to the function if it is not present already.
-    pub fn get_basic_block_start(
+    /// Returns a 2-tuple of the form `(start_place, end_place)`
+    /// where:
+    ///  - `start_place` is the start place of block with the given block number,
+    /// which is added to the function if it is not present already.
+    ///  - `end_place` is the end place of the currently active basic block.
+    ///
+    /// Clone the references to simplify using them.
+    pub fn get_start_and_end_place_for_function_call(
         &mut self,
         block_number: rustc_middle::mir::BasicBlock,
         net: &mut PetriNet,
-    ) -> &PlaceRef {
+    ) -> (PlaceRef, PlaceRef) {
         if !self.basic_blocks.contains_key(&block_number) {
             self.add_basic_block(block_number, net);
         }
@@ -214,7 +213,9 @@ impl Function {
             .basic_blocks
             .get(&block_number)
             .expect("BUG: The basic block cannot be retrieved");
-        &block.start_place
+
+        let active_block = self.get_active_block();
+        (block.start_place.clone(), active_block.end_place.clone())
     }
 
     /// Adds a statement to the active basic block.
