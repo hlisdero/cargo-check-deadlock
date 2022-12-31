@@ -238,16 +238,15 @@ impl Function {
         active_block.finish_statement_block(net);
     }
 
-    /// Connects the active basic block to the next basic block identified as the argument `to`
-    /// of the goto terminator.
+    /// Connects the active basic block to the target basic block.
     /// <https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/enum.TerminatorKind.html#variant.Goto>
     ///
     /// # Panics
     ///
     /// If there is no active basic block set, then the function panics.
-    pub fn goto(&mut self, to: rustc_middle::mir::BasicBlock, net: &mut PetriNet) {
-        let (active_block, to) = self.get_pair_active_block_target_block(to, net);
-        active_block.goto(to, net);
+    pub fn goto(&mut self, target: rustc_middle::mir::BasicBlock, net: &mut PetriNet) {
+        let (active_block, target_block) = self.get_pair_active_block_target_block(target, net);
+        active_block.goto(target_block, net);
     }
 
     /// Connects the active basic block to all the possible basic block targets in the switch int statement.

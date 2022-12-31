@@ -51,10 +51,10 @@ impl BasicBlock {
         }
     }
 
-    /// Connects the end place of this block to the start place of the `to` basic block.
-    pub fn goto(&self, to: &BasicBlock, net: &mut PetriNet) {
+    /// Connects the end place of this block to the start place of the target basic block.
+    pub fn goto(&self, target: &BasicBlock, net: &mut PetriNet) {
         self.connect_end_to_next_place(
-            &to.start_place,
+            &target.start_place,
             net,
             BASIC_BLOCK_GOTO,
             "goto transition",
