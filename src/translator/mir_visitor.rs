@@ -66,10 +66,7 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
                 // <rustc_middle::mir::terminator::SwitchTargets>
                 function.switch_int(targets.all_targets().to_vec(), &mut self.net);
             }
-            TerminatorKind::Resume => {
-                function.unwind(self.program_panic.clone(), &mut self.net);
-            }
-            TerminatorKind::Abort => {
+            TerminatorKind::Resume | TerminatorKind::Abort => {
                 function.unwind(self.program_panic.clone(), &mut self.net);
             }
             TerminatorKind::Return => {
@@ -106,24 +103,18 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
                 let function_name = self.tcx.def_path_str(function_def_id);
                 if is_panic(&function_name) {
                     function.unwind(self.program_panic.clone(), &mut self.net);
+                } else if self.tcx.is_foreign_item(function_def_id)
+                    || !self.tcx.is_mir_available(function_def_id)
+                {
+                    unimplemented!("Foreign function not implemented yet");
                 } else {
-                    if self.tcx.is_foreign_item(function_def_id)
-                        || !self.tcx.is_mir_available(function_def_id)
-                    {
-                        unimplemented!("Foreign function not implemented yet");
-                    } else {
-                        let return_block = match target {
-                            Some(block) => block,
-                            None => unimplemented!("Diverging functions not implemented yet"),
-                        };
-                        let (start_place, end_place) = function
-                            .get_start_and_end_place_for_function_call(
-                                *return_block,
-                                &mut self.net,
-                            );
-                        self.push_function_to_call_stack(function_def_id, start_place, end_place);
-                        self.translate_top_call_stack();
-                    }
+                    let Some(return_block) = target else { 
+                        unimplemented!("Diverging functions not implemented yet")
+                    };
+                    let (start_place, end_place) = function
+                        .get_start_and_end_place_for_function_call(*return_block, &mut self.net);
+                    self.push_function_to_call_stack(function_def_id, start_place, end_place);
+                    self.translate_top_call_stack();
                 }
             }
             TerminatorKind::Assert {

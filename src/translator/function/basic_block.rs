@@ -52,7 +52,7 @@ impl BasicBlock {
     }
 
     /// Connects the end place of this block to the start place of the target basic block.
-    pub fn goto(&self, target: &BasicBlock, net: &mut PetriNet) {
+    pub fn goto(&self, target: &Self, net: &mut PetriNet) {
         self.connect_end_to_next_place(
             &target.start_place,
             net,
@@ -63,7 +63,7 @@ impl BasicBlock {
     }
 
     /// Connects the end place of this block to the start place of the `target` basic block.
-    pub fn switch_int(&self, target: &BasicBlock, index: usize, net: &mut PetriNet) {
+    pub fn switch_int(&self, target: &Self, index: usize, net: &mut PetriNet) {
         self.connect_end_to_next_place(
             &target.start_place,
             net,
@@ -74,9 +74,9 @@ impl BasicBlock {
     }
 
     /// Connects the end place of this block to the unwind place.
-    pub fn unwind(&self, unwind_place: PlaceRef, net: &mut PetriNet) {
+    pub fn unwind(&self, unwind_place: &PlaceRef, net: &mut PetriNet) {
         self.connect_end_to_next_place(
-            &unwind_place,
+            unwind_place,
             net,
             BASIC_BLOCK_UNWIND,
             "unwind transition",
@@ -85,7 +85,7 @@ impl BasicBlock {
     }
 
     /// Connects the end place of this block to the start place of the `target` basic block.
-    pub fn drop(&self, target: &BasicBlock, net: &mut PetriNet) {
+    pub fn drop(&self, target: &Self, net: &mut PetriNet) {
         self.connect_end_to_next_place(
             &target.start_place,
             net,
@@ -96,7 +96,7 @@ impl BasicBlock {
     }
 
     /// Connects the end place of this block to the start place of the `unwind` basic block.
-    pub fn drop_unwind(&self, unwind: &BasicBlock, net: &mut PetriNet) {
+    pub fn drop_unwind(&self, unwind: &Self, net: &mut PetriNet) {
         self.connect_end_to_next_place(
             &unwind.start_place,
             net,
@@ -107,7 +107,7 @@ impl BasicBlock {
     }
 
     /// Connects the end place of this block to the start place of the `assert` basic block.
-    pub fn assert(&self, target: &BasicBlock, net: &mut PetriNet) {
+    pub fn assert(&self, target: &Self, net: &mut PetriNet) {
         self.connect_end_to_next_place(
             &target.start_place,
             net,
@@ -118,7 +118,7 @@ impl BasicBlock {
     }
 
     /// Connects the end place of this block to the start place of the `cleanup` basic block.
-    pub fn assert_cleanup(&self, cleanup: &BasicBlock, net: &mut PetriNet) {
+    pub fn assert_cleanup(&self, cleanup: &Self, net: &mut PetriNet) {
         self.connect_end_to_next_place(
             &cleanup.start_place,
             net,
@@ -140,12 +140,19 @@ impl BasicBlock {
     ) {
         let transition_cleanup = net.add_transition(transition_label);
         net.add_arc_place_transition(&self.end_place, &transition_cleanup)
-            .expect(&format_err_str_add_arc(
-                "end place of the block",
-                transition_name,
-            ));
-        net.add_arc_transition_place(&transition_cleanup, &next_place)
-            .expect(&format_err_str_add_arc(transition_name, next_place_name));
+            .unwrap_or_else(|_| {
+                panic!(
+                    "{}",
+                    format_err_str_add_arc("end place of the block", transition_name,)
+                )
+            });
+        net.add_arc_transition_place(&transition_cleanup, next_place)
+            .unwrap_or_else(|_| {
+                panic!(
+                    "{}",
+                    format_err_str_add_arc(transition_name, next_place_name)
+                )
+            });
     }
 
     /// Prepares the start place for the next statement.
@@ -167,14 +174,18 @@ impl BasicBlock {
         // if there is only a terminator (no statement) we have to connect start and end place of the block
         let transition_empty = net.add_transition(BASIC_BLOCK_EMPTY);
         net.add_arc_place_transition(&self.start_place, &transition_empty)
-            .expect(&format_err_str_add_arc(
-                "start place",
-                "empty basic block transition",
-            ));
+            .unwrap_or_else(|_| {
+                panic!(
+                    "{}",
+                    format_err_str_add_arc("start place", "empty basic block transition",)
+                )
+            });
         net.add_arc_transition_place(&transition_empty, &self.end_place)
-            .expect(&format_err_str_add_arc(
-                "empty basic block transition",
-                "end place",
-            ));
+            .unwrap_or_else(|_| {
+                panic!(
+                    "{}",
+                    format_err_str_add_arc("empty basic block transition", "end place",)
+                )
+            });
     }
 }

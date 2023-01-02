@@ -145,7 +145,7 @@ impl Function {
     /// Adds a new basic block to the function.
     /// Receives the block number (`rustc_middle::mir::BasicBlock`) which is just an index to a vector
     /// of `rustc_middle::mir::BasicBlockData` in the MIR body of the function.
-    /// https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/struct.BasicBlock.html
+    /// <https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/struct.BasicBlock.html>
     ///
     /// # Panics
     ///
@@ -155,7 +155,11 @@ impl Function {
         let index = block_number.index();
         let start_place = self.prepare_start_place_for_next_basic_block(index, net);
         let basic_block = BasicBlock::new(start_place, net);
-        if let Some(_) = self.basic_blocks.insert(block_number, basic_block) {
+        if self
+            .basic_blocks
+            .insert(block_number, basic_block)
+            .is_some()
+        {
             panic!("BUG: Basic blocks should only be added once to the function.")
         }
     }
@@ -183,11 +187,7 @@ impl Function {
     }
 
     /// Activates the given basic block. Adds it to the function if it is not present already.
-    pub fn activate_block<'net>(
-        &mut self,
-        block: rustc_middle::mir::BasicBlock,
-        net: &'net mut PetriNet,
-    ) {
+    pub fn activate_block(&mut self, block: rustc_middle::mir::BasicBlock, net: &mut PetriNet) {
         if !self.basic_blocks.contains_key(&block) {
             self.add_basic_block(block, net);
         };
@@ -274,7 +274,7 @@ impl Function {
     /// If there is no active basic block set, then the function panics.
     pub fn unwind(&mut self, unwind_place: PlaceRef, net: &mut PetriNet) {
         let active_block = self.get_active_block();
-        active_block.unwind(unwind_place, net);
+        active_block.unwind(&unwind_place, net);
     }
 
     /// Connects the active basic block to the next basic block identified as the argument `target`
@@ -335,14 +335,24 @@ impl Function {
 
         let transition = net.add_transition(&label);
         net.add_arc_place_transition(&start_place, &transition)
-            .expect(&format_err_str_add_arc(
-                "last place inside the function",
-                "return statement transition",
-            ));
+            .unwrap_or_else(|_| {
+                panic!(
+                    "{}",
+                    format_err_str_add_arc(
+                        "last place inside the function",
+                        "return statement transition",
+                    )
+                )
+            });
         net.add_arc_transition_place(&transition, &self.end_place)
-            .expect(&format_err_str_add_arc(
-                "return statement transition",
-                "end place of the function",
-            ));
+            .unwrap_or_else(|_| {
+                panic!(
+                    "{}",
+                    format_err_str_add_arc(
+                        "return statement transition",
+                        "end place of the function",
+                    )
+                )
+            });
     }
 }

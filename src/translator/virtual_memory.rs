@@ -24,6 +24,6 @@ impl VirtualMemory {
 
     /// Gets the local variable structure corresponding to the MIR local.
     pub fn get_local_variable(&self, local: &rustc_middle::mir::Local) -> Option<&Local> {
-        self.locals.get(&local)
+        self.locals.get(local)
     }
 }

@@ -27,10 +27,12 @@ impl Statement {
         let transition = net.add_transition(&label);
 
         net.add_arc_place_transition(start_place, &transition)
-            .expect(&format_err_str_add_arc(
-                "start place",
-                "statement transition",
-            ));
+            .unwrap_or_else(|_| {
+                panic!(
+                    "{}",
+                    format_err_str_add_arc("start place", "statement transition",)
+                )
+            });
 
         Self { transition }
     }
@@ -40,16 +42,23 @@ impl Statement {
     pub fn create_end_place(&self, net: &mut PetriNet) -> PlaceRef {
         let place = net.add_place(STATEMENT_END);
         net.add_arc_transition_place(&self.transition, &place)
-            .expect(&format_err_str_add_arc("statement transition", "end place"));
+            .unwrap_or_else(|_| {
+                panic!(
+                    "{}",
+                    format_err_str_add_arc("statement transition", "end place")
+                )
+            });
         place
     }
 
     /// Connects the statement transition to the given end place.
     pub fn connect_to_end_place(&self, end_place: &PlaceRef, net: &mut PetriNet) {
         net.add_arc_transition_place(&self.transition, end_place)
-            .expect(&format_err_str_add_arc(
-                "statement transition",
-                "given end place",
-            ));
+            .unwrap_or_else(|_| {
+                panic!(
+                    "{}",
+                    format_err_str_add_arc("statement transition", "given end place",)
+                )
+            });
     }
 }
