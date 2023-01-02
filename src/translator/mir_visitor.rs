@@ -67,7 +67,7 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
                 function.switch_int(targets.all_targets().to_vec(), &mut self.net);
             }
             TerminatorKind::Resume | TerminatorKind::Abort => {
-                function.unwind(self.program_panic.clone(), &mut self.net);
+                function.unwind(&self.program_panic, &mut self.net);
             }
             TerminatorKind::Return => {
                 function.return_statement(&mut self.net);
@@ -80,12 +80,9 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
             } => {
                 function.drop(*target, *unwind, &mut self.net);
             }
-            TerminatorKind::DropAndReplace {
-                place: _,
-                value: _,
-                target: _,
-                unwind: _,
-            } => unimplemented!("TerminatorKind::DropAndReplace not implemented yet"),
+            TerminatorKind::DropAndReplace { .. } => {
+                unimplemented!("TerminatorKind::DropAndReplace not implemented yet")
+            }
             TerminatorKind::Call {
                 func,
                 args: _,
@@ -102,13 +99,13 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
                 );
                 let function_name = self.tcx.def_path_str(function_def_id);
                 if is_panic(&function_name) {
-                    function.unwind(self.program_panic.clone(), &mut self.net);
+                    function.unwind(&self.program_panic, &mut self.net);
                 } else if self.tcx.is_foreign_item(function_def_id)
                     || !self.tcx.is_mir_available(function_def_id)
                 {
                     unimplemented!("Foreign function not implemented yet");
                 } else {
-                    let Some(return_block) = target else { 
+                    let Some(return_block) = target else {
                         unimplemented!("Diverging functions not implemented yet")
                     };
                     let (start_place, end_place) = function
@@ -126,35 +123,19 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
             } => {
                 function.assert(*target, *cleanup, &mut self.net);
             }
-            TerminatorKind::Yield {
-                value: _,
-                resume: _,
-                resume_arg: _,
-                drop: _,
-            } => unimplemented!("TerminatorKind::Yield not implemented yet"),
+            TerminatorKind::Yield { .. } => {
+                unimplemented!("TerminatorKind::Yield not implemented yet")
+            }
             TerminatorKind::GeneratorDrop => {
                 unimplemented!("TerminatorKind::GeneratorDrop not implemented yet")
             }
-            TerminatorKind::FalseEdge {
-                real_target: _,
-                imaginary_target: _,
-            } => {
+            TerminatorKind::FalseEdge { .. } => {
                 unimplemented!("TerminatorKind::FalseEdge not implemented yet")
             }
-            TerminatorKind::FalseUnwind {
-                real_target: _,
-                unwind: _,
-            } => {
+            TerminatorKind::FalseUnwind { .. } => {
                 unimplemented!("TerminatorKind::FalseUnwind not implemented yet")
             }
-            TerminatorKind::InlineAsm {
-                template: _,
-                operands: _,
-                options: _,
-                line_spans: _,
-                destination: _,
-                cleanup: _,
-            } => {
+            TerminatorKind::InlineAsm { .. } => {
                 unimplemented!("TerminatorKind::InlineAsm not implemented yet")
             }
         }

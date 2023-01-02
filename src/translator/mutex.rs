@@ -44,6 +44,8 @@ impl Mutex {
     /// fire if the mutex is unlocked.
     pub fn add_lock_guard(&self, transition_lock: &TransitionRef, net: &mut PetriNet) {
         net.add_arc_place_transition(&self.place_ref, transition_lock)
-            .unwrap_or_else(|_| panic!("{}", format_err_str_add_arc("mutex's place", "lock guard")))
+            .unwrap_or_else(|_| {
+                panic!("{}", format_err_str_add_arc("mutex's place", "lock guard"))
+            });
     }
 }

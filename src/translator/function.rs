@@ -272,9 +272,9 @@ impl Function {
     /// # Panics
     ///
     /// If there is no active basic block set, then the function panics.
-    pub fn unwind(&mut self, unwind_place: PlaceRef, net: &mut PetriNet) {
+    pub fn unwind(&mut self, unwind_place: &PlaceRef, net: &mut PetriNet) {
         let active_block = self.get_active_block();
-        active_block.unwind(&unwind_place, net);
+        active_block.unwind(unwind_place, net);
     }
 
     /// Connects the active basic block to the next basic block identified as the argument `target`
