@@ -11,12 +11,8 @@ use rustc_middle::mir::visit::Visitor;
 use rustc_middle::mir::TerminatorKind;
 
 impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
-    /// Entered a MIR function block. Do nothing.
-    fn visit_body(&mut self, body: &rustc_middle::mir::Body<'tcx>) {
-        self.super_body(body);
-    }
-
-    /// Entered a basic block. Do nothing
+    /// Entering a new basic block of the current MIR function.
+    /// Activate it. This is the first step to start processing it.
     fn visit_basic_block_data(
         &mut self,
         block: rustc_middle::mir::BasicBlock,
