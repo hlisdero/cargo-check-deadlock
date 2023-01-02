@@ -10,8 +10,6 @@ use crate::translator::Translator;
 use rustc_middle::mir::visit::Visitor;
 use rustc_middle::mir::TerminatorKind;
 
-use super::special_function::is_panic;
-
 impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
     /// Entered a MIR function block. Do nothing.
     fn visit_body(&mut self, body: &rustc_middle::mir::Body<'tcx>) {
@@ -92,27 +90,7 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
                 from_hir_call: _,
                 fn_span: _,
             } => {
-                let function_def_id = Self::extract_def_id_of_called_function_from_operand(
-                    func,
-                    function.def_id,
-                    self.tcx,
-                );
-                let function_name = self.tcx.def_path_str(function_def_id);
-                if is_panic(&function_name) {
-                    function.unwind(&self.program_panic, &mut self.net);
-                } else if self.tcx.is_foreign_item(function_def_id)
-                    || !self.tcx.is_mir_available(function_def_id)
-                {
-                    unimplemented!("Foreign function not implemented yet");
-                } else {
-                    let Some(return_block) = target else {
-                        unimplemented!("Diverging functions not implemented yet")
-                    };
-                    let (start_place, end_place) = function
-                        .get_start_and_end_place_for_function_call(*return_block, &mut self.net);
-                    self.push_function_to_call_stack(function_def_id, start_place, end_place);
-                    self.translate_top_call_stack();
-                }
+                self.call_function(func, *target);
             }
             TerminatorKind::Assert {
                 cond: _,

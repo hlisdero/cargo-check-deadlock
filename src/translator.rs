@@ -14,6 +14,7 @@ use crate::translator::error_handling::EMPTY_CALL_STACK;
 use crate::translator::function::Function;
 use crate::translator::mutex_manager::MutexManager;
 use crate::translator::naming::{PROGRAM_END, PROGRAM_PANIC, PROGRAM_START};
+use crate::translator::special_function::is_panic;
 use netcrab::petri_net::{PetriNet, PlaceRef};
 use rustc_middle::mir::visit::Visitor;
 
@@ -166,6 +167,45 @@ impl<'tcx> Translator<'tcx> {
             _ => {
                 panic!("TyKind::FnDef, a function definition, but got: {function_type:?}")
             }
+        }
+    }
+
+    /// Jumps from the current function on the top of the stack
+    /// to a new function called inside the current function.
+    ///
+    /// This is the handler for the enum variant `TerminatorKind::Call` in the MIR Visitor.
+    /// <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/mir/enum.TerminatorKind.html#variant.Call>
+    ///
+    /// # Panics
+    ///
+    /// If the target is `None` (signaling a diverging function), then the function panics.
+    fn call_function(
+        &mut self,
+        func: &rustc_middle::mir::Operand<'tcx>,
+        target: Option<rustc_middle::mir::BasicBlock>,
+    ) {
+        let current_function = self.call_stack.peek_mut().expect(EMPTY_CALL_STACK);
+        let function_def_id = Self::extract_def_id_of_called_function_from_operand(
+            func,
+            current_function.def_id,
+            self.tcx,
+        );
+        let function_name = self.tcx.def_path_str(function_def_id);
+
+        if is_panic(&function_name) {
+            current_function.unwind(&self.program_panic, &mut self.net);
+        } else if self.tcx.is_foreign_item(function_def_id)
+            || !self.tcx.is_mir_available(function_def_id)
+        {
+            unimplemented!("Foreign function not implemented yet");
+        } else {
+            let Some(return_block) = target else {
+                unimplemented!("Diverging functions not implemented yet")
+            };
+            let (start_place, end_place) = current_function
+                .get_start_and_end_place_for_function_call(return_block, &mut self.net);
+            self.push_function_to_call_stack(function_def_id, start_place, end_place);
+            self.translate_top_call_stack();
         }
     }
 }
