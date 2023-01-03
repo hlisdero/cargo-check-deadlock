@@ -7,13 +7,19 @@
 use crate::translator::error_handling::format_err_str_add_arc;
 use crate::translator::function::statement::Statement;
 use crate::translator::naming::{
-    function_switch_int_transition_label_from_block_index, BASIC_BLOCK_ASSERT,
-    BASIC_BLOCK_ASSERT_CLEANUP, BASIC_BLOCK_DROP, BASIC_BLOCK_DROP_UNWIND, BASIC_BLOCK_EMPTY,
-    BASIC_BLOCK_END_PLACE, BASIC_BLOCK_GOTO, BASIC_BLOCK_UNWIND,
+    basic_block_assert_cleanup_transition_label, basic_block_assert_transition_label,
+    basic_block_drop_transition_label, basic_block_drop_unwind_transition_label,
+    basic_block_empty_transition_label, basic_block_end_place_label,
+    basic_block_goto_transition_label, basic_block_switch_int_transition_label,
+    basic_block_unwind_transition_label,
 };
 use netcrab::petri_net::{PetriNet, PlaceRef};
 
 pub struct BasicBlock {
+    /// Name of the function to which this block belongs.
+    function_name: String,
+    /// Index of this block in the current function.
+    index: usize,
     /// The start place of this basic block in the Petri net.
     pub start_place: PlaceRef,
     /// The end place of this basic block in the Petri net, before the terminator.
@@ -23,10 +29,17 @@ pub struct BasicBlock {
 
 impl BasicBlock {
     /// Creates a new basic block and adds its representation to the Petri net.
-    pub fn new(start_place: PlaceRef, net: &mut PetriNet) -> Self {
-        let end_place = net.add_place(BASIC_BLOCK_END_PLACE);
+    pub fn new(
+        function_name: &str,
+        index: usize,
+        start_place: PlaceRef,
+        net: &mut PetriNet,
+    ) -> Self {
+        let end_place = net.add_place(&basic_block_end_place_label(function_name, index));
 
         Self {
+            function_name: function_name.to_string(),
+            index,
             start_place,
             end_place,
             statements: Vec::new(),
@@ -36,8 +49,15 @@ impl BasicBlock {
     /// Adds a statement to the basic block.
     pub fn add_statement(&mut self, statement: &rustc_middle::mir::Statement, net: &mut PetriNet) {
         let start_place = self.prepare_start_place_next_statement(net);
-        self.statements
-            .push(Statement::new(statement, &start_place, net));
+        let statement_index = self.statements.len();
+        self.statements.push(Statement::new(
+            &self.function_name,
+            self.index,
+            statement_index,
+            statement,
+            &start_place,
+            net,
+        ));
     }
 
     /// Connects the last statement transition to the end place of this basic block.
@@ -56,7 +76,7 @@ impl BasicBlock {
         self.connect_end_to_next_place(
             &target.start_place,
             net,
-            BASIC_BLOCK_GOTO,
+            &basic_block_goto_transition_label(&self.function_name, self.index),
             "goto transition",
             "to block start place",
         );
@@ -67,7 +87,7 @@ impl BasicBlock {
         self.connect_end_to_next_place(
             &target.start_place,
             net,
-            &function_switch_int_transition_label_from_block_index(index),
+            &basic_block_switch_int_transition_label(&self.function_name, index),
             "switch int transition",
             "target block start place",
         );
@@ -78,7 +98,7 @@ impl BasicBlock {
         self.connect_end_to_next_place(
             unwind_place,
             net,
-            BASIC_BLOCK_UNWIND,
+            &basic_block_unwind_transition_label(&self.function_name, self.index),
             "unwind transition",
             "unwind place",
         );
@@ -89,7 +109,7 @@ impl BasicBlock {
         self.connect_end_to_next_place(
             &target.start_place,
             net,
-            BASIC_BLOCK_DROP,
+            &basic_block_drop_transition_label(&self.function_name, self.index),
             "drop transition",
             "target block start place",
         );
@@ -100,7 +120,7 @@ impl BasicBlock {
         self.connect_end_to_next_place(
             &unwind.start_place,
             net,
-            BASIC_BLOCK_DROP_UNWIND,
+            &basic_block_drop_unwind_transition_label(&self.function_name, self.index),
             "drop unwind transition",
             "unwind block start place",
         );
@@ -111,7 +131,7 @@ impl BasicBlock {
         self.connect_end_to_next_place(
             &target.start_place,
             net,
-            BASIC_BLOCK_ASSERT,
+            &basic_block_assert_transition_label(&self.function_name, self.index),
             "assert transition",
             "target block start place",
         );
@@ -122,7 +142,7 @@ impl BasicBlock {
         self.connect_end_to_next_place(
             &cleanup.start_place,
             net,
-            BASIC_BLOCK_ASSERT_CLEANUP,
+            &basic_block_assert_cleanup_transition_label(&self.function_name, self.index),
             "assert cleanup transition",
             "cleanup block start place",
         );
@@ -172,7 +192,10 @@ impl BasicBlock {
     /// This "fake statement" exists only in the model and not in the Rust source code.
     fn handle_basic_block_with_no_statements(&self, net: &mut PetriNet) {
         // if there is only a terminator (no statement) we have to connect start and end place of the block
-        let transition_empty = net.add_transition(BASIC_BLOCK_EMPTY);
+        let transition_empty = net.add_transition(&basic_block_empty_transition_label(
+            &self.function_name,
+            self.index,
+        ));
         net.add_arc_place_transition(&self.start_place, &transition_empty)
             .unwrap_or_else(|_| {
                 panic!(

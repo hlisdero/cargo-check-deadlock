@@ -9,21 +9,27 @@
 //! The transition points to the start place of the next statement or
 //! the end of the current basic block.
 use crate::translator::error_handling::format_err_str_add_arc;
-use crate::translator::naming::{statement_transition_label_from_statement_kind, STATEMENT_END};
+use crate::translator::naming::{statement_end_place_label, statement_transition_label};
 use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
 
 pub struct Statement {
     transition: TransitionRef,
+    function_name: String,
+    block_index: usize,
+    statement_index: usize,
 }
 
 impl Statement {
     /// Creates a new statement and adds its representation to the Petri net.
     pub fn new(
+        function_name: &str,
+        block_index: usize,
+        statement_index: usize,
         statement: &rustc_middle::mir::Statement,
         start_place: &PlaceRef,
         net: &mut PetriNet,
     ) -> Self {
-        let label = statement_transition_label_from_statement_kind(&statement.kind);
+        let label = statement_transition_label(function_name, block_index, statement_index);
         let transition = net.add_transition(&label);
 
         net.add_arc_place_transition(start_place, &transition)
@@ -34,13 +40,22 @@ impl Statement {
                 )
             });
 
-        Self { transition }
+        Self {
+            transition,
+            function_name: function_name.to_string(),
+            block_index,
+            statement_index,
+        }
     }
 
     /// Creates an end place for this statement, connects the statement transition to it and returns it.
     /// The caller is responsible for storing this new place.
     pub fn create_end_place(&self, net: &mut PetriNet) -> PlaceRef {
-        let place = net.add_place(STATEMENT_END);
+        let place = net.add_place(&statement_end_place_label(
+            &self.function_name,
+            self.block_index,
+            self.statement_index,
+        ));
         net.add_arc_transition_place(&self.transition, &place)
             .unwrap_or_else(|_| {
                 panic!(

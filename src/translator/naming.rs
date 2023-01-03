@@ -9,59 +9,104 @@
 //! See the reference for more information:
 //! <https://doc.rust-lang.org/stable/reference/attributes/codegen.html>
 
-/// Name of the place that models the program start state.
+/// Label of the place that models the program start state.
 /// It is present in every generated Petri net.
 pub const PROGRAM_START: &str = "PROGRAM_START";
-/// Name of the place that models the normal program end state.
+/// Label of the place that models the normal program end state.
 /// It is present in every generated Petri net.
 pub const PROGRAM_END: &str = "PROGRAM_END";
-/// Name of the place that models the program end state after a `panic!`.
+/// Label of the place that models the program end state after a `panic!`.
 /// It is present in every generated Petri net.
 pub const PROGRAM_PANIC: &str = "PROGRAM_PANIC";
 
-/// Name of the transition for an empty `BasicBlock` with no statements.
-pub const BASIC_BLOCK_EMPTY: &str = "BASIC_BLOCK_EMPTY";
-/// Name of the transition that represents a goto terminator to another `BasicBlock`.
-pub const BASIC_BLOCK_GOTO: &str = "GOTO";
-/// Name of the transition that represents an unwind terminator to the general `PROGRAM_PANIC` place.
-pub const BASIC_BLOCK_UNWIND: &str = "UNWIND";
-/// Name of the transition that represents a drop terminator.
-pub const BASIC_BLOCK_DROP: &str = "DROP";
-/// Name of the transition that represents the (optional) unwind path of a drop terminator.
-pub const BASIC_BLOCK_DROP_UNWIND: &str = "DROP_UNWIND";
-/// Name of the transition that represents an assert terminator.
-pub const BASIC_BLOCK_ASSERT: &str = "ASSERT";
-/// Name of the transition that represents the (optional) unwind path of an assert terminator.
-pub const BASIC_BLOCK_ASSERT_CLEANUP: &str = "ASSERT_UNWIND";
-/// Name of the end place of any `BasicBlock`.
-pub const BASIC_BLOCK_END_PLACE: &str = "BASIC_BLOCK_END_PLACE";
-
-/// Name of the end place of any `Statement`.
-pub const STATEMENT_END: &str = "STATEMENT_END";
-
+/// Label of the transition for the return statement of a function.
 #[inline]
-pub fn mutex_place_label_from_index(index: usize) -> String {
-    format!("MUTEX_{index}")
+pub fn function_return_transition_label(function_name: &str) -> String {
+    format!("{function_name}_RETURN")
 }
 
+/// Label of the start place of any `BasicBlock`.
 #[inline]
-pub fn function_switch_int_transition_label_from_block_index(index: usize) -> String {
-    format!("SWITCH_INT_{index}")
+pub fn basic_block_start_place_label(function_name: &str, index: usize) -> String {
+    format!("{function_name}_BASIC_BLOCK_{index}")
 }
 
+/// Label of the end place of any `BasicBlock`.
 #[inline]
-pub fn function_return_transition_label_from_function_name(function_name: &str) -> String {
-    format!("RETURN_{function_name}")
+pub fn basic_block_end_place_label(function_name: &str, index: usize) -> String {
+    format!("{function_name}_BASIC_BLOCK_END_PLACE_{index}")
 }
 
+/// Label of the transition for an empty `BasicBlock` with no statements.
 #[inline]
-pub fn basic_block_start_place_label_from_block_index(index: usize) -> String {
-    format!("BASIC_BLOCK_{index}")
+pub fn basic_block_empty_transition_label(function_name: &str, index: usize) -> String {
+    format!("{function_name}_BASIC_BLOCK_EMPTY_{index}")
 }
 
+/// Label of the transition that represents a goto terminator to another `BasicBlock`.
 #[inline]
-pub fn statement_transition_label_from_statement_kind(
-    statement_kind: &rustc_middle::mir::StatementKind,
+pub fn basic_block_goto_transition_label(function_name: &str, index: usize) -> String {
+    format!("{function_name}_GOTO_{index}")
+}
+
+/// Label of the transition that represents a switch int terminator to another `BasicBlock`.
+#[inline]
+pub fn basic_block_switch_int_transition_label(function_name: &str, index: usize) -> String {
+    format!("{function_name}_SWITCH_INT_{index}")
+}
+
+/// Label of the transition that represents an unwind terminator to the general `PROGRAM_PANIC` place.
+#[inline]
+pub fn basic_block_unwind_transition_label(function_name: &str, index: usize) -> String {
+    format!("{function_name}_UNWIND_{index}")
+}
+
+/// Label of the transition that represents a drop terminator.
+#[inline]
+pub fn basic_block_drop_transition_label(function_name: &str, index: usize) -> String {
+    format!("{function_name}_DROP_{index}")
+}
+
+/// Label of the transition that represents the (optional) unwind path of a drop terminator.
+#[inline]
+pub fn basic_block_drop_unwind_transition_label(function_name: &str, index: usize) -> String {
+    format!("{function_name}_DROP_UNWIND_{index}")
+}
+
+/// Label of the transition that represents an assert terminator.
+#[inline]
+pub fn basic_block_assert_transition_label(function_name: &str, index: usize) -> String {
+    format!("{function_name}_ASSERT_{index}")
+}
+
+/// Label of the transition that represents the (optional) unwind path of an assert terminator.
+#[inline]
+pub fn basic_block_assert_cleanup_transition_label(function_name: &str, index: usize) -> String {
+    format!("{function_name}_ASSERT_CLEANUP_{index}")
+}
+
+/// Label of the transition of any `Statement`.
+#[inline]
+pub fn statement_transition_label(
+    function_name: &str,
+    block_index: usize,
+    statement_index: usize,
 ) -> String {
-    format!("STATEMENT {statement_kind:?}")
+    format!("{function_name}_BLOCK_{block_index}_STATEMENT_{statement_index}")
+}
+
+/// Label of the end place of any `Statement`.
+#[inline]
+pub fn statement_end_place_label(
+    function_name: &str,
+    block_index: usize,
+    statement_index: usize,
+) -> String {
+    format!("{function_name}_BLOCK_{block_index}_STATEMENT_END_{statement_index}")
+}
+
+/// Label of the single place that models every `Mutex`.
+#[inline]
+pub fn mutex_place_label(index: usize) -> String {
+    format!("MUTEX_{index}")
 }

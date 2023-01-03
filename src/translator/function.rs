@@ -5,10 +5,7 @@ mod statement;
 use crate::translator::error_handling::format_err_str_add_arc;
 use crate::translator::function::basic_block::BasicBlock;
 use crate::translator::mutex_manager::MutexManager;
-use crate::translator::naming::{
-    basic_block_start_place_label_from_block_index,
-    function_return_transition_label_from_function_name,
-};
+use crate::translator::naming::{basic_block_start_place_label, function_return_transition_label};
 use netcrab::petri_net::{PetriNet, PlaceRef};
 use std::collections::HashMap;
 
@@ -93,7 +90,7 @@ impl Function {
         if self.basic_blocks.is_empty() {
             self.start_place.clone()
         } else {
-            net.add_place(&basic_block_start_place_label_from_block_index(index))
+            net.add_place(&basic_block_start_place_label(&self.name, index))
         }
     }
 
@@ -154,7 +151,7 @@ impl Function {
         // Extracts the value of this index as a usize.
         let index = block_number.index();
         let start_place = self.prepare_start_place_for_next_basic_block(index, net);
-        let basic_block = BasicBlock::new(start_place, net);
+        let basic_block = BasicBlock::new(&self.name, index, start_place, net);
         if self
             .basic_blocks
             .insert(block_number, basic_block)
@@ -331,7 +328,7 @@ impl Function {
     /// <https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/enum.TerminatorKind.html#variant.Return>
     pub fn return_statement(&mut self, net: &mut PetriNet) {
         let start_place = self.prepare_start_place_for_return_statement();
-        let label = function_return_transition_label_from_function_name(&self.name);
+        let label = function_return_transition_label(&self.name);
 
         let transition = net.add_transition(&label);
         net.add_arc_place_transition(&start_place, &transition)
