@@ -14,7 +14,7 @@ use crate::translator::error_handling::EMPTY_CALL_STACK;
 use crate::translator::function::Function;
 use crate::translator::mutex_manager::MutexManager;
 use crate::translator::naming::{PROGRAM_END, PROGRAM_PANIC, PROGRAM_START};
-use crate::translator::special_function::is_panic;
+use crate::translator::special_function::{foreign_function_call, is_panic};
 use netcrab::petri_net::{PetriNet, PlaceRef};
 use rustc_middle::mir::visit::Visitor;
 
@@ -183,6 +183,7 @@ impl<'tcx> Translator<'tcx> {
         &mut self,
         func: &rustc_middle::mir::Operand<'tcx>,
         target: Option<rustc_middle::mir::BasicBlock>,
+        cleanup: Option<rustc_middle::mir::BasicBlock>,
     ) {
         let current_function = self.call_stack.peek_mut().expect(EMPTY_CALL_STACK);
         let function_def_id = Self::extract_def_id_of_called_function_from_operand(
@@ -194,18 +195,27 @@ impl<'tcx> Translator<'tcx> {
 
         if is_panic(&function_name) {
             current_function.unwind(&self.program_panic, &mut self.net);
-        } else if self.tcx.is_foreign_item(function_def_id)
-            || !self.tcx.is_mir_available(function_def_id)
+            return;
+        }
+
+        let Some(return_block) = target else {
+            unimplemented!("Function {function_name} diverges, i.e., it does not return. Diverging functions are not implemented yet")
+        };
+        let (start_place, end_place, cleanup_place) =
+            current_function.get_place_refs_for_function_call(return_block, cleanup, &mut self.net);
+
+        if self.tcx.is_foreign_item(function_def_id) || !self.tcx.is_mir_available(function_def_id)
         {
-            unimplemented!(
-                "Function {function_name} is a foreign function which is not implemented yet"
+            // Abridged function call: Non-recursive call for the translation process.
+            foreign_function_call(
+                &function_name,
+                &start_place,
+                &end_place,
+                cleanup_place,
+                &mut self.net,
             );
         } else {
-            let Some(return_block) = target else {
-                unimplemented!("Function {function_name} divergest, i.e., it does not return. Diverging functions are not implemented yet")
-            };
-            let (start_place, end_place) = current_function
-                .get_start_and_end_place_for_function_call(return_block, &mut self.net);
+            // Normal function call: Recursive call for the translation process.
             self.push_function_to_call_stack(function_def_id, start_place, end_place);
             self.translate_top_call_stack();
         }

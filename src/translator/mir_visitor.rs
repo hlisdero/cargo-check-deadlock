@@ -82,11 +82,11 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
                 args: _,
                 destination: _,
                 target,
-                cleanup: _,
+                cleanup,
                 from_hir_call: _,
                 fn_span: _,
             } => {
-                self.call_function(func, *target);
+                self.call_function(func, *target, *cleanup);
             }
             TerminatorKind::Assert {
                 cond: _,

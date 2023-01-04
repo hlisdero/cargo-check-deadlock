@@ -161,6 +161,24 @@ impl Function {
         }
     }
 
+    /// Checks if the block number is already present and adds the basic block to the function
+    /// if it is not already present. Returns an immutable reference to the basic block.
+    /// Receives the block number (`rustc_middle::mir::BasicBlock`) which is just an index to a vector
+    /// of `rustc_middle::mir::BasicBlockData` in the MIR body of the function.
+    /// <https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/struct.BasicBlock.html>
+    fn get_or_add_basic_block(
+        &mut self,
+        block_number: rustc_middle::mir::BasicBlock,
+        net: &mut PetriNet,
+    ) -> &BasicBlock {
+        if !self.basic_blocks.contains_key(&block_number) {
+            self.add_basic_block(block_number, net);
+        }
+        self.basic_blocks
+            .get(&block_number)
+            .expect("BUG: The basic block cannot be retrieved")
+    }
+
     /// Retrieves the active basic block and the target basic block with the given basic block number.
     /// Adds the target basic block it if it is not present already.
     ///
@@ -191,28 +209,34 @@ impl Function {
         self.active_block = Some(block);
     }
 
-    /// Returns a 2-tuple of the form `(start_place, end_place)`
+    /// Returns a 3-tuple of the form `(start_place, end_place, cleanup_place)`
     /// where:
     ///  - `start_place` is the end place of the currently active basic block.
     ///  - `end_place` is the start place of the block with the given block number,
-    /// which is added to the function if it is not present already.
+    ///     which is added to the function if it is not present already.
+    ///  - `cleanup_place` (optional) is the place for cleanups in case the function call unwinds.
+    ///     Usually foreign function calls have this.
     ///
     /// Clone the references to simplify using them.
-    pub fn get_start_and_end_place_for_function_call(
+    pub fn get_place_refs_for_function_call(
         &mut self,
         block_number: rustc_middle::mir::BasicBlock,
+        cleanup_block_number: Option<rustc_middle::mir::BasicBlock>,
         net: &mut PetriNet,
-    ) -> (PlaceRef, PlaceRef) {
-        if !self.basic_blocks.contains_key(&block_number) {
-            self.add_basic_block(block_number, net);
-        }
-        let block = self
-            .basic_blocks
-            .get(&block_number)
-            .expect("BUG: The basic block cannot be retrieved");
-
+    ) -> (PlaceRef, PlaceRef, Option<PlaceRef>) {
         let active_block = self.get_active_block();
-        (active_block.end_place.clone(), block.start_place.clone())
+        let start_place = active_block.end_place.clone();
+
+        let return_block = self.get_or_add_basic_block(block_number, net);
+        let end_place = return_block.start_place.clone();
+
+        let mut cleanup_place = None;
+        if let Some(cleanup_block_number) = cleanup_block_number {
+            let cleanup_block = self.get_or_add_basic_block(cleanup_block_number, net);
+            cleanup_place = Some(cleanup_block.start_place.clone());
+        }
+
+        (start_place, end_place, cleanup_place)
     }
 
     /// Adds a statement to the active basic block.
