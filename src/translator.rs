@@ -197,10 +197,12 @@ impl<'tcx> Translator<'tcx> {
         } else if self.tcx.is_foreign_item(function_def_id)
             || !self.tcx.is_mir_available(function_def_id)
         {
-            unimplemented!("Foreign function not implemented yet");
+            unimplemented!(
+                "Function {function_name} is a foreign function which is not implemented yet"
+            );
         } else {
             let Some(return_block) = target else {
-                unimplemented!("Diverging functions not implemented yet")
+                unimplemented!("Function {function_name} divergest, i.e., it does not return. Diverging functions are not implemented yet")
             };
             let (start_place, end_place) = current_function
                 .get_start_and_end_place_for_function_call(return_block, &mut self.net);

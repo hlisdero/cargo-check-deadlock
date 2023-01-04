@@ -9,7 +9,12 @@ const SUPPORTED_SPECIAL_FUNCTIONS: [&str; 3] = [
     "std::sync::Mutex::<T>::try_lock",
 ];
 
-const PANIC_FUNCTIONS: [&str; 2] = ["core::panicking::panic", "core::panicking::panic_fmt"];
+const PANIC_FUNCTIONS: [&str; 4] = [
+    "core::panicking::panic",
+    "core::panicking::panic_fmt",
+    "std::rt::begin_panic",
+    "std::rt::begin_panic_fmt",
+];
 
 /// Check whether the function name corresponds to one of the functions
 /// that needs to be translated separately, e.g, mutex functions.
