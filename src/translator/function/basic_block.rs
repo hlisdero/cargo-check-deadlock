@@ -154,7 +154,7 @@ impl BasicBlock {
         let transition = net.add_transition(label);
         net.add_arc_place_transition(&self.end_place, &transition)
             .unwrap_or_else(|_| {
-                handle_err_add_arc("end place of the block", "diverging call transition")
+                handle_err_add_arc("end place of the block", "diverging call transition");
             });
     }
 
