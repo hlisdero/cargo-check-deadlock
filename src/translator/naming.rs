@@ -22,67 +22,73 @@ pub const PROGRAM_PANIC: &str = "PROGRAM_PANIC";
 /// Label of the transition for the return statement of a function.
 #[inline]
 pub fn function_return_transition_label(function_name: &str) -> String {
-    format!("{function_name}_RETURN")
+    format!("{}_RETURN", sanitize(function_name))
+}
+
+/// Label of the transition for a foreign function item.
+#[inline]
+pub fn function_foreign_call_transition_label(function_name: &str) -> String {
+    format!("{}_FOREIGN_CALL", sanitize(function_name))
 }
 
 /// Label of the start place of any `BasicBlock`.
 #[inline]
 pub fn basic_block_start_place_label(function_name: &str, index: usize) -> String {
-    format!("{function_name}_BASIC_BLOCK_{index}")
+    format!("{}_BASIC_BLOCK_{index}", sanitize(function_name))
 }
 
 /// Label of the end place of any `BasicBlock`.
 #[inline]
 pub fn basic_block_end_place_label(function_name: &str, index: usize) -> String {
-    format!("{function_name}_BASIC_BLOCK_END_PLACE_{index}")
+    format!("{}_BASIC_BLOCK_END_PLACE_{index}", sanitize(function_name))
 }
 
 /// Label of the transition for an empty `BasicBlock` with no statements.
 #[inline]
 pub fn basic_block_empty_transition_label(function_name: &str, index: usize) -> String {
-    format!("{function_name}_BASIC_BLOCK_EMPTY_{index}")
+    format!("{}_BASIC_BLOCK_EMPTY_{index}", sanitize(function_name))
 }
 
 /// Label of the transition that represents a goto terminator to another `BasicBlock`.
 #[inline]
 pub fn basic_block_goto_transition_label(function_name: &str, index: usize) -> String {
-    format!("{function_name}_GOTO_{index}")
+    format!("{}_GOTO_{index}", sanitize(function_name))
 }
 
 /// Label of the transition that represents a switch int terminator to another `BasicBlock`.
 #[inline]
 pub fn basic_block_switch_int_transition_label(function_name: &str, index: usize) -> String {
-    format!("{function_name}_SWITCH_INT_{index}")
+    format!("{}_SWITCH_INT_{index}", sanitize(function_name))
 }
 
 /// Label of the transition that represents an unwind terminator to the general `PROGRAM_PANIC` place.
 #[inline]
 pub fn basic_block_unwind_transition_label(function_name: &str, index: usize) -> String {
-    format!("{function_name}_UNWIND_{index}")
+    format!("{}_UNWIND_{index}", sanitize(function_name))
 }
 
 /// Label of the transition that represents a drop terminator.
 #[inline]
 pub fn basic_block_drop_transition_label(function_name: &str, index: usize) -> String {
-    format!("{function_name}_DROP_{index}")
+    format!("{}_DROP_{index}", sanitize(function_name))
 }
 
 /// Label of the transition that represents the (optional) unwind path of a drop terminator.
 #[inline]
 pub fn basic_block_drop_unwind_transition_label(function_name: &str, index: usize) -> String {
-    format!("{function_name}_DROP_UNWIND_{index}")
+    format!("{}_DROP_UNWIND_{index}", sanitize(function_name))
 }
 
 /// Label of the transition that represents an assert terminator.
 #[inline]
 pub fn basic_block_assert_transition_label(function_name: &str, index: usize) -> String {
-    format!("{function_name}_ASSERT_{index}")
+    format!("{}_ASSERT_{index}", sanitize(function_name))
 }
 
 /// Label of the transition that represents the (optional) unwind path of an assert terminator.
 #[inline]
 pub fn basic_block_assert_cleanup_transition_label(function_name: &str, index: usize) -> String {
-    format!("{function_name}_ASSERT_CLEANUP_{index}")
+    format!("{}_ASSERT_CLEANUP_{index}", sanitize(function_name))
 }
 
 /// Label of the transition of any `Statement`.
@@ -92,7 +98,10 @@ pub fn statement_transition_label(
     block_index: usize,
     statement_index: usize,
 ) -> String {
-    format!("{function_name}_BLOCK_{block_index}_STATEMENT_{statement_index}")
+    format!(
+        "{}_BLOCK_{block_index}_STATEMENT_{statement_index}",
+        sanitize(function_name)
+    )
 }
 
 /// Label of the end place of any `Statement`.
@@ -102,11 +111,20 @@ pub fn statement_end_place_label(
     block_index: usize,
     statement_index: usize,
 ) -> String {
-    format!("{function_name}_BLOCK_{block_index}_STATEMENT_END_{statement_index}")
+    format!(
+        "{}_BLOCK_{block_index}_STATEMENT_END_{statement_index}",
+        sanitize(function_name)
+    )
 }
 
 /// Label of the single place that models every `Mutex`.
 #[inline]
 pub fn mutex_place_label(index: usize) -> String {
     format!("MUTEX_{index}")
+}
+
+/// Sanitize the function name for the DOT format:
+/// - Replace colons with underscores.
+fn sanitize(function_name: &str) -> String {
+    function_name.replace("::", "_")
 }
