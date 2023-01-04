@@ -2,7 +2,7 @@
 //! during the translation.
 //!
 //! These could be synchronization primitives or `panic!`-related primitives.
-use crate::translator::error_handling::format_err_str_add_arc;
+use crate::translator::error_handling::handle_err_add_arc;
 use crate::translator::naming::function_foreign_call_transition_label;
 use netcrab::petri_net::{PetriNet, PlaceRef};
 
@@ -56,32 +56,17 @@ pub fn foreign_function_call(
         net.add_transition(&function_foreign_call_transition_label(function_name));
     net.add_arc_place_transition(start_place, &transition_foreign_call)
         .unwrap_or_else(|_| {
-            panic!(
-                "{}",
-                format_err_str_add_arc(
-                    "foreign call start place",
-                    "foreign function call transition",
-                )
-            )
+            handle_err_add_arc("foreign call start place", "foreign call transition");
         });
     net.add_arc_transition_place(&transition_foreign_call, end_place)
         .unwrap_or_else(|_| {
-            panic!(
-                "{}",
-                format_err_str_add_arc(
-                    "foreign function call transition",
-                    "foreign call end place",
-                )
-            )
+            handle_err_add_arc("foreign call transition", "foreign call end place");
         });
 
     if let Some(cleanup_place) = cleanup_place {
         net.add_arc_transition_place(&transition_foreign_call, &cleanup_place)
             .unwrap_or_else(|_| {
-                panic!(
-                    "{}",
-                    format_err_str_add_arc("foreign function call transition", "cleanup place",)
-                )
+                handle_err_add_arc("foreign call transition", "cleanup place");
             });
     }
 }

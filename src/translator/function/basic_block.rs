@@ -4,7 +4,7 @@
 //!
 //! The `BasicBlock` stores one reference to the start and end place in the Petri net.
 //! It also stores a vector of `Statement` which form a chain of places and transitions.
-use crate::translator::error_handling::format_err_str_add_arc;
+use crate::translator::error_handling::handle_err_add_arc;
 use crate::translator::function::statement::Statement;
 use crate::translator::naming::{
     basic_block_assert_cleanup_transition_label, basic_block_assert_transition_label,
@@ -160,19 +160,9 @@ impl BasicBlock {
     ) {
         let transition_cleanup = net.add_transition(transition_label);
         net.add_arc_place_transition(&self.end_place, &transition_cleanup)
-            .unwrap_or_else(|_| {
-                panic!(
-                    "{}",
-                    format_err_str_add_arc("end place of the block", transition_name,)
-                )
-            });
+            .unwrap_or_else(|_| handle_err_add_arc("end place of the block", transition_name));
         net.add_arc_transition_place(&transition_cleanup, next_place)
-            .unwrap_or_else(|_| {
-                panic!(
-                    "{}",
-                    format_err_str_add_arc(transition_name, next_place_name)
-                )
-            });
+            .unwrap_or_else(|_| handle_err_add_arc(transition_name, next_place_name));
     }
 
     /// Prepares the start place for the next statement.
@@ -197,18 +187,8 @@ impl BasicBlock {
             self.index,
         ));
         net.add_arc_place_transition(&self.start_place, &transition_empty)
-            .unwrap_or_else(|_| {
-                panic!(
-                    "{}",
-                    format_err_str_add_arc("start place", "empty basic block transition",)
-                )
-            });
+            .unwrap_or_else(|_| handle_err_add_arc("start place", "empty basic block transition"));
         net.add_arc_transition_place(&transition_empty, &self.end_place)
-            .unwrap_or_else(|_| {
-                panic!(
-                    "{}",
-                    format_err_str_add_arc("empty basic block transition", "end place",)
-                )
-            });
+            .unwrap_or_else(|_| handle_err_add_arc("empty basic block transition", "end place"));
     }
 }

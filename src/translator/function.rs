@@ -2,7 +2,7 @@
 mod basic_block;
 mod statement;
 
-use crate::translator::error_handling::format_err_str_add_arc;
+use crate::translator::error_handling::handle_err_add_arc;
 use crate::translator::function::basic_block::BasicBlock;
 use crate::translator::mutex_manager::MutexManager;
 use crate::translator::naming::{basic_block_start_place_label, function_return_transition_label};
@@ -357,23 +357,14 @@ impl Function {
         let transition = net.add_transition(&label);
         net.add_arc_place_transition(&start_place, &transition)
             .unwrap_or_else(|_| {
-                panic!(
-                    "{}",
-                    format_err_str_add_arc(
-                        "last place inside the function",
-                        "return statement transition",
-                    )
-                )
+                handle_err_add_arc(
+                    "last place inside the function",
+                    "return statement transition",
+                );
             });
         net.add_arc_transition_place(&transition, &self.end_place)
             .unwrap_or_else(|_| {
-                panic!(
-                    "{}",
-                    format_err_str_add_arc(
-                        "return statement transition",
-                        "end place of the function",
-                    )
-                )
+                handle_err_add_arc("return statement transition", "end place of the function");
             });
     }
 }
