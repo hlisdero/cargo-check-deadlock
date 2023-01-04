@@ -91,6 +91,12 @@ pub fn basic_block_assert_cleanup_transition_label(function_name: &str, index: u
     format!("{}_ASSERT_CLEANUP_{index}", sanitize(function_name))
 }
 
+/// Label of the transition that represents a diverging function call (a function that does not return).
+#[inline]
+pub fn basic_block_diverging_call_transition_label(function_name: &str) -> String {
+    format!("{}_DIVERGING_CALL", sanitize(function_name))
+}
+
 /// Label of the transition of any `Statement`.
 #[inline]
 pub fn statement_transition_label(

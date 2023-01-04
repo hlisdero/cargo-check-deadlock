@@ -199,7 +199,8 @@ impl<'tcx> Translator<'tcx> {
         }
 
         let Some(return_block) = target else {
-            unimplemented!("Function {function_name} diverges, i.e., it does not return. Diverging functions are not implemented yet")
+            current_function.diverging_call(&function_name, &mut self.net);
+            return;
         };
         let (start_place, end_place, cleanup_place) =
             current_function.get_place_refs_for_function_call(return_block, cleanup, &mut self.net);

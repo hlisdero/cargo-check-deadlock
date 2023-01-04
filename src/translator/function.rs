@@ -347,6 +347,12 @@ impl Function {
         };
     }
 
+    /// Connects the active basic block to a new transition that models a "dead end" in the net.
+    pub fn diverging_call(&self, function_name: &str, net: &mut PetriNet) {
+        let active_block = self.get_active_block();
+        active_block.diverging_call(function_name, net);
+    }
+
     /// Connects the active basic block to the end place of the function.
     /// This corresponds to the return statement that exits from this function.
     /// <https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/enum.TerminatorKind.html#variant.Return>
