@@ -14,7 +14,7 @@ use crate::translator::error_handling::EMPTY_CALL_STACK;
 use crate::translator::function::Function;
 use crate::translator::mutex_manager::MutexManager;
 use crate::translator::naming::{PROGRAM_END, PROGRAM_PANIC, PROGRAM_START};
-use crate::translator::special_function::{foreign_function_call, is_panic};
+use crate::translator::special_function::{foreign_function_call, is_panic, is_special};
 use netcrab::petri_net::{PetriNet, PlaceRef};
 use rustc_middle::mir::visit::Visitor;
 
@@ -176,9 +176,12 @@ impl<'tcx> Translator<'tcx> {
     /// This is the handler for the enum variant `TerminatorKind::Call` in the MIR Visitor.
     /// <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/mir/enum.TerminatorKind.html#variant.Call>
     ///
-    /// # Panics
+    /// Translates functions in a shortened way in the following cases:
+    /// - Foreign items i.e., linked via extern { ... }).
+    /// - Functions that do not have a MIR representation.
+    /// - Functions in a list of special functions defined by `translator::special_function::SUPPORTED_SPECIAL_FUNCTIONS`.
     ///
-    /// If the target is `None` (signaling a diverging function), then the function panics.
+    /// Diverging functions are handled here too. They are modelled as a dead end in the net.
     fn call_function(
         &mut self,
         func: &rustc_middle::mir::Operand<'tcx>,
@@ -205,7 +208,9 @@ impl<'tcx> Translator<'tcx> {
         let (start_place, end_place, cleanup_place) =
             current_function.get_place_refs_for_function_call(return_block, cleanup, &mut self.net);
 
-        if self.tcx.is_foreign_item(function_def_id) || !self.tcx.is_mir_available(function_def_id)
+        if self.tcx.is_foreign_item(function_def_id)
+            || !self.tcx.is_mir_available(function_def_id)
+            || is_special(&function_name)
         {
             // Abridged function call: Non-recursive call for the translation process.
             foreign_function_call(
