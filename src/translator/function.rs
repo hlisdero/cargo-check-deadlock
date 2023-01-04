@@ -193,9 +193,9 @@ impl Function {
 
     /// Returns a 2-tuple of the form `(start_place, end_place)`
     /// where:
-    ///  - `start_place` is the start place of block with the given block number,
+    ///  - `start_place` is the end place of the currently active basic block.
+    ///  - `end_place` is the start place of the block with the given block number,
     /// which is added to the function if it is not present already.
-    ///  - `end_place` is the end place of the currently active basic block.
     ///
     /// Clone the references to simplify using them.
     pub fn get_start_and_end_place_for_function_call(
@@ -212,7 +212,7 @@ impl Function {
             .expect("BUG: The basic block cannot be retrieved");
 
         let active_block = self.get_active_block();
-        (block.start_place.clone(), active_block.end_place.clone())
+        (active_block.end_place.clone(), block.start_place.clone())
     }
 
     /// Adds a statement to the active basic block.
