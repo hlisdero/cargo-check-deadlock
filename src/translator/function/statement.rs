@@ -25,7 +25,7 @@ impl Statement {
         function_name: &str,
         block_index: usize,
         statement_index: usize,
-        statement: &rustc_middle::mir::Statement,
+        _statement: &rustc_middle::mir::Statement,
         start_place: &PlaceRef,
         net: &mut PetriNet,
     ) -> Self {
