@@ -1,4 +1,27 @@
 //! Submodule for the main translation logic.
+//!
+//! The source code translation takes place on the level of the Mid-level Intermediate Representation (MIR).
+//! <https://rustc-dev-guide.rust-lang.org/mir/index.html>
+//!
+//! The `Translator` translates the MIR code of each function in approximately the order they are called.
+//! For this purpose a call stack is used to represent the functions being translated, similar to how the processor
+//! executes the code.
+//!
+//! Each MIR function consists of one or more basic blocks.
+//! Each basic block consists of 0 or more statements and exactly one terminator statement.
+//!
+//! Functions are uniquely identified through their definition ID.
+//! <https://doc.rust-lang.org/stable/nightly-rustc/rustc_hir/def_id/struct.DefId.html>
+//!
+//! It is possible to obtain the MIR representation for a specific function on-demand.
+//! `rustc` supports a query system that computes the result and caches it automatically, which
+//! saves us the work of storing everything we request from the compiler.
+//! More information on the query system: <https://rustc-dev-guide.rust-lang.org/query.html>
+//!
+//! The naming of the places and transitions in the net is globally unique,
+//! i.e. each function, block and statement receive a different label.
+//! It can be configured in the `naming` submodule.
+
 mod error_handling;
 mod function;
 mod local;
@@ -55,7 +78,7 @@ impl<'tcx> Translator<'tcx> {
         }
     }
 
-    /// Get the result of the translation, i.e. the Petri net.
+    /// Returns the result of the translation, i.e. the Petri net.
     /// The ownership is transferred to the caller.
     ///
     /// # Errors
@@ -69,13 +92,13 @@ impl<'tcx> Translator<'tcx> {
         }
     }
 
-    /// Set the error string explicitly.
+    /// Sets the error string explicitly.
     /// This is only used internally during the translation process.
     fn set_err_str(&mut self, err_str: &'static str) {
         self.err_str = Some(err_str);
     }
 
-    /// Translate the source code to a Petri net.
+    /// Translates the source code to a Petri net.
     ///
     /// # Errors
     ///
@@ -98,7 +121,7 @@ impl<'tcx> Translator<'tcx> {
     }
 
     /// Pushes a new function frame to the call stack.
-    /// The call stack is the main method to pass information between methods.
+    /// The call stack is the preferred way to pass information between `Translator` methods.
     fn push_function_to_call_stack(
         &mut self,
         function_def_id: rustc_hir::def_id::DefId,
@@ -117,13 +140,13 @@ impl<'tcx> Translator<'tcx> {
     }
 
     /// Main translation loop.
-    /// Translate the function from the top of the call stack.
-    /// Inside the MIR Visitor, when a call to another function happens this method will be called again
+    /// Translates the function from the top of the call stack.
+    /// Inside the MIR Visitor, when a call to another function happens, this method will be called again
     /// to jump to the new function. Eventually a "leaf function" will be reached, the functions will exit and the
     /// elements from the stack will be popped in order.
     fn translate_top_call_stack(&mut self) {
         let function = self.call_stack.peek_mut().expect(EMPTY_CALL_STACK);
-        // Translate the function to a Petri net from the MIR representation.
+        // Obtain the MIR representation of the function.
         let body = self.tcx.optimized_mir(function.def_id);
         // Visit the MIR body of the function using the methods of `rustc_middle::mir::visit::Visitor`.
         // <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/mir/visit/trait.Visitor.html>
@@ -150,7 +173,7 @@ impl<'tcx> Translator<'tcx> {
         let function_type = match operand {
             rustc_middle::mir::Operand::Copy(place) | rustc_middle::mir::Operand::Move(place) => {
                 // Find the type through the local declarations of the caller function.
-                // The place should be declared there and we can query its type.
+                // The `Place` (memory location) of the called function should be declared there and we can query its type.
                 let body = tcx.optimized_mir(caller_function_def_id);
                 let place_ty = place.ty(&body.local_decls, tcx);
                 place_ty.ty

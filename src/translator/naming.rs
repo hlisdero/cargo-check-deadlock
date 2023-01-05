@@ -1,4 +1,4 @@
-//! Submodule that defines the naming of places in the Petri net.
+//! Submodule that defines the naming of places and transitions in the Petri net.
 //!
 //! These functions are called every time that a new place
 //! in the resulting net is created.

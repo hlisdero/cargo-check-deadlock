@@ -18,6 +18,7 @@
 
 // Compiler crates need to be imported in this way because they are not published on crates.io.
 // These crates are only available when using the nightly toolchain.
+// It suffices to declare them once to use their types and methods in the whole crate.
 extern crate rustc_ast_pretty;
 extern crate rustc_driver;
 extern crate rustc_error_codes;

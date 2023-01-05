@@ -1,4 +1,17 @@
 //! Representation of a function in the Petri net.
+//! For an introduction to MIR see:
+//! <https://rustc-dev-guide.rust-lang.org/mir/index.html>
+//!
+//! The `Function` stores a vector of `BasicBlock` which are connected between them through
+//! different terminator statements such as goto, switch int, call, unwind, assert, drop, etc.
+//! The `Function` keeps track of an active block, the one currently being translated.
+//! The operations are performed mostly on this block.
+//!
+//! The basic blocks are indexed by the type `rustc_middle::mir::BasicBlock` in the representation of the body.
+//! <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/mir/struct.Body.html>
+//! The order in which the blocks get visited during the translation is linear.
+//! But the terminators may refer to blocks previously seen or new blocks. Each basic block is visited only once.
+
 mod basic_block;
 mod statement;
 
@@ -50,9 +63,9 @@ impl Function {
         }
     }
 
-    // Iterates the local variable declarations in the body of the function with given `DefId`
-    // searching for a variable whose type is a mutex (`std::sync::Mutex`).
-    // <https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/struct.LocalDecl.html>
+    /// Iterates the local variable declarations in the body of the function with given `DefId`
+    /// searching for a variable whose type is a mutex (`std::sync::Mutex`).
+    /// <https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/struct.LocalDecl.html>
     fn search_for_mutex_in_local_variables(
         def_id: rustc_hir::def_id::DefId,
         mutex_manager: &mut MutexManager,
@@ -217,7 +230,7 @@ impl Function {
     ///  - `cleanup_place` (optional) is the place for cleanups in case the function call unwinds.
     ///     Usually foreign function calls have this.
     ///
-    /// Clone the references to simplify using them.
+    /// Clones the references to simplify using them.
     pub fn get_place_refs_for_function_call(
         &mut self,
         block_number: rustc_middle::mir::BasicBlock,
@@ -348,6 +361,7 @@ impl Function {
     }
 
     /// Connects the active basic block to a new transition that models a "dead end" in the net.
+    /// <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/mir/enum.TerminatorKind.html#variant.Call>
     pub fn diverging_call(&self, function_name: &str, net: &mut PetriNet) {
         let active_block = self.get_active_block();
         active_block.diverging_call(function_name, net);

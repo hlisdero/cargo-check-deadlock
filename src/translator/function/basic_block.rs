@@ -3,7 +3,8 @@
 //! <https://rustc-dev-guide.rust-lang.org/mir/index.html>
 //!
 //! The `BasicBlock` stores one reference to the start and end place in the Petri net.
-//! It also stores a vector of `Statement` which form a chain of places and transitions.
+//! It also stores a vector of `Statement` which forms a chain of places and transitions.
+
 use crate::translator::error_handling::handle_err_add_arc;
 use crate::translator::function::statement::Statement;
 use crate::translator::naming::{
@@ -65,7 +66,7 @@ impl BasicBlock {
         }
     }
 
-    /// Connects the end place of this block to the start place of the target basic block.
+    /// Connects the end place of this block to the start place of the `target` basic block.
     pub fn goto(&self, target: &Self, net: &mut PetriNet) {
         self.connect_end_to_next_place(
             &target.start_place,

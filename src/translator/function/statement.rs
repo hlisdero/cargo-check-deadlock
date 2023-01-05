@@ -8,6 +8,7 @@
 //! place of the previous statement.
 //! The transition points to the start place of the next statement or
 //! the end of the current basic block.
+
 use crate::translator::error_handling::handle_err_add_arc;
 use crate::translator::naming::{statement_end_place_label, statement_transition_label};
 use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};

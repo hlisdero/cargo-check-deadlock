@@ -1,10 +1,11 @@
-//! Implement the trait `rustc_middle::mir::visit::Visitor` for Translator
+//! Implementation of the trait `rustc_middle::mir::visit::Visitor` for Translator.
 //! <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/mir/visit/trait.Visitor.html>
 //!
 //! This trait defines a method for visiting every possible MIR element.
 //! It is not required to implement every method, only for the elements we care about.
 //! For an introduction to MIR see:
 //! <https://rustc-dev-guide.rust-lang.org/mir/index.html>
+
 use crate::translator::error_handling::EMPTY_CALL_STACK;
 use crate::translator::Translator;
 use rustc_middle::mir::visit::Visitor;
@@ -21,16 +22,6 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
         let function = self.call_stack.peek_mut().expect(EMPTY_CALL_STACK);
         function.activate_block(block, &mut self.net);
         self.super_basic_block_data(block, data);
-    }
-
-    fn visit_assign(
-        &mut self,
-        place: &rustc_middle::mir::Place<'tcx>,
-        rvalue: &rustc_middle::mir::Rvalue<'tcx>,
-        location: rustc_middle::mir::Location,
-    ) {
-        println!("VISIT_ASSIGN: {place:?} {rvalue:?} {location:?}");
-        self.super_assign(place, rvalue, location);
     }
 
     fn visit_statement(

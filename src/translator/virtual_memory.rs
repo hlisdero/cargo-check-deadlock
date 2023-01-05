@@ -6,10 +6,11 @@
 //!
 //! More info:
 //! <https://rustc-dev-guide.rust-lang.org/mir/index.html#mir-data-types>
+
 use crate::translator::local::Local;
 use std::collections::HashMap;
 
-/// TODO: Local is a an mere index to the vector in body. This is not unique!!!
+/// TODO: Local is a an mere index to the vector in body. This is only unique for a given function!!!
 /// <https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/struct.Body.html#structfield.local_decls>
 #[derive(Default)]
 pub struct VirtualMemory {

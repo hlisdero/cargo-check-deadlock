@@ -1,7 +1,10 @@
 //! Constant definitions for functions that require special treatment
 //! during the translation.
 //!
-//! These could be synchronization primitives or `panic!`-related primitives.
+//! These could be synchronization primitives, `panic!`-related primitives,
+//! or simply functions for which we are not interested in translation the source code.
+//! For example: Calls to standard library methods, iterators, etc.
+
 use crate::translator::error_handling::handle_err_add_arc;
 use crate::translator::naming::function_foreign_call_transition_label;
 use netcrab::petri_net::{PetriNet, PlaceRef};
@@ -16,7 +19,7 @@ const PANIC_FUNCTIONS: [&str; 5] = [
     "std::rt::begin_panic_fmt",
 ];
 
-/// Check whether the function name corresponds to one of the functions
+/// Checks whether the function name corresponds to one of the functions
 /// that needs to be translated separately, e.g, mutex functions.
 pub fn is_special(function_name: &str) -> bool {
     for name in SUPPORTED_SPECIAL_FUNCTIONS {
@@ -27,7 +30,7 @@ pub fn is_special(function_name: &str) -> bool {
     false
 }
 
-/// Check whether the function name corresponds to one of the functions
+/// Checks whether the function name corresponds to one of the functions
 /// that starts a panic, i.e. an unwind of the stack.
 pub fn is_panic(function_name: &str) -> bool {
     for name in PANIC_FUNCTIONS {

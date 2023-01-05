@@ -4,6 +4,10 @@
 //! <https://doc.rust-lang.org/stable/nightly-rustc/rustc_interface/interface/struct.Config.html>
 //!
 //! It includes command-line options as well as internal rustc options.
+//! The relevant parts in this case are the `sysroot` and the input file.
+//!
+//! See the rustc driver examples for other possible example configurations:
+//! <https://rustc-dev-guide.rust-lang.org/rustc-driver.html>
 
 use rustc_errors::registry;
 use rustc_session::config::{self, CheckCfg};

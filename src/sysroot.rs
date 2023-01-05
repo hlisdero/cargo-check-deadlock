@@ -18,7 +18,7 @@ use std::path::PathBuf;
 use std::process::Command;
 use std::str;
 
-/// Get the current sysroot from running the rustc compiler.
+/// Gets the current sysroot from running the rustc compiler.
 pub fn get_from_rustc() -> Result<PathBuf, &'static str> {
     // Run rustc --print=sysroot and get the stdout.
     let Ok(out) = Command::new("rustc")

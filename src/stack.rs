@@ -7,25 +7,25 @@ pub struct Stack<T> {
 }
 
 impl<T> Stack<T> {
-    /// Create a new empty stack.
+    /// Creates a new empty stack.
     #[must_use]
     pub const fn new() -> Self {
         Self { stack: Vec::new() }
     }
 
-    /// Push an element to the top of the stack.
+    /// Pushes an element to the top of the stack.
     #[inline]
     pub fn push(&mut self, item: T) {
         self.stack.push(item);
     }
 
-    /// Remove and return the top element of the stack.
+    /// Removes and returns the top element of the stack.
     #[inline]
     pub fn pop(&mut self) -> Option<T> {
         self.stack.pop()
     }
 
-    /// Return a mutable reference to the top element of the stack.
+    /// Returns a mutable reference to the top element of the stack.
     /// Does not remove the element from the stack.
     pub fn peek_mut(&mut self) -> Option<&mut T> {
         if self.stack.is_empty() {

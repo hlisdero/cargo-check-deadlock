@@ -6,6 +6,7 @@
 //! It also stores the links, i.e. the local variables that reference a mutex.
 //! If a mutex A is accessed in two threads then two variables
 //! (the original and the `.clone()` of the `std::sync::Arc`) is a link to mutex A.
+
 use crate::translator::local::Local;
 use crate::translator::mutex::Mutex;
 use netcrab::petri_net::{PetriNet, TransitionRef};
@@ -23,12 +24,12 @@ pub struct MutexManager {
 pub struct MutexRef(usize);
 
 impl MutexManager {
-    /// Return a new empty `MutexManager`
+    /// Returns a new empty `MutexManager`
     pub fn new() -> Self {
         Self::default()
     }
 
-    /// Return the `Mutex` associated to the mutex reference.
+    /// Returns the `Mutex` associated to the mutex reference.
     ///
     /// # Errors
     ///
@@ -40,7 +41,7 @@ impl MutexManager {
         Ok(&self.mutexes[mutex_ref.0])
     }
 
-    /// Return the `Mutex` contained in the `Local` variable.
+    /// Returns the `Mutex` contained in the `Local` variable.
     ///
     /// # Errors
     ///
@@ -52,7 +53,7 @@ impl MutexManager {
         self.get_mutex_from_ref(mutex_ref)
     }
 
-    /// Add a mutex and create its corresponding representation in the Petri net.
+    /// Adds a mutex and create its corresponding representation in the Petri net.
     pub fn add_mutex(&mut self, net: &mut PetriNet) -> MutexRef {
         let index = self.mutexes.len();
         self.mutexes.push(Mutex::new(index, net));
@@ -86,13 +87,13 @@ impl MutexManager {
         Ok(())
     }
 
-    /// Check if the `Local` variable is linked to a `Mutex`.
-    /// Return true if the variable contains a mutex.
+    /// Checks if the `Local` variable is linked to a `Mutex`.
+    /// Returns true if the variable contains a mutex.
     pub fn is_linked_to_mutex(&self, local: &Local) -> bool {
         self.links.contains_key(local)
     }
 
-    /// Link the local variable to a specific mutex through its reference.
+    /// Links the local variable to a specific mutex through its reference.
     ///
     /// If the local variable did not have an associated mutex, `None` is returned.
     /// If the local variable had an associated mutex, the value is updated and the old value is returned.
