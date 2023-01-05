@@ -14,25 +14,7 @@ const MINIMAL_MATCH_STATEMENT_DOT_OUTPUT: &str = r#"digraph petrinet {
     main_BASIC_BLOCK_7 [shape="circle" xlabel="main_BASIC_BLOCK_7" label=""];
     main_BASIC_BLOCK_8 [shape="circle" xlabel="main_BASIC_BLOCK_8" label=""];
     main_BASIC_BLOCK_9 [shape="circle" xlabel="main_BASIC_BLOCK_9" label=""];
-    main_BASIC_BLOCK_END_PLACE_0 [shape="circle" xlabel="main_BASIC_BLOCK_END_PLACE_0" label=""];
     main_BASIC_BLOCK_END_PLACE_1 [shape="circle" xlabel="main_BASIC_BLOCK_END_PLACE_1" label=""];
-    main_BASIC_BLOCK_END_PLACE_2 [shape="circle" xlabel="main_BASIC_BLOCK_END_PLACE_2" label=""];
-    main_BASIC_BLOCK_END_PLACE_3 [shape="circle" xlabel="main_BASIC_BLOCK_END_PLACE_3" label=""];
-    main_BASIC_BLOCK_END_PLACE_4 [shape="circle" xlabel="main_BASIC_BLOCK_END_PLACE_4" label=""];
-    main_BASIC_BLOCK_END_PLACE_5 [shape="circle" xlabel="main_BASIC_BLOCK_END_PLACE_5" label=""];
-    main_BASIC_BLOCK_END_PLACE_6 [shape="circle" xlabel="main_BASIC_BLOCK_END_PLACE_6" label=""];
-    main_BASIC_BLOCK_END_PLACE_7 [shape="circle" xlabel="main_BASIC_BLOCK_END_PLACE_7" label=""];
-    main_BASIC_BLOCK_END_PLACE_8 [shape="circle" xlabel="main_BASIC_BLOCK_END_PLACE_8" label=""];
-    main_BASIC_BLOCK_END_PLACE_9 [shape="circle" xlabel="main_BASIC_BLOCK_END_PLACE_9" label=""];
-    main_BASIC_BLOCK_EMPTY_0 [shape="box" xlabel="main_BASIC_BLOCK_EMPTY_0" label=""];
-    main_BASIC_BLOCK_EMPTY_2 [shape="box" xlabel="main_BASIC_BLOCK_EMPTY_2" label=""];
-    main_BASIC_BLOCK_EMPTY_3 [shape="box" xlabel="main_BASIC_BLOCK_EMPTY_3" label=""];
-    main_BASIC_BLOCK_EMPTY_4 [shape="box" xlabel="main_BASIC_BLOCK_EMPTY_4" label=""];
-    main_BASIC_BLOCK_EMPTY_5 [shape="box" xlabel="main_BASIC_BLOCK_EMPTY_5" label=""];
-    main_BASIC_BLOCK_EMPTY_6 [shape="box" xlabel="main_BASIC_BLOCK_EMPTY_6" label=""];
-    main_BASIC_BLOCK_EMPTY_7 [shape="box" xlabel="main_BASIC_BLOCK_EMPTY_7" label=""];
-    main_BASIC_BLOCK_EMPTY_8 [shape="box" xlabel="main_BASIC_BLOCK_EMPTY_8" label=""];
-    main_BASIC_BLOCK_EMPTY_9 [shape="box" xlabel="main_BASIC_BLOCK_EMPTY_9" label=""];
     main_BLOCK_1_STATEMENT_0 [shape="box" xlabel="main_BLOCK_1_STATEMENT_0" label=""];
     main_DROP_6 [shape="box" xlabel="main_DROP_6" label=""];
     main_DROP_8 [shape="box" xlabel="main_DROP_8" label=""];
@@ -46,37 +28,19 @@ const MINIMAL_MATCH_STATEMENT_DOT_OUTPUT: &str = r#"digraph petrinet {
     main_UNWIND_9 [shape="box" xlabel="main_UNWIND_9" label=""];
     std_env_args_FOREIGN_CALL [shape="box" xlabel="std_env_args_FOREIGN_CALL" label=""];
     std_iter_ExactSizeIterator_len_FOREIGN_CALL [shape="box" xlabel="std_iter_ExactSizeIterator_len_FOREIGN_CALL" label=""];
-    PROGRAM_START -> main_BASIC_BLOCK_EMPTY_0;
+    PROGRAM_START -> std_env_args_FOREIGN_CALL;
     main_BASIC_BLOCK_1 -> main_BLOCK_1_STATEMENT_0;
-    main_BASIC_BLOCK_2 -> main_BASIC_BLOCK_EMPTY_2;
-    main_BASIC_BLOCK_3 -> main_BASIC_BLOCK_EMPTY_3;
-    main_BASIC_BLOCK_4 -> main_BASIC_BLOCK_EMPTY_4;
-    main_BASIC_BLOCK_5 -> main_BASIC_BLOCK_EMPTY_5;
-    main_BASIC_BLOCK_6 -> main_BASIC_BLOCK_EMPTY_6;
-    main_BASIC_BLOCK_7 -> main_BASIC_BLOCK_EMPTY_7;
-    main_BASIC_BLOCK_8 -> main_BASIC_BLOCK_EMPTY_8;
-    main_BASIC_BLOCK_9 -> main_BASIC_BLOCK_EMPTY_9;
-    main_BASIC_BLOCK_END_PLACE_0 -> std_env_args_FOREIGN_CALL;
+    main_BASIC_BLOCK_2 -> main_SWITCH_INT_3;
+    main_BASIC_BLOCK_2 -> main_SWITCH_INT_4;
+    main_BASIC_BLOCK_2 -> main_SWITCH_INT_5;
+    main_BASIC_BLOCK_3 -> main_GOTO_3;
+    main_BASIC_BLOCK_4 -> main_GOTO_4;
+    main_BASIC_BLOCK_5 -> main_GOTO_5;
+    main_BASIC_BLOCK_6 -> main_DROP_6;
+    main_BASIC_BLOCK_7 -> main_RETURN;
+    main_BASIC_BLOCK_8 -> main_DROP_8;
+    main_BASIC_BLOCK_9 -> main_UNWIND_9;
     main_BASIC_BLOCK_END_PLACE_1 -> std_iter_ExactSizeIterator_len_FOREIGN_CALL;
-    main_BASIC_BLOCK_END_PLACE_2 -> main_SWITCH_INT_3;
-    main_BASIC_BLOCK_END_PLACE_2 -> main_SWITCH_INT_4;
-    main_BASIC_BLOCK_END_PLACE_2 -> main_SWITCH_INT_5;
-    main_BASIC_BLOCK_END_PLACE_3 -> main_GOTO_3;
-    main_BASIC_BLOCK_END_PLACE_4 -> main_GOTO_4;
-    main_BASIC_BLOCK_END_PLACE_5 -> main_GOTO_5;
-    main_BASIC_BLOCK_END_PLACE_6 -> main_DROP_6;
-    main_BASIC_BLOCK_END_PLACE_7 -> main_RETURN;
-    main_BASIC_BLOCK_END_PLACE_8 -> main_DROP_8;
-    main_BASIC_BLOCK_END_PLACE_9 -> main_UNWIND_9;
-    main_BASIC_BLOCK_EMPTY_0 -> main_BASIC_BLOCK_END_PLACE_0;
-    main_BASIC_BLOCK_EMPTY_2 -> main_BASIC_BLOCK_END_PLACE_2;
-    main_BASIC_BLOCK_EMPTY_3 -> main_BASIC_BLOCK_END_PLACE_3;
-    main_BASIC_BLOCK_EMPTY_4 -> main_BASIC_BLOCK_END_PLACE_4;
-    main_BASIC_BLOCK_EMPTY_5 -> main_BASIC_BLOCK_END_PLACE_5;
-    main_BASIC_BLOCK_EMPTY_6 -> main_BASIC_BLOCK_END_PLACE_6;
-    main_BASIC_BLOCK_EMPTY_7 -> main_BASIC_BLOCK_END_PLACE_7;
-    main_BASIC_BLOCK_EMPTY_8 -> main_BASIC_BLOCK_END_PLACE_8;
-    main_BASIC_BLOCK_EMPTY_9 -> main_BASIC_BLOCK_END_PLACE_9;
     main_BLOCK_1_STATEMENT_0 -> main_BASIC_BLOCK_END_PLACE_1;
     main_DROP_6 -> main_BASIC_BLOCK_7;
     main_DROP_8 -> main_BASIC_BLOCK_9;
@@ -107,64 +71,10 @@ const MINIMAL_MATCH_STATEMENT_LOLA_OUTPUT: &str = r#"PLACE
     main_BASIC_BLOCK_7,
     main_BASIC_BLOCK_8,
     main_BASIC_BLOCK_9,
-    main_BASIC_BLOCK_END_PLACE_0,
-    main_BASIC_BLOCK_END_PLACE_1,
-    main_BASIC_BLOCK_END_PLACE_2,
-    main_BASIC_BLOCK_END_PLACE_3,
-    main_BASIC_BLOCK_END_PLACE_4,
-    main_BASIC_BLOCK_END_PLACE_5,
-    main_BASIC_BLOCK_END_PLACE_6,
-    main_BASIC_BLOCK_END_PLACE_7,
-    main_BASIC_BLOCK_END_PLACE_8,
-    main_BASIC_BLOCK_END_PLACE_9;
+    main_BASIC_BLOCK_END_PLACE_1;
 
 MARKING
     PROGRAM_START : 1,
-TRANSITION main_BASIC_BLOCK_EMPTY_0
-  CONSUME
-    PROGRAM_START : 1;
-  PRODUCE
-    main_BASIC_BLOCK_END_PLACE_0 : 1;
-TRANSITION main_BASIC_BLOCK_EMPTY_2
-  CONSUME
-    main_BASIC_BLOCK_2 : 1;
-  PRODUCE
-    main_BASIC_BLOCK_END_PLACE_2 : 1;
-TRANSITION main_BASIC_BLOCK_EMPTY_3
-  CONSUME
-    main_BASIC_BLOCK_3 : 1;
-  PRODUCE
-    main_BASIC_BLOCK_END_PLACE_3 : 1;
-TRANSITION main_BASIC_BLOCK_EMPTY_4
-  CONSUME
-    main_BASIC_BLOCK_4 : 1;
-  PRODUCE
-    main_BASIC_BLOCK_END_PLACE_4 : 1;
-TRANSITION main_BASIC_BLOCK_EMPTY_5
-  CONSUME
-    main_BASIC_BLOCK_5 : 1;
-  PRODUCE
-    main_BASIC_BLOCK_END_PLACE_5 : 1;
-TRANSITION main_BASIC_BLOCK_EMPTY_6
-  CONSUME
-    main_BASIC_BLOCK_6 : 1;
-  PRODUCE
-    main_BASIC_BLOCK_END_PLACE_6 : 1;
-TRANSITION main_BASIC_BLOCK_EMPTY_7
-  CONSUME
-    main_BASIC_BLOCK_7 : 1;
-  PRODUCE
-    main_BASIC_BLOCK_END_PLACE_7 : 1;
-TRANSITION main_BASIC_BLOCK_EMPTY_8
-  CONSUME
-    main_BASIC_BLOCK_8 : 1;
-  PRODUCE
-    main_BASIC_BLOCK_END_PLACE_8 : 1;
-TRANSITION main_BASIC_BLOCK_EMPTY_9
-  CONSUME
-    main_BASIC_BLOCK_9 : 1;
-  PRODUCE
-    main_BASIC_BLOCK_END_PLACE_9 : 1;
 TRANSITION main_BLOCK_1_STATEMENT_0
   CONSUME
     main_BASIC_BLOCK_1 : 1;
@@ -172,57 +82,57 @@ TRANSITION main_BLOCK_1_STATEMENT_0
     main_BASIC_BLOCK_END_PLACE_1 : 1;
 TRANSITION main_DROP_6
   CONSUME
-    main_BASIC_BLOCK_END_PLACE_6 : 1;
+    main_BASIC_BLOCK_6 : 1;
   PRODUCE
     main_BASIC_BLOCK_7 : 1;
 TRANSITION main_DROP_8
   CONSUME
-    main_BASIC_BLOCK_END_PLACE_8 : 1;
+    main_BASIC_BLOCK_8 : 1;
   PRODUCE
     main_BASIC_BLOCK_9 : 1;
 TRANSITION main_GOTO_3
   CONSUME
-    main_BASIC_BLOCK_END_PLACE_3 : 1;
+    main_BASIC_BLOCK_3 : 1;
   PRODUCE
     main_BASIC_BLOCK_6 : 1;
 TRANSITION main_GOTO_4
   CONSUME
-    main_BASIC_BLOCK_END_PLACE_4 : 1;
+    main_BASIC_BLOCK_4 : 1;
   PRODUCE
     main_BASIC_BLOCK_6 : 1;
 TRANSITION main_GOTO_5
   CONSUME
-    main_BASIC_BLOCK_END_PLACE_5 : 1;
+    main_BASIC_BLOCK_5 : 1;
   PRODUCE
     main_BASIC_BLOCK_6 : 1;
 TRANSITION main_RETURN
   CONSUME
-    main_BASIC_BLOCK_END_PLACE_7 : 1;
+    main_BASIC_BLOCK_7 : 1;
   PRODUCE
     PROGRAM_END : 1;
 TRANSITION main_SWITCH_INT_3
   CONSUME
-    main_BASIC_BLOCK_END_PLACE_2 : 1;
+    main_BASIC_BLOCK_2 : 1;
   PRODUCE
     main_BASIC_BLOCK_3 : 1;
 TRANSITION main_SWITCH_INT_4
   CONSUME
-    main_BASIC_BLOCK_END_PLACE_2 : 1;
+    main_BASIC_BLOCK_2 : 1;
   PRODUCE
     main_BASIC_BLOCK_4 : 1;
 TRANSITION main_SWITCH_INT_5
   CONSUME
-    main_BASIC_BLOCK_END_PLACE_2 : 1;
+    main_BASIC_BLOCK_2 : 1;
   PRODUCE
     main_BASIC_BLOCK_5 : 1;
 TRANSITION main_UNWIND_9
   CONSUME
-    main_BASIC_BLOCK_END_PLACE_9 : 1;
+    main_BASIC_BLOCK_9 : 1;
   PRODUCE
     PROGRAM_PANIC : 1;
 TRANSITION std_env_args_FOREIGN_CALL
   CONSUME
-    main_BASIC_BLOCK_END_PLACE_0 : 1;
+    PROGRAM_START : 1;
   PRODUCE
     main_BASIC_BLOCK_1 : 1;
 TRANSITION std_iter_ExactSizeIterator_len_FOREIGN_CALL
@@ -300,101 +210,11 @@ const MINIMAL_MATCH_STATEMENT_PNML_OUTPUT: &str = r#"<?xml version="1.0" encodin
           <text>main_BASIC_BLOCK_9</text>
         </name>
       </place>
-      <place id="main_BASIC_BLOCK_END_PLACE_0">
-        <name>
-          <text>main_BASIC_BLOCK_END_PLACE_0</text>
-        </name>
-      </place>
       <place id="main_BASIC_BLOCK_END_PLACE_1">
         <name>
           <text>main_BASIC_BLOCK_END_PLACE_1</text>
         </name>
       </place>
-      <place id="main_BASIC_BLOCK_END_PLACE_2">
-        <name>
-          <text>main_BASIC_BLOCK_END_PLACE_2</text>
-        </name>
-      </place>
-      <place id="main_BASIC_BLOCK_END_PLACE_3">
-        <name>
-          <text>main_BASIC_BLOCK_END_PLACE_3</text>
-        </name>
-      </place>
-      <place id="main_BASIC_BLOCK_END_PLACE_4">
-        <name>
-          <text>main_BASIC_BLOCK_END_PLACE_4</text>
-        </name>
-      </place>
-      <place id="main_BASIC_BLOCK_END_PLACE_5">
-        <name>
-          <text>main_BASIC_BLOCK_END_PLACE_5</text>
-        </name>
-      </place>
-      <place id="main_BASIC_BLOCK_END_PLACE_6">
-        <name>
-          <text>main_BASIC_BLOCK_END_PLACE_6</text>
-        </name>
-      </place>
-      <place id="main_BASIC_BLOCK_END_PLACE_7">
-        <name>
-          <text>main_BASIC_BLOCK_END_PLACE_7</text>
-        </name>
-      </place>
-      <place id="main_BASIC_BLOCK_END_PLACE_8">
-        <name>
-          <text>main_BASIC_BLOCK_END_PLACE_8</text>
-        </name>
-      </place>
-      <place id="main_BASIC_BLOCK_END_PLACE_9">
-        <name>
-          <text>main_BASIC_BLOCK_END_PLACE_9</text>
-        </name>
-      </place>
-      <transition id="main_BASIC_BLOCK_EMPTY_0">
-        <name>
-          <text>main_BASIC_BLOCK_EMPTY_0</text>
-        </name>
-      </transition>
-      <transition id="main_BASIC_BLOCK_EMPTY_2">
-        <name>
-          <text>main_BASIC_BLOCK_EMPTY_2</text>
-        </name>
-      </transition>
-      <transition id="main_BASIC_BLOCK_EMPTY_3">
-        <name>
-          <text>main_BASIC_BLOCK_EMPTY_3</text>
-        </name>
-      </transition>
-      <transition id="main_BASIC_BLOCK_EMPTY_4">
-        <name>
-          <text>main_BASIC_BLOCK_EMPTY_4</text>
-        </name>
-      </transition>
-      <transition id="main_BASIC_BLOCK_EMPTY_5">
-        <name>
-          <text>main_BASIC_BLOCK_EMPTY_5</text>
-        </name>
-      </transition>
-      <transition id="main_BASIC_BLOCK_EMPTY_6">
-        <name>
-          <text>main_BASIC_BLOCK_EMPTY_6</text>
-        </name>
-      </transition>
-      <transition id="main_BASIC_BLOCK_EMPTY_7">
-        <name>
-          <text>main_BASIC_BLOCK_EMPTY_7</text>
-        </name>
-      </transition>
-      <transition id="main_BASIC_BLOCK_EMPTY_8">
-        <name>
-          <text>main_BASIC_BLOCK_EMPTY_8</text>
-        </name>
-      </transition>
-      <transition id="main_BASIC_BLOCK_EMPTY_9">
-        <name>
-          <text>main_BASIC_BLOCK_EMPTY_9</text>
-        </name>
-      </transition>
       <transition id="main_BLOCK_1_STATEMENT_0">
         <name>
           <text>main_BLOCK_1_STATEMENT_0</text>
@@ -460,9 +280,9 @@ const MINIMAL_MATCH_STATEMENT_PNML_OUTPUT: &str = r#"<?xml version="1.0" encodin
           <text>std_iter_ExactSizeIterator_len_FOREIGN_CALL</text>
         </name>
       </transition>
-      <arc source="PROGRAM_START" target="main_BASIC_BLOCK_EMPTY_0" id="(PROGRAM_START, main_BASIC_BLOCK_EMPTY_0)">
+      <arc source="PROGRAM_START" target="std_env_args_FOREIGN_CALL" id="(PROGRAM_START, std_env_args_FOREIGN_CALL)">
         <name>
-          <text>(PROGRAM_START, main_BASIC_BLOCK_EMPTY_0)</text>
+          <text>(PROGRAM_START, std_env_args_FOREIGN_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -476,73 +296,81 @@ const MINIMAL_MATCH_STATEMENT_PNML_OUTPUT: &str = r#"<?xml version="1.0" encodin
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BASIC_BLOCK_2" target="main_BASIC_BLOCK_EMPTY_2" id="(main_BASIC_BLOCK_2, main_BASIC_BLOCK_EMPTY_2)">
+      <arc source="main_BASIC_BLOCK_2" target="main_SWITCH_INT_3" id="(main_BASIC_BLOCK_2, main_SWITCH_INT_3)">
         <name>
-          <text>(main_BASIC_BLOCK_2, main_BASIC_BLOCK_EMPTY_2)</text>
+          <text>(main_BASIC_BLOCK_2, main_SWITCH_INT_3)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BASIC_BLOCK_3" target="main_BASIC_BLOCK_EMPTY_3" id="(main_BASIC_BLOCK_3, main_BASIC_BLOCK_EMPTY_3)">
+      <arc source="main_BASIC_BLOCK_2" target="main_SWITCH_INT_4" id="(main_BASIC_BLOCK_2, main_SWITCH_INT_4)">
         <name>
-          <text>(main_BASIC_BLOCK_3, main_BASIC_BLOCK_EMPTY_3)</text>
+          <text>(main_BASIC_BLOCK_2, main_SWITCH_INT_4)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BASIC_BLOCK_4" target="main_BASIC_BLOCK_EMPTY_4" id="(main_BASIC_BLOCK_4, main_BASIC_BLOCK_EMPTY_4)">
+      <arc source="main_BASIC_BLOCK_2" target="main_SWITCH_INT_5" id="(main_BASIC_BLOCK_2, main_SWITCH_INT_5)">
         <name>
-          <text>(main_BASIC_BLOCK_4, main_BASIC_BLOCK_EMPTY_4)</text>
+          <text>(main_BASIC_BLOCK_2, main_SWITCH_INT_5)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BASIC_BLOCK_5" target="main_BASIC_BLOCK_EMPTY_5" id="(main_BASIC_BLOCK_5, main_BASIC_BLOCK_EMPTY_5)">
+      <arc source="main_BASIC_BLOCK_3" target="main_GOTO_3" id="(main_BASIC_BLOCK_3, main_GOTO_3)">
         <name>
-          <text>(main_BASIC_BLOCK_5, main_BASIC_BLOCK_EMPTY_5)</text>
+          <text>(main_BASIC_BLOCK_3, main_GOTO_3)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BASIC_BLOCK_6" target="main_BASIC_BLOCK_EMPTY_6" id="(main_BASIC_BLOCK_6, main_BASIC_BLOCK_EMPTY_6)">
+      <arc source="main_BASIC_BLOCK_4" target="main_GOTO_4" id="(main_BASIC_BLOCK_4, main_GOTO_4)">
         <name>
-          <text>(main_BASIC_BLOCK_6, main_BASIC_BLOCK_EMPTY_6)</text>
+          <text>(main_BASIC_BLOCK_4, main_GOTO_4)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BASIC_BLOCK_7" target="main_BASIC_BLOCK_EMPTY_7" id="(main_BASIC_BLOCK_7, main_BASIC_BLOCK_EMPTY_7)">
+      <arc source="main_BASIC_BLOCK_5" target="main_GOTO_5" id="(main_BASIC_BLOCK_5, main_GOTO_5)">
         <name>
-          <text>(main_BASIC_BLOCK_7, main_BASIC_BLOCK_EMPTY_7)</text>
+          <text>(main_BASIC_BLOCK_5, main_GOTO_5)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BASIC_BLOCK_8" target="main_BASIC_BLOCK_EMPTY_8" id="(main_BASIC_BLOCK_8, main_BASIC_BLOCK_EMPTY_8)">
+      <arc source="main_BASIC_BLOCK_6" target="main_DROP_6" id="(main_BASIC_BLOCK_6, main_DROP_6)">
         <name>
-          <text>(main_BASIC_BLOCK_8, main_BASIC_BLOCK_EMPTY_8)</text>
+          <text>(main_BASIC_BLOCK_6, main_DROP_6)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BASIC_BLOCK_9" target="main_BASIC_BLOCK_EMPTY_9" id="(main_BASIC_BLOCK_9, main_BASIC_BLOCK_EMPTY_9)">
+      <arc source="main_BASIC_BLOCK_7" target="main_RETURN" id="(main_BASIC_BLOCK_7, main_RETURN)">
         <name>
-          <text>(main_BASIC_BLOCK_9, main_BASIC_BLOCK_EMPTY_9)</text>
+          <text>(main_BASIC_BLOCK_7, main_RETURN)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BASIC_BLOCK_END_PLACE_0" target="std_env_args_FOREIGN_CALL" id="(main_BASIC_BLOCK_END_PLACE_0, std_env_args_FOREIGN_CALL)">
+      <arc source="main_BASIC_BLOCK_8" target="main_DROP_8" id="(main_BASIC_BLOCK_8, main_DROP_8)">
         <name>
-          <text>(main_BASIC_BLOCK_END_PLACE_0, std_env_args_FOREIGN_CALL)</text>
+          <text>(main_BASIC_BLOCK_8, main_DROP_8)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main_BASIC_BLOCK_9" target="main_UNWIND_9" id="(main_BASIC_BLOCK_9, main_UNWIND_9)">
+        <name>
+          <text>(main_BASIC_BLOCK_9, main_UNWIND_9)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -551,158 +379,6 @@ const MINIMAL_MATCH_STATEMENT_PNML_OUTPUT: &str = r#"<?xml version="1.0" encodin
       <arc source="main_BASIC_BLOCK_END_PLACE_1" target="std_iter_ExactSizeIterator_len_FOREIGN_CALL" id="(main_BASIC_BLOCK_END_PLACE_1, std_iter_ExactSizeIterator_len_FOREIGN_CALL)">
         <name>
           <text>(main_BASIC_BLOCK_END_PLACE_1, std_iter_ExactSizeIterator_len_FOREIGN_CALL)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BASIC_BLOCK_END_PLACE_2" target="main_SWITCH_INT_3" id="(main_BASIC_BLOCK_END_PLACE_2, main_SWITCH_INT_3)">
-        <name>
-          <text>(main_BASIC_BLOCK_END_PLACE_2, main_SWITCH_INT_3)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BASIC_BLOCK_END_PLACE_2" target="main_SWITCH_INT_4" id="(main_BASIC_BLOCK_END_PLACE_2, main_SWITCH_INT_4)">
-        <name>
-          <text>(main_BASIC_BLOCK_END_PLACE_2, main_SWITCH_INT_4)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BASIC_BLOCK_END_PLACE_2" target="main_SWITCH_INT_5" id="(main_BASIC_BLOCK_END_PLACE_2, main_SWITCH_INT_5)">
-        <name>
-          <text>(main_BASIC_BLOCK_END_PLACE_2, main_SWITCH_INT_5)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BASIC_BLOCK_END_PLACE_3" target="main_GOTO_3" id="(main_BASIC_BLOCK_END_PLACE_3, main_GOTO_3)">
-        <name>
-          <text>(main_BASIC_BLOCK_END_PLACE_3, main_GOTO_3)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BASIC_BLOCK_END_PLACE_4" target="main_GOTO_4" id="(main_BASIC_BLOCK_END_PLACE_4, main_GOTO_4)">
-        <name>
-          <text>(main_BASIC_BLOCK_END_PLACE_4, main_GOTO_4)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BASIC_BLOCK_END_PLACE_5" target="main_GOTO_5" id="(main_BASIC_BLOCK_END_PLACE_5, main_GOTO_5)">
-        <name>
-          <text>(main_BASIC_BLOCK_END_PLACE_5, main_GOTO_5)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BASIC_BLOCK_END_PLACE_6" target="main_DROP_6" id="(main_BASIC_BLOCK_END_PLACE_6, main_DROP_6)">
-        <name>
-          <text>(main_BASIC_BLOCK_END_PLACE_6, main_DROP_6)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BASIC_BLOCK_END_PLACE_7" target="main_RETURN" id="(main_BASIC_BLOCK_END_PLACE_7, main_RETURN)">
-        <name>
-          <text>(main_BASIC_BLOCK_END_PLACE_7, main_RETURN)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BASIC_BLOCK_END_PLACE_8" target="main_DROP_8" id="(main_BASIC_BLOCK_END_PLACE_8, main_DROP_8)">
-        <name>
-          <text>(main_BASIC_BLOCK_END_PLACE_8, main_DROP_8)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BASIC_BLOCK_END_PLACE_9" target="main_UNWIND_9" id="(main_BASIC_BLOCK_END_PLACE_9, main_UNWIND_9)">
-        <name>
-          <text>(main_BASIC_BLOCK_END_PLACE_9, main_UNWIND_9)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BASIC_BLOCK_EMPTY_0" target="main_BASIC_BLOCK_END_PLACE_0" id="(main_BASIC_BLOCK_EMPTY_0, main_BASIC_BLOCK_END_PLACE_0)">
-        <name>
-          <text>(main_BASIC_BLOCK_EMPTY_0, main_BASIC_BLOCK_END_PLACE_0)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BASIC_BLOCK_EMPTY_2" target="main_BASIC_BLOCK_END_PLACE_2" id="(main_BASIC_BLOCK_EMPTY_2, main_BASIC_BLOCK_END_PLACE_2)">
-        <name>
-          <text>(main_BASIC_BLOCK_EMPTY_2, main_BASIC_BLOCK_END_PLACE_2)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BASIC_BLOCK_EMPTY_3" target="main_BASIC_BLOCK_END_PLACE_3" id="(main_BASIC_BLOCK_EMPTY_3, main_BASIC_BLOCK_END_PLACE_3)">
-        <name>
-          <text>(main_BASIC_BLOCK_EMPTY_3, main_BASIC_BLOCK_END_PLACE_3)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BASIC_BLOCK_EMPTY_4" target="main_BASIC_BLOCK_END_PLACE_4" id="(main_BASIC_BLOCK_EMPTY_4, main_BASIC_BLOCK_END_PLACE_4)">
-        <name>
-          <text>(main_BASIC_BLOCK_EMPTY_4, main_BASIC_BLOCK_END_PLACE_4)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BASIC_BLOCK_EMPTY_5" target="main_BASIC_BLOCK_END_PLACE_5" id="(main_BASIC_BLOCK_EMPTY_5, main_BASIC_BLOCK_END_PLACE_5)">
-        <name>
-          <text>(main_BASIC_BLOCK_EMPTY_5, main_BASIC_BLOCK_END_PLACE_5)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BASIC_BLOCK_EMPTY_6" target="main_BASIC_BLOCK_END_PLACE_6" id="(main_BASIC_BLOCK_EMPTY_6, main_BASIC_BLOCK_END_PLACE_6)">
-        <name>
-          <text>(main_BASIC_BLOCK_EMPTY_6, main_BASIC_BLOCK_END_PLACE_6)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BASIC_BLOCK_EMPTY_7" target="main_BASIC_BLOCK_END_PLACE_7" id="(main_BASIC_BLOCK_EMPTY_7, main_BASIC_BLOCK_END_PLACE_7)">
-        <name>
-          <text>(main_BASIC_BLOCK_EMPTY_7, main_BASIC_BLOCK_END_PLACE_7)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BASIC_BLOCK_EMPTY_8" target="main_BASIC_BLOCK_END_PLACE_8" id="(main_BASIC_BLOCK_EMPTY_8, main_BASIC_BLOCK_END_PLACE_8)">
-        <name>
-          <text>(main_BASIC_BLOCK_EMPTY_8, main_BASIC_BLOCK_END_PLACE_8)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BASIC_BLOCK_EMPTY_9" target="main_BASIC_BLOCK_END_PLACE_9" id="(main_BASIC_BLOCK_EMPTY_9, main_BASIC_BLOCK_END_PLACE_9)">
-        <name>
-          <text>(main_BASIC_BLOCK_EMPTY_9, main_BASIC_BLOCK_END_PLACE_9)</text>
         </name>
         <inscription>
           <text>1</text>

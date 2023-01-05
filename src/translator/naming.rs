@@ -43,12 +43,6 @@ pub fn basic_block_end_place_label(function_name: &str, index: usize) -> String 
     format!("{}_BASIC_BLOCK_END_PLACE_{index}", sanitize(function_name))
 }
 
-/// Label of the transition for an empty `BasicBlock` with no statements.
-#[inline]
-pub fn basic_block_empty_transition_label(function_name: &str, index: usize) -> String {
-    format!("{}_BASIC_BLOCK_EMPTY_{index}", sanitize(function_name))
-}
-
 /// Label of the transition that represents a goto terminator to another `BasicBlock`.
 #[inline]
 pub fn basic_block_goto_transition_label(function_name: &str, index: usize) -> String {

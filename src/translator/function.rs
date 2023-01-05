@@ -151,7 +151,7 @@ impl Function {
         // Extracts the value of this index as a usize.
         let index = block_number.index();
         let start_place = self.prepare_start_place_for_next_basic_block(index, net);
-        let basic_block = BasicBlock::new(&self.name, index, start_place, net);
+        let basic_block = BasicBlock::new(&self.name, index, start_place);
         if self
             .basic_blocks
             .insert(block_number, basic_block)
@@ -256,7 +256,7 @@ impl Function {
     ///
     /// If there is no active basic block set, then the function panics.
     pub fn finish_statement_block(&mut self, net: &mut PetriNet) {
-        let active_block = self.get_active_block();
+        let active_block = self.get_mut_active_block();
         active_block.finish_statement_block(net);
     }
 

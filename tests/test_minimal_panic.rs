@@ -5,12 +5,8 @@ const MINIMAL_PANIC_DOT_OUTPUT: &str = r#"digraph petrinet {
     PROGRAM_END [shape="circle" xlabel="PROGRAM_END" label=""];
     PROGRAM_PANIC [shape="circle" xlabel="PROGRAM_PANIC" label=""];
     PROGRAM_START [shape="circle" xlabel="PROGRAM_START" label="•"];
-    main_BASIC_BLOCK_END_PLACE_0 [shape="circle" xlabel="main_BASIC_BLOCK_END_PLACE_0" label=""];
-    main_BASIC_BLOCK_EMPTY_0 [shape="box" xlabel="main_BASIC_BLOCK_EMPTY_0" label=""];
     main_UNWIND_0 [shape="box" xlabel="main_UNWIND_0" label=""];
-    PROGRAM_START -> main_BASIC_BLOCK_EMPTY_0;
-    main_BASIC_BLOCK_END_PLACE_0 -> main_UNWIND_0;
-    main_BASIC_BLOCK_EMPTY_0 -> main_BASIC_BLOCK_END_PLACE_0;
+    PROGRAM_START -> main_UNWIND_0;
     main_UNWIND_0 -> PROGRAM_PANIC;
 }
 "#;
@@ -18,19 +14,14 @@ const MINIMAL_PANIC_DOT_OUTPUT: &str = r#"digraph petrinet {
 const MINIMAL_PANIC_LOLA_OUTPUT: &str = r#"PLACE
     PROGRAM_END,
     PROGRAM_PANIC,
-    PROGRAM_START,
-    main_BASIC_BLOCK_END_PLACE_0;
+    PROGRAM_START;
 
 MARKING
-    PROGRAM_START : 1,
-TRANSITION main_BASIC_BLOCK_EMPTY_0
-  CONSUME
     PROGRAM_START : 1;
-  PRODUCE
-    main_BASIC_BLOCK_END_PLACE_0 : 1;
+
 TRANSITION main_UNWIND_0
   CONSUME
-    main_BASIC_BLOCK_END_PLACE_0 : 1;
+    PROGRAM_START : 1;
   PRODUCE
     PROGRAM_PANIC : 1;
 "#;
@@ -57,40 +48,14 @@ const MINIMAL_PANIC_PNML_OUTPUT: &str = r#"<?xml version="1.0" encoding="utf-8"?
           <text>1</text>
         </initialMarking>
       </place>
-      <place id="main_BASIC_BLOCK_END_PLACE_0">
-        <name>
-          <text>main_BASIC_BLOCK_END_PLACE_0</text>
-        </name>
-      </place>
-      <transition id="main_BASIC_BLOCK_EMPTY_0">
-        <name>
-          <text>main_BASIC_BLOCK_EMPTY_0</text>
-        </name>
-      </transition>
       <transition id="main_UNWIND_0">
         <name>
           <text>main_UNWIND_0</text>
         </name>
       </transition>
-      <arc source="PROGRAM_START" target="main_BASIC_BLOCK_EMPTY_0" id="(PROGRAM_START, main_BASIC_BLOCK_EMPTY_0)">
+      <arc source="PROGRAM_START" target="main_UNWIND_0" id="(PROGRAM_START, main_UNWIND_0)">
         <name>
-          <text>(PROGRAM_START, main_BASIC_BLOCK_EMPTY_0)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BASIC_BLOCK_END_PLACE_0" target="main_UNWIND_0" id="(main_BASIC_BLOCK_END_PLACE_0, main_UNWIND_0)">
-        <name>
-          <text>(main_BASIC_BLOCK_END_PLACE_0, main_UNWIND_0)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BASIC_BLOCK_EMPTY_0" target="main_BASIC_BLOCK_END_PLACE_0" id="(main_BASIC_BLOCK_EMPTY_0, main_BASIC_BLOCK_END_PLACE_0)">
-        <name>
-          <text>(main_BASIC_BLOCK_EMPTY_0, main_BASIC_BLOCK_END_PLACE_0)</text>
+          <text>(PROGRAM_START, main_UNWIND_0)</text>
         </name>
         <inscription>
           <text>1</text>

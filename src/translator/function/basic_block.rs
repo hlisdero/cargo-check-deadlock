@@ -9,9 +9,9 @@ use crate::translator::function::statement::Statement;
 use crate::translator::naming::{
     basic_block_assert_cleanup_transition_label, basic_block_assert_transition_label,
     basic_block_diverging_call_transition_label, basic_block_drop_transition_label,
-    basic_block_drop_unwind_transition_label, basic_block_empty_transition_label,
-    basic_block_end_place_label, basic_block_goto_transition_label,
-    basic_block_switch_int_transition_label, basic_block_unwind_transition_label,
+    basic_block_drop_unwind_transition_label, basic_block_end_place_label,
+    basic_block_goto_transition_label, basic_block_switch_int_transition_label,
+    basic_block_unwind_transition_label,
 };
 use netcrab::petri_net::{PetriNet, PlaceRef};
 
@@ -29,19 +29,13 @@ pub struct BasicBlock {
 
 impl BasicBlock {
     /// Creates a new basic block and adds its representation to the Petri net.
-    pub fn new(
-        function_name: &str,
-        index: usize,
-        start_place: PlaceRef,
-        net: &mut PetriNet,
-    ) -> Self {
-        let end_place = net.add_place(&basic_block_end_place_label(function_name, index));
-
+    /// Assumes that the end place is the same as the start place until a statement is added.
+    pub fn new(function_name: &str, index: usize, start_place: PlaceRef) -> Self {
         Self {
             function_name: function_name.to_string(),
             index,
-            start_place,
-            end_place,
+            start_place: start_place.clone(),
+            end_place: start_place,
             statements: Vec::new(),
         }
     }
@@ -60,14 +54,14 @@ impl BasicBlock {
         ));
     }
 
-    /// Connects the last statement transition to the end place of this basic block.
-    /// In case there are no statements, an additional transition is created to
-    /// connect the start and end place of this basic block.
-    pub fn finish_statement_block(&self, net: &mut PetriNet) {
+    /// Connects the last statement transition to the end place of this basic block. The end place is created here.
+    /// In case there are no statements in this block, the end place continues to be the same
+    /// as the start place, so there is nothing to do.
+    pub fn finish_statement_block(&mut self, net: &mut PetriNet) {
         if let Some(statement) = self.statements.last() {
+            let label = basic_block_end_place_label(&self.function_name, self.index);
+            self.end_place = net.add_place(&label);
             statement.connect_to_end_place(&self.end_place, net);
-        } else {
-            self.handle_basic_block_with_no_statements(net);
         }
     }
 
@@ -186,19 +180,5 @@ impl BasicBlock {
             || self.start_place.clone(),
             |statement| statement.create_end_place(net),
         )
-    }
-
-    /// Creates an extra transition and connects the start and end place through it.
-    /// This "fake statement" exists only in the model and not in the Rust source code.
-    fn handle_basic_block_with_no_statements(&self, net: &mut PetriNet) {
-        // if there is only a terminator (no statement) we have to connect start and end place of the block
-        let transition_empty = net.add_transition(&basic_block_empty_transition_label(
-            &self.function_name,
-            self.index,
-        ));
-        net.add_arc_place_transition(&self.start_place, &transition_empty)
-            .unwrap_or_else(|_| handle_err_add_arc("start place", "empty basic block transition"));
-        net.add_arc_transition_place(&transition_empty, &self.end_place)
-            .unwrap_or_else(|_| handle_err_add_arc("empty basic block transition", "end place"));
     }
 }
