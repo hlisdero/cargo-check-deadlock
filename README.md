@@ -22,13 +22,19 @@ To get a local copy up and running follow these simple example steps.
 - Install the latest nightly version with the `rustc-dev` component running:
 
    ```sh
-   rustup toolchain install nightly --rustc-dev
+   rustup toolchain install nightly
    ```
 
 - Activate the [nightly toolchain](https://rust-lang.github.io/rustup/concepts/channels.html):
 
    ```sh
    rustup default nightly
+   ```
+
+- Install the components needed to work with the compiler internals
+
+   ```sh
+   rustup component add rust-src rustc-dev llvm-tools-preview
    ```
 
 ### Compiler version
