@@ -1,5 +1,4 @@
 use clap::{Parser, ValueEnum};
-use log::info;
 use netcrab::petri_net::PetriNet;
 
 const ERR_SOURCE_FILE_NOT_FOUND: i32 = 1;
@@ -42,12 +41,8 @@ struct CliArgs {
 }
 
 fn main() {
-    env_logger::init();
-
-    info!("Parsing arguments");
     let args = CliArgs::parse();
 
-    info!("Checking that the source code file exists");
     // Double check that the file exists before starting the compiler
     // to generate an error message independent of the rustc output.
     if !args.path.exists() {
@@ -58,7 +53,6 @@ fn main() {
         std::process::exit(ERR_SOURCE_FILE_NOT_FOUND);
     };
 
-    info!("Starting compiler");
     let petri_net = match granite2::run(args.path) {
         Ok(petri_net) => petri_net,
         Err(err_str) => {
@@ -67,7 +61,6 @@ fn main() {
         }
     };
 
-    info!("Generating output files");
     if let Err(err_str) = create_output_files(&petri_net, &args.output_format) {
         eprintln!("{err_str}");
         std::process::exit(ERR_OUTPUT_FILE_GENERATION);
