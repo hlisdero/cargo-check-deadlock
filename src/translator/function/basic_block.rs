@@ -150,7 +150,7 @@ impl BasicBlock {
 
     /// Connects the end place of this block to a new transition that models a call to a function which does not return.
     pub fn diverging_call(&self, function_name: &str, net: &mut PetriNet) {
-        let label = &basic_block_diverging_call_transition_label(&function_name);
+        let label = &basic_block_diverging_call_transition_label(function_name);
         let transition = net.add_transition(label);
         net.add_arc_place_transition(&self.end_place, &transition)
             .unwrap_or_else(|_| {
