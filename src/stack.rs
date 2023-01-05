@@ -25,16 +25,6 @@ impl<T> Stack<T> {
         self.stack.pop()
     }
 
-    /// Return an immutable reference to the top element of the stack.
-    /// Does not remove the element from the stack.
-    pub fn peek(&self) -> Option<&T> {
-        if self.stack.is_empty() {
-            None
-        } else {
-            Some(&self.stack[self.stack.len() - 1])
-        }
-    }
-
     /// Return a mutable reference to the top element of the stack.
     /// Does not remove the element from the stack.
     pub fn peek_mut(&mut self) -> Option<&mut T> {
@@ -44,20 +34,6 @@ impl<T> Stack<T> {
             let len = self.stack.len();
             Some(&mut self.stack[len - 1])
         }
-    }
-
-    /// Check whether the stack is empty.
-    #[inline]
-    #[must_use]
-    pub fn is_empty(&self) -> bool {
-        self.stack.is_empty()
-    }
-
-    /// Return how many elements the stack has.
-    #[inline]
-    #[must_use]
-    pub fn len(&self) -> usize {
-        self.stack.len()
     }
 }
 
@@ -69,14 +45,14 @@ mod stack_tests {
     fn stack_new_is_empty() {
         let stack: Stack<usize> = Stack::new();
 
-        assert!(stack.is_empty());
+        assert!(stack.stack.is_empty());
     }
 
     #[test]
     fn stack_new_has_length_zero() {
         let stack: Stack<usize> = Stack::new();
 
-        assert_eq!(stack.len(), 0);
+        assert_eq!(stack.stack.len(), 0);
     }
 
     #[test]
@@ -84,13 +60,6 @@ mod stack_tests {
         let mut stack: Stack<usize> = Stack::new();
 
         assert!(stack.pop().is_none());
-    }
-
-    #[test]
-    fn stack_new_peek_returns_none() {
-        let stack: Stack<usize> = Stack::new();
-
-        assert!(stack.peek().is_none());
     }
 
     #[test]
@@ -105,21 +74,21 @@ mod stack_tests {
         let mut stack: Stack<usize> = Stack::new();
         stack.push(0);
 
-        assert!(!stack.is_empty());
-        assert_eq!(stack.len(), 1);
+        assert!(!stack.stack.is_empty());
+        assert_eq!(stack.stack.len(), 1);
     }
 
     #[test]
     fn stack_push_lots_of_elements() {
         let mut stack: Stack<usize> = Stack::new();
-        assert_eq!(stack.len(), 0);
+        assert_eq!(stack.stack.len(), 0);
 
         for i in 0..10 {
             stack.push(i);
         }
 
-        assert!(!stack.is_empty());
-        assert_eq!(stack.len(), 10);
+        assert!(!stack.stack.is_empty());
+        assert_eq!(stack.stack.len(), 10);
     }
 
     #[test]
@@ -131,7 +100,7 @@ mod stack_tests {
 
         assert!(result.is_some());
         assert_eq!(result.unwrap(), 1);
-        assert!(stack.is_empty());
+        assert!(stack.stack.is_empty());
     }
 
     #[test]
@@ -143,14 +112,14 @@ mod stack_tests {
         let result = stack.pop();
 
         assert!(result.is_none());
-        assert!(stack.is_empty());
-        assert_eq!(stack.len(), 0)
+        assert!(stack.stack.is_empty());
+        assert_eq!(stack.stack.len(), 0)
     }
 
     #[test]
     fn stack_pop_lots_of_elements() {
         let mut stack: Stack<usize> = Stack::new();
-        assert_eq!(stack.len(), 0);
+        assert_eq!(stack.stack.len(), 0);
 
         for i in 0..10 {
             stack.push(i);
@@ -160,20 +129,8 @@ mod stack_tests {
             stack.pop();
         }
 
-        assert!(!stack.is_empty());
-        assert_eq!(stack.len(), 3);
-    }
-
-    #[test]
-    fn stack_peek_returns_top_element() {
-        let mut stack: Stack<usize> = Stack::new();
-
-        stack.push(101);
-        let result = stack.peek();
-
-        assert!(result.is_some());
-        assert_eq!(*result.unwrap(), 101);
-        assert!(!stack.is_empty());
+        assert!(!stack.stack.is_empty());
+        assert_eq!(stack.stack.len(), 3);
     }
 
     #[test]
@@ -185,7 +142,7 @@ mod stack_tests {
 
         assert!(result.is_some());
         assert_eq!(*result.unwrap(), 101);
-        assert!(!stack.is_empty());
+        assert!(!stack.stack.is_empty());
     }
 
     #[test]
@@ -195,10 +152,10 @@ mod stack_tests {
         stack.push(101);
         let top = stack.peek_mut().unwrap();
         *top = 999;
-        let result = stack.peek();
+        let result = stack.peek_mut();
 
         assert!(result.is_some());
         assert_eq!(*result.unwrap(), 999);
-        assert!(!stack.is_empty());
+        assert!(!stack.stack.is_empty());
     }
 }
