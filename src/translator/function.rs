@@ -74,18 +74,8 @@ impl Function {
     ) {
         let body = tcx.optimized_mir(def_id);
         for local_decl in body.local_decls.iter() {
-            let mut type_walk = local_decl.ty.walk();
-            if type_walk.next().unwrap().to_string() == "struct `std::sync::Mutex`" {
-                let mut is_generic = false;
-                for ty in type_walk {
-                    if ty.to_string() == "type parameter `T`" {
-                        is_generic = true;
-                        break;
-                    }
-                }
-                if !is_generic {
-                    let _mutex_ref = mutex_manager.add_mutex(net);
-                }
+            if MutexManager::is_mutex_declaration(local_decl) {
+                let _mutex_ref = mutex_manager.add_mutex(net);
             }
         }
     }
