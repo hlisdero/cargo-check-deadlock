@@ -20,6 +20,8 @@ impl Mutex {
     pub fn new(index: usize, net: &mut PetriNet) -> Self {
         let label = mutex_place_label(index);
         let place_ref = net.add_place(&label);
+        net.add_token(&place_ref, 1)
+            .expect("BUG: Adding initial token to mutex place should not cause an overflow");
         Self { place_ref }
     }
 
