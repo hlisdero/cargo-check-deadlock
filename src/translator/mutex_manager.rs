@@ -33,14 +33,9 @@ impl MutexManager {
     /// where `T` is a concrete type and not a type parameter.
     pub fn is_mutex_declaration(local_decl: &rustc_middle::mir::LocalDecl) -> bool {
         let ty_string = local_decl.ty.to_string();
-        if ty_string.starts_with("std::sync::Mutex<") && ty_string.ends_with(">") {
-            if ty_string == "std::sync::Mutex<T>" {
-                // Mutex with generic type
-                false
-            } else {
-                // Mutex with concrete type
-                true
-            }
+        if ty_string.starts_with("std::sync::Mutex<") && ty_string.ends_with('>') {
+            // True if mutex with concrete type
+            ty_string != "std::sync::Mutex<T>"
         } else {
             // Not a mutex
             false
