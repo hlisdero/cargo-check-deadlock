@@ -9,11 +9,7 @@ use crate::translator::error_handling::handle_err_add_arc;
 use crate::translator::naming::function_foreign_call_transition_label;
 use netcrab::petri_net::{PetriNet, PlaceRef};
 
-const SUPPORTED_SPECIAL_FUNCTIONS: [&str; 3] = [
-    "std::sync::Mutex::<T>::new",
-    "std::sync::Mutex::<T>::lock",
-    "std::iter::ExactSizeIterator::len",
-];
+const SUPPORTED_SPECIAL_FUNCTIONS: [&str; 1] = ["std::iter::ExactSizeIterator::len"];
 
 const PANIC_FUNCTIONS: [&str; 5] = [
     "core::panicking::assert_failed",

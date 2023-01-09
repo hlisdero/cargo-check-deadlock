@@ -128,14 +128,7 @@ impl<'tcx> Translator<'tcx> {
         start_place: PlaceRef,
         end_place: PlaceRef,
     ) {
-        let function = Function::new(
-            function_def_id,
-            start_place,
-            end_place,
-            &mut self.mutex_manager,
-            &mut self.net,
-            &mut self.tcx,
-        );
+        let function = Function::new(function_def_id, start_place, end_place, &mut self.tcx);
         self.call_stack.push(function);
     }
 
@@ -243,6 +236,9 @@ impl<'tcx> Translator<'tcx> {
                 cleanup_place,
                 &mut self.net,
             );
+        } else if MutexManager::is_mutex_function(&function_name) {
+            self.mutex_manager
+                .function_call(&function_name, &mut self.net);
         } else {
             // Normal function call: Recursive call for the translation process.
             self.push_function_to_call_stack(function_def_id, start_place, end_place);

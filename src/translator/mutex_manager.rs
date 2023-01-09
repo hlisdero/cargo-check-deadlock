@@ -12,6 +12,9 @@ use crate::translator::mutex::Mutex;
 use netcrab::petri_net::{PetriNet, TransitionRef};
 use std::collections::HashMap;
 
+const SUPPORTED_MUTEX_FUNCTIONS: [&str; 2] =
+    ["std::sync::Mutex::<T>::new", "std::sync::Mutex::<T>::lock"];
+
 #[derive(Default)]
 pub struct MutexManager {
     mutexes: Vec<Mutex>,
@@ -29,6 +32,16 @@ impl MutexManager {
         Self::default()
     }
 
+    /// Checks whether the function name corresponds to one of the supported mutex functions.
+    pub fn is_mutex_function(function_name: &str) -> bool {
+        for name in SUPPORTED_MUTEX_FUNCTIONS {
+            if function_name == name {
+                return true;
+            }
+        }
+        false
+    }
+
     /// Checks whether the type of a local declaration is `std::sync::Mutex<T>`,
     /// where `T` is a concrete type and not a type parameter.
     pub fn is_mutex_declaration(local_decl: &rustc_middle::mir::LocalDecl) -> bool {
@@ -39,6 +52,15 @@ impl MutexManager {
         } else {
             // Not a mutex
             false
+        }
+    }
+
+    pub fn function_call(&mut self, function_name: &str, net: &mut PetriNet) {
+        match function_name {
+            "std::sync::Mutex::<T>::new" => {
+                self.add_mutex(net);
+            }
+            _ => unimplemented!("Mutex method {function_name} not implemented yet"),
         }
     }
 

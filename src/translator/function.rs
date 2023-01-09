@@ -46,12 +46,9 @@ impl Function {
         def_id: rustc_hir::def_id::DefId,
         start_place: PlaceRef,
         end_place: PlaceRef,
-        mutex_manager: &mut MutexManager,
-        net: &mut PetriNet,
         tcx: &mut rustc_middle::ty::TyCtxt,
     ) -> Self {
         let function_name = tcx.def_path_str(def_id);
-        Self::search_for_mutex_in_local_variables(def_id, mutex_manager, net, tcx);
 
         Self {
             def_id,
@@ -60,23 +57,6 @@ impl Function {
             end_place,
             active_block: None,
             basic_blocks: HashMap::new(),
-        }
-    }
-
-    /// Iterates the local variable declarations in the body of the function with given `DefId`
-    /// searching for a variable whose type is a mutex (`std::sync::Mutex`).
-    /// <https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/struct.LocalDecl.html>
-    fn search_for_mutex_in_local_variables(
-        def_id: rustc_hir::def_id::DefId,
-        mutex_manager: &mut MutexManager,
-        net: &mut PetriNet,
-        tcx: &mut rustc_middle::ty::TyCtxt,
-    ) {
-        let body = tcx.optimized_mir(def_id);
-        for local_decl in body.local_decls.iter() {
-            if MutexManager::is_mutex_declaration(local_decl) {
-                let _mutex_ref = mutex_manager.add_mutex(net);
-            }
         }
     }
 
