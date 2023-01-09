@@ -17,7 +17,6 @@ mod statement;
 
 use crate::translator::error_handling::handle_err_add_arc;
 use crate::translator::function::basic_block::BasicBlock;
-use crate::translator::mutex_manager::MutexManager;
 use crate::translator::naming::{basic_block_start_place_label, function_return_transition_label};
 use netcrab::petri_net::{PetriNet, PlaceRef};
 use std::collections::HashMap;
