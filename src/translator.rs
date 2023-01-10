@@ -24,18 +24,18 @@
 
 mod error_handling;
 mod function;
-mod local;
 mod mir_visitor;
 mod mutex;
 mod mutex_manager;
 mod naming;
 mod special_function;
-mod virtual_memory;
+mod utils;
 
 use crate::stack::Stack;
 use crate::translator::error_handling::EMPTY_CALL_STACK;
 use crate::translator::function::Function;
 use crate::translator::mutex_manager::MutexManager;
+use crate::translator::naming::function_foreign_call_transition_label;
 use crate::translator::naming::{PROGRAM_END, PROGRAM_PANIC, PROGRAM_START};
 use crate::translator::special_function::{foreign_function_call, is_panic, is_special};
 use netcrab::petri_net::{PetriNet, PlaceRef};
@@ -201,6 +201,8 @@ impl<'tcx> Translator<'tcx> {
     fn call_function(
         &mut self,
         func: &rustc_middle::mir::Operand<'tcx>,
+        args: &[rustc_middle::mir::Operand<'tcx>],
+        destination: &rustc_middle::mir::Place<'tcx>,
         target: Option<rustc_middle::mir::BasicBlock>,
         cleanup: Option<rustc_middle::mir::BasicBlock>,
     ) {
@@ -228,17 +230,31 @@ impl<'tcx> Translator<'tcx> {
             || !self.tcx.is_mir_available(function_def_id)
             || is_special(&function_name)
         {
+            let transition_label = &function_foreign_call_transition_label(&function_name);
             // Abridged function call: Non-recursive call for the translation process.
             foreign_function_call(
+                &start_place,
+                &end_place,
+                cleanup_place,
+                transition_label,
+                &mut self.net,
+            );
+        } else if MutexManager::is_mutex_function(&function_name) {
+            // Abridged function call: Non-recursive call for the translation process.
+            let transition_function_call = self.mutex_manager.translate_function_call(
                 &function_name,
                 &start_place,
                 &end_place,
                 cleanup_place,
                 &mut self.net,
             );
-        } else if MutexManager::is_mutex_function(&function_name) {
-            self.mutex_manager
-                .function_call(&function_name, &mut self.net);
+            self.mutex_manager.translate_function_side_effects(
+                &function_name,
+                args,
+                destination,
+                &transition_function_call,
+                &mut self.net,
+            );
         } else {
             // Normal function call: Recursive call for the translation process.
             self.push_function_to_call_stack(function_def_id, start_place, end_place);

@@ -7,6 +7,8 @@
 //! <https://rustc-dev-guide.rust-lang.org/mir/index.html>
 
 use crate::translator::error_handling::EMPTY_CALL_STACK;
+use crate::translator::utils::place_to_local;
+use crate::translator::MutexManager;
 use crate::translator::Translator;
 use rustc_middle::mir::visit::Visitor;
 use rustc_middle::mir::TerminatorKind;
@@ -22,6 +24,32 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
         let function = self.call_stack.peek_mut().expect(EMPTY_CALL_STACK);
         function.activate_block(block, &mut self.net);
         self.super_basic_block_data(block, data);
+    }
+
+    /// Identify MIR assignments of the form: `_X = &_Y` where:
+    /// - `_X` is of type `&std::sync::Mutex<T>` and
+    /// - `_Y` is of type `std::sync::Mutex<T>`.
+    ///
+    /// Link the local on the left-hand side to the mutex on the right-hand side.
+    fn visit_assign(
+        &mut self,
+        place: &rustc_middle::mir::Place<'tcx>,
+        rvalue: &rustc_middle::mir::Rvalue<'tcx>,
+        location: rustc_middle::mir::Location,
+    ) {
+        let function = self.call_stack.peek_mut().expect(EMPTY_CALL_STACK);
+        let body = self.tcx.optimized_mir(function.def_id);
+
+        if let rustc_middle::mir::Rvalue::Ref(_, _, rhs) = rvalue {
+            let rhs = place_to_local(rhs);
+            let local_decl = &body.local_decls[rhs];
+            if MutexManager::is_mutex_declaration(local_decl) {
+                let lhs = place_to_local(place);
+                self.mutex_manager.link_local_to_same_mutex(lhs, rhs);
+            }
+        }
+
+        self.super_assign(place, rvalue, location);
     }
 
     fn visit_statement(
@@ -70,14 +98,14 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
             }
             TerminatorKind::Call {
                 func,
-                args: _,
-                destination: _,
+                args,
+                destination,
                 target,
                 cleanup,
                 from_hir_call: _,
                 fn_span: _,
             } => {
-                self.call_function(func, *target, *cleanup);
+                self.call_function(func, args, destination, *target, *cleanup);
             }
             TerminatorKind::Assert {
                 cond: _,

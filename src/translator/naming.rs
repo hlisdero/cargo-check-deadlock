@@ -126,7 +126,7 @@ pub fn mutex_place_label(index: usize) -> String {
 /// Label of the transition that represents a call to a function of `std::sync::Mutex<T>`.
 #[inline]
 pub fn mutex_function_transition_label(function_name: &str, index: usize) -> String {
-    format!("{function_name}_{index}")
+    format!("{}_{index}", sanitize(function_name))
 }
 
 /// Sanitize the function name for the DOT format:

@@ -6,8 +6,7 @@
 //! For example: Calls to standard library methods, iterators, etc.
 
 use crate::translator::error_handling::handle_err_add_arc;
-use crate::translator::naming::function_foreign_call_transition_label;
-use netcrab::petri_net::{PetriNet, PlaceRef};
+use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
 
 const SUPPORTED_SPECIAL_FUNCTIONS: [&str; 1] = ["std::iter::ExactSizeIterator::len"];
 
@@ -44,15 +43,15 @@ pub fn is_panic(function_name: &str) -> bool {
 /// Creates an abridged Petri net representation of a function call.
 /// Connects the start place and end place through a new transition.
 /// If an optional cleanup place is provided, it connects the transition to this place too.
+/// Returns the transition reference representing the function call.
 pub fn foreign_function_call(
-    function_name: &str,
     start_place: &PlaceRef,
     end_place: &PlaceRef,
     cleanup_place: Option<PlaceRef>,
+    transition_label: &str,
     net: &mut PetriNet,
-) {
-    let transition_foreign_call =
-        net.add_transition(&function_foreign_call_transition_label(function_name));
+) -> TransitionRef {
+    let transition_foreign_call = net.add_transition(transition_label);
     net.add_arc_place_transition(start_place, &transition_foreign_call)
         .unwrap_or_else(|_| {
             handle_err_add_arc("foreign call start place", "foreign call transition");
@@ -68,4 +67,6 @@ pub fn foreign_function_call(
                 handle_err_add_arc("foreign call transition", "cleanup place");
             });
     }
+
+    transition_foreign_call
 }
