@@ -5,7 +5,10 @@ use netcrab::petri_net::PlaceRef;
 
 pub enum FunctionCall<'tcx> {
     /// A function which does not return.
-    Diverging { function_name: String },
+    Diverging {
+        function_name: String,
+        start_place: PlaceRef,
+    },
     /// Normal function call: Recursive call for the translation process.
     Default {
         function_def_id: rustc_hir::def_id::DefId,
@@ -29,5 +32,8 @@ pub enum FunctionCall<'tcx> {
         cleanup_place: Option<PlaceRef>,
     },
     /// Any function call which triggers an abnormal termination of the program.
-    Panic,
+    Panic {
+        function_name: String,
+        start_place: PlaceRef,
+    },
 }

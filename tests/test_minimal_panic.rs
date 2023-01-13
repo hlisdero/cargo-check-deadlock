@@ -5,9 +5,9 @@ const MINIMAL_PANIC_DOT_OUTPUT: &str = r#"digraph petrinet {
     PROGRAM_END [shape="circle" xlabel="PROGRAM_END" label=""];
     PROGRAM_PANIC [shape="circle" xlabel="PROGRAM_PANIC" label=""];
     PROGRAM_START [shape="circle" xlabel="PROGRAM_START" label="•"];
-    main_UNWIND_0 [shape="box" xlabel="main_UNWIND_0" label=""];
-    PROGRAM_START -> main_UNWIND_0;
-    main_UNWIND_0 -> PROGRAM_PANIC;
+    main_UNWIND [shape="box" xlabel="main_UNWIND" label=""];
+    PROGRAM_START -> main_UNWIND;
+    main_UNWIND -> PROGRAM_PANIC;
 }
 "#;
 
@@ -19,7 +19,7 @@ const MINIMAL_PANIC_LOLA_OUTPUT: &str = r#"PLACE
 MARKING
     PROGRAM_START : 1;
 
-TRANSITION main_UNWIND_0
+TRANSITION main_UNWIND
   CONSUME
     PROGRAM_START : 1;
   PRODUCE
@@ -48,22 +48,22 @@ const MINIMAL_PANIC_PNML_OUTPUT: &str = r#"<?xml version="1.0" encoding="utf-8"?
           <text>1</text>
         </initialMarking>
       </place>
-      <transition id="main_UNWIND_0">
+      <transition id="main_UNWIND">
         <name>
-          <text>main_UNWIND_0</text>
+          <text>main_UNWIND</text>
         </name>
       </transition>
-      <arc source="PROGRAM_START" target="main_UNWIND_0" id="(PROGRAM_START, main_UNWIND_0)">
+      <arc source="PROGRAM_START" target="main_UNWIND" id="(PROGRAM_START, main_UNWIND)">
         <name>
-          <text>(PROGRAM_START, main_UNWIND_0)</text>
+          <text>(PROGRAM_START, main_UNWIND)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_UNWIND_0" target="PROGRAM_PANIC" id="(main_UNWIND_0, PROGRAM_PANIC)">
+      <arc source="main_UNWIND" target="PROGRAM_PANIC" id="(main_UNWIND, PROGRAM_PANIC)">
         <name>
-          <text>(main_UNWIND_0, PROGRAM_PANIC)</text>
+          <text>(main_UNWIND, PROGRAM_PANIC)</text>
         </name>
         <inscription>
           <text>1</text>

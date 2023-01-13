@@ -190,6 +190,12 @@ impl MirFunction {
         self.active_block = Some(block);
     }
 
+    /// Returns the start place for a function call, i.e., the end place of the current active block.
+    pub fn get_start_place_for_function_call(&self) -> PlaceRef {
+        let active_block = self.get_active_block();
+        active_block.end_place.clone()
+    }
+
     /// Returns a 3-tuple of the form `(start_place, end_place, cleanup_place)`
     /// where:
     ///  - `start_place` is the end place of the currently active basic block.
@@ -326,13 +332,6 @@ impl MirFunction {
                 self.get_pair_active_block_target_block(cleanup, net);
             active_block.assert_cleanup(cleanup_block, net);
         };
-    }
-
-    /// Connects the active basic block to a new transition that models a "dead end" in the net.
-    /// <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/mir/enum.TerminatorKind.html#variant.Call>
-    pub fn diverging_call(&self, function_name: &str, net: &mut PetriNet) {
-        let active_block = self.get_active_block();
-        active_block.diverging_call(function_name, net);
     }
 
     /// Connects the active basic block to the end place of the function.

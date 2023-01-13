@@ -31,6 +31,18 @@ pub fn function_foreign_call_transition_label(function_name: &str) -> String {
     format!("{}_FOREIGN_CALL", sanitize(function_name))
 }
 
+/// Label of the transition that represents a diverging function call (a function that does not return).
+#[inline]
+pub fn function_diverging_call_transition_label(function_name: &str) -> String {
+    format!("{}_DIVERGING_CALL", sanitize(function_name))
+}
+
+/// Label of the transition that represents a call to a `panic!` or an `abort`.
+#[inline]
+pub fn function_panic_transition_label(function_name: &str) -> String {
+    format!("{}_UNWIND", sanitize(function_name))
+}
+
 /// Label of the start place of any `BasicBlock`.
 #[inline]
 pub fn basic_block_start_place_label(function_name: &str, index: usize) -> String {
@@ -83,12 +95,6 @@ pub fn basic_block_assert_transition_label(function_name: &str, index: usize) ->
 #[inline]
 pub fn basic_block_assert_cleanup_transition_label(function_name: &str, index: usize) -> String {
     format!("{}_ASSERT_CLEANUP_{index}", sanitize(function_name))
-}
-
-/// Label of the transition that represents a diverging function call (a function that does not return).
-#[inline]
-pub fn basic_block_diverging_call_transition_label(function_name: &str) -> String {
-    format!("{}_DIVERGING_CALL", sanitize(function_name))
 }
 
 /// Label of the transition of any `Statement`.

@@ -9,10 +9,9 @@ use crate::translator::error_handling::handle_err_add_arc;
 use crate::translator::mir_function::statement::Statement;
 use crate::translator::naming::{
     basic_block_assert_cleanup_transition_label, basic_block_assert_transition_label,
-    basic_block_diverging_call_transition_label, basic_block_drop_transition_label,
-    basic_block_drop_unwind_transition_label, basic_block_end_place_label,
-    basic_block_goto_transition_label, basic_block_switch_int_transition_label,
-    basic_block_unwind_transition_label,
+    basic_block_drop_transition_label, basic_block_drop_unwind_transition_label,
+    basic_block_end_place_label, basic_block_goto_transition_label,
+    basic_block_switch_int_transition_label, basic_block_unwind_transition_label,
 };
 use netcrab::petri_net::{PetriNet, PlaceRef};
 
@@ -141,16 +140,6 @@ impl BasicBlock {
             "assert cleanup transition",
             "cleanup block start place",
         );
-    }
-
-    /// Connects the end place of this block to a new transition that models a call to a function which does not return.
-    pub fn diverging_call(&self, function_name: &str, net: &mut PetriNet) {
-        let label = &basic_block_diverging_call_transition_label(function_name);
-        let transition = net.add_transition(label);
-        net.add_arc_place_transition(&self.end_place, &transition)
-            .unwrap_or_else(|_| {
-                handle_err_add_arc("end place of the block", "diverging call transition");
-            });
     }
 
     /// Connects the end place of this block to the start place of the next basic block.

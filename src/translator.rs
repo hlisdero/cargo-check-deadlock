@@ -37,7 +37,9 @@ use crate::translator::function_call::FunctionCall;
 use crate::translator::mir_function::MirFunction;
 use crate::translator::naming::function_foreign_call_transition_label;
 use crate::translator::naming::{PROGRAM_END, PROGRAM_PANIC, PROGRAM_START};
-use crate::translator::special_function::{foreign_function_call, is_panic, is_special};
+use crate::translator::special_function::{
+    diverging_function_call, foreign_function_call, is_panic, is_special, panic_function_call,
+};
 use crate::translator::sync::MutexManager;
 use netcrab::petri_net::{PetriNet, PlaceRef};
 use rustc_middle::mir::visit::Visitor;
@@ -209,12 +211,18 @@ impl<'tcx> Translator<'tcx> {
         let function_name = self.tcx.def_path_str(function_def_id);
 
         if is_panic(&function_name) {
-            return FunctionCall::Panic;
+            let start_place = current_function.get_start_place_for_function_call();
+            return FunctionCall::Panic {
+                function_name: current_function.name.clone(),
+                start_place,
+            };
         }
 
         let Some(return_block) = target else {
-            return FunctionCall::Diverging { function_name };
+            let start_place = current_function.get_start_place_for_function_call();
+            return FunctionCall::Diverging { function_name, start_place };
         };
+
         let (start_place, end_place, cleanup_place) =
             current_function.get_place_refs_for_function_call(return_block, cleanup, &mut self.net);
 
@@ -266,10 +274,10 @@ impl<'tcx> Translator<'tcx> {
                 self.push_function_to_call_stack(function_def_id, start_place, end_place);
                 self.translate_top_call_stack();
             }
-            FunctionCall::Diverging { function_name } => {
-                let current_function = self.call_stack.peek_mut().expect(EMPTY_CALL_STACK);
-                current_function.diverging_call(&function_name, &mut self.net);
-            }
+            FunctionCall::Diverging {
+                function_name,
+                start_place,
+            } => diverging_function_call(&start_place, &function_name, &mut self.net),
             FunctionCall::Foreign {
                 function_name,
                 start_place,
@@ -308,10 +316,15 @@ impl<'tcx> Translator<'tcx> {
                     &mut self.net,
                 );
             }
-            FunctionCall::Panic => {
-                let current_function = self.call_stack.peek_mut().expect(EMPTY_CALL_STACK);
-                current_function.unwind(&self.program_panic, &mut self.net);
-            }
+            FunctionCall::Panic {
+                function_name,
+                start_place,
+            } => panic_function_call(
+                &start_place,
+                &self.program_panic,
+                &function_name,
+                &mut self.net,
+            ),
         }
     }
 }
