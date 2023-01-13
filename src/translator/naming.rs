@@ -40,7 +40,7 @@ pub fn function_diverging_call_transition_label(function_name: &str) -> String {
 /// Label of the transition that represents a call to a `panic!` or an `abort`.
 #[inline]
 pub fn function_panic_transition_label(function_name: &str) -> String {
-    format!("{}_UNWIND", sanitize(function_name))
+    format!("{}_PANIC", sanitize(function_name))
 }
 
 /// Label of the start place of any `BasicBlock`.
