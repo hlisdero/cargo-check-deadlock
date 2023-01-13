@@ -63,7 +63,7 @@ pub fn run(source_file_path: std::path::PathBuf) -> Result<PetriNet, &'static st
 
             // Run the translator as a query to the compiler.
             // <https://rustc-dev-guide.rust-lang.org/rustc-driver.html>
-            query.take().enter(|tcx| {
+            query.enter(|tcx| {
                 let mut translator = translator::Translator::new(tcx);
                 translator.run();
                 translation_result = translator.get_result();
