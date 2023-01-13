@@ -247,7 +247,7 @@ impl<'tcx> Translator<'tcx> {
             };
         }
 
-        FunctionCall::Default {
+        FunctionCall::MirFunction {
             function_def_id,
             start_place,
             end_place,
@@ -266,7 +266,7 @@ impl<'tcx> Translator<'tcx> {
     /// Diverging functions are handled here too. They are modelled as a dead end in the net.
     pub fn call_function(&mut self, function_call: FunctionCall) {
         match function_call {
-            FunctionCall::Default {
+            FunctionCall::MirFunction {
                 function_def_id,
                 start_place,
                 end_place,

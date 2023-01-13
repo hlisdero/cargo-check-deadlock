@@ -4,25 +4,29 @@
 use netcrab::petri_net::PlaceRef;
 
 pub enum FunctionCall<'tcx> {
-    /// A function which does not return.
+    /// Call to a function which does not return (Return type: -> !).
+    /// Non-recursive call for the translation process.
     Diverging {
         function_name: String,
         start_place: PlaceRef,
     },
-    /// Normal function call: Recursive call for the translation process.
-    Default {
+    /// MIR function call (the "default" case).
+    /// Recursive call for the translation process.
+    MirFunction {
         function_def_id: rustc_hir::def_id::DefId,
         start_place: PlaceRef,
         end_place: PlaceRef,
     },
-    /// Abridged function call: Non-recursive call for the translation process.
+    /// Abridged function call.
+    /// Non-recursive call for the translation process.
     Foreign {
         function_name: String,
         start_place: PlaceRef,
         end_place: PlaceRef,
         cleanup_place: Option<PlaceRef>,
     },
-    /// Call to a mutex synchronization primitive: Non-recursive call for the translation process.
+    /// Call to a mutex synchronization primitive.
+    /// Non-recursive call for the translation process.
     Mutex {
         function_name: String,
         args: Vec<rustc_middle::mir::Operand<'tcx>>,
@@ -31,7 +35,8 @@ pub enum FunctionCall<'tcx> {
         end_place: PlaceRef,
         cleanup_place: Option<PlaceRef>,
     },
-    /// Any function call which triggers an abnormal termination of the program.
+    /// Function call which starts an abnormal termination of the program.
+    /// Non-recursive call for the translation process.
     Panic {
         function_name: String,
         start_place: PlaceRef,
