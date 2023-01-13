@@ -62,7 +62,7 @@ impl MutexManager {
     ///
     /// The naming depends:
     /// - For `std::sync::Mutex::<T>::new` the numbering follows the numbering of the labels of the mutexes.
-    /// - FOr `std::sync::Mutex::<T>::lock` a separate counter is incremented every time that the function is called.
+    /// - For `std::sync::Mutex::<T>::lock` a separate counter is incremented every time that the function is called.
     pub fn translate_function_call(
         &self,
         function_name: &str,
