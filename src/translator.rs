@@ -26,19 +26,19 @@ mod error_handling;
 mod function_call;
 mod mir_function;
 mod mir_visitor;
-mod mutex;
 mod naming;
 mod special_function;
+mod sync;
 mod utils;
 
 use crate::stack::Stack;
 use crate::translator::error_handling::EMPTY_CALL_STACK;
 use crate::translator::function_call::FunctionCall;
 use crate::translator::mir_function::MirFunction;
-use crate::translator::mutex::MutexManager;
 use crate::translator::naming::function_foreign_call_transition_label;
 use crate::translator::naming::{PROGRAM_END, PROGRAM_PANIC, PROGRAM_START};
 use crate::translator::special_function::{foreign_function_call, is_panic, is_special};
+use crate::translator::sync::MutexManager;
 use netcrab::petri_net::{PetriNet, PlaceRef};
 use rustc_middle::mir::visit::Visitor;
 

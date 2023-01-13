@@ -7,9 +7,9 @@
 //! If a mutex A is accessed in two threads then two variables
 //! (the original and the `.clone()` of the `std::sync::Arc`) is a link to mutex A.
 
-use crate::translator::mutex::mutex::Mutex;
 use crate::translator::naming::mutex_function_transition_label;
 use crate::translator::special_function::foreign_function_call;
+use crate::translator::sync::mutex::Mutex;
 use crate::translator::utils::place_to_local;
 use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
 use std::collections::HashMap;
