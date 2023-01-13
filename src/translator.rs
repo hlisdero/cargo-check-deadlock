@@ -23,8 +23,8 @@
 //! It can be configured in the `naming` submodule.
 
 mod error_handling;
-mod function;
 mod function_call;
+mod mir_function;
 mod mir_visitor;
 mod mutex;
 mod mutex_manager;
@@ -34,8 +34,8 @@ mod utils;
 
 use crate::stack::Stack;
 use crate::translator::error_handling::EMPTY_CALL_STACK;
-use crate::translator::function::Function;
 use crate::translator::function_call::FunctionCall;
+use crate::translator::mir_function::MirFunction;
 use crate::translator::mutex_manager::MutexManager;
 use crate::translator::naming::function_foreign_call_transition_label;
 use crate::translator::naming::{PROGRAM_END, PROGRAM_PANIC, PROGRAM_START};
@@ -50,7 +50,7 @@ pub struct Translator<'tcx> {
     program_start: PlaceRef,
     program_end: PlaceRef,
     program_panic: PlaceRef,
-    call_stack: Stack<Function>,
+    call_stack: Stack<MirFunction>,
     mutex_manager: MutexManager,
 }
 
@@ -130,7 +130,7 @@ impl<'tcx> Translator<'tcx> {
         start_place: PlaceRef,
         end_place: PlaceRef,
     ) {
-        let function = Function::new(function_def_id, start_place, end_place, &mut self.tcx);
+        let function = MirFunction::new(function_def_id, start_place, end_place, &mut self.tcx);
         self.call_stack.push(function);
     }
 

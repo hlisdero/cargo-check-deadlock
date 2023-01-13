@@ -1,10 +1,10 @@
-//! Representation of a function in the Petri net.
+//! Representation of a MIR function in the Petri net.
 //! For an introduction to MIR see:
 //! <https://rustc-dev-guide.rust-lang.org/mir/index.html>
 //!
-//! The `Function` stores a vector of `BasicBlock` which are connected between them through
+//! The `MirFunction` stores a vector of `BasicBlock` which are connected between them through
 //! different terminator statements such as goto, switch int, call, unwind, assert, drop, etc.
-//! The `Function` keeps track of an active block, the one currently being translated.
+//! The `MirFunction` keeps track of an active block, the one currently being translated.
 //! The operations are performed mostly on this block.
 //!
 //! The basic blocks are indexed by the type `rustc_middle::mir::BasicBlock` in the representation of the body.
@@ -16,12 +16,12 @@ mod basic_block;
 mod statement;
 
 use crate::translator::error_handling::handle_err_add_arc;
-use crate::translator::function::basic_block::BasicBlock;
+use crate::translator::mir_function::basic_block::BasicBlock;
 use crate::translator::naming::{basic_block_start_place_label, function_return_transition_label};
 use netcrab::petri_net::{PetriNet, PlaceRef};
 use std::collections::HashMap;
 
-pub struct Function {
+pub struct MirFunction {
     /// The ID that uniquely identifies the function in this crate in the HIR representation.
     /// <https://doc.rust-lang.org/stable/nightly-rustc/rustc_hir/def_id/struct.DefId.html>
     pub def_id: rustc_hir::def_id::DefId,
@@ -37,10 +37,9 @@ pub struct Function {
     basic_blocks: HashMap<rustc_middle::mir::BasicBlock, BasicBlock>,
 }
 
-impl Function {
+impl MirFunction {
     /// Creates a new function.
     /// Uses the `rustc_middle::ty::TyCtxt` to get the MIR body and the name of the function.
-    /// Searches for mutexes in the local variable declarations and adds them to the `MutexManager`.
     pub fn new(
         def_id: rustc_hir::def_id::DefId,
         start_place: PlaceRef,
