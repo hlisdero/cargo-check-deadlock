@@ -85,7 +85,8 @@ pub fn diverging_function_call(start_place: &PlaceRef, function_name: &str, net:
         });
 }
 
-/// Creates an abridged Petri net representation of a function call to `panic!`, `abort()` or similar.
+/// Creates an abridged Petri net representation of a function call
+/// that starts a panic, i.e. an unwind of the stack.
 /// Connects the start place to the panic place through a new transition.
 pub fn panic_function_call(
     start_place: &PlaceRef,
