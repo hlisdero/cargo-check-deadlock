@@ -24,6 +24,7 @@
 
 mod error_handling;
 mod function;
+mod function_call;
 mod mir_visitor;
 mod mutex;
 mod mutex_manager;
@@ -34,6 +35,7 @@ mod utils;
 use crate::stack::Stack;
 use crate::translator::error_handling::EMPTY_CALL_STACK;
 use crate::translator::function::Function;
+use crate::translator::function_call::FunctionCall;
 use crate::translator::mutex_manager::MutexManager;
 use crate::translator::naming::function_foreign_call_transition_label;
 use crate::translator::naming::{PROGRAM_END, PROGRAM_PANIC, PROGRAM_START};
@@ -186,26 +188,19 @@ impl<'tcx> Translator<'tcx> {
         }
     }
 
-    /// Jumps from the current function on the top of the stack
-    /// to a new function called inside the current function.
+    /// Prepares the function call depending on the type of function.
+    /// The return `FunctionCall` enum has all the information required for the function call.
     ///
     /// This is the handler for the enum variant `TerminatorKind::Call` in the MIR Visitor.
     /// <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/mir/enum.TerminatorKind.html#variant.Call>
-    ///
-    /// Translates functions in a shortened way in the following cases:
-    /// - Foreign items i.e., linked via extern { ... }).
-    /// - Functions that do not have a MIR representation.
-    /// - Functions in a list of special functions defined by `translator::special_function::SUPPORTED_SPECIAL_FUNCTIONS`.
-    ///
-    /// Diverging functions are handled here too. They are modelled as a dead end in the net.
-    fn call_function(
+    fn prepare_function_call(
         &mut self,
         func: &rustc_middle::mir::Operand<'tcx>,
-        args: &[rustc_middle::mir::Operand<'tcx>],
-        destination: &rustc_middle::mir::Place<'tcx>,
+        args: Vec<rustc_middle::mir::Operand<'tcx>>,
+        destination: rustc_middle::mir::Place<'tcx>,
         target: Option<rustc_middle::mir::BasicBlock>,
         cleanup: Option<rustc_middle::mir::BasicBlock>,
-    ) {
+    ) -> FunctionCall<'tcx> {
         let current_function = self.call_stack.peek_mut().expect(EMPTY_CALL_STACK);
         let function_def_id = Self::extract_def_id_of_called_function_from_operand(
             func,
@@ -215,13 +210,11 @@ impl<'tcx> Translator<'tcx> {
         let function_name = self.tcx.def_path_str(function_def_id);
 
         if is_panic(&function_name) {
-            current_function.unwind(&self.program_panic, &mut self.net);
-            return;
+            return FunctionCall::Panic;
         }
 
         let Some(return_block) = target else {
-            current_function.diverging_call(&function_name, &mut self.net);
-            return;
+            return FunctionCall::Diverging { function_name };
         };
         let (start_place, end_place, cleanup_place) =
             current_function.get_place_refs_for_function_call(return_block, cleanup, &mut self.net);
@@ -230,35 +223,96 @@ impl<'tcx> Translator<'tcx> {
             || !self.tcx.is_mir_available(function_def_id)
             || is_special(&function_name)
         {
-            let transition_label = &function_foreign_call_transition_label(&function_name);
-            // Abridged function call: Non-recursive call for the translation process.
-            foreign_function_call(
-                &start_place,
-                &end_place,
+            return FunctionCall::Foreign {
+                function_name,
+                start_place,
+                end_place,
                 cleanup_place,
-                transition_label,
-                &mut self.net,
-            );
+            };
         } else if MutexManager::is_mutex_function(&function_name) {
-            // Abridged function call: Non-recursive call for the translation process.
-            let transition_function_call = self.mutex_manager.translate_function_call(
-                &function_name,
-                &start_place,
-                &end_place,
-                cleanup_place,
-                &mut self.net,
-            );
-            self.mutex_manager.translate_function_side_effects(
-                &function_name,
+            return FunctionCall::Mutex {
+                function_name,
                 args,
                 destination,
-                &transition_function_call,
-                &mut self.net,
-            );
-        } else {
-            // Normal function call: Recursive call for the translation process.
-            self.push_function_to_call_stack(function_def_id, start_place, end_place);
-            self.translate_top_call_stack();
+                start_place,
+                end_place,
+                cleanup_place,
+            };
+        }
+
+        FunctionCall::Default {
+            function_def_id,
+            start_place,
+            end_place,
+        }
+    }
+
+    /// Jumps from the current function on the top of the stack
+    /// to a new function called inside the current function.
+    ///
+    /// Translates functions in a shortened way in the following cases:
+    /// - Foreign items i.e., linked via extern { ... }).
+    /// - Functions that do not have a MIR representation.
+    /// - Functions in a list of special functions defined by `translator::special_function::SUPPORTED_SPECIAL_FUNCTIONS`.
+    /// - Functions that call a mutex synchronization primitive such as `std::sync::Mutex::lock`.
+    ///
+    /// Diverging functions are handled here too. They are modelled as a dead end in the net.
+    pub fn call_function(&mut self, function_call: FunctionCall) {
+        match function_call {
+            FunctionCall::Default {
+                function_def_id,
+                start_place,
+                end_place,
+            } => {
+                self.push_function_to_call_stack(function_def_id, start_place, end_place);
+                self.translate_top_call_stack();
+            }
+            FunctionCall::Diverging { function_name } => {
+                let current_function = self.call_stack.peek_mut().expect(EMPTY_CALL_STACK);
+                current_function.diverging_call(&function_name, &mut self.net);
+            }
+            FunctionCall::Foreign {
+                function_name,
+                start_place,
+                end_place,
+                cleanup_place,
+            } => {
+                let transition_label = &function_foreign_call_transition_label(&function_name);
+                foreign_function_call(
+                    &start_place,
+                    &end_place,
+                    cleanup_place,
+                    transition_label,
+                    &mut self.net,
+                );
+            }
+            FunctionCall::Mutex {
+                function_name,
+                args,
+                destination,
+                start_place,
+                end_place,
+                cleanup_place,
+            } => {
+                let transition_function_call = self.mutex_manager.translate_function_call(
+                    &function_name,
+                    &start_place,
+                    &end_place,
+                    cleanup_place,
+                    &mut self.net,
+                );
+                self.mutex_manager.translate_function_side_effects(
+                    &function_name,
+                    &args,
+                    destination,
+                    &transition_function_call,
+                    &mut self.net,
+                );
+            }
+            FunctionCall::Panic => {
+                let current_function = self.call_stack.peek_mut().expect(EMPTY_CALL_STACK);
+                current_function.unwind(&self.program_panic, &mut self.net);
+            }
         }
     }
 }

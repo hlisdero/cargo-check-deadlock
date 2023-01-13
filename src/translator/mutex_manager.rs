@@ -91,13 +91,13 @@ impl MutexManager {
         &mut self,
         function_name: &str,
         args: &[rustc_middle::mir::Operand],
-        return_value: &rustc_middle::mir::Place,
+        return_value: rustc_middle::mir::Place,
         transition_function_call: &TransitionRef,
         net: &mut PetriNet,
     ) {
         match function_name {
             "std::sync::Mutex::<T>::new" => {
-                self.add_mutex(place_to_local(return_value), net);
+                self.add_mutex(place_to_local(&return_value), net);
             }
             "std::sync::Mutex::<T>::lock" => {
                 let mutex_to_lock =

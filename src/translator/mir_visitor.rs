@@ -70,11 +70,14 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
         let function = self.call_stack.peek_mut().expect(EMPTY_CALL_STACK);
         function.finish_statement_block(&mut self.net);
 
-        match &terminator.kind {
+        match terminator.kind {
             TerminatorKind::Goto { target } => {
-                function.goto(*target, &mut self.net);
+                function.goto(target, &mut self.net);
             }
-            TerminatorKind::SwitchInt { discr: _, targets } => {
+            TerminatorKind::SwitchInt {
+                discr: _,
+                ref targets,
+            } => {
                 // Convert the specific type for the targets vector into a `std::collections::Vec`
                 // <rustc_middle::mir::terminator::SwitchTargets>
                 function.switch_int(targets.all_targets().to_vec(), &mut self.net);
@@ -91,21 +94,23 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
                 target,
                 unwind,
             } => {
-                function.drop(*target, *unwind, &mut self.net);
+                function.drop(target, unwind, &mut self.net);
             }
             TerminatorKind::DropAndReplace { .. } => {
                 unimplemented!("TerminatorKind::DropAndReplace not implemented yet")
             }
             TerminatorKind::Call {
-                func,
-                args,
+                ref func,
+                ref args,
                 destination,
                 target,
                 cleanup,
                 from_hir_call: _,
                 fn_span: _,
             } => {
-                self.call_function(func, args, destination, *target, *cleanup);
+                let function_call =
+                    self.prepare_function_call(func, args.clone(), destination, target, cleanup);
+                self.call_function(function_call);
             }
             TerminatorKind::Assert {
                 cond: _,
@@ -114,7 +119,7 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
                 target,
                 cleanup,
             } => {
-                function.assert(*target, *cleanup, &mut self.net);
+                function.assert(target, cleanup, &mut self.net);
             }
             TerminatorKind::Yield { .. } => {
                 unimplemented!("TerminatorKind::Yield not implemented yet")
