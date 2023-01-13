@@ -93,7 +93,7 @@ pub fn panic_function_call(
     function_name: &str,
     net: &mut PetriNet,
 ) {
-    let transition = net.add_transition(&function_panic_transition_label(&function_name));
+    let transition = net.add_transition(&function_panic_transition_label(function_name));
     net.add_arc_place_transition(start_place, &transition)
         .unwrap_or_else(|_| handle_err_add_arc("panic start place", "panic transition"));
     net.add_arc_transition_place(&transition, unwind_place)
