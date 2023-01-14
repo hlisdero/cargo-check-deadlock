@@ -11,7 +11,7 @@ use crate::translator::naming::{
 };
 use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
 
-const SUPPORTED_SPECIAL_FUNCTIONS: [&str; 1] = ["std::iter::ExactSizeIterator::len"];
+const FUNCTIONS_EXCLUDED_FROM_TRANSLATION: [&str; 1] = ["std::iter::ExactSizeIterator::len"];
 
 const PANIC_FUNCTIONS: [&str; 5] = [
     "core::panicking::assert_failed",
@@ -23,8 +23,8 @@ const PANIC_FUNCTIONS: [&str; 5] = [
 
 /// Checks whether the function name corresponds to one of the functions
 /// that needs to be translated separately, e.g, mutex functions.
-pub fn is_special(function_name: &str) -> bool {
-    for name in SUPPORTED_SPECIAL_FUNCTIONS {
+fn is_function_excluded_from_translation(function_name: &str) -> bool {
+    for name in FUNCTIONS_EXCLUDED_FROM_TRANSLATION {
         if function_name == name {
             return true;
         }
@@ -41,6 +41,23 @@ pub fn is_panic(function_name: &str) -> bool {
         }
     }
     false
+}
+
+/// Checks whether the function with the given `DefId` should be treated
+/// as a foreign function call.
+///
+/// A foreign function call occurs when:
+/// - the function does not have a MIR representation.
+/// - the function is a foreign item i.e., linked via extern { ... }).
+/// - the function belongs to the exclusions listed in `FUNCTIONS_EXCLUDED_FROM_TRANSLATION`
+pub fn is_foreign_function<'tcx>(
+    function_def_id: rustc_hir::def_id::DefId,
+    tcx: rustc_middle::ty::TyCtxt<'tcx>,
+) -> bool {
+    let function_name = tcx.def_path_str(function_def_id);
+    tcx.is_foreign_item(function_def_id)
+        || !tcx.is_mir_available(function_def_id)
+        || is_function_excluded_from_translation(&function_name)
 }
 
 /// Creates an abridged Petri net representation of a function call.

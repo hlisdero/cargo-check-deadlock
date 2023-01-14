@@ -37,7 +37,8 @@ use crate::translator::mir_function::MirFunction;
 use crate::translator::naming::function_foreign_call_transition_label;
 use crate::translator::naming::{PROGRAM_END, PROGRAM_PANIC, PROGRAM_START};
 use crate::translator::special_function::{
-    diverging_function_call, foreign_function_call, is_panic, is_special, panic_function_call,
+    diverging_function_call, foreign_function_call, is_foreign_function, is_panic,
+    panic_function_call,
 };
 use crate::translator::sync::{is_mutex_function, MutexManager};
 use crate::translator::utils::{extract_def_id_of_called_function_from_operand, place_to_local};
@@ -151,18 +152,6 @@ impl<'tcx> Translator<'tcx> {
         self.call_stack.pop();
     }
 
-    /// Checks whether the function with the given function name
-    /// and given `DefId` should be treated as a foreign function call.
-    fn is_foreign_function_call(
-        &self,
-        function_def_id: rustc_hir::def_id::DefId,
-        function_name: &str,
-    ) -> bool {
-        self.tcx.is_foreign_item(function_def_id)
-            || !self.tcx.is_mir_available(function_def_id)
-            || is_special(function_name)
-    }
-
     /// Prepares the function call depending on the type of function.
     /// The return `FunctionCall` enum has all the information required for the function call.
     ///
@@ -197,7 +186,7 @@ impl<'tcx> Translator<'tcx> {
         let (start_place, end_place, cleanup_place) =
             current_function.get_place_refs_for_function_call(return_block, cleanup, &mut self.net);
 
-        if self.is_foreign_function_call(function_def_id, &function_name) {
+        if is_foreign_function(function_def_id, self.tcx) {
             return FunctionCall::Foreign {
                 function_name,
                 start_place,
@@ -228,12 +217,12 @@ impl<'tcx> Translator<'tcx> {
     /// to a new function called inside the current function.
     ///
     /// Translates functions in a shortened way in the following cases:
-    /// - Foreign items i.e., linked via extern { ... }).
+    /// - Foreign functions i.e., linked via extern { ... }).
     /// - Functions that do not have a MIR representation.
-    /// - Functions in a list of special functions defined by `translator::special_function::SUPPORTED_SPECIAL_FUNCTIONS`.
+    /// - Functions in a list of excluded functions defined by `translator::special_function::FUNCTIONS_EXCLUDED_FROM_TRANSLATION`.
     /// - Functions that call a mutex synchronization primitive such as `std::sync::Mutex::lock`.
-    ///
-    /// Diverging functions are handled here too. They are modelled as a dead end in the net.
+    /// - Functions that do not return (diverging functions).
+    /// - Functions that represent a `panic` i.e., functions that starts an unwind of the stack.
     fn call_function(&mut self, function_call: FunctionCall) {
         match function_call {
             FunctionCall::MirFunction {
