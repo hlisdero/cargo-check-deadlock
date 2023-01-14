@@ -32,7 +32,6 @@ mod sync;
 mod utils;
 
 use crate::stack::Stack;
-use crate::translator::error_handling::EMPTY_CALL_STACK;
 use crate::translator::function_call::FunctionCall;
 use crate::translator::mir_function::MirFunction;
 use crate::translator::naming::function_foreign_call_transition_label;
@@ -142,7 +141,7 @@ impl<'tcx> Translator<'tcx> {
     /// to jump to the new function. Eventually a "leaf function" will be reached, the functions will exit and the
     /// elements from the stack will be popped in order.
     fn translate_top_call_stack(&mut self) {
-        let function = self.call_stack.peek_mut().expect(EMPTY_CALL_STACK);
+        let function = self.call_stack.peek_mut();
         // Obtain the MIR representation of the function.
         let body = self.tcx.optimized_mir(function.def_id);
         // Visit the MIR body of the function using the methods of `rustc_middle::mir::visit::Visitor`.
@@ -215,7 +214,7 @@ impl<'tcx> Translator<'tcx> {
         target: Option<rustc_middle::mir::BasicBlock>,
         cleanup: Option<rustc_middle::mir::BasicBlock>,
     ) -> FunctionCall<'tcx> {
-        let current_function = self.call_stack.peek_mut().expect(EMPTY_CALL_STACK);
+        let current_function = self.call_stack.peek_mut();
         let function_def_id = Self::extract_def_id_of_called_function_from_operand(
             func,
             current_function.def_id,
@@ -321,7 +320,7 @@ impl<'tcx> Translator<'tcx> {
                     &mut self.net,
                 );
 
-                let current_function = self.call_stack.peek_mut().expect(EMPTY_CALL_STACK);
+                let current_function = self.call_stack.peek_mut();
                 self.mutex_manager.translate_function_side_effects(
                     &function_name,
                     &args,

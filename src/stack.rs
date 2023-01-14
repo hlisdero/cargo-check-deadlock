@@ -2,6 +2,9 @@
 //!
 //! It is used to implement the call stack for the source code translation.
 
+/// Error message when the stack is empty.
+const EMPTY_STACK: &str = "BUG: `peek_mut` should not be called on an empty stack";
+
 pub struct Stack<T> {
     stack: Vec<T>,
 }
@@ -27,12 +30,16 @@ impl<T> Stack<T> {
 
     /// Returns a mutable reference to the top element of the stack.
     /// Does not remove the element from the stack.
-    pub fn peek_mut(&mut self) -> Option<&mut T> {
+    ///
+    /// # Panics
+    ///
+    /// If the stack is empty, then the function panics.
+    pub fn peek_mut(&mut self) -> &mut T {
         if self.stack.is_empty() {
-            None
+            panic!("{EMPTY_STACK}");
         } else {
             let len = self.stack.len();
-            Some(&mut self.stack[len - 1])
+            &mut self.stack[len - 1]
         }
     }
 }
@@ -63,10 +70,11 @@ mod stack_tests {
     }
 
     #[test]
+    #[should_panic(expected = "BUG: `peek_mut` should not be called on an empty stack")]
     fn stack_new_peek_mut_returns_none() {
         let mut stack: Stack<usize> = Stack::new();
 
-        assert!(stack.peek_mut().is_none());
+        stack.peek_mut();
     }
 
     #[test]
@@ -140,8 +148,7 @@ mod stack_tests {
         stack.push(101);
         let result = stack.peek_mut();
 
-        assert!(result.is_some());
-        assert_eq!(*result.unwrap(), 101);
+        assert_eq!(*result, 101);
         assert!(!stack.stack.is_empty());
     }
 
@@ -150,12 +157,11 @@ mod stack_tests {
         let mut stack: Stack<usize> = Stack::new();
 
         stack.push(101);
-        let top = stack.peek_mut().unwrap();
+        let top = stack.peek_mut();
         *top = 999;
         let result = stack.peek_mut();
 
-        assert!(result.is_some());
-        assert_eq!(*result.unwrap(), 999);
+        assert_eq!(*result, 999);
         assert!(!stack.stack.is_empty());
     }
 }

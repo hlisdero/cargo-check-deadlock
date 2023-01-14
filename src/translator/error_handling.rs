@@ -1,9 +1,5 @@
 //! Submodule for error handling functions and messages.
 
-/// Error message when the call stack in the translator is empty.
-pub const EMPTY_CALL_STACK: &str =
-    "BUG: The call stack should contain a function for the MIR visitor methods to work";
-
 /// Handles the error case when adding an arc. Panic with a custom error message.
 /// This error points to an error in the Petri net library or in the code and should not occur.
 #[inline]

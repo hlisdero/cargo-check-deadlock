@@ -6,7 +6,6 @@
 //! For an introduction to MIR see:
 //! <https://rustc-dev-guide.rust-lang.org/mir/index.html>
 
-use crate::translator::error_handling::EMPTY_CALL_STACK;
 use crate::translator::sync::is_mutex_declaration;
 use crate::translator::utils::place_to_local;
 use crate::translator::Translator;
@@ -21,7 +20,7 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
         block: rustc_middle::mir::BasicBlock,
         data: &rustc_middle::mir::BasicBlockData<'tcx>,
     ) {
-        let function = self.call_stack.peek_mut().expect(EMPTY_CALL_STACK);
+        let function = self.call_stack.peek_mut();
         function.activate_block(block, &mut self.net);
         self.super_basic_block_data(block, data);
     }
@@ -37,7 +36,7 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
         rvalue: &rustc_middle::mir::Rvalue<'tcx>,
         location: rustc_middle::mir::Location,
     ) {
-        let function = self.call_stack.peek_mut().expect(EMPTY_CALL_STACK);
+        let function = self.call_stack.peek_mut();
         let body = self.tcx.optimized_mir(function.def_id);
 
         if let rustc_middle::mir::Rvalue::Ref(_, _, rhs) = rvalue {
@@ -57,7 +56,7 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
         statement: &rustc_middle::mir::Statement<'tcx>,
         location: rustc_middle::mir::Location,
     ) {
-        let function = self.call_stack.peek_mut().expect(EMPTY_CALL_STACK);
+        let function = self.call_stack.peek_mut();
         function.add_statement(statement, &mut self.net);
         self.super_statement(statement, location);
     }
@@ -67,7 +66,7 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
         terminator: &rustc_middle::mir::Terminator<'tcx>,
         location: rustc_middle::mir::Location,
     ) {
-        let function = self.call_stack.peek_mut().expect(EMPTY_CALL_STACK);
+        let function = self.call_stack.peek_mut();
         function.finish_statement_block(&mut self.net);
 
         match terminator.kind {
