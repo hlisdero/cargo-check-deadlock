@@ -50,9 +50,9 @@ pub fn is_panic_function(function_name: &str) -> bool {
 /// - the function does not have a MIR representation.
 /// - the function is a foreign item i.e., linked via extern { ... }).
 /// - the function belongs to the exclusions listed in `FUNCTIONS_EXCLUDED_FROM_TRANSLATION`
-pub fn is_foreign_function<'tcx>(
+pub fn is_foreign_function(
     function_def_id: rustc_hir::def_id::DefId,
-    tcx: rustc_middle::ty::TyCtxt<'tcx>,
+    tcx: rustc_middle::ty::TyCtxt,
 ) -> bool {
     let function_name = tcx.def_path_str(function_def_id);
     tcx.is_foreign_item(function_def_id)
