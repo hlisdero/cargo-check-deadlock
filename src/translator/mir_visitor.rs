@@ -22,6 +22,7 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
     ) {
         let function = self.call_stack.peek_mut();
         function.activate_block(block, &mut self.net);
+
         self.super_basic_block_data(block, data);
     }
 
@@ -58,6 +59,7 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
     ) {
         let function = self.call_stack.peek_mut();
         function.add_statement(statement, &mut self.net);
+
         self.super_statement(statement, location);
     }
 
@@ -137,6 +139,7 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
                 unimplemented!("TerminatorKind::InlineAsm not implemented yet")
             }
         }
+
         self.super_terminator(terminator, location);
     }
 }
