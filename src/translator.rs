@@ -41,6 +41,7 @@ use crate::translator::special_function::{
     diverging_function_call, foreign_function_call, is_panic, is_special, panic_function_call,
 };
 use crate::translator::sync::{is_mutex_function, MutexManager};
+use crate::translator::utils::place_to_local;
 use netcrab::petri_net::{PetriNet, PlaceRef};
 use rustc_middle::mir::visit::Visitor;
 
@@ -319,12 +320,15 @@ impl<'tcx> Translator<'tcx> {
                     cleanup_place,
                     &mut self.net,
                 );
+
+                let current_function = self.call_stack.peek_mut().expect(EMPTY_CALL_STACK);
                 self.mutex_manager.translate_function_side_effects(
                     &function_name,
                     &args,
                     destination,
                     &transition_function_call,
                     &mut self.net,
+                    &mut current_function.memory,
                 );
             }
             FunctionCall::Panic {

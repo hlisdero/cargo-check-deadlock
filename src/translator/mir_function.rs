@@ -18,6 +18,7 @@ mod statement;
 use crate::translator::error_handling::handle_err_add_arc;
 use crate::translator::mir_function::basic_block::BasicBlock;
 use crate::translator::naming::{basic_block_start_place_label, function_return_transition_label};
+use crate::translator::sync::Memory;
 use netcrab::petri_net::{PetriNet, PlaceRef};
 use std::collections::HashMap;
 
@@ -35,6 +36,8 @@ pub struct MirFunction {
     active_block: Option<rustc_middle::mir::BasicBlock>,
     /// A mapping between the basic block number and our representation of the basic block.
     basic_blocks: HashMap<rustc_middle::mir::BasicBlock, BasicBlock>,
+    /// A representation of the memory of the function.
+    pub memory: Memory,
 }
 
 impl MirFunction {
@@ -55,6 +58,7 @@ impl MirFunction {
             end_place,
             active_block: None,
             basic_blocks: HashMap::new(),
+            memory: Memory::new(),
         }
     }
 

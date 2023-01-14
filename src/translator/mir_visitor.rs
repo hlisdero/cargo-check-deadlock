@@ -45,7 +45,7 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
             let local_decl = &body.local_decls[rhs];
             if is_mutex_declaration(local_decl) {
                 let lhs = place_to_local(place);
-                self.mutex_manager.link_local_to_same_mutex(lhs, rhs);
+                function.memory.link_local_to_same_mutex(lhs, rhs);
             }
         }
 
