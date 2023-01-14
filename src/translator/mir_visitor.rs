@@ -89,11 +89,12 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
             }
             TerminatorKind::Unreachable => {}
             TerminatorKind::Drop {
-                place: _,
+                place,
                 target,
                 unwind,
             } => {
-                function.drop(target, unwind, &mut self.net);
+                let transition_drop = function.drop(target, unwind, &mut self.net);
+                self.handle_lock_guard_drop(place, &transition_drop);
             }
             TerminatorKind::DropAndReplace { .. } => {
                 unimplemented!("TerminatorKind::DropAndReplace not implemented yet")

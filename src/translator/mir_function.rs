@@ -19,7 +19,7 @@ use crate::translator::error_handling::handle_err_add_arc;
 use crate::translator::mir_function::basic_block::BasicBlock;
 use crate::translator::naming::{basic_block_start_place_label, function_return_transition_label};
 use crate::translator::sync::Memory;
-use netcrab::petri_net::{PetriNet, PlaceRef};
+use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
 use std::collections::HashMap;
 
 pub struct MirFunction {
@@ -291,6 +291,8 @@ impl MirFunction {
 
     /// Connects the active basic block to the next basic block identified as the argument `target`
     /// of the drop terminator.
+    /// Returns the transition that represents dropping the variable.
+    ///
     /// Optionally, if an unwind block is present, connects the active basic block to the next basic
     /// block identified as the argument `unwind` of the drop terminator.
     /// <https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/enum.TerminatorKind.html#variant.Drop>
@@ -303,14 +305,15 @@ impl MirFunction {
         target: rustc_middle::mir::BasicBlock,
         unwind: Option<rustc_middle::mir::BasicBlock>,
         net: &mut PetriNet,
-    ) {
+    ) -> TransitionRef {
         let (active_block, target_block) = self.get_pair_active_block_target_block(target, net);
-        active_block.drop(target_block, net);
+        let transition_drop = active_block.drop(target_block, net);
 
         if let Some(unwind) = unwind {
             let (active_block, unwind_block) = self.get_pair_active_block_target_block(unwind, net);
             active_block.drop_unwind(unwind_block, net);
         };
+        transition_drop
     }
 
     /// Connects the active basic block to the next basic block identified as the argument `target`

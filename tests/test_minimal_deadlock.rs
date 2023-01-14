@@ -41,8 +41,11 @@ const MINIMAL_DEADLOCK_DOT_OUTPUT: &str = r#"digraph petrinet {
     main_BB7 -> main_UNWIND_7;
     main_BB1_STMT0 -> main_BB1_END_PLACE;
     main_BB2_STMT0 -> main_BB2_END_PLACE;
+    main_DROP_3 -> MUTEX_0;
     main_DROP_3 -> main_BB4;
+    main_DROP_4 -> MUTEX_0;
     main_DROP_4 -> main_BB5;
+    main_DROP_6 -> MUTEX_0;
     main_DROP_6 -> main_BB7;
     main_DROP_UNWIND_3 -> main_BB6;
     main_RETURN -> PROGRAM_END;
@@ -86,16 +89,19 @@ TRANSITION main_DROP_3
   CONSUME
     main_BB3 : 1;
   PRODUCE
+    MUTEX_0 : 1,
     main_BB4 : 1;
 TRANSITION main_DROP_4
   CONSUME
     main_BB4 : 1;
   PRODUCE
+    MUTEX_0 : 1,
     main_BB5 : 1;
 TRANSITION main_DROP_6
   CONSUME
     main_BB6 : 1;
   PRODUCE
+    MUTEX_0 : 1,
     main_BB7 : 1;
 TRANSITION main_DROP_UNWIND_3
   CONSUME
@@ -382,6 +388,14 @@ const MINIMAL_DEADLOCK_PNML_OUTPUT: &str = r#"<?xml version="1.0" encoding="utf-
           <text>1</text>
         </inscription>
       </arc>
+      <arc source="main_DROP_3" target="MUTEX_0" id="(main_DROP_3, MUTEX_0)">
+        <name>
+          <text>(main_DROP_3, MUTEX_0)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
       <arc source="main_DROP_3" target="main_BB4" id="(main_DROP_3, main_BB4)">
         <name>
           <text>(main_DROP_3, main_BB4)</text>
@@ -390,9 +404,25 @@ const MINIMAL_DEADLOCK_PNML_OUTPUT: &str = r#"<?xml version="1.0" encoding="utf-
           <text>1</text>
         </inscription>
       </arc>
+      <arc source="main_DROP_4" target="MUTEX_0" id="(main_DROP_4, MUTEX_0)">
+        <name>
+          <text>(main_DROP_4, MUTEX_0)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
       <arc source="main_DROP_4" target="main_BB5" id="(main_DROP_4, main_BB5)">
         <name>
           <text>(main_DROP_4, main_BB5)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main_DROP_6" target="MUTEX_0" id="(main_DROP_6, MUTEX_0)">
+        <name>
+          <text>(main_DROP_6, MUTEX_0)</text>
         </name>
         <inscription>
           <text>1</text>

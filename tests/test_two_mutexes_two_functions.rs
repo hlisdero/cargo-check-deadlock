@@ -79,8 +79,11 @@ const TWO_MUTEXES_TWO_FUNCTIONS_DOT_OUTPUT: &str = r#"digraph petrinet {
     second_deadlock_BB7 -> second_deadlock_UNWIND_7;
     first_deadlock_BB1_STMT0 -> first_deadlock_BB1_END_PLACE;
     first_deadlock_BB2_STMT0 -> first_deadlock_BB2_END_PLACE;
+    first_deadlock_DROP_3 -> MUTEX_0;
     first_deadlock_DROP_3 -> first_deadlock_BB4;
+    first_deadlock_DROP_4 -> MUTEX_0;
     first_deadlock_DROP_4 -> first_deadlock_BB5;
+    first_deadlock_DROP_6 -> MUTEX_0;
     first_deadlock_DROP_6 -> first_deadlock_BB7;
     first_deadlock_DROP_UNWIND_3 -> first_deadlock_BB6;
     first_deadlock_RETURN -> main_BB1;
@@ -88,8 +91,11 @@ const TWO_MUTEXES_TWO_FUNCTIONS_DOT_OUTPUT: &str = r#"digraph petrinet {
     main_RETURN -> PROGRAM_END;
     second_deadlock_BB1_STMT0 -> second_deadlock_BB1_END_PLACE;
     second_deadlock_BB2_STMT0 -> second_deadlock_BB2_END_PLACE;
+    second_deadlock_DROP_3 -> MUTEX_1;
     second_deadlock_DROP_3 -> second_deadlock_BB4;
+    second_deadlock_DROP_4 -> MUTEX_1;
     second_deadlock_DROP_4 -> second_deadlock_BB5;
+    second_deadlock_DROP_6 -> MUTEX_1;
     second_deadlock_DROP_6 -> second_deadlock_BB7;
     second_deadlock_DROP_UNWIND_3 -> second_deadlock_BB6;
     second_deadlock_RETURN -> main_BB2;
@@ -150,16 +156,19 @@ TRANSITION first_deadlock_DROP_3
   CONSUME
     first_deadlock_BB3 : 1;
   PRODUCE
+    MUTEX_0 : 1,
     first_deadlock_BB4 : 1;
 TRANSITION first_deadlock_DROP_4
   CONSUME
     first_deadlock_BB4 : 1;
   PRODUCE
+    MUTEX_0 : 1,
     first_deadlock_BB5 : 1;
 TRANSITION first_deadlock_DROP_6
   CONSUME
     first_deadlock_BB6 : 1;
   PRODUCE
+    MUTEX_0 : 1,
     first_deadlock_BB7 : 1;
 TRANSITION first_deadlock_DROP_UNWIND_3
   CONSUME
@@ -195,16 +204,19 @@ TRANSITION second_deadlock_DROP_3
   CONSUME
     second_deadlock_BB3 : 1;
   PRODUCE
+    MUTEX_1 : 1,
     second_deadlock_BB4 : 1;
 TRANSITION second_deadlock_DROP_4
   CONSUME
     second_deadlock_BB4 : 1;
   PRODUCE
+    MUTEX_1 : 1,
     second_deadlock_BB5 : 1;
 TRANSITION second_deadlock_DROP_6
   CONSUME
     second_deadlock_BB6 : 1;
   PRODUCE
+    MUTEX_1 : 1,
     second_deadlock_BB7 : 1;
 TRANSITION second_deadlock_DROP_UNWIND_3
   CONSUME
@@ -744,6 +756,14 @@ const TWO_MUTEXES_TWO_FUNCTIONS_PNML_OUTPUT: &str = r#"<?xml version="1.0" encod
           <text>1</text>
         </inscription>
       </arc>
+      <arc source="first_deadlock_DROP_3" target="MUTEX_0" id="(first_deadlock_DROP_3, MUTEX_0)">
+        <name>
+          <text>(first_deadlock_DROP_3, MUTEX_0)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
       <arc source="first_deadlock_DROP_3" target="first_deadlock_BB4" id="(first_deadlock_DROP_3, first_deadlock_BB4)">
         <name>
           <text>(first_deadlock_DROP_3, first_deadlock_BB4)</text>
@@ -752,9 +772,25 @@ const TWO_MUTEXES_TWO_FUNCTIONS_PNML_OUTPUT: &str = r#"<?xml version="1.0" encod
           <text>1</text>
         </inscription>
       </arc>
+      <arc source="first_deadlock_DROP_4" target="MUTEX_0" id="(first_deadlock_DROP_4, MUTEX_0)">
+        <name>
+          <text>(first_deadlock_DROP_4, MUTEX_0)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
       <arc source="first_deadlock_DROP_4" target="first_deadlock_BB5" id="(first_deadlock_DROP_4, first_deadlock_BB5)">
         <name>
           <text>(first_deadlock_DROP_4, first_deadlock_BB5)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="first_deadlock_DROP_6" target="MUTEX_0" id="(first_deadlock_DROP_6, MUTEX_0)">
+        <name>
+          <text>(first_deadlock_DROP_6, MUTEX_0)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -816,6 +852,14 @@ const TWO_MUTEXES_TWO_FUNCTIONS_PNML_OUTPUT: &str = r#"<?xml version="1.0" encod
           <text>1</text>
         </inscription>
       </arc>
+      <arc source="second_deadlock_DROP_3" target="MUTEX_1" id="(second_deadlock_DROP_3, MUTEX_1)">
+        <name>
+          <text>(second_deadlock_DROP_3, MUTEX_1)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
       <arc source="second_deadlock_DROP_3" target="second_deadlock_BB4" id="(second_deadlock_DROP_3, second_deadlock_BB4)">
         <name>
           <text>(second_deadlock_DROP_3, second_deadlock_BB4)</text>
@@ -824,9 +868,25 @@ const TWO_MUTEXES_TWO_FUNCTIONS_PNML_OUTPUT: &str = r#"<?xml version="1.0" encod
           <text>1</text>
         </inscription>
       </arc>
+      <arc source="second_deadlock_DROP_4" target="MUTEX_1" id="(second_deadlock_DROP_4, MUTEX_1)">
+        <name>
+          <text>(second_deadlock_DROP_4, MUTEX_1)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
       <arc source="second_deadlock_DROP_4" target="second_deadlock_BB5" id="(second_deadlock_DROP_4, second_deadlock_BB5)">
         <name>
           <text>(second_deadlock_DROP_4, second_deadlock_BB5)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="second_deadlock_DROP_6" target="MUTEX_1" id="(second_deadlock_DROP_6, MUTEX_1)">
+        <name>
+          <text>(second_deadlock_DROP_6, MUTEX_1)</text>
         </name>
         <inscription>
           <text>1</text>

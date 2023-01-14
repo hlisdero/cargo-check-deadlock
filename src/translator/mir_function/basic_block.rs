@@ -13,7 +13,7 @@ use crate::translator::naming::{
     basic_block_end_place_label, basic_block_goto_transition_label,
     basic_block_switch_int_transition_label, basic_block_unwind_transition_label,
 };
-use netcrab::petri_net::{PetriNet, PlaceRef};
+use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
 
 pub struct BasicBlock {
     /// Name of the function to which this block belongs.
@@ -99,14 +99,17 @@ impl BasicBlock {
     }
 
     /// Connects the end place of this block to the start place of the `target` basic block.
-    pub fn drop(&self, target: &Self, net: &mut PetriNet) {
-        self.connect_end_to_next_place(
-            &target.start_place,
-            net,
-            &basic_block_drop_transition_label(&self.function_name, self.index),
-            "drop transition",
-            "target block start place",
-        );
+    /// Returns the new transition created to connect the two basic blocks.
+    pub fn drop(&self, target: &Self, net: &mut PetriNet) -> TransitionRef {
+        let transition = net.add_transition(&basic_block_drop_transition_label(
+            &self.function_name,
+            self.index,
+        ));
+        net.add_arc_place_transition(&self.end_place, &transition)
+            .unwrap_or_else(|_| handle_err_add_arc("end place of the block", "drop transition"));
+        net.add_arc_transition_place(&transition, &target.start_place)
+            .unwrap_or_else(|_| handle_err_add_arc("drop transition", "target block start place"));
+        transition
     }
 
     /// Connects the end place of this block to the start place of the `unwind` basic block.
