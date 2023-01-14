@@ -275,7 +275,7 @@ impl<'tcx> Translator<'tcx> {
     /// - Functions that call a mutex synchronization primitive such as `std::sync::Mutex::lock`.
     ///
     /// Diverging functions are handled here too. They are modelled as a dead end in the net.
-    pub fn call_function(&mut self, function_call: FunctionCall) {
+    fn call_function(&mut self, function_call: FunctionCall) {
         match function_call {
             FunctionCall::MirFunction {
                 function_def_id,
