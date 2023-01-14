@@ -12,13 +12,13 @@ categories = ["command-line-utilities"]
 edition = "2021"
 
 [dependencies]
-clap = { version = "4.0.32", features = ["derive"] }
+clap = { version = "4.1.1", features = ["derive"] }
 netcrab = { git = "https://github.com/hlisdero/netcrab/" }
 
 [dev-dependencies]
-assert_cmd = "2.0.7"
+assert_cmd = "2.0.8"
 assert_fs = "1.0.10"
-predicates = "2.1.4"
+predicates = "2.1.5"
 
 [package.metadata.rust-analyzer]
 # This package uses #[feature(rustc_private)]
