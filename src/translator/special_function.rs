@@ -1,4 +1,4 @@
-//! Constant definitions for functions that require special treatment
+//! Submodule for functions that require special treatment
 //! during the translation.
 //!
 //! These could be synchronization primitives, `panic!`-related primitives,

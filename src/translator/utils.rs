@@ -1,3 +1,5 @@
+//! Submodule for miscellaneous utility functions.
+
 /// Convert the `Place` directly to a `Local`.
 /// <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/mir/syntax/struct.Place.html#method.as_local>
 ///
