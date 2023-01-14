@@ -40,7 +40,7 @@ use crate::translator::naming::{PROGRAM_END, PROGRAM_PANIC, PROGRAM_START};
 use crate::translator::special_function::{
     diverging_function_call, foreign_function_call, is_panic, is_special, panic_function_call,
 };
-use crate::translator::sync::MutexManager;
+use crate::translator::sync::{is_mutex_function, MutexManager};
 use netcrab::petri_net::{PetriNet, PlaceRef};
 use rustc_middle::mir::visit::Visitor;
 
@@ -193,12 +193,12 @@ impl<'tcx> Translator<'tcx> {
     /// and given `DefId` should be treated as a foreign function call.
     fn is_foreign_function_call(
         &self,
-        function_def_id: &rustc_hir::def_id::DefId,
+        function_def_id: rustc_hir::def_id::DefId,
         function_name: &str,
     ) -> bool {
         self.tcx.is_foreign_item(function_def_id)
             || !self.tcx.is_mir_available(function_def_id)
-            || is_special(&function_name)
+            || is_special(function_name)
     }
 
     /// Prepares the function call depending on the type of function.
@@ -238,7 +238,7 @@ impl<'tcx> Translator<'tcx> {
         let (start_place, end_place, cleanup_place) =
             current_function.get_place_refs_for_function_call(return_block, cleanup, &mut self.net);
 
-        if self.is_foreign_function_call(&function_def_id, &function_name) {
+        if self.is_foreign_function_call(function_def_id, &function_name) {
             return FunctionCall::Foreign {
                 function_name,
                 start_place,
@@ -247,7 +247,7 @@ impl<'tcx> Translator<'tcx> {
             };
         }
 
-        if MutexManager::is_mutex_function(&function_name) {
+        if is_mutex_function(&function_name) {
             return FunctionCall::Mutex {
                 function_name,
                 args,

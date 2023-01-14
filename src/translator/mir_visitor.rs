@@ -7,8 +7,8 @@
 //! <https://rustc-dev-guide.rust-lang.org/mir/index.html>
 
 use crate::translator::error_handling::EMPTY_CALL_STACK;
+use crate::translator::sync::is_mutex_declaration;
 use crate::translator::utils::place_to_local;
-use crate::translator::MutexManager;
 use crate::translator::Translator;
 use rustc_middle::mir::visit::Visitor;
 use rustc_middle::mir::TerminatorKind;
@@ -43,7 +43,7 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
         if let rustc_middle::mir::Rvalue::Ref(_, _, rhs) = rvalue {
             let rhs = place_to_local(rhs);
             let local_decl = &body.local_decls[rhs];
-            if MutexManager::is_mutex_declaration(local_decl) {
+            if is_mutex_declaration(local_decl) {
                 let lhs = place_to_local(place);
                 self.mutex_manager.link_local_to_same_mutex(lhs, rhs);
             }
