@@ -189,6 +189,18 @@ impl<'tcx> Translator<'tcx> {
         }
     }
 
+    /// Checks whether the function with the given function name
+    /// and given `DefId` should be treated as a foreign function call.
+    fn is_foreign_function_call(
+        &self,
+        function_def_id: &rustc_hir::def_id::DefId,
+        function_name: &str,
+    ) -> bool {
+        self.tcx.is_foreign_item(function_def_id)
+            || !self.tcx.is_mir_available(function_def_id)
+            || is_special(&function_name)
+    }
+
     /// Prepares the function call depending on the type of function.
     /// The return `FunctionCall` enum has all the information required for the function call.
     ///
@@ -226,17 +238,16 @@ impl<'tcx> Translator<'tcx> {
         let (start_place, end_place, cleanup_place) =
             current_function.get_place_refs_for_function_call(return_block, cleanup, &mut self.net);
 
-        if self.tcx.is_foreign_item(function_def_id)
-            || !self.tcx.is_mir_available(function_def_id)
-            || is_special(&function_name)
-        {
+        if self.is_foreign_function_call(&function_def_id, &function_name) {
             return FunctionCall::Foreign {
                 function_name,
                 start_place,
                 end_place,
                 cleanup_place,
             };
-        } else if MutexManager::is_mutex_function(&function_name) {
+        }
+
+        if MutexManager::is_mutex_function(&function_name) {
             return FunctionCall::Mutex {
                 function_name,
                 args,
@@ -246,7 +257,7 @@ impl<'tcx> Translator<'tcx> {
                 cleanup_place,
             };
         }
-
+        // Default case: A function with MIR representation
         FunctionCall::MirFunction {
             function_def_id,
             start_place,
