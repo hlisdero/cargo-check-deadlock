@@ -5,12 +5,12 @@ const MINIMAL_FUNCTION_CALL_DOT_OUTPUT: &str = r#"digraph petrinet {
     PROGRAM_END [shape="circle" xlabel="PROGRAM_END" label=""];
     PROGRAM_PANIC [shape="circle" xlabel="PROGRAM_PANIC" label=""];
     PROGRAM_START [shape="circle" xlabel="PROGRAM_START" label="•"];
-    main_BASIC_BLOCK_1 [shape="circle" xlabel="main_BASIC_BLOCK_1" label=""];
-    call_RETURN [shape="box" xlabel="call_RETURN" label=""];
-    main_RETURN [shape="box" xlabel="main_RETURN" label=""];
+    main_BB1 [shape="circle" xlabel="main_BB1" label=""];
+    call_RETURN [shape="box" xlabel="" label="call_RETURN"];
+    main_RETURN [shape="box" xlabel="" label="main_RETURN"];
     PROGRAM_START -> call_RETURN;
-    main_BASIC_BLOCK_1 -> main_RETURN;
-    call_RETURN -> main_BASIC_BLOCK_1;
+    main_BB1 -> main_RETURN;
+    call_RETURN -> main_BB1;
     main_RETURN -> PROGRAM_END;
 }
 "#;
@@ -19,7 +19,7 @@ const MINIMAL_FUNCTION_CALL_LOLA_OUTPUT: &str = r#"PLACE
     PROGRAM_END,
     PROGRAM_PANIC,
     PROGRAM_START,
-    main_BASIC_BLOCK_1;
+    main_BB1;
 
 MARKING
     PROGRAM_START : 1,
@@ -27,10 +27,10 @@ TRANSITION call_RETURN
   CONSUME
     PROGRAM_START : 1;
   PRODUCE
-    main_BASIC_BLOCK_1 : 1;
+    main_BB1 : 1;
 TRANSITION main_RETURN
   CONSUME
-    main_BASIC_BLOCK_1 : 1;
+    main_BB1 : 1;
   PRODUCE
     PROGRAM_END : 1;
 "#;
@@ -57,9 +57,9 @@ const MINIMAL_FUNCTION_CALL_PNML_OUTPUT: &str = r#"<?xml version="1.0" encoding=
           <text>1</text>
         </initialMarking>
       </place>
-      <place id="main_BASIC_BLOCK_1">
+      <place id="main_BB1">
         <name>
-          <text>main_BASIC_BLOCK_1</text>
+          <text>main_BB1</text>
         </name>
       </place>
       <transition id="call_RETURN">
@@ -80,17 +80,17 @@ const MINIMAL_FUNCTION_CALL_PNML_OUTPUT: &str = r#"<?xml version="1.0" encoding=
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BASIC_BLOCK_1" target="main_RETURN" id="(main_BASIC_BLOCK_1, main_RETURN)">
+      <arc source="main_BB1" target="main_RETURN" id="(main_BB1, main_RETURN)">
         <name>
-          <text>(main_BASIC_BLOCK_1, main_RETURN)</text>
+          <text>(main_BB1, main_RETURN)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="call_RETURN" target="main_BASIC_BLOCK_1" id="(call_RETURN, main_BASIC_BLOCK_1)">
+      <arc source="call_RETURN" target="main_BB1" id="(call_RETURN, main_BB1)">
         <name>
-          <text>(call_RETURN, main_BASIC_BLOCK_1)</text>
+          <text>(call_RETURN, main_BB1)</text>
         </name>
         <inscription>
           <text>1</text>

@@ -5,13 +5,13 @@ const MINIMAL_INFINITE_LOOP_DOT_OUTPUT: &str = r#"digraph petrinet {
     PROGRAM_END [shape="circle" xlabel="PROGRAM_END" label=""];
     PROGRAM_PANIC [shape="circle" xlabel="PROGRAM_PANIC" label=""];
     PROGRAM_START [shape="circle" xlabel="PROGRAM_START" label="•"];
-    main_BASIC_BLOCK_1 [shape="circle" xlabel="main_BASIC_BLOCK_1" label=""];
-    main_GOTO_0 [shape="box" xlabel="main_GOTO_0" label=""];
-    main_GOTO_1 [shape="box" xlabel="main_GOTO_1" label=""];
+    main_BB1 [shape="circle" xlabel="main_BB1" label=""];
+    main_GOTO_0 [shape="box" xlabel="" label="main_GOTO_0"];
+    main_GOTO_1 [shape="box" xlabel="" label="main_GOTO_1"];
     PROGRAM_START -> main_GOTO_0;
-    main_BASIC_BLOCK_1 -> main_GOTO_1;
-    main_GOTO_0 -> main_BASIC_BLOCK_1;
-    main_GOTO_1 -> main_BASIC_BLOCK_1;
+    main_BB1 -> main_GOTO_1;
+    main_GOTO_0 -> main_BB1;
+    main_GOTO_1 -> main_BB1;
 }
 "#;
 
@@ -19,7 +19,7 @@ const MINIMAL_INFINITE_LOOP_LOLA_OUTPUT: &str = r#"PLACE
     PROGRAM_END,
     PROGRAM_PANIC,
     PROGRAM_START,
-    main_BASIC_BLOCK_1;
+    main_BB1;
 
 MARKING
     PROGRAM_START : 1,
@@ -27,12 +27,12 @@ TRANSITION main_GOTO_0
   CONSUME
     PROGRAM_START : 1;
   PRODUCE
-    main_BASIC_BLOCK_1 : 1;
+    main_BB1 : 1;
 TRANSITION main_GOTO_1
   CONSUME
-    main_BASIC_BLOCK_1 : 1;
+    main_BB1 : 1;
   PRODUCE
-    main_BASIC_BLOCK_1 : 1;
+    main_BB1 : 1;
 "#;
 
 const MINIMAL_INFINITE_LOOP_PNML_OUTPUT: &str = r#"<?xml version="1.0" encoding="utf-8"?>
@@ -57,9 +57,9 @@ const MINIMAL_INFINITE_LOOP_PNML_OUTPUT: &str = r#"<?xml version="1.0" encoding=
           <text>1</text>
         </initialMarking>
       </place>
-      <place id="main_BASIC_BLOCK_1">
+      <place id="main_BB1">
         <name>
-          <text>main_BASIC_BLOCK_1</text>
+          <text>main_BB1</text>
         </name>
       </place>
       <transition id="main_GOTO_0">
@@ -80,25 +80,25 @@ const MINIMAL_INFINITE_LOOP_PNML_OUTPUT: &str = r#"<?xml version="1.0" encoding=
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BASIC_BLOCK_1" target="main_GOTO_1" id="(main_BASIC_BLOCK_1, main_GOTO_1)">
+      <arc source="main_BB1" target="main_GOTO_1" id="(main_BB1, main_GOTO_1)">
         <name>
-          <text>(main_BASIC_BLOCK_1, main_GOTO_1)</text>
+          <text>(main_BB1, main_GOTO_1)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_GOTO_0" target="main_BASIC_BLOCK_1" id="(main_GOTO_0, main_BASIC_BLOCK_1)">
+      <arc source="main_GOTO_0" target="main_BB1" id="(main_GOTO_0, main_BB1)">
         <name>
-          <text>(main_GOTO_0, main_BASIC_BLOCK_1)</text>
+          <text>(main_GOTO_0, main_BB1)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_GOTO_1" target="main_BASIC_BLOCK_1" id="(main_GOTO_1, main_BASIC_BLOCK_1)">
+      <arc source="main_GOTO_1" target="main_BB1" id="(main_GOTO_1, main_BB1)">
         <name>
-          <text>(main_GOTO_1, main_BASIC_BLOCK_1)</text>
+          <text>(main_GOTO_1, main_BB1)</text>
         </name>
         <inscription>
           <text>1</text>

@@ -5,7 +5,7 @@ const MINIMAL_ABORT_DOT_OUTPUT: &str = r#"digraph petrinet {
     PROGRAM_END [shape="circle" xlabel="PROGRAM_END" label=""];
     PROGRAM_PANIC [shape="circle" xlabel="PROGRAM_PANIC" label=""];
     PROGRAM_START [shape="circle" xlabel="PROGRAM_START" label="•"];
-    std_process_abort_DIVERGING_CALL [shape="box" xlabel="std_process_abort_DIVERGING_CALL" label=""];
+    std_process_abort_DIVERGING_CALL [shape="box" xlabel="" label="std_process_abort_DIVERGING_CALL"];
     PROGRAM_START -> std_process_abort_DIVERGING_CALL;
 }
 "#;

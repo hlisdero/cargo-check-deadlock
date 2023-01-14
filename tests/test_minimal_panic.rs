@@ -5,7 +5,7 @@ const MINIMAL_PANIC_DOT_OUTPUT: &str = r#"digraph petrinet {
     PROGRAM_END [shape="circle" xlabel="PROGRAM_END" label=""];
     PROGRAM_PANIC [shape="circle" xlabel="PROGRAM_PANIC" label=""];
     PROGRAM_START [shape="circle" xlabel="PROGRAM_START" label="•"];
-    main_PANIC [shape="box" xlabel="main_PANIC" label=""];
+    main_PANIC [shape="box" xlabel="" label="main_PANIC"];
     PROGRAM_START -> main_PANIC;
     main_PANIC -> PROGRAM_PANIC;
 }

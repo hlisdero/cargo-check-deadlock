@@ -46,13 +46,13 @@ pub fn function_panic_transition_label(function_name: &str) -> String {
 /// Label of the start place of any `BasicBlock`.
 #[inline]
 pub fn basic_block_start_place_label(function_name: &str, index: usize) -> String {
-    format!("{}_BASIC_BLOCK_{index}", sanitize(function_name))
+    format!("{}_BB{index}", sanitize(function_name))
 }
 
 /// Label of the end place of any `BasicBlock`.
 #[inline]
 pub fn basic_block_end_place_label(function_name: &str, index: usize) -> String {
-    format!("{}_BASIC_BLOCK_END_PLACE_{index}", sanitize(function_name))
+    format!("{}_BB{index}_END_PLACE", sanitize(function_name))
 }
 
 /// Label of the transition that represents a goto terminator to another `BasicBlock`.
@@ -105,7 +105,7 @@ pub fn statement_transition_label(
     statement_index: usize,
 ) -> String {
     format!(
-        "{}_BLOCK_{block_index}_STATEMENT_{statement_index}",
+        "{}_BB{block_index}_STMT{statement_index}",
         sanitize(function_name)
     )
 }
@@ -118,7 +118,7 @@ pub fn statement_end_place_label(
     statement_index: usize,
 ) -> String {
     format!(
-        "{}_BLOCK_{block_index}_STATEMENT_END_{statement_index}",
+        "{}_BB{block_index}_STMT{statement_index}_END",
         sanitize(function_name)
     )
 }
