@@ -58,7 +58,7 @@ jobs:
           profile: minimal
           toolchain: nightly
           override: true
-          components: clippy
+          components: clippy, rust-src, rustc-dev, llvm-tools-preview
       - uses: actions-rs/cargo@v1
         with:
           command: clippy
