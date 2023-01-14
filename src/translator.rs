@@ -37,8 +37,8 @@ use crate::translator::mir_function::MirFunction;
 use crate::translator::naming::function_foreign_call_transition_label;
 use crate::translator::naming::{PROGRAM_END, PROGRAM_PANIC, PROGRAM_START};
 use crate::translator::special_function::{
-    diverging_function_call, foreign_function_call, is_foreign_function, is_panic,
-    panic_function_call,
+    call_diverging_function, call_foreign_function, call_panic_function, is_foreign_function,
+    is_panic_function,
 };
 use crate::translator::sync::{is_mutex_function, MutexManager};
 use crate::translator::utils::{extract_def_id_of_called_function_from_operand, place_to_local};
@@ -170,7 +170,7 @@ impl<'tcx> Translator<'tcx> {
             extract_def_id_of_called_function_from_operand(func, current_function.def_id, self.tcx);
         let function_name = self.tcx.def_path_str(function_def_id);
 
-        if is_panic(&function_name) {
+        if is_panic_function(&function_name) {
             let start_place = current_function.get_start_place_for_function_call();
             return FunctionCall::Panic {
                 function_name: current_function.name.clone(),
@@ -236,7 +236,7 @@ impl<'tcx> Translator<'tcx> {
             FunctionCall::Diverging {
                 function_name,
                 start_place,
-            } => diverging_function_call(&start_place, &function_name, &mut self.net),
+            } => call_diverging_function(&start_place, &function_name, &mut self.net),
             FunctionCall::Foreign {
                 function_name,
                 start_place,
@@ -244,7 +244,7 @@ impl<'tcx> Translator<'tcx> {
                 cleanup_place,
             } => {
                 let transition_label = &function_foreign_call_transition_label(&function_name);
-                foreign_function_call(
+                call_foreign_function(
                     &start_place,
                     &end_place,
                     cleanup_place,
@@ -281,7 +281,7 @@ impl<'tcx> Translator<'tcx> {
             FunctionCall::Panic {
                 function_name,
                 start_place,
-            } => panic_function_call(
+            } => call_panic_function(
                 &start_place,
                 &self.program_panic,
                 &function_name,

@@ -5,7 +5,7 @@
 
 use crate::translator::naming::mutex_function_transition_label;
 use crate::translator::place_to_local;
-use crate::translator::special_function::foreign_function_call;
+use crate::translator::special_function::call_foreign_function;
 use crate::translator::sync::extract_self_reference_from_arguments_to_function_call;
 use crate::translator::sync::mutex::Mutex;
 use crate::translator::sync::Memory;
@@ -48,7 +48,7 @@ impl MutexManager {
         };
 
         let transition_label = &mutex_function_transition_label(function_name, index);
-        foreign_function_call(start_place, end_place, cleanup_place, transition_label, net)
+        call_foreign_function(start_place, end_place, cleanup_place, transition_label, net)
     }
 
     /// Translates the side effects for the methods of `std::sync::Mutex`, i.e.,

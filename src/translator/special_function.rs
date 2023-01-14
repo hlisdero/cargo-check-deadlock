@@ -34,7 +34,7 @@ fn is_function_excluded_from_translation(function_name: &str) -> bool {
 
 /// Checks whether the function name corresponds to one of the functions
 /// that starts a panic, i.e. an unwind of the stack.
-pub fn is_panic(function_name: &str) -> bool {
+pub fn is_panic_function(function_name: &str) -> bool {
     for name in PANIC_FUNCTIONS {
         if function_name == name {
             return true;
@@ -64,7 +64,7 @@ pub fn is_foreign_function<'tcx>(
 /// Connects the start place and end place through a new transition.
 /// If an optional cleanup place is provided, it connects the transition to this place too.
 /// Returns the transition reference representing the function call.
-pub fn foreign_function_call(
+pub fn call_foreign_function(
     start_place: &PlaceRef,
     end_place: &PlaceRef,
     cleanup_place: Option<PlaceRef>,
@@ -93,7 +93,7 @@ pub fn foreign_function_call(
 
 /// Creates an abridged Petri net representation of a diverging function call.
 /// Connects the start place to a new transition that models a call to a function which does not return.
-pub fn diverging_function_call(start_place: &PlaceRef, function_name: &str, net: &mut PetriNet) {
+pub fn call_diverging_function(start_place: &PlaceRef, function_name: &str, net: &mut PetriNet) {
     let label = &function_diverging_call_transition_label(function_name);
     let transition = net.add_transition(label);
     net.add_arc_place_transition(start_place, &transition)
@@ -105,7 +105,7 @@ pub fn diverging_function_call(start_place: &PlaceRef, function_name: &str, net:
 /// Creates an abridged Petri net representation of a function call
 /// that starts a panic, i.e. an unwind of the stack.
 /// Connects the start place to the panic place through a new transition.
-pub fn panic_function_call(
+pub fn call_panic_function(
     start_place: &PlaceRef,
     unwind_place: &PlaceRef,
     function_name: &str,
