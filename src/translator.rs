@@ -29,6 +29,7 @@ mod special_function;
 mod sync;
 mod utils;
 
+use crate::error_handling::ERR_NO_MAIN_FUNCTION_FOUND;
 use crate::naming::function_foreign_call_transition_label;
 use crate::naming::{PROGRAM_END, PROGRAM_PANIC, PROGRAM_START};
 use crate::stack::Stack;
@@ -111,7 +112,7 @@ impl<'tcx> Translator<'tcx> {
     /// If the translation fails due to an unsupported feature present in the code, then the function panics.
     pub fn run(&mut self) {
         let Some((main_function_id, _)) = self.tcx.entry_fn(()) else {
-            self.set_err_str("No main function found in the given source code");
+            self.set_err_str(ERR_NO_MAIN_FUNCTION_FOUND);
             return;
         };
         self.push_function_to_call_stack(
