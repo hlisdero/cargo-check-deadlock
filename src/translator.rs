@@ -27,7 +27,6 @@ mod mir_function;
 mod mir_visitor;
 mod special_function;
 mod sync;
-mod utils;
 
 use crate::error_handling::ERR_NO_MAIN_FUNCTION_FOUND;
 use crate::naming::function_foreign_call_transition_label;
@@ -40,7 +39,7 @@ use crate::translator::special_function::{
     is_panic_function,
 };
 use crate::translator::sync::{is_mutex_function, MutexManager};
-use crate::translator::utils::{extract_def_id_of_called_function_from_operand, place_to_local};
+use crate::utils::{extract_def_id_of_called_function_from_operand, place_to_local};
 use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
 use rustc_middle::mir::visit::Visitor;
 

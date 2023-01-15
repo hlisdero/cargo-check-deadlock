@@ -7,8 +7,8 @@
 //! <https://rustc-dev-guide.rust-lang.org/mir/index.html>
 
 use crate::translator::sync::is_mutex_declaration;
-use crate::translator::utils::place_to_local;
 use crate::translator::Translator;
+use crate::utils::place_to_local;
 use rustc_middle::mir::visit::Visitor;
 use rustc_middle::mir::TerminatorKind;
 

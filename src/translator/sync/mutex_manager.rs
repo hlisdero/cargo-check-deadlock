@@ -8,7 +8,7 @@ use crate::translator::place_to_local;
 use crate::translator::special_function::call_foreign_function;
 use crate::translator::sync::mutex::Mutex;
 use crate::translator::sync::Memory;
-use crate::translator::utils::extract_self_reference_from_arguments_for_function_call;
+use crate::utils::extract_self_reference_from_arguments_for_function_call;
 use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
 
 #[derive(Default)]

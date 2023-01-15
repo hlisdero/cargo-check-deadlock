@@ -36,6 +36,7 @@ mod naming;
 mod stack;
 mod sysroot;
 mod translator;
+mod utils;
 
 use netcrab::petri_net::PetriNet;
 
