@@ -138,6 +138,7 @@ pub fn mutex_function_transition_label(function_name: &str, index: usize) -> Str
 /// Sanitize the function name for the DOT format:
 /// - Replace colons with underscores.
 /// - Replace generic types "<T>" with "T" .
+#[inline]
 fn sanitize(function_name: &str) -> String {
     function_name.replace("::", "_").replace("<T>", "T")
 }
