@@ -1,9 +1,9 @@
 //! Submodule that defines the methods for handling each of the possible terminators for a basic block.
 //! <https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/enum.TerminatorKind.html>
 
+use crate::naming::function_return_transition_label;
 use crate::translator::error_handling::handle_err_add_arc;
 use crate::translator::mir_function::MirFunction;
-use crate::translator::naming::function_return_transition_label;
 use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
 
 impl MirFunction {

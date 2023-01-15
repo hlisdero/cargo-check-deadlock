@@ -3,7 +3,7 @@
 //! The `MutexManager` stores the mutexes discovered so far in the code.
 //! It also performs the translation for each mutex function.
 
-use crate::translator::naming::mutex_function_transition_label;
+use crate::naming::mutex_function_transition_label;
 use crate::translator::place_to_local;
 use crate::translator::special_function::call_foreign_function;
 use crate::translator::sync::mutex::Mutex;
