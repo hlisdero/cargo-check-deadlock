@@ -6,8 +6,8 @@
 //! If the place has a token, the mutex is unlocked.
 //! If the place does not have a token, the mutex is locked.
 
+use crate::error_handling::handle_err_add_arc;
 use crate::naming::mutex_place_label;
-use crate::translator::error_handling::handle_err_add_arc;
 use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
 
 pub struct Mutex {

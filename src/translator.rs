@@ -22,7 +22,6 @@
 //! i.e. each function, block and statement receive a different label.
 //! It can be configured in the `naming` submodule.
 
-mod error_handling;
 mod function_call;
 mod mir_function;
 mod mir_visitor;

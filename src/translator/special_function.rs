@@ -5,8 +5,8 @@
 //! or simply functions for which we are not interested in translation the source code.
 //! For example: Calls to standard library methods, iterators, etc.
 
+use crate::error_handling::handle_err_add_arc;
 use crate::naming::{function_diverging_call_transition_label, function_panic_transition_label};
-use crate::translator::error_handling::handle_err_add_arc;
 use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
 
 const FUNCTIONS_EXCLUDED_FROM_TRANSLATION: [&str; 1] = ["std::iter::ExactSizeIterator::len"];
