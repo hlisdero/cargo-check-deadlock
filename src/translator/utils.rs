@@ -1,4 +1,7 @@
 //! Submodule for miscellaneous utility functions.
+//!
+//! These functions should involve some kind of processing of the compiler types
+//! which does not need additional translation data structures.
 
 /// Convert the `Place` directly to a `Local`.
 /// <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/mir/syntax/struct.Place.html#method.as_local>
@@ -49,4 +52,17 @@ pub fn extract_def_id_of_called_function_from_operand<'tcx>(
             panic!("TyKind::FnDef, a function definition, but got: {function_type:?}")
         }
     }
+}
+
+/// Extracts the self reference from the function arguments.
+/// For example: The call `mutex.lock()` desugars to `std::sync::Mutex::lock(&mutex)`
+/// where `&self` is the first argument.
+pub fn extract_self_reference_from_arguments_for_function_call<'tcx>(
+    args: &[rustc_middle::mir::Operand<'tcx>],
+) -> rustc_middle::mir::Place<'tcx> {
+    let rustc_middle::mir::Operand::Move(self_ref) = args.get(0)
+            .expect("BUG: Function should receive a reference to self as the 0-th function argument") else { 
+                panic!("BUG: The self reference should be passed by moving");
+        };
+    *self_ref
 }

@@ -35,16 +35,3 @@ pub fn is_mutex_declaration(local_decl: &rustc_middle::mir::LocalDecl) -> bool {
         false
     }
 }
-
-/// Extracts the self reference from the function arguments.
-/// For example: The call `mutex.lock()` desugars to `std::sync::Mutex::lock(&mutex)`
-/// where `&self` is the first argument.
-pub fn extract_self_reference_from_arguments_to_function_call<'tcx>(
-    args: &[rustc_middle::mir::Operand<'tcx>],
-) -> rustc_middle::mir::Place<'tcx> {
-    let rustc_middle::mir::Operand::Move(self_ref) = args.get(0)
-            .expect("BUG: Function should receive a reference to self as the 0-th function argument") else { 
-                panic!("BUG: The self reference should be passed by moving");
-        };
-    *self_ref
-}

@@ -6,9 +6,9 @@
 use crate::translator::naming::mutex_function_transition_label;
 use crate::translator::place_to_local;
 use crate::translator::special_function::call_foreign_function;
-use crate::translator::sync::extract_self_reference_from_arguments_to_function_call;
 use crate::translator::sync::mutex::Mutex;
 use crate::translator::sync::Memory;
+use crate::translator::utils::extract_self_reference_from_arguments_for_function_call;
 use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
 
 #[derive(Default)]
@@ -71,7 +71,7 @@ impl MutexManager {
             memory.link_local_to_mutex(return_value_local, mutex_ref);
         } else if function_name == "std::sync::Mutex::<T>::lock" {
             // Retrieve the mutex from the local variable passed to the function as an argument.
-            let self_ref = extract_self_reference_from_arguments_to_function_call(args);
+            let self_ref = extract_self_reference_from_arguments_for_function_call(args);
             let local_with_mutex = place_to_local(&self_ref);
             let mutex_ref = memory.get_linked_mutex(local_with_mutex);
             self.add_lock_guard(mutex_ref, transition_function_call, net);
