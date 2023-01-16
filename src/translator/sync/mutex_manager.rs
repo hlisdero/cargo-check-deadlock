@@ -3,7 +3,7 @@
 //! The `MutexManager` stores the mutexes discovered so far in the code.
 //! It also performs the translation for each mutex function.
 
-use crate::naming::mutex::mutex_function_transition_label;
+use crate::naming::mutex::function_transition_label;
 use crate::translator::mir_function::Memory;
 use crate::translator::place_to_local;
 use crate::translator::special_function::call_foreign_function;
@@ -47,7 +47,7 @@ impl MutexManager {
             self.lock_counter
         };
 
-        let transition_label = &mutex_function_transition_label(function_name, index);
+        let transition_label = &function_transition_label(function_name, index);
         call_foreign_function(start_place, end_place, cleanup_place, transition_label, net)
     }
 

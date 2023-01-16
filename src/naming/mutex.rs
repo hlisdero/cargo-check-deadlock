@@ -14,12 +14,12 @@ use super::sanitize;
 
 /// Label of the single place that models every `Mutex`.
 #[inline]
-pub fn mutex_place_label(index: usize) -> String {
+pub fn place_label(index: usize) -> String {
     format!("MUTEX_{index}")
 }
 
 /// Label of the transition that represents a call to a function of `std::sync::Mutex<T>`.
 #[inline]
-pub fn mutex_function_transition_label(function_name: &str, index: usize) -> String {
+pub fn function_transition_label(function_name: &str, index: usize) -> String {
     format!("{}_{index}", sanitize(function_name))
 }

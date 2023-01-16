@@ -14,24 +14,24 @@ use super::sanitize;
 
 /// Label of the transition for the return statement of a function.
 #[inline]
-pub fn function_return_transition_label(function_name: &str) -> String {
+pub fn return_transition_label(function_name: &str) -> String {
     format!("{}_RETURN", sanitize(function_name))
 }
 
 /// Label of the transition for a foreign function item.
 #[inline]
-pub fn function_foreign_call_transition_label(function_name: &str) -> String {
+pub fn foreign_call_transition_label(function_name: &str) -> String {
     format!("{}_FOREIGN_CALL", sanitize(function_name))
 }
 
 /// Label of the transition that represents a diverging function call (a function that does not return).
 #[inline]
-pub fn function_diverging_call_transition_label(function_name: &str) -> String {
+pub fn diverging_call_transition_label(function_name: &str) -> String {
     format!("{}_DIVERGING_CALL", sanitize(function_name))
 }
 
 /// Label of the transition that represents a call to a `panic!` or an `abort`.
 #[inline]
-pub fn function_panic_transition_label(function_name: &str) -> String {
+pub fn panic_transition_label(function_name: &str) -> String {
     format!("{}_PANIC", sanitize(function_name))
 }

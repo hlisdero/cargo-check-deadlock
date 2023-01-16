@@ -21,7 +21,7 @@
 //! The function executed by the thread is translated to a Petri net just as any other.
 
 use crate::error_handling::handle_err_add_arc;
-use crate::naming::thread::{thread_end_place_label, thread_start_place_label};
+use crate::naming::thread::{end_place_label, start_place_label};
 use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
 
 pub struct ThreadSpan {
@@ -64,8 +64,8 @@ impl ThreadSpan {
         &self,
         net: &mut PetriNet,
     ) -> (rustc_hir::def_id::DefId, PlaceRef, PlaceRef) {
-        let thread_start_place = net.add_place(&thread_start_place_label(self.index));
-        let thread_end_place = net.add_place(&thread_end_place_label(self.index));
+        let thread_start_place = net.add_place(&start_place_label(self.index));
+        let thread_end_place = net.add_place(&end_place_label(self.index));
 
         net.add_arc_transition_place(&self.spawn_transition, &thread_start_place)
             .unwrap_or_else(|_| handle_err_add_arc("spawn transition", "thread start place"));

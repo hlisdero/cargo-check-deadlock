@@ -30,7 +30,7 @@ mod sync;
 mod thread;
 
 use crate::error_handling::ERR_NO_MAIN_FUNCTION_FOUND;
-use crate::naming::function::function_foreign_call_transition_label;
+use crate::naming::function::foreign_call_transition_label;
 use crate::naming::program::{PROGRAM_END, PROGRAM_PANIC, PROGRAM_START};
 use crate::stack::Stack;
 use crate::translator::function_call::FunctionCall;
@@ -249,7 +249,7 @@ impl<'tcx> Translator<'tcx> {
                 end_place,
                 cleanup_place,
             } => {
-                let transition_label = &function_foreign_call_transition_label(&function_name);
+                let transition_label = &foreign_call_transition_label(&function_name);
                 call_foreign_function(
                     &start_place,
                     &end_place,

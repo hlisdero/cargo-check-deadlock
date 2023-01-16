@@ -2,7 +2,7 @@
 //! <https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/enum.TerminatorKind.html>
 
 use crate::error_handling::handle_err_add_arc;
-use crate::naming::function::function_return_transition_label;
+use crate::naming::function::return_transition_label;
 use crate::translator::mir_function::MirFunction;
 use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
 
@@ -97,7 +97,7 @@ impl MirFunction {
     /// This corresponds to the return statement that exits from this function.
     pub fn return_statement(&mut self, net: &mut PetriNet) {
         let start_place = self.prepare_start_place_for_return_statement();
-        let label = function_return_transition_label(&self.name);
+        let label = return_transition_label(&self.name);
 
         let transition = net.add_transition(&label);
         net.add_arc_place_transition(&start_place, &transition)

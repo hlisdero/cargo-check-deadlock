@@ -7,7 +7,7 @@
 //! If the place does not have a token, the mutex is locked.
 
 use crate::error_handling::handle_err_add_arc;
-use crate::naming::mutex::mutex_place_label;
+use crate::naming::mutex::place_label;
 use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
 
 pub struct Mutex {
@@ -18,7 +18,7 @@ impl Mutex {
     /// Creates a new mutex whose label is based on `index`.
     /// Adds a place to the Petri Net.
     pub fn new(index: usize, net: &mut PetriNet) -> Self {
-        let label = mutex_place_label(index);
+        let label = place_label(index);
         let place_ref = net.add_place(&label);
         net.add_token(&place_ref, 1)
             .expect("BUG: Adding initial token to mutex place should not cause an overflow");

@@ -6,9 +6,7 @@
 //! For example: Calls to standard library methods, iterators, etc.
 
 use crate::error_handling::handle_err_add_arc;
-use crate::naming::function::{
-    function_diverging_call_transition_label, function_panic_transition_label,
-};
+use crate::naming::function::{diverging_call_transition_label, panic_transition_label};
 use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
 
 const FUNCTIONS_EXCLUDED_FROM_TRANSLATION: [&str; 1] = ["std::iter::ExactSizeIterator::len"];
@@ -94,7 +92,7 @@ pub fn call_foreign_function(
 /// Creates an abridged Petri net representation of a diverging function call.
 /// Connects the start place to a new transition that models a call to a function which does not return.
 pub fn call_diverging_function(start_place: &PlaceRef, function_name: &str, net: &mut PetriNet) {
-    let label = &function_diverging_call_transition_label(function_name);
+    let label = &diverging_call_transition_label(function_name);
     let transition = net.add_transition(label);
     net.add_arc_place_transition(start_place, &transition)
         .unwrap_or_else(|_| {
@@ -111,7 +109,7 @@ pub fn call_panic_function(
     function_name: &str,
     net: &mut PetriNet,
 ) {
-    let transition = net.add_transition(&function_panic_transition_label(function_name));
+    let transition = net.add_transition(&panic_transition_label(function_name));
     net.add_arc_place_transition(start_place, &transition)
         .unwrap_or_else(|_| handle_err_add_arc("panic start place", "panic transition"));
     net.add_arc_transition_place(&transition, unwind_place)

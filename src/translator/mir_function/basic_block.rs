@@ -7,10 +7,9 @@
 
 use crate::error_handling::handle_err_add_arc;
 use crate::naming::basic_block::{
-    basic_block_assert_cleanup_transition_label, basic_block_assert_transition_label,
-    basic_block_drop_transition_label, basic_block_drop_unwind_transition_label,
-    basic_block_end_place_label, basic_block_goto_transition_label,
-    basic_block_switch_int_transition_label, basic_block_unwind_transition_label,
+    assert_cleanup_transition_label, assert_transition_label, drop_transition_label,
+    drop_unwind_transition_label, end_place_label, goto_transition_label,
+    switch_int_transition_label, unwind_transition_label,
 };
 use crate::translator::mir_function::statement::Statement;
 use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
@@ -59,7 +58,7 @@ impl BasicBlock {
     /// as the start place, so there is nothing to do.
     pub fn finish_statement_block(&mut self, net: &mut PetriNet) {
         if let Some(statement) = self.statements.last() {
-            let label = basic_block_end_place_label(&self.function_name, self.index);
+            let label = end_place_label(&self.function_name, self.index);
             self.end_place = net.add_place(&label);
             statement.connect_to_end_place(&self.end_place, net);
         }
@@ -70,7 +69,7 @@ impl BasicBlock {
         self.connect_end_to_next_place(
             &target.start_place,
             net,
-            &basic_block_goto_transition_label(&self.function_name, self.index),
+            &goto_transition_label(&self.function_name, self.index),
             "goto transition",
             "to block start place",
         );
@@ -81,7 +80,7 @@ impl BasicBlock {
         self.connect_end_to_next_place(
             &target.start_place,
             net,
-            &basic_block_switch_int_transition_label(&self.function_name, index),
+            &switch_int_transition_label(&self.function_name, index),
             "switch int transition",
             "target block start place",
         );
@@ -92,7 +91,7 @@ impl BasicBlock {
         self.connect_end_to_next_place(
             unwind_place,
             net,
-            &basic_block_unwind_transition_label(&self.function_name, self.index),
+            &unwind_transition_label(&self.function_name, self.index),
             "unwind transition",
             "unwind place",
         );
@@ -101,10 +100,8 @@ impl BasicBlock {
     /// Connects the end place of this block to the start place of the `target` basic block.
     /// Returns the new transition created to connect the two basic blocks.
     pub fn drop(&self, target: &Self, net: &mut PetriNet) -> TransitionRef {
-        let transition = net.add_transition(&basic_block_drop_transition_label(
-            &self.function_name,
-            self.index,
-        ));
+        let transition =
+            net.add_transition(&drop_transition_label(&self.function_name, self.index));
         net.add_arc_place_transition(&self.end_place, &transition)
             .unwrap_or_else(|_| handle_err_add_arc("end place of the block", "drop transition"));
         net.add_arc_transition_place(&transition, &target.start_place)
@@ -117,7 +114,7 @@ impl BasicBlock {
         self.connect_end_to_next_place(
             &unwind.start_place,
             net,
-            &basic_block_drop_unwind_transition_label(&self.function_name, self.index),
+            &drop_unwind_transition_label(&self.function_name, self.index),
             "drop unwind transition",
             "unwind block start place",
         );
@@ -128,7 +125,7 @@ impl BasicBlock {
         self.connect_end_to_next_place(
             &target.start_place,
             net,
-            &basic_block_assert_transition_label(&self.function_name, self.index),
+            &assert_transition_label(&self.function_name, self.index),
             "assert transition",
             "target block start place",
         );
@@ -139,7 +136,7 @@ impl BasicBlock {
         self.connect_end_to_next_place(
             &cleanup.start_place,
             net,
-            &basic_block_assert_cleanup_transition_label(&self.function_name, self.index),
+            &assert_cleanup_transition_label(&self.function_name, self.index),
             "assert cleanup transition",
             "cleanup block start place",
         );

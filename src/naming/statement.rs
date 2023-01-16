@@ -14,11 +14,7 @@ use super::sanitize;
 
 /// Label of the transition of any `Statement`.
 #[inline]
-pub fn statement_transition_label(
-    function_name: &str,
-    block_index: usize,
-    statement_index: usize,
-) -> String {
+pub fn transition_label(function_name: &str, block_index: usize, statement_index: usize) -> String {
     format!(
         "{}_BB{block_index}_STMT{statement_index}",
         sanitize(function_name)
@@ -27,11 +23,7 @@ pub fn statement_transition_label(
 
 /// Label of the end place of any `Statement`.
 #[inline]
-pub fn statement_end_place_label(
-    function_name: &str,
-    block_index: usize,
-    statement_index: usize,
-) -> String {
+pub fn end_place_label(function_name: &str, block_index: usize, statement_index: usize) -> String {
     format!(
         "{}_BB{block_index}_STMT{statement_index}_END",
         sanitize(function_name)

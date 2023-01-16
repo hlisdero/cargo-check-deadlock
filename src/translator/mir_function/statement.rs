@@ -10,7 +10,7 @@
 //! the end of the current basic block.
 
 use crate::error_handling::handle_err_add_arc;
-use crate::naming::statement::{statement_end_place_label, statement_transition_label};
+use crate::naming::statement::{end_place_label, transition_label};
 use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
 
 pub struct Statement {
@@ -30,7 +30,7 @@ impl Statement {
         start_place: &PlaceRef,
         net: &mut PetriNet,
     ) -> Self {
-        let label = statement_transition_label(function_name, block_index, statement_index);
+        let label = transition_label(function_name, block_index, statement_index);
         let transition = net.add_transition(&label);
         net.add_arc_place_transition(start_place, &transition)
             .unwrap_or_else(|_| handle_err_add_arc("start place", "statement transition"));
@@ -46,7 +46,7 @@ impl Statement {
     /// Creates an end place for this statement, connects the statement transition to it and returns it.
     /// The caller is responsible for storing this new place.
     pub fn create_end_place(&self, net: &mut PetriNet) -> PlaceRef {
-        let place = net.add_place(&statement_end_place_label(
+        let place = net.add_place(&end_place_label(
             &self.function_name,
             self.block_index,
             self.statement_index,

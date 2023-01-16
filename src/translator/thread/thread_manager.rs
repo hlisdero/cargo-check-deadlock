@@ -6,7 +6,7 @@
 //! Once the translation of the main thread is over, each thread stored
 //! here will be translated in order.
 
-use crate::naming::thread::thread_function_transition_label;
+use crate::naming::thread::function_transition_label;
 use crate::translator::mir_function::Memory;
 use crate::translator::special_function::call_foreign_function;
 use crate::translator::thread::ThreadSpan;
@@ -53,7 +53,7 @@ impl ThreadManager {
             self.thread_join_counter
         };
 
-        let transition_label = &thread_function_transition_label(function_name, index);
+        let transition_label = &function_transition_label(function_name, index);
         // There is no cleanup place for the supported functions in `std::thread`.
         call_foreign_function(start_place, end_place, None, transition_label, net)
     }
