@@ -10,13 +10,6 @@ pub enum FunctionCall<'tcx> {
         function_name: String,
         start_place: PlaceRef,
     },
-    /// MIR function call (the "default" case).
-    /// Recursive call for the translation process.
-    MirFunction {
-        function_def_id: rustc_hir::def_id::DefId,
-        start_place: PlaceRef,
-        end_place: PlaceRef,
-    },
     /// Abridged function call.
     /// Non-recursive call for the translation process.
     Foreign {
@@ -24,6 +17,13 @@ pub enum FunctionCall<'tcx> {
         start_place: PlaceRef,
         end_place: PlaceRef,
         cleanup_place: Option<PlaceRef>,
+    },
+    /// MIR function call (the "default" case).
+    /// Recursive call for the translation process.
+    MirFunction {
+        function_def_id: rustc_hir::def_id::DefId,
+        start_place: PlaceRef,
+        end_place: PlaceRef,
     },
     /// Call to a mutex synchronization primitive.
     /// Non-recursive call for the translation process.
