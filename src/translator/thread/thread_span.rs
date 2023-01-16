@@ -20,15 +20,19 @@
 //! to translate the thread function and defer the translation.
 //! The function executed by the thread is translated to a Petri net just as any other.
 
-use netcrab::petri_net::TransitionRef;
+use crate::error_handling::handle_err_add_arc;
+use crate::naming::thread::{thread_end_place_label, thread_start_place_label};
+use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
 
 pub struct ThreadSpan {
     /// The transition from which the thread branches off at the start.
-    pub spawn_transition: TransitionRef,
+    spawn_transition: TransitionRef,
     /// The definition ID that uniquely identifies the function run by the thread.
-    pub thread_function_def_id: rustc_hir::def_id::DefId,
+    thread_function_def_id: rustc_hir::def_id::DefId,
     /// The transition to which the thread joins in at the end.
-    pub join_transition: Option<TransitionRef>,
+    join_transition: Option<TransitionRef>,
+    /// An index to identify the thread span.
+    index: usize,
 }
 
 impl ThreadSpan {
@@ -37,16 +41,42 @@ impl ThreadSpan {
     pub const fn new(
         spawn_transition: TransitionRef,
         thread_function_def_id: rustc_hir::def_id::DefId,
+        index: usize,
     ) -> Self {
         Self {
             spawn_transition,
             thread_function_def_id,
             join_transition: None,
+            index,
         }
     }
 
     /// Sets the transition that models joining this thread.
     pub fn set_join_transition(&mut self, join_transition: TransitionRef) {
         self.join_transition = Some(join_transition);
+    }
+
+    /// Prepares the thread span for translation.
+    /// Adds a start and end place for the thread to the Petri net.
+    /// Connects the spawn transition to the start place and the end place to the join transition (if available).
+    /// Returns a 3-tuple containing the definition ID, the start place and the end place.
+    pub fn prepare_for_translation(
+        &self,
+        net: &mut PetriNet,
+    ) -> (rustc_hir::def_id::DefId, PlaceRef, PlaceRef) {
+        let thread_start_place = net.add_place(&thread_start_place_label(self.index));
+        let thread_end_place = net.add_place(&thread_end_place_label(self.index));
+
+        net.add_arc_transition_place(&self.spawn_transition, &thread_start_place)
+            .unwrap_or_else(|_| handle_err_add_arc("spawn transition", "thread start place"));
+        if let Some(join_transition) = &self.join_transition {
+            net.add_arc_place_transition(&thread_end_place, join_transition)
+                .unwrap_or_else(|_| handle_err_add_arc("thread end place", "join transition"));
+        }
+        (
+            self.thread_function_def_id,
+            thread_start_place,
+            thread_end_place,
+        )
     }
 }

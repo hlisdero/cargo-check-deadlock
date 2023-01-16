@@ -101,8 +101,11 @@ impl ThreadManager {
         thread_function_def_id: rustc_hir::def_id::DefId,
     ) -> ThreadRef {
         let index = self.threads.len();
-        self.threads
-            .push_front(ThreadSpan::new(spawn_transition, thread_function_def_id));
+        self.threads.push_front(ThreadSpan::new(
+            spawn_transition,
+            thread_function_def_id,
+            index,
+        ));
         ThreadRef(index)
     }
 

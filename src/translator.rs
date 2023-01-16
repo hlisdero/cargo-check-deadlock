@@ -29,10 +29,9 @@ mod special_function;
 mod sync;
 mod thread;
 
-use crate::error_handling::{handle_err_add_arc, ERR_NO_MAIN_FUNCTION_FOUND};
+use crate::error_handling::ERR_NO_MAIN_FUNCTION_FOUND;
 use crate::naming::function::function_foreign_call_transition_label;
 use crate::naming::program::{PROGRAM_END, PROGRAM_PANIC, PROGRAM_START};
-use crate::naming::thread::{thread_end_place_label, thread_start_place_label};
 use crate::stack::Stack;
 use crate::translator::function_call::FunctionCall;
 use crate::translator::mir_function::MirFunction;
@@ -41,7 +40,7 @@ use crate::translator::special_function::{
     is_panic_function,
 };
 use crate::translator::sync::{is_mutex_function, MutexManager};
-use crate::translator::thread::{is_thread_function, ThreadManager, ThreadSpan};
+use crate::translator::thread::{is_thread_function, ThreadManager};
 use crate::utils::{extract_def_id_of_called_function_from_operand, place_to_local};
 use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
 use rustc_middle::mir::visit::Visitor;
@@ -353,36 +352,16 @@ impl<'tcx> Translator<'tcx> {
     /// Main translation loop for the threads.
     /// Gets a thread from the thread manager and translates it.
     fn translate_threads(&mut self) {
-        let mut thread_index: usize = 0;
         while let Some(thread_span) = self.thread_manager.pop_thread() {
-            self.translate_thread_span(thread_index, &thread_span);
-            thread_index += 1;
+            let (thread_function_def_id, thread_start_place, thread_end_place) =
+                thread_span.prepare_for_translation(&mut self.net);
+
+            self.push_function_to_call_stack(
+                thread_function_def_id,
+                thread_start_place,
+                thread_end_place,
+            );
+            self.translate_top_call_stack();
         }
-    }
-
-    /// Translates a thread span.
-    /// Adds an start and end place for the thread to the Petri net.
-    /// Connects the spawn transition to the start place and
-    /// connects the end place to the join transition.
-    /// Pushes the function to the call stack and translates it.
-    fn translate_thread_span(&mut self, index: usize, thread_span: &ThreadSpan) {
-        let thread_start_place = self.net.add_place(&thread_start_place_label(index));
-        let thread_end_place = self.net.add_place(&thread_end_place_label(index));
-
-        self.net
-            .add_arc_transition_place(&thread_span.spawn_transition, &thread_start_place)
-            .unwrap_or_else(|_| handle_err_add_arc("spawn transition", "thread start place"));
-        if let Some(join_transition) = &thread_span.join_transition {
-            self.net
-                .add_arc_place_transition(&thread_end_place, join_transition)
-                .unwrap_or_else(|_| handle_err_add_arc("thread end place", "join transition"));
-        }
-
-        self.push_function_to_call_stack(
-            thread_span.thread_function_def_id,
-            thread_start_place,
-            thread_end_place,
-        );
-        self.translate_top_call_stack();
     }
 }
