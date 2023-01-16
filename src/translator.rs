@@ -223,14 +223,6 @@ impl<'tcx> Translator<'tcx> {
     /// - Functions that represent a `panic` i.e., functions that starts an unwind of the stack.
     fn call_function(&mut self, function_call: FunctionCall) {
         match function_call {
-            FunctionCall::MirFunction {
-                function_def_id,
-                start_place,
-                end_place,
-            } => {
-                self.push_function_to_call_stack(function_def_id, start_place, end_place);
-                self.translate_top_call_stack();
-            }
             FunctionCall::Diverging {
                 function_name,
                 start_place,
@@ -249,6 +241,14 @@ impl<'tcx> Translator<'tcx> {
                     transition_label,
                     &mut self.net,
                 );
+            }
+            FunctionCall::MirFunction {
+                function_def_id,
+                start_place,
+                end_place,
+            } => {
+                self.push_function_to_call_stack(function_def_id, start_place, end_place);
+                self.translate_top_call_stack();
             }
             FunctionCall::Mutex {
                 function_name,
