@@ -7,8 +7,8 @@
 //! here will be translated in order.
 
 use crate::naming::thread_function_transition_label;
+use crate::translator::mir_function::Memory;
 use crate::translator::special_function::call_foreign_function;
-use crate::translator::sync::Memory;
 use crate::translator::thread::ThreadSpan;
 use crate::utils::place_to_local;
 use crate::utils::{

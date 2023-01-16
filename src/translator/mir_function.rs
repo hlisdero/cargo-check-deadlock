@@ -13,12 +13,13 @@
 //! But the terminators may refer to blocks previously seen or new blocks. Each basic block is visited only once.
 
 mod basic_block;
+mod memory;
 mod statement;
 mod terminator;
 
 use crate::naming::basic_block_start_place_label;
 use crate::translator::mir_function::basic_block::BasicBlock;
-use crate::translator::sync::Memory;
+pub use crate::translator::mir_function::memory::Memory;
 use netcrab::petri_net::{PetriNet, PlaceRef};
 use std::collections::HashMap;
 

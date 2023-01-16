@@ -3,10 +3,8 @@
 //! It defines which functions are supported and how to detect them.
 //! It exposes only the necessary definitions to the outside modules.
 
-pub use memory::Memory;
 pub use mutex_manager::{MutexManager, MutexRef};
 
-mod memory;
 mod mutex;
 mod mutex_manager;
 
