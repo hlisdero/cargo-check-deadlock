@@ -30,10 +30,9 @@ mod sync;
 mod thread;
 
 use crate::error_handling::{handle_err_add_arc, ERR_NO_MAIN_FUNCTION_FOUND};
-use crate::naming::{
-    function_foreign_call_transition_label, thread_end_place_label, thread_start_place_label,
-    PROGRAM_END, PROGRAM_PANIC, PROGRAM_START,
-};
+use crate::naming::function::function_foreign_call_transition_label;
+use crate::naming::program::{PROGRAM_END, PROGRAM_PANIC, PROGRAM_START};
+use crate::naming::thread::{thread_end_place_label, thread_start_place_label};
 use crate::stack::Stack;
 use crate::translator::function_call::FunctionCall;
 use crate::translator::mir_function::MirFunction;

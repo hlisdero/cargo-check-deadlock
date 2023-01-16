@@ -17,7 +17,7 @@ mod memory;
 mod statement;
 mod terminator;
 
-use crate::naming::basic_block_start_place_label;
+use crate::naming::basic_block::basic_block_start_place_label;
 use crate::translator::mir_function::basic_block::BasicBlock;
 pub use crate::translator::mir_function::memory::Memory;
 use netcrab::petri_net::{PetriNet, PlaceRef};

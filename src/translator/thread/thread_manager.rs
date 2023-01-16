@@ -6,7 +6,7 @@
 //! Once the translation of the main thread is over, each thread stored
 //! here will be translated in order.
 
-use crate::naming::thread_function_transition_label;
+use crate::naming::thread::thread_function_transition_label;
 use crate::translator::mir_function::Memory;
 use crate::translator::special_function::call_foreign_function;
 use crate::translator::thread::ThreadSpan;

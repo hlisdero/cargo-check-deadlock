@@ -10,7 +10,7 @@
 //! the end of the current basic block.
 
 use crate::error_handling::handle_err_add_arc;
-use crate::naming::{statement_end_place_label, statement_transition_label};
+use crate::naming::statement::{statement_end_place_label, statement_transition_label};
 use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
 
 pub struct Statement {

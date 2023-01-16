@@ -2,7 +2,7 @@
 //! <https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/enum.TerminatorKind.html>
 
 use crate::error_handling::handle_err_add_arc;
-use crate::naming::function_return_transition_label;
+use crate::naming::function::function_return_transition_label;
 use crate::translator::mir_function::MirFunction;
 use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
 

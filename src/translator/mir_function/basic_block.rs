@@ -6,7 +6,7 @@
 //! It also stores a vector of `Statement` which forms a chain of places and transitions.
 
 use crate::error_handling::handle_err_add_arc;
-use crate::naming::{
+use crate::naming::basic_block::{
     basic_block_assert_cleanup_transition_label, basic_block_assert_transition_label,
     basic_block_drop_transition_label, basic_block_drop_unwind_transition_label,
     basic_block_end_place_label, basic_block_goto_transition_label,

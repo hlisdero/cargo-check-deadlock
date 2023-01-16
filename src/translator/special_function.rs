@@ -6,7 +6,9 @@
 //! For example: Calls to standard library methods, iterators, etc.
 
 use crate::error_handling::handle_err_add_arc;
-use crate::naming::{function_diverging_call_transition_label, function_panic_transition_label};
+use crate::naming::function::{
+    function_diverging_call_transition_label, function_panic_transition_label,
+};
 use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
 
 const FUNCTIONS_EXCLUDED_FROM_TRANSLATION: [&str; 1] = ["std::iter::ExactSizeIterator::len"];
