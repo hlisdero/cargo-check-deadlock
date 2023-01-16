@@ -27,10 +27,13 @@ mod mir_function;
 mod mir_visitor;
 mod special_function;
 mod sync;
+mod thread;
 
-use crate::error_handling::ERR_NO_MAIN_FUNCTION_FOUND;
-use crate::naming::function_foreign_call_transition_label;
-use crate::naming::{PROGRAM_END, PROGRAM_PANIC, PROGRAM_START};
+use crate::error_handling::{handle_err_add_arc, ERR_NO_MAIN_FUNCTION_FOUND};
+use crate::naming::{
+    function_foreign_call_transition_label, thread_end_place_label, thread_start_place_label,
+    PROGRAM_END, PROGRAM_PANIC, PROGRAM_START,
+};
 use crate::stack::Stack;
 use crate::translator::function_call::FunctionCall;
 use crate::translator::mir_function::MirFunction;
@@ -39,6 +42,7 @@ use crate::translator::special_function::{
     is_panic_function,
 };
 use crate::translator::sync::{is_mutex_function, MutexManager};
+use crate::translator::thread::{is_thread_function, ThreadManager, ThreadSpan};
 use crate::utils::{extract_def_id_of_called_function_from_operand, place_to_local};
 use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
 use rustc_middle::mir::visit::Visitor;
@@ -52,6 +56,7 @@ pub struct Translator<'tcx> {
     program_panic: PlaceRef,
     call_stack: Stack<MirFunction>,
     mutex_manager: MutexManager,
+    thread_manager: ThreadManager,
 }
 
 impl<'tcx> Translator<'tcx> {
@@ -77,6 +82,7 @@ impl<'tcx> Translator<'tcx> {
             program_panic,
             call_stack: Stack::new(),
             mutex_manager: MutexManager::new(),
+            thread_manager: ThreadManager::new(),
         }
     }
 
@@ -120,6 +126,7 @@ impl<'tcx> Translator<'tcx> {
             self.program_end.clone(),
         );
         self.translate_top_call_stack();
+        self.translate_threads();
     }
 
     /// Pushes a new function frame to the call stack.
@@ -203,6 +210,17 @@ impl<'tcx> Translator<'tcx> {
                 cleanup_place,
             };
         }
+
+        if is_thread_function(&function_name) {
+            return FunctionCall::Thread {
+                function_name,
+                args,
+                destination,
+                start_place,
+                end_place,
+            };
+        }
+
         // Default case: A function with MIR representation
         FunctionCall::MirFunction {
             function_def_id,
@@ -221,7 +239,7 @@ impl<'tcx> Translator<'tcx> {
     /// - Functions that call a mutex synchronization primitive such as `std::sync::Mutex::lock`.
     /// - Functions that do not return (diverging functions).
     /// - Functions that represent a `panic` i.e., functions that starts an unwind of the stack.
-    fn call_function(&mut self, function_call: FunctionCall) {
+    fn call_function(&mut self, function_call: FunctionCall<'tcx>) {
         match function_call {
             FunctionCall::Diverging {
                 function_name,
@@ -285,6 +303,31 @@ impl<'tcx> Translator<'tcx> {
                 &function_name,
                 &mut self.net,
             ),
+            FunctionCall::Thread {
+                function_name,
+                args,
+                destination,
+                start_place,
+                end_place,
+            } => {
+                let transition_function_call = self.thread_manager.translate_function_call(
+                    &function_name,
+                    &start_place,
+                    &end_place,
+                    &mut self.net,
+                );
+
+                let current_function = self.call_stack.peek_mut();
+                self.thread_manager.translate_function_side_effects(
+                    &function_name,
+                    &args,
+                    destination,
+                    transition_function_call,
+                    &mut current_function.memory,
+                    current_function.def_id,
+                    self.tcx,
+                );
+            }
         }
     }
 
@@ -306,5 +349,41 @@ impl<'tcx> Translator<'tcx> {
             self.mutex_manager
                 .add_unlock_guard(mutex_ref, transition_drop, &mut self.net);
         }
+    }
+
+    /// Main translation loop for the threads.
+    /// Gets a thread from the thread manager and translates it.
+    fn translate_threads(&mut self) {
+        let mut thread_index: usize = 0;
+        while let Some(thread_span) = self.thread_manager.pop_thread() {
+            self.translate_thread_span(thread_index, thread_span);
+            thread_index += 1;
+        }
+    }
+
+    /// Translates a thread span.
+    /// Adds an start and end place for the thread to the Petri net.
+    /// Connects the spawn transition to the start place and
+    /// connects the end place to the join transition.
+    /// Pushes the function to the call stack and translates it.
+    fn translate_thread_span(&mut self, index: usize, thread_span: ThreadSpan) {
+        let thread_start_place = self.net.add_place(&thread_start_place_label(index));
+        let thread_end_place = self.net.add_place(&thread_end_place_label(index));
+
+        self.net
+            .add_arc_transition_place(&thread_span.spawn_transition, &thread_start_place)
+            .unwrap_or_else(|_| handle_err_add_arc("spawn transition", "thread start place"));
+        if let Some(join_transition) = &thread_span.join_transition {
+            self.net
+                .add_arc_place_transition(&thread_end_place, join_transition)
+                .unwrap_or_else(|_| handle_err_add_arc("thread end place", "join transition"));
+        }
+
+        self.push_function_to_call_stack(
+            thread_span.thread_function_def_id,
+            thread_start_place,
+            thread_end_place,
+        );
+        self.translate_top_call_stack();
     }
 }

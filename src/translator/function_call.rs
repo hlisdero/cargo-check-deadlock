@@ -41,4 +41,11 @@ pub enum FunctionCall<'tcx> {
         function_name: String,
         start_place: PlaceRef,
     },
+    Thread {
+        function_name: String,
+        args: Vec<rustc_middle::mir::Operand<'tcx>>,
+        destination: rustc_middle::mir::Place<'tcx>,
+        start_place: PlaceRef,
+        end_place: PlaceRef,
+    },
 }

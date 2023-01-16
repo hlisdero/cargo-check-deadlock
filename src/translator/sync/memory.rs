@@ -7,12 +7,14 @@
 //! <https://rustc-dev-guide.rust-lang.org/mir/index.html#mir-data-types>
 
 use crate::translator::sync::MutexRef;
+use crate::translator::thread::ThreadRef;
 use std::collections::HashMap;
 
 #[derive(Default)]
 pub struct Memory {
     locals_linked_to_mutexes: HashMap<rustc_middle::mir::Local, MutexRef>,
     locals_linked_to_lock_guards: HashMap<rustc_middle::mir::Local, MutexRef>,
+    locals_linked_to_join_handles: HashMap<rustc_middle::mir::Local, ThreadRef>,
 }
 
 impl Memory {
@@ -55,6 +57,25 @@ impl Memory {
         }
     }
 
+    /// Marks a local variable as containing a join handle for a thread.
+    ///
+    /// # Panics
+    ///
+    /// If the local variable is already linked to a join handle, then the function panics.
+    pub fn link_local_to_join_handle(
+        &mut self,
+        local: rustc_middle::mir::Local,
+        thread_ref: ThreadRef,
+    ) {
+        if self
+            .locals_linked_to_join_handles
+            .insert(local, thread_ref)
+            .is_some()
+        {
+            panic!("BUG: The local should not be already linked to a join handle")
+        }
+    }
+
     /// Returns the mutex reference linked to the given local variable.
     ///
     /// # Panics
@@ -77,6 +98,17 @@ impl Memory {
             .expect("BUG: The local variable should be linked to a lock guard")
     }
 
+    /// Returns the thread reference for the join handle linked to the given local variable.
+    ///
+    /// # Panics
+    ///
+    /// If the local variable is not linked to a join handle, then the function panics.
+    pub fn get_linked_join_handle(&self, local: rustc_middle::mir::Local) -> &ThreadRef {
+        self.locals_linked_to_join_handles
+            .get(&local)
+            .expect("BUG: The local variable should be linked to a join handle")
+    }
+
     /// Checks whether the local variable is linked to a lock guard.
     pub fn is_linked_to_local_guard(&self, local: rustc_middle::mir::Local) -> bool {
         self.locals_linked_to_lock_guards.contains_key(&local)
@@ -97,5 +129,22 @@ impl Memory {
     ) {
         let mutex_ref = self.get_linked_mutex(local_linked_to_mutex);
         self.link_local_to_mutex(local_to_be_linked, mutex_ref.clone());
+    }
+
+    /// Links a local variable to the join handle linked to another local.
+    /// After this operation both locals point to the same join handle, i.e.,
+    /// the first local is an alias for the second local.
+    ///
+    /// # Panics
+    ///
+    /// If the local to be linked is already linked to a join handle, then the function panics.
+    /// If the local linked to a join handle is not linked to a join handle, then the function panics.
+    pub fn link_local_to_same_join_handle(
+        &mut self,
+        local_to_be_linked: rustc_middle::mir::Local,
+        local_linked_to_join_handle: rustc_middle::mir::Local,
+    ) {
+        let thread_ref = self.get_linked_join_handle(local_linked_to_join_handle);
+        self.link_local_to_join_handle(local_to_be_linked, thread_ref.clone());
     }
 }

@@ -135,10 +135,35 @@ pub fn mutex_function_transition_label(function_name: &str, index: usize) -> Str
     format!("{}_{index}", sanitize(function_name))
 }
 
+/// Label of the transition that represents a call to a function of `std::thread`.
+#[inline]
+pub fn thread_function_transition_label(function_name: &str, index: usize) -> String {
+    format!("{}_{index}", sanitize(function_name))
+}
+
+/// Label of the place that models the thread start state.
+#[inline]
+pub fn thread_start_place_label(index: usize) -> String {
+    format!("THREAD_START_{index}")
+}
+
+/// Label of the place that models the thread end state.
+#[inline]
+pub fn thread_end_place_label(index: usize) -> String {
+    format!("THREAD_END_{index}")
+}
+
 /// Sanitize the function name for the DOT format:
 /// - Replace colons with underscores.
-/// - Replace generic types "<T>" with "T" .
+/// - Replace generic types "<T>" with "T".
+/// - Replace curly braces with underscores.
+/// - Replace pound sign with underscores.
 #[inline]
 fn sanitize(function_name: &str) -> String {
-    function_name.replace("::", "_").replace("<T>", "T")
+    function_name
+        .replace("::", "_")
+        .replace("<T>", "T")
+        .replace('{', "_")
+        .replace('}', "_")
+        .replace('#', "_")
 }
