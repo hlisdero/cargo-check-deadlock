@@ -356,7 +356,7 @@ impl<'tcx> Translator<'tcx> {
     fn translate_threads(&mut self) {
         let mut thread_index: usize = 0;
         while let Some(thread_span) = self.thread_manager.pop_thread() {
-            self.translate_thread_span(thread_index, thread_span);
+            self.translate_thread_span(thread_index, &thread_span);
             thread_index += 1;
         }
     }
@@ -366,7 +366,7 @@ impl<'tcx> Translator<'tcx> {
     /// Connects the spawn transition to the start place and
     /// connects the end place to the join transition.
     /// Pushes the function to the call stack and translates it.
-    fn translate_thread_span(&mut self, index: usize, thread_span: ThreadSpan) {
+    fn translate_thread_span(&mut self, index: usize, thread_span: &ThreadSpan) {
         let thread_start_place = self.net.add_place(&thread_start_place_label(index));
         let thread_end_place = self.net.add_place(&thread_end_place_label(index));
 

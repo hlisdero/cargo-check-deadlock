@@ -154,16 +154,14 @@ pub fn thread_end_place_label(index: usize) -> String {
 }
 
 /// Sanitize the function name for the DOT format:
-/// - Replace colons with underscores.
 /// - Replace generic types "<T>" with "T".
+/// - Replace double colons with underscores.
 /// - Replace curly braces with underscores.
 /// - Replace pound sign with underscores.
 #[inline]
 fn sanitize(function_name: &str) -> String {
     function_name
-        .replace("::", "_")
         .replace("<T>", "T")
-        .replace('{', "_")
-        .replace('}', "_")
-        .replace('#', "_")
+        .replace("::", "_")
+        .replace(['{', '}', '#'], "_")
 }
