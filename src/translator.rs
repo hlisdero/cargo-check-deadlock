@@ -182,15 +182,6 @@ impl<'tcx> Translator<'tcx> {
         let (start_place, end_place, cleanup_place) =
             current_function.get_place_refs_for_function_call(return_block, cleanup, &mut self.net);
 
-        if is_foreign_function(function_def_id, self.tcx) {
-            return FunctionCall::Foreign {
-                function_name,
-                start_place,
-                end_place,
-                cleanup_place,
-            };
-        }
-
         if is_mutex_new(&function_name) {
             return FunctionCall::MutexNew {
                 destination,
@@ -226,7 +217,15 @@ impl<'tcx> Translator<'tcx> {
                 end_place,
             };
         }
-
+        // Default case for standard and core library calls
+        if is_foreign_function(function_def_id, self.tcx) {
+            return FunctionCall::Foreign {
+                function_name,
+                start_place,
+                end_place,
+                cleanup_place,
+            };
+        }
         // Default case: A function with MIR representation
         FunctionCall::MirFunction {
             function_def_id,

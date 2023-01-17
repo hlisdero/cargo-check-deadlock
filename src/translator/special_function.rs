@@ -1,15 +1,13 @@
 //! Submodule for functions that require special treatment
 //! during the translation.
 //!
-//! These could be synchronization primitives, `panic!`-related primitives,
-//! or simply functions for which we are not interested in translation the source code.
+//! These could be `panic!`-related primitives, diverging functions
+//! or simply functions which we are not interested in translating.
 //! For example: Calls to standard library methods, iterators, etc.
 
 use crate::error_handling::handle_err_add_arc;
 use crate::naming::function::{diverging_call_transition_label, panic_transition_label};
 use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
-
-const FUNCTIONS_EXCLUDED_FROM_TRANSLATION: [&str; 1] = ["std::iter::ExactSizeIterator::len"];
 
 const PANIC_FUNCTIONS: [&str; 5] = [
     "core::panicking::assert_failed",
@@ -20,14 +18,19 @@ const PANIC_FUNCTIONS: [&str; 5] = [
 ];
 
 /// Checks whether the function name corresponds to one of the functions
-/// that needs to be translated separately, e.g, mutex functions.
+/// that should be excluded from the translation.
+///
+/// These are:
+/// - All the standard library functions.
+/// - All the core library functions.
 fn is_function_excluded_from_translation(function_name: &str) -> bool {
-    for name in FUNCTIONS_EXCLUDED_FROM_TRANSLATION {
-        if function_name == name {
-            return true;
-        }
+    if function_name.starts_with("std::") {
+        true
+    } else if function_name.starts_with("core::") {
+        true
+    } else {
+        false
     }
-    false
 }
 
 /// Checks whether the function name corresponds to one of the functions
