@@ -6,10 +6,9 @@
 //! For an introduction to MIR see:
 //! <https://rustc-dev-guide.rust-lang.org/mir/index.html>
 
-use crate::translator::multithreading::is_join_handle_declaration;
-use crate::translator::sync::is_mutex_declaration;
+use crate::translator::multithreading::identify_assign_of_local_with_join_handle;
+use crate::translator::sync::identify_assign_of_local_with_mutex;
 use crate::translator::Translator;
-use crate::utils::place_to_local;
 use rustc_middle::mir::visit::Visitor;
 use rustc_middle::mir::TerminatorKind;
 
@@ -36,32 +35,12 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
         let function = self.call_stack.peek_mut();
         let body = self.tcx.optimized_mir(function.def_id);
 
-        // Identify MIR assignments of the form: `_X = &_Y` where:
-        // - `_X` is of type `&std::sync::Mutex<T>` and
-        // - `_Y` is of type `std::sync::Mutex<T>`.
-        //
-        // Link the local on the left-hand side to the mutex on the right-hand side.
-        if let rustc_middle::mir::Rvalue::Ref(_, _, rhs) = rvalue {
-            let rhs = place_to_local(rhs);
-            let local_decl = &body.local_decls[rhs];
-            if is_mutex_declaration(local_decl) {
-                let lhs = place_to_local(place);
-                function.memory.link_local_to_same_mutex(lhs, rhs);
-            }
+        if let Some((lhs, rhs)) = identify_assign_of_local_with_mutex(place, rvalue, body) {
+            function.memory.link_local_to_same_mutex(lhs, rhs);
         }
 
-        // Identify MIR assignments of the form: `_X = move _Y` where:
-        // - `_X` is of type `std::thread::JoinHandle<T>` and
-        // - `_Y` is of type `std::thread::JoinHandle<T>`.
-        //
-        // Link the local on the left-hand side to the join handle on the right-hand side.
-        if let rustc_middle::mir::Rvalue::Use(rustc_middle::mir::Operand::Move(rhs)) = rvalue {
-            let rhs = place_to_local(rhs);
-            let local_decl = &body.local_decls[rhs];
-            if is_join_handle_declaration(local_decl) {
-                let lhs = place_to_local(place);
-                function.memory.link_local_to_same_join_handle(lhs, rhs);
-            }
+        if let Some((lhs, rhs)) = identify_assign_of_local_with_join_handle(place, rvalue, body) {
+            function.memory.link_local_to_same_join_handle(lhs, rhs);
         }
 
         self.super_assign(place, rvalue, location);
