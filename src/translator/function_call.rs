@@ -48,10 +48,18 @@ pub enum FunctionCall<'tcx> {
         function_name: String,
         start_place: PlaceRef,
     },
-    Thread {
-        function_name: String,
+    /// Call to `std::thread::spawn`.
+    /// Non-recursive call for the translation process.
+    ThreadSpawn {
         args: Vec<rustc_middle::mir::Operand<'tcx>>,
         destination: rustc_middle::mir::Place<'tcx>,
+        start_place: PlaceRef,
+        end_place: PlaceRef,
+    },
+    /// Call to `std::thread::JoinHandle::<T>::join`.
+    /// Non-recursive call for the translation process.
+    ThreadJoin {
+        args: Vec<rustc_middle::mir::Operand<'tcx>>,
         start_place: PlaceRef,
         end_place: PlaceRef,
     },

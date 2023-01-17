@@ -10,17 +10,16 @@ pub use thread_manager::ThreadManager;
 pub use thread_manager::ThreadRef;
 pub use thread_span::ThreadSpan;
 
-const SUPPORTED_THREAD_FUNCTIONS: [&str; 2] =
-    ["std::thread::spawn", "std::thread::JoinHandle::<T>::join"];
+/// Checks whether the function name corresponds to `std::thread::spawn`.
+#[inline]
+pub fn is_thread_spawn(function_name: &str) -> bool {
+    function_name == "std::thread::spawn"
+}
 
-/// Checks whether the function name corresponds to one of the supported thread functions.
-pub fn is_thread_function(function_name: &str) -> bool {
-    for name in SUPPORTED_THREAD_FUNCTIONS {
-        if function_name == name {
-            return true;
-        }
-    }
-    false
+/// Checks whether the function name corresponds to `std::thread::JoinHandle::<T>::join`.
+#[inline]
+pub fn is_thread_join(function_name: &str) -> bool {
+    function_name == "std::thread::JoinHandle::<T>::join"
 }
 
 /// Checks whether the type of a local declaration is `std::thread::JoinHandle<T>`,

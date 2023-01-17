@@ -35,7 +35,7 @@ use crate::naming::program::{PROGRAM_END, PROGRAM_PANIC, PROGRAM_START};
 use crate::stack::Stack;
 use crate::translator::function_call::FunctionCall;
 use crate::translator::mir_function::MirFunction;
-use crate::translator::multithreading::{is_thread_function, ThreadManager};
+use crate::translator::multithreading::{is_thread_join, is_thread_spawn, ThreadManager};
 use crate::translator::special_function::{
     call_diverging_function, call_foreign_function, call_panic_function, is_foreign_function,
     is_panic_function,
@@ -217,11 +217,18 @@ impl<'tcx> Translator<'tcx> {
             };
         }
 
-        if is_thread_function(&function_name) {
-            return FunctionCall::Thread {
-                function_name,
+        if is_thread_spawn(&function_name) {
+            return FunctionCall::ThreadSpawn {
                 args,
                 destination,
+                start_place,
+                end_place,
+            };
+        }
+
+        if is_thread_join(&function_name) {
+            return FunctionCall::ThreadJoin {
+                args,
                 start_place,
                 end_place,
             };
@@ -326,29 +333,44 @@ impl<'tcx> Translator<'tcx> {
                 &function_name,
                 &mut self.net,
             ),
-            FunctionCall::Thread {
-                function_name,
+            FunctionCall::ThreadSpawn {
                 args,
                 destination,
                 start_place,
                 end_place,
             } => {
-                let transition_function_call = self.thread_manager.translate_function_call(
-                    &function_name,
+                let transition_function_call = self.thread_manager.translate_function_call_spawn(
                     &start_place,
                     &end_place,
                     &mut self.net,
                 );
 
                 let current_function = self.call_stack.peek_mut();
-                self.thread_manager.translate_function_side_effects(
-                    &function_name,
+                self.thread_manager.translate_function_side_effects_spawn(
                     &args,
                     destination,
                     transition_function_call,
                     &mut current_function.memory,
                     current_function.def_id,
                     self.tcx,
+                );
+            }
+            FunctionCall::ThreadJoin {
+                args,
+                start_place,
+                end_place,
+            } => {
+                let transition_function_call = self.thread_manager.translate_function_call_join(
+                    &start_place,
+                    &end_place,
+                    &mut self.net,
+                );
+
+                let current_function = self.call_stack.peek_mut();
+                self.thread_manager.translate_function_side_effects_join(
+                    &args,
+                    transition_function_call,
+                    &mut current_function.memory,
                 );
             }
         }
