@@ -414,7 +414,9 @@ impl<'tcx> Translator<'tcx> {
         transition_drop: &TransitionRef,
     ) {
         let function = self.call_stack.peek_mut();
-        let local_to_be_dropped = place_to_local(&place);
+        let Some(local_to_be_dropped) = place.as_local() else {
+            return;
+        };
         if function
             .memory
             .is_linked_to_local_guard(local_to_be_dropped)
