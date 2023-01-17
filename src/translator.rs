@@ -333,15 +333,11 @@ impl<'tcx> Translator<'tcx> {
         end_place: &PlaceRef,
         cleanup_place: Option<PlaceRef>,
     ) {
-        self.mutex_manager.translate_function_call_new(
-            start_place,
-            end_place,
-            cleanup_place,
-            &mut self.net,
-        );
+        self.mutex_manager
+            .translate_call_new(start_place, end_place, cleanup_place, &mut self.net);
 
         let current_function = self.call_stack.peek_mut();
-        self.mutex_manager.translate_function_side_effects_new(
+        self.mutex_manager.translate_side_effects_new(
             destination,
             &mut self.net,
             &mut current_function.memory,
@@ -357,7 +353,7 @@ impl<'tcx> Translator<'tcx> {
         end_place: &PlaceRef,
         cleanup_place: Option<PlaceRef>,
     ) {
-        let transition_function_call = self.mutex_manager.translate_function_call_lock(
+        let transition_function_call = self.mutex_manager.translate_call_lock(
             start_place,
             end_place,
             cleanup_place,
@@ -365,7 +361,7 @@ impl<'tcx> Translator<'tcx> {
         );
 
         let current_function = self.call_stack.peek_mut();
-        self.mutex_manager.translate_function_side_effects_lock(
+        self.mutex_manager.translate_side_effects_lock(
             args,
             destination,
             &transition_function_call,
@@ -382,14 +378,12 @@ impl<'tcx> Translator<'tcx> {
         start_place: &PlaceRef,
         end_place: &PlaceRef,
     ) {
-        let transition_function_call = self.thread_manager.translate_function_call_spawn(
-            start_place,
-            end_place,
-            &mut self.net,
-        );
+        let transition_function_call =
+            self.thread_manager
+                .translate_call_spawn(start_place, end_place, &mut self.net);
 
         let current_function = self.call_stack.peek_mut();
-        self.thread_manager.translate_function_side_effects_spawn(
+        self.thread_manager.translate_side_effects_spawn(
             args,
             destination,
             transition_function_call,
@@ -408,10 +402,10 @@ impl<'tcx> Translator<'tcx> {
     ) {
         let transition_function_call =
             self.thread_manager
-                .translate_function_call_join(start_place, end_place, &mut self.net);
+                .translate_call_join(start_place, end_place, &mut self.net);
 
         let current_function = self.call_stack.peek_mut();
-        self.thread_manager.translate_function_side_effects_join(
+        self.thread_manager.translate_side_effects_join(
             args,
             transition_function_call,
             &mut current_function.memory,

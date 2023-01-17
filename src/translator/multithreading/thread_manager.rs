@@ -38,7 +38,7 @@ impl ThreadManager {
     /// the same representation as in `foreign_function_call`.
     /// The labelling follows the numbering of the labels of the threads.
     /// Returns the transition that represents the function call.
-    pub fn translate_function_call_spawn(
+    pub fn translate_call_spawn(
         &self,
         start_place: &PlaceRef,
         end_place: &PlaceRef,
@@ -55,7 +55,7 @@ impl ThreadManager {
     /// A separate counter is incremented every time that
     /// the function is called to generate a unique label.
     /// Returns the transition that represents the function call.
-    pub fn translate_function_call_join(
+    pub fn translate_call_join(
         &self,
         start_place: &PlaceRef,
         end_place: &PlaceRef,
@@ -72,7 +72,7 @@ impl ThreadManager {
     /// the specific logic of spawning a new thread.
     /// Receives a reference to the memory of the caller function to
     /// link the return local variable to the new join handle.
-    pub fn translate_function_side_effects_spawn<'tcx>(
+    pub fn translate_side_effects_spawn<'tcx>(
         &mut self,
         args: &[rustc_middle::mir::Operand<'tcx>],
         return_value: rustc_middle::mir::Place,
@@ -99,7 +99,7 @@ impl ThreadManager {
     /// the specific logic of joining an existing thread.
     /// Receives a reference to the memory of the caller function to retrieve
     /// the join handle linked to the local variable.
-    pub fn translate_function_side_effects_join(
+    pub fn translate_side_effects_join(
         &mut self,
         args: &[rustc_middle::mir::Operand],
         transition_function_call: TransitionRef,

@@ -31,7 +31,7 @@ impl MutexManager {
     /// the same representation as in `foreign_function_call`.
     /// The labelling follows the numbering of the labels of the mutexes.
     /// Returns the transition that represents the function call.
-    pub fn translate_function_call_new(
+    pub fn translate_call_new(
         &self,
         start_place: &PlaceRef,
         end_place: &PlaceRef,
@@ -48,7 +48,7 @@ impl MutexManager {
     /// A separate counter is incremented every time that
     /// the function is called to generate a unique label.
     /// Returns the transition that represents the function call.
-    pub fn translate_function_call_lock(
+    pub fn translate_call_lock(
         &self,
         start_place: &PlaceRef,
         end_place: &PlaceRef,
@@ -64,7 +64,7 @@ impl MutexManager {
     /// the specific logic of creating a new mutex.
     /// Receives a reference to the memory of the caller function to
     /// link the return local variable to the new mutex.
-    pub fn translate_function_side_effects_new(
+    pub fn translate_side_effects_new(
         &mut self,
         return_value: rustc_middle::mir::Place,
         net: &mut PetriNet,
@@ -80,7 +80,7 @@ impl MutexManager {
     /// the specific logic of locking a mutex.
     /// Receives a reference to the memory of the caller function to retrieve the mutex contained
     /// in the local variable for the call and to link the return local variable to the new lock guard.
-    pub fn translate_function_side_effects_lock(
+    pub fn translate_side_effects_lock(
         &mut self,
         args: &[rustc_middle::mir::Operand],
         return_value: rustc_middle::mir::Place,
