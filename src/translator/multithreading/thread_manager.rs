@@ -8,8 +8,8 @@
 
 use crate::naming::thread::function_transition_label;
 use crate::translator::mir_function::Memory;
+use crate::translator::multithreading::ThreadSpan;
 use crate::translator::special_function::call_foreign_function;
-use crate::translator::thread::ThreadSpan;
 use crate::utils::place_to_local;
 use crate::utils::{
     extract_def_id_of_called_function_from_operand,

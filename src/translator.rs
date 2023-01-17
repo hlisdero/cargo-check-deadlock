@@ -25,9 +25,9 @@
 mod function_call;
 mod mir_function;
 mod mir_visitor;
+mod multithreading;
 mod special_function;
 mod sync;
-mod thread;
 
 use crate::error_handling::ERR_NO_MAIN_FUNCTION_FOUND;
 use crate::naming::function::foreign_call_transition_label;
@@ -35,12 +35,12 @@ use crate::naming::program::{PROGRAM_END, PROGRAM_PANIC, PROGRAM_START};
 use crate::stack::Stack;
 use crate::translator::function_call::FunctionCall;
 use crate::translator::mir_function::MirFunction;
+use crate::translator::multithreading::{is_thread_function, ThreadManager};
 use crate::translator::special_function::{
     call_diverging_function, call_foreign_function, call_panic_function, is_foreign_function,
     is_panic_function,
 };
 use crate::translator::sync::{is_mutex_function, MutexManager};
-use crate::translator::thread::{is_thread_function, ThreadManager};
 use crate::utils::{extract_def_id_of_called_function_from_operand, place_to_local};
 use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
 use rustc_middle::mir::visit::Visitor;

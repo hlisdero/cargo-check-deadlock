@@ -6,8 +6,8 @@
 //! For an introduction to MIR see:
 //! <https://rustc-dev-guide.rust-lang.org/mir/index.html>
 
+use crate::translator::multithreading::is_join_handle_declaration;
 use crate::translator::sync::is_mutex_declaration;
-use crate::translator::thread::is_join_handle_declaration;
 use crate::translator::Translator;
 use crate::utils::place_to_local;
 use rustc_middle::mir::visit::Visitor;
