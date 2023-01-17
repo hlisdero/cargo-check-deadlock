@@ -287,19 +287,7 @@ impl<'tcx> Translator<'tcx> {
                 end_place,
                 cleanup_place,
             } => {
-                self.mutex_manager.translate_function_call_new(
-                    &start_place,
-                    &end_place,
-                    cleanup_place,
-                    &mut self.net,
-                );
-
-                let current_function = self.call_stack.peek_mut();
-                self.mutex_manager.translate_function_side_effects_new(
-                    destination,
-                    &mut self.net,
-                    &mut current_function.memory,
-                );
+                self.call_mutex_new(destination, &start_place, &end_place, cleanup_place);
             }
             FunctionCall::MutexLock {
                 args,
@@ -308,21 +296,7 @@ impl<'tcx> Translator<'tcx> {
                 end_place,
                 cleanup_place,
             } => {
-                let transition_function_call = self.mutex_manager.translate_function_call_lock(
-                    &start_place,
-                    &end_place,
-                    cleanup_place,
-                    &mut self.net,
-                );
-
-                let current_function = self.call_stack.peek_mut();
-                self.mutex_manager.translate_function_side_effects_lock(
-                    &args,
-                    destination,
-                    &transition_function_call,
-                    &mut self.net,
-                    &mut current_function.memory,
-                );
+                self.call_mutex_lock(&args, destination, &start_place, &end_place, cleanup_place);
             }
             FunctionCall::Panic {
                 function_name,
@@ -339,41 +313,109 @@ impl<'tcx> Translator<'tcx> {
                 start_place,
                 end_place,
             } => {
-                let transition_function_call = self.thread_manager.translate_function_call_spawn(
-                    &start_place,
-                    &end_place,
-                    &mut self.net,
-                );
-
-                let current_function = self.call_stack.peek_mut();
-                self.thread_manager.translate_function_side_effects_spawn(
-                    &args,
-                    destination,
-                    transition_function_call,
-                    &mut current_function.memory,
-                    current_function.def_id,
-                    self.tcx,
-                );
+                self.call_thread_spawn(&args, destination, &start_place, &end_place);
             }
             FunctionCall::ThreadJoin {
                 args,
                 start_place,
                 end_place,
             } => {
-                let transition_function_call = self.thread_manager.translate_function_call_join(
-                    &start_place,
-                    &end_place,
-                    &mut self.net,
-                );
-
-                let current_function = self.call_stack.peek_mut();
-                self.thread_manager.translate_function_side_effects_join(
-                    &args,
-                    transition_function_call,
-                    &mut current_function.memory,
-                );
+                self.call_thread_join(&args, &start_place, &end_place);
             }
         }
+    }
+
+    /// Handler for the case `FunctionCall::MutexNew`.
+    fn call_mutex_new(
+        &mut self,
+        destination: rustc_middle::mir::Place<'tcx>,
+        start_place: &PlaceRef,
+        end_place: &PlaceRef,
+        cleanup_place: Option<PlaceRef>,
+    ) {
+        self.mutex_manager.translate_function_call_new(
+            start_place,
+            end_place,
+            cleanup_place,
+            &mut self.net,
+        );
+
+        let current_function = self.call_stack.peek_mut();
+        self.mutex_manager.translate_function_side_effects_new(
+            destination,
+            &mut self.net,
+            &mut current_function.memory,
+        );
+    }
+
+    /// Handler for the case `FunctionCall::MutexLock`.
+    fn call_mutex_lock(
+        &mut self,
+        args: &[rustc_middle::mir::Operand<'tcx>],
+        destination: rustc_middle::mir::Place<'tcx>,
+        start_place: &PlaceRef,
+        end_place: &PlaceRef,
+        cleanup_place: Option<PlaceRef>,
+    ) {
+        let transition_function_call = self.mutex_manager.translate_function_call_lock(
+            start_place,
+            end_place,
+            cleanup_place,
+            &mut self.net,
+        );
+
+        let current_function = self.call_stack.peek_mut();
+        self.mutex_manager.translate_function_side_effects_lock(
+            args,
+            destination,
+            &transition_function_call,
+            &mut self.net,
+            &mut current_function.memory,
+        );
+    }
+
+    /// Handler for the case `FunctionCall::ThreadSpawn`.
+    fn call_thread_spawn(
+        &mut self,
+        args: &[rustc_middle::mir::Operand<'tcx>],
+        destination: rustc_middle::mir::Place<'tcx>,
+        start_place: &PlaceRef,
+        end_place: &PlaceRef,
+    ) {
+        let transition_function_call = self.thread_manager.translate_function_call_spawn(
+            start_place,
+            end_place,
+            &mut self.net,
+        );
+
+        let current_function = self.call_stack.peek_mut();
+        self.thread_manager.translate_function_side_effects_spawn(
+            args,
+            destination,
+            transition_function_call,
+            &mut current_function.memory,
+            current_function.def_id,
+            self.tcx,
+        );
+    }
+
+    /// Handler for the case `FunctionCall::ThreadJoin`.
+    fn call_thread_join(
+        &mut self,
+        args: &[rustc_middle::mir::Operand<'tcx>],
+        start_place: &PlaceRef,
+        end_place: &PlaceRef,
+    ) {
+        let transition_function_call =
+            self.thread_manager
+                .translate_function_call_join(start_place, end_place, &mut self.net);
+
+        let current_function = self.call_stack.peek_mut();
+        self.thread_manager.translate_function_side_effects_join(
+            args,
+            transition_function_call,
+            &mut current_function.memory,
+        );
     }
 
     /// Checks whether the variable to be dropped is a lock guard and
