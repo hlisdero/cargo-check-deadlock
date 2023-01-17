@@ -401,7 +401,7 @@ impl<'tcx> Translator<'tcx> {
         self.thread_manager.translate_side_effects_join(
             args,
             transition_function_call,
-            &mut current_function.memory,
+            &current_function.memory,
         );
     }
 

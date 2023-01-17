@@ -103,7 +103,7 @@ impl ThreadManager {
         &mut self,
         args: &[rustc_middle::mir::Operand],
         transition_function_call: TransitionRef,
-        memory: &mut Memory,
+        memory: &Memory,
     ) {
         // Retrieve the join handle from the local variable passed to the function as an argument.
         let self_ref = extract_self_reference_from_arguments_for_function_call(args);
