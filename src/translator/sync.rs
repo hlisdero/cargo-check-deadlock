@@ -8,17 +8,16 @@ pub use mutex_manager::{MutexManager, MutexRef};
 mod mutex;
 mod mutex_manager;
 
-const SUPPORTED_MUTEX_FUNCTIONS: [&str; 2] =
-    ["std::sync::Mutex::<T>::new", "std::sync::Mutex::<T>::lock"];
+/// Checks whether the function name corresponds to `std::sync::Mutex::<T>::new`.
+#[inline]
+pub fn is_mutex_new(function_name: &str) -> bool {
+    function_name == "std::sync::Mutex::<T>::new"
+}
 
-/// Checks whether the function name corresponds to one of the supported mutex functions.
-pub fn is_mutex_function(function_name: &str) -> bool {
-    for name in SUPPORTED_MUTEX_FUNCTIONS {
-        if function_name == name {
-            return true;
-        }
-    }
-    false
+/// Checks whether the function name corresponds to `std::sync::Mutex::<T>::lock`.
+#[inline]
+pub fn is_mutex_lock(function_name: &str) -> bool {
+    function_name == "std::sync::Mutex::<T>::lock"
 }
 
 /// Checks whether the type of a local declaration is `std::sync::Mutex<T>`,

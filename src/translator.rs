@@ -40,7 +40,7 @@ use crate::translator::special_function::{
     call_diverging_function, call_foreign_function, call_panic_function, is_foreign_function,
     is_panic_function,
 };
-use crate::translator::sync::{is_mutex_function, MutexManager};
+use crate::translator::sync::{is_mutex_lock, is_mutex_new, MutexManager};
 use crate::utils::{extract_def_id_of_called_function_from_operand, place_to_local};
 use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
 use rustc_middle::mir::visit::Visitor;
@@ -198,9 +198,17 @@ impl<'tcx> Translator<'tcx> {
             };
         }
 
-        if is_mutex_function(&function_name) {
-            return FunctionCall::Mutex {
-                function_name,
+        if is_mutex_new(&function_name) {
+            return FunctionCall::MutexNew {
+                destination,
+                start_place,
+                end_place,
+                cleanup_place,
+            };
+        }
+
+        if is_mutex_lock(&function_name) {
+            return FunctionCall::MutexLock {
                 args,
                 destination,
                 start_place,
@@ -266,16 +274,13 @@ impl<'tcx> Translator<'tcx> {
                 self.push_function_to_call_stack(function_def_id, start_place, end_place);
                 self.translate_top_call_stack();
             }
-            FunctionCall::Mutex {
-                function_name,
-                args,
+            FunctionCall::MutexNew {
                 destination,
                 start_place,
                 end_place,
                 cleanup_place,
             } => {
-                let transition_function_call = self.mutex_manager.translate_function_call(
-                    &function_name,
+                self.mutex_manager.translate_function_call_new(
                     &start_place,
                     &end_place,
                     cleanup_place,
@@ -283,8 +288,28 @@ impl<'tcx> Translator<'tcx> {
                 );
 
                 let current_function = self.call_stack.peek_mut();
-                self.mutex_manager.translate_function_side_effects(
-                    &function_name,
+                self.mutex_manager.translate_function_side_effects_new(
+                    destination,
+                    &mut self.net,
+                    &mut current_function.memory,
+                );
+            }
+            FunctionCall::MutexLock {
+                args,
+                destination,
+                start_place,
+                end_place,
+                cleanup_place,
+            } => {
+                let transition_function_call = self.mutex_manager.translate_function_call_lock(
+                    &start_place,
+                    &end_place,
+                    cleanup_place,
+                    &mut self.net,
+                );
+
+                let current_function = self.call_stack.peek_mut();
+                self.mutex_manager.translate_function_side_effects_lock(
                     &args,
                     destination,
                     &transition_function_call,

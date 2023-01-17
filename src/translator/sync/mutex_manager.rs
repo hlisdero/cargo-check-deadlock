@@ -27,58 +27,75 @@ impl MutexManager {
         Self::default()
     }
 
-    /// Translates a mutex function call using the same logic as in `foreign_function_call`.
+    /// Translates a call to `std::sync::Mutex::<T>::new` using
+    /// the same representation as in `foreign_function_call`.
+    /// The labelling follows the numbering of the labels of the mutexes.
     /// Returns the transition that represents the function call.
-    ///
-    /// The naming depends:
-    /// - For `std::sync::Mutex::<T>::new` the numbering follows the numbering of the labels of the mutexes.
-    /// - For `std::sync::Mutex::<T>::lock` a separate counter is incremented every time that the function is called.
-    pub fn translate_function_call(
+    pub fn translate_function_call_new(
         &self,
-        function_name: &str,
         start_place: &PlaceRef,
         end_place: &PlaceRef,
         cleanup_place: Option<PlaceRef>,
         net: &mut PetriNet,
     ) -> TransitionRef {
-        let index = if function_name == "std::sync::Mutex::<T>::new" {
-            self.mutexes.len()
-        } else {
-            self.lock_counter
-        };
-
-        let transition_label = &function_transition_label(function_name, index);
+        let index = self.mutexes.len();
+        let transition_label = &function_transition_label("std::sync::Mutex::<T>::new", index);
         call_foreign_function(start_place, end_place, cleanup_place, transition_label, net)
     }
 
-    /// Translates the side effects for the methods of `std::sync::Mutex`, i.e.,
-    /// the specific logic of creating a new mutex and locking it.
-    /// Receives a reference to the memory of the caller function to update
-    /// and retrieve the mapping between local variables and mutex references.
-    pub fn translate_function_side_effects(
+    /// Translates a call to `std::sync::Mutex::<T>::lock` using
+    /// the same representation as in `foreign_function_call`.
+    /// A separate counter is incremented every time that
+    /// the function is called to generate a unique label.
+    /// Returns the transition that represents the function call.
+    pub fn translate_function_call_lock(
+        &self,
+        start_place: &PlaceRef,
+        end_place: &PlaceRef,
+        cleanup_place: Option<PlaceRef>,
+        net: &mut PetriNet,
+    ) -> TransitionRef {
+        let index = self.lock_counter;
+        let transition_label = &function_transition_label("std::sync::Mutex::<T>::lock", index);
+        call_foreign_function(start_place, end_place, cleanup_place, transition_label, net)
+    }
+
+    /// Translates the side effects for `std::sync::Mutex::<T>::new` i.e.,
+    /// the specific logic of creating a new mutex.
+    /// Receives a reference to the memory of the caller function to
+    /// link the return local variable to the new mutex.
+    pub fn translate_function_side_effects_new(
         &mut self,
-        function_name: &str,
+        return_value: rustc_middle::mir::Place,
+        net: &mut PetriNet,
+        memory: &mut Memory,
+    ) {
+        let mutex_ref = self.add_mutex(net);
+        // The return value contains a new mutex. Link the local variable to it.
+        let return_value_local = place_to_local(&return_value);
+        memory.link_local_to_mutex(return_value_local, mutex_ref);
+    }
+
+    /// Translates the side effects for `std::sync::Mutex::<T>::lock` i.e.,
+    /// the specific logic of locking a mutex.
+    /// Receives a reference to the memory of the caller function to retrieve the mutex contained
+    /// in the local variable for the call and to link the return local variable to the new lock guard.
+    pub fn translate_function_side_effects_lock(
+        &mut self,
         args: &[rustc_middle::mir::Operand],
         return_value: rustc_middle::mir::Place,
         transition_function_call: &TransitionRef,
         net: &mut PetriNet,
         memory: &mut Memory,
     ) {
-        if function_name == "std::sync::Mutex::<T>::new" {
-            let mutex_ref = self.add_mutex(net);
-            // The return value contains a new mutex. Link the local variable to it.
-            let return_value_local = place_to_local(&return_value);
-            memory.link_local_to_mutex(return_value_local, mutex_ref);
-        } else if function_name == "std::sync::Mutex::<T>::lock" {
-            // Retrieve the mutex from the local variable passed to the function as an argument.
-            let self_ref = extract_self_reference_from_arguments_for_function_call(args);
-            let local_with_mutex = place_to_local(&self_ref);
-            let mutex_ref = memory.get_linked_mutex(local_with_mutex);
-            self.add_lock_guard(mutex_ref, transition_function_call, net);
-            // The return value contains a new lock guard. Link the local variable to it.
-            let return_value_local = place_to_local(&return_value);
-            memory.link_local_to_lock_guard(return_value_local, mutex_ref.clone());
-        }
+        // Retrieve the mutex from the local variable passed to the function as an argument.
+        let self_ref = extract_self_reference_from_arguments_for_function_call(args);
+        let local_with_mutex = place_to_local(&self_ref);
+        let mutex_ref = memory.get_linked_mutex(local_with_mutex);
+        self.add_lock_guard(mutex_ref, transition_function_call, net);
+        // The return value contains a new lock guard. Link the local variable to it.
+        let return_value_local = place_to_local(&return_value);
+        memory.link_local_to_lock_guard(return_value_local, mutex_ref.clone());
     }
 
     /// Adds a new mutex and creates its corresponding representation in the Petri net.

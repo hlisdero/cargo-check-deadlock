@@ -25,10 +25,17 @@ pub enum FunctionCall<'tcx> {
         start_place: PlaceRef,
         end_place: PlaceRef,
     },
-    /// Call to a mutex synchronization primitive.
+    /// Call to `std::sync::Mutex::<T>::new`.
     /// Non-recursive call for the translation process.
-    Mutex {
-        function_name: String,
+    MutexNew {
+        destination: rustc_middle::mir::Place<'tcx>,
+        start_place: PlaceRef,
+        end_place: PlaceRef,
+        cleanup_place: Option<PlaceRef>,
+    },
+    /// Call to `std::sync::Mutex::<T>::lock`.
+    /// Non-recursive call for the translation process.
+    MutexLock {
         args: Vec<rustc_middle::mir::Operand<'tcx>>,
         destination: rustc_middle::mir::Place<'tcx>,
         start_place: PlaceRef,
