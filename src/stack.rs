@@ -2,9 +2,6 @@
 //!
 //! It is used to implement the call stack for the source code translation.
 
-/// Error message when the stack is empty.
-const EMPTY_STACK: &str = "BUG: `peek_mut` should not be called on an empty stack";
-
 pub struct Stack<T> {
     stack: Vec<T>,
 }
@@ -28,6 +25,21 @@ impl<T> Stack<T> {
         self.stack.pop()
     }
 
+    /// Returns an immutable reference to the top element of the stack.
+    /// Does not remove the element from the stack.
+    ///
+    /// # Panics
+    ///
+    /// If the stack is empty, then the function panics.
+    pub fn peek(&self) -> &T {
+        if self.stack.is_empty() {
+            panic!("BUG: `peek` should not be called on an empty stack");
+        } else {
+            let len = self.stack.len();
+            &self.stack[len - 1]
+        }
+    }
+
     /// Returns a mutable reference to the top element of the stack.
     /// Does not remove the element from the stack.
     ///
@@ -36,7 +48,7 @@ impl<T> Stack<T> {
     /// If the stack is empty, then the function panics.
     pub fn peek_mut(&mut self) -> &mut T {
         if self.stack.is_empty() {
-            panic!("{EMPTY_STACK}");
+            panic!("BUG: `peek_mut` should not be called on an empty stack");
         } else {
             let len = self.stack.len();
             &mut self.stack[len - 1]
@@ -67,6 +79,14 @@ mod stack_tests {
         let mut stack: Stack<usize> = Stack::new();
 
         assert!(stack.pop().is_none());
+    }
+
+    #[test]
+    #[should_panic(expected = "BUG: `peek` should not be called on an empty stack")]
+    fn stack_new_peek_returns_none() {
+        let stack: Stack<usize> = Stack::new();
+
+        stack.peek();
     }
 
     #[test]
@@ -139,6 +159,17 @@ mod stack_tests {
 
         assert!(!stack.stack.is_empty());
         assert_eq!(stack.stack.len(), 3);
+    }
+
+    #[test]
+    fn stack_peek_returns_top_element() {
+        let mut stack: Stack<usize> = Stack::new();
+
+        stack.push(101);
+        let result = stack.peek();
+
+        assert_eq!(*result, 101);
+        assert!(!stack.stack.is_empty());
     }
 
     #[test]
