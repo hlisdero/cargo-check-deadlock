@@ -90,7 +90,12 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
                 unwind,
             } => {
                 let transition_drop = function.drop(target, unwind, &mut self.net);
-                self.handle_lock_guard_drop(place, &transition_drop);
+                self.mutex_manager.handle_lock_guard_drop(
+                    place,
+                    &transition_drop,
+                    &function.memory,
+                    &mut self.net,
+                );
             }
             TerminatorKind::DropAndReplace { .. } => {
                 unimplemented!("TerminatorKind::DropAndReplace not implemented yet")

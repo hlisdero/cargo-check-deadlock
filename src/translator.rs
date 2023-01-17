@@ -42,7 +42,7 @@ use crate::translator::special_function::{
 };
 use crate::translator::sync::{is_mutex_lock, is_mutex_new, MutexManager};
 use crate::utils::{extract_def_id_of_called_function_from_operand, place_to_local};
-use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
+use netcrab::petri_net::{PetriNet, PlaceRef};
 use rustc_middle::mir::visit::Visitor;
 
 pub struct Translator<'tcx> {
@@ -403,28 +403,6 @@ impl<'tcx> Translator<'tcx> {
             transition_function_call,
             &mut current_function.memory,
         );
-    }
-
-    /// Checks whether the variable to be dropped is a lock guard and
-    /// if that is the case, add an unlock guard for the mutex corresponding
-    /// to the lock guard. Otherwise do nothing.
-    fn handle_lock_guard_drop(
-        &mut self,
-        place: rustc_middle::mir::Place<'tcx>,
-        transition_drop: &TransitionRef,
-    ) {
-        let function = self.call_stack.peek_mut();
-        let Some(local_to_be_dropped) = place.as_local() else {
-            return;
-        };
-        if function
-            .memory
-            .is_linked_to_local_guard(local_to_be_dropped)
-        {
-            let mutex_ref = function.memory.get_linked_lock_guard(local_to_be_dropped);
-            self.mutex_manager
-                .add_unlock_guard(mutex_ref, transition_drop, &mut self.net);
-        }
     }
 
     /// Main translation loop for the threads.

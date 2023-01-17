@@ -98,6 +98,25 @@ impl MutexManager {
         memory.link_local_to_lock_guard(return_value_local, mutex_ref.clone());
     }
 
+    /// Checks whether the variable to be dropped is a lock guard and
+    /// if that is the case, adds an unlock guard for the mutex corresponding
+    /// to the lock guard. Otherwise do nothing.
+    pub fn handle_lock_guard_drop(
+        &mut self,
+        place: rustc_middle::mir::Place,
+        transition_drop: &TransitionRef,
+        memory: &Memory,
+        net: &mut PetriNet,
+    ) {
+        let Some(local_to_be_dropped) = place.as_local() else {
+            return;
+        };
+        if memory.is_linked_to_local_guard(local_to_be_dropped) {
+            let mutex_ref = memory.get_linked_lock_guard(local_to_be_dropped);
+            self.add_unlock_guard(mutex_ref, transition_drop, net);
+        }
+    }
+
     /// Adds a new mutex and creates its corresponding representation in the Petri net.
     /// Returns a reference to the new mutex.
     pub fn add_mutex(&mut self, net: &mut PetriNet) -> MutexRef {
