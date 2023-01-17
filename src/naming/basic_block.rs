@@ -65,3 +65,9 @@ pub fn assert_transition_label(function_name: &str, index: usize) -> String {
 pub fn assert_cleanup_transition_label(function_name: &str, index: usize) -> String {
     format!("{}_ASSERT_CLEANUP_{index}", sanitize(function_name))
 }
+
+/// Label of the transition that represents the `Unreachable` terminator.
+#[inline]
+pub fn unreachable_transition_label(function_name: &str, index: usize) -> String {
+    format!("{}_UNREACHABLE_{index}", sanitize(function_name))
+}

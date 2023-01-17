@@ -83,7 +83,9 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
             TerminatorKind::Return => {
                 function.return_statement(&mut self.net);
             }
-            TerminatorKind::Unreachable => {}
+            TerminatorKind::Unreachable => {
+                function.unreachable(&self.program_end, &mut self.net);
+            }
             TerminatorKind::Drop {
                 place,
                 target,

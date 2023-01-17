@@ -112,4 +112,17 @@ impl MirFunction {
                 handle_err_add_arc("return statement transition", "end place of the function");
             });
     }
+
+    /// Connects the active basic block to a given end place.
+    /// We need a unique non-deadlocking end for all the terminators of this kind.
+    /// <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/mir/enum.TerminatorKind.html#variant.Unreachable>
+    /// This is just the same as `unwind` but with a different label.
+    ///
+    /// # Panics
+    ///
+    /// If there is no active basic block set, then the function panics.
+    pub fn unreachable(&mut self, end_place: &PlaceRef, net: &mut PetriNet) {
+        let active_block = self.get_active_block();
+        active_block.unreachable(end_place, net);
+    }
 }

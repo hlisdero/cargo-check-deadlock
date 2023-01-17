@@ -9,7 +9,7 @@ use crate::error_handling::handle_err_add_arc;
 use crate::naming::basic_block::{
     assert_cleanup_transition_label, assert_transition_label, drop_transition_label,
     drop_unwind_transition_label, end_place_label, goto_transition_label,
-    switch_int_transition_label, unwind_transition_label,
+    switch_int_transition_label, unreachable_transition_label, unwind_transition_label,
 };
 use crate::translator::mir_function::statement::Statement;
 use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
@@ -139,6 +139,17 @@ impl BasicBlock {
             &assert_cleanup_transition_label(&self.function_name, self.index),
             "assert cleanup transition",
             "cleanup block start place",
+        );
+    }
+
+    /// Connects the end place of this block to the end place.
+    pub fn unreachable(&self, end_place: &PlaceRef, net: &mut PetriNet) {
+        self.connect_end_to_next_place(
+            end_place,
+            net,
+            &unreachable_transition_label(&self.function_name, self.index),
+            "unreachable transition",
+            "end place",
         );
     }
 
