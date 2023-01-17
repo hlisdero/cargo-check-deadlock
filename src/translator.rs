@@ -93,15 +93,8 @@ impl<'tcx> Translator<'tcx> {
     pub fn get_result(&mut self) -> Result<PetriNet, &'static str> {
         match self.err_str {
             Some(err_str) => Err(err_str),
-            // We do not want to panic here. The user should call `has_err()` first.
             None => Ok(std::mem::take(&mut self.net)),
         }
-    }
-
-    /// Sets the error string explicitly.
-    /// This is only used internally during the translation process.
-    fn set_err_str(&mut self, err_str: &'static str) {
-        self.err_str = Some(err_str);
     }
 
     /// Translates the source code to a Petri net.
@@ -115,7 +108,7 @@ impl<'tcx> Translator<'tcx> {
     /// If the translation fails due to an unsupported feature present in the code, then the function panics.
     pub fn run(&mut self) {
         let Some((main_function_id, _)) = self.tcx.entry_fn(()) else {
-            self.set_err_str(ERR_NO_MAIN_FUNCTION_FOUND);
+            self.err_str = Some(ERR_NO_MAIN_FUNCTION_FOUND);
             return;
         };
         self.push_function_to_call_stack(
