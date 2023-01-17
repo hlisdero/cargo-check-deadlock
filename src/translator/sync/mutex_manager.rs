@@ -49,7 +49,7 @@ impl MutexManager {
     /// the function is called to generate a unique label.
     /// Returns the transition that represents the function call.
     pub fn translate_call_lock(
-        &self,
+        &mut self,
         start_place: &PlaceRef,
         end_place: &PlaceRef,
         cleanup_place: Option<PlaceRef>,
@@ -57,6 +57,7 @@ impl MutexManager {
     ) -> TransitionRef {
         let index = self.lock_counter;
         let transition_label = &function_transition_label("std::sync::Mutex::<T>::lock", index);
+        self.lock_counter += 1;
         call_foreign_function(start_place, end_place, cleanup_place, transition_label, net)
     }
 
@@ -81,7 +82,7 @@ impl MutexManager {
     /// Receives a reference to the memory of the caller function to retrieve the mutex contained
     /// in the local variable for the call and to link the return local variable to the new lock guard.
     pub fn translate_side_effects_lock(
-        &mut self,
+        &self,
         args: &[rustc_middle::mir::Operand],
         return_value: rustc_middle::mir::Place,
         transition_function_call: &TransitionRef,
@@ -102,7 +103,7 @@ impl MutexManager {
     /// if that is the case, adds an unlock guard for the mutex corresponding
     /// to the lock guard. Otherwise do nothing.
     pub fn handle_lock_guard_drop(
-        &mut self,
+        &self,
         place: rustc_middle::mir::Place,
         transition_drop: &TransitionRef,
         memory: &Memory,
@@ -133,14 +134,13 @@ impl MutexManager {
     ///
     /// If the mutex reference is invalid, then the function panics.
     pub fn add_lock_guard(
-        &mut self,
+        &self,
         mutex_ref: &MutexRef,
         transition_lock: &TransitionRef,
         net: &mut PetriNet,
     ) {
         let mutex = self.get_mutex_from_ref(mutex_ref);
         mutex.add_lock_guard(transition_lock, net);
-        self.lock_counter += 1;
     }
 
     /// Adds an unlock guard to the mutex.
@@ -151,7 +151,7 @@ impl MutexManager {
     ///
     /// If the mutex reference is invalid, then the function panics.
     pub fn add_unlock_guard(
-        &mut self,
+        &self,
         mutex_ref: &MutexRef,
         transition_lock: &TransitionRef,
         net: &mut PetriNet,
