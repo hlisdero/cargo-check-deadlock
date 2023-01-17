@@ -23,6 +23,7 @@ const PANIC_FUNCTIONS: [&str; 5] = [
 /// These are:
 /// - All the standard library functions.
 /// - All the core library functions.
+#[inline]
 fn is_function_excluded_from_translation(function_name: &str) -> bool {
     function_name.starts_with("std::") || function_name.starts_with("core::")
 }
