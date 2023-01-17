@@ -34,7 +34,10 @@ pub fn identify_assign_of_local_with_join_handle(
     body: &rustc_middle::mir::Body,
 ) -> Option<(rustc_middle::mir::Local, rustc_middle::mir::Local)> {
     if let rustc_middle::mir::Rvalue::Use(rustc_middle::mir::Operand::Move(rhs)) = rvalue {
-        let rhs = place_to_local(rhs);
+        // The right hand side must be a local variable with no projections.
+        let Some(rhs) = rhs.as_local() else {
+            return None
+        };
         let local_decl = &body.local_decls[rhs];
         if is_join_handle_declaration(local_decl) {
             let lhs = place_to_local(place);
