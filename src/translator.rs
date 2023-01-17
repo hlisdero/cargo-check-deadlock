@@ -138,7 +138,7 @@ impl<'tcx> Translator<'tcx> {
     /// to jump to the new function. Eventually a "leaf function" will be reached, the functions will exit and the
     /// elements from the stack will be popped in order.
     fn translate_top_call_stack(&mut self) {
-        let function = self.call_stack.peek_mut();
+        let function = self.call_stack.peek();
         // Obtain the MIR representation of the function.
         let body = self.tcx.optimized_mir(function.def_id);
         // Visit the MIR body of the function using the methods of `rustc_middle::mir::visit::Visitor`.
@@ -397,7 +397,7 @@ impl<'tcx> Translator<'tcx> {
             self.thread_manager
                 .translate_call_join(start_place, end_place, &mut self.net);
 
-        let current_function = self.call_stack.peek_mut();
+        let current_function = self.call_stack.peek();
         self.thread_manager.translate_side_effects_join(
             args,
             transition_function_call,
