@@ -255,23 +255,13 @@ impl<'tcx> Translator<'tcx> {
                 start_place,
                 end_place,
                 cleanup_place,
-            } => {
-                let transition_label = &foreign_call_transition_label(&function_name);
-                call_foreign_function(
-                    &start_place,
-                    &end_place,
-                    cleanup_place,
-                    transition_label,
-                    &mut self.net,
-                );
-            }
+            } => self.call_foreign(&function_name, &start_place, &end_place, cleanup_place),
             FunctionCall::MirFunction {
                 function_def_id,
                 start_place,
                 end_place,
             } => {
-                self.push_function_to_call_stack(function_def_id, start_place, end_place);
-                self.translate_top_call_stack();
+                self.call_mir_function(function_def_id, start_place, end_place);
             }
             FunctionCall::MutexNew {
                 destination,
@@ -315,6 +305,35 @@ impl<'tcx> Translator<'tcx> {
                 self.call_thread_join(&args, &start_place, &end_place);
             }
         }
+    }
+
+    /// Handler for the case `FunctionCall::MirFunction`
+    fn call_mir_function(
+        &mut self,
+        function_def_id: rustc_hir::def_id::DefId,
+        start_place: PlaceRef,
+        end_place: PlaceRef,
+    ) {
+        self.push_function_to_call_stack(function_def_id, start_place, end_place);
+        self.translate_top_call_stack();
+    }
+
+    /// Handler for the case `FunctionCall::Foreign`
+    fn call_foreign(
+        &mut self,
+        function_name: &str,
+        start_place: &PlaceRef,
+        end_place: &PlaceRef,
+        cleanup_place: Option<PlaceRef>,
+    ) {
+        let transition_label = &foreign_call_transition_label(function_name);
+        call_foreign_function(
+            start_place,
+            end_place,
+            cleanup_place,
+            transition_label,
+            &mut self.net,
+        );
     }
 
     /// Handler for the case `FunctionCall::MutexNew`.
