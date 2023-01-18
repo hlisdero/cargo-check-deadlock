@@ -4,13 +4,18 @@
 use crate::naming::function::foreign_call_transition_label;
 use crate::translator::multithreading::{is_thread_join, is_thread_spawn};
 use crate::translator::special_function::{call_foreign_function, is_foreign_function};
-use crate::translator::sync::{is_mutex_lock, is_mutex_new};
+use crate::translator::sync::{
+    identify_arc_new_with_mutex, is_arc_new, is_mutex_lock, is_mutex_new,
+};
 use crate::translator::Translator;
 
 use netcrab::petri_net::PlaceRef;
 
 /// Types of function calls that the translator supports.
 pub enum FunctionCall {
+    /// Abridged function call.
+    /// Non-recursive call for the translation process.
+    ArcNew,
     /// Abridged function call.
     /// Non-recursive call for the translation process.
     Foreign,
@@ -36,6 +41,9 @@ impl FunctionCall {
     pub fn new(function_def_id: rustc_hir::def_id::DefId, tcx: rustc_middle::ty::TyCtxt) -> Self {
         let function_name = tcx.def_path_str(function_def_id);
 
+        if is_arc_new(&function_name) {
+            return Self::ArcNew;
+        }
         if is_mutex_new(&function_name) {
             return Self::MutexNew;
         }
@@ -72,11 +80,14 @@ impl<'tcx> Translator<'tcx> {
         let (start_place, end_place, cleanup_place) = place_refs_for_function_call;
 
         match function_call {
-            FunctionCall::Foreign => {
-                self.call_foreign(&function_name, &start_place, &end_place, cleanup_place);
+            FunctionCall::ArcNew => {
+                self.call_arc_new(args, destination, &start_place, &end_place);
             }
             FunctionCall::MirFunction => {
                 self.call_mir_function(function_def_id, start_place, end_place);
+            }
+            FunctionCall::Foreign => {
+                self.call_foreign(&function_name, &start_place, &end_place, cleanup_place);
             }
             FunctionCall::MutexLock => {
                 self.call_mutex_lock(args, destination, &start_place, &end_place, cleanup_place);
@@ -122,25 +133,6 @@ impl<'tcx> Translator<'tcx> {
         );
     }
 
-    /// Handler for the case `FunctionCall::MutexNew`.
-    pub fn call_mutex_new(
-        &mut self,
-        destination: rustc_middle::mir::Place<'tcx>,
-        start_place: &PlaceRef,
-        end_place: &PlaceRef,
-        cleanup_place: Option<PlaceRef>,
-    ) {
-        self.mutex_manager
-            .translate_call_new(start_place, end_place, cleanup_place, &mut self.net);
-
-        let current_function = self.call_stack.peek_mut();
-        self.mutex_manager.translate_side_effects_new(
-            destination,
-            &mut self.net,
-            &mut current_function.memory,
-        );
-    }
-
     /// Handler for the case `FunctionCall::MutexLock`.
     pub fn call_mutex_lock(
         &mut self,
@@ -167,6 +159,44 @@ impl<'tcx> Translator<'tcx> {
         );
     }
 
+    /// Handler for the case `FunctionCall::MutexNew`.
+    pub fn call_mutex_new(
+        &mut self,
+        destination: rustc_middle::mir::Place<'tcx>,
+        start_place: &PlaceRef,
+        end_place: &PlaceRef,
+        cleanup_place: Option<PlaceRef>,
+    ) {
+        self.mutex_manager
+            .translate_call_new(start_place, end_place, cleanup_place, &mut self.net);
+
+        let current_function = self.call_stack.peek_mut();
+        self.mutex_manager.translate_side_effects_new(
+            destination,
+            &mut self.net,
+            &mut current_function.memory,
+        );
+    }
+
+    /// Handler for the case `FunctionCall::ThreadJoin`.
+    pub fn call_thread_join(
+        &mut self,
+        args: &[rustc_middle::mir::Operand<'tcx>],
+        start_place: &PlaceRef,
+        end_place: &PlaceRef,
+    ) {
+        let transition_function_call =
+            self.thread_manager
+                .translate_call_join(start_place, end_place, &mut self.net);
+
+        let current_function = self.call_stack.peek();
+        self.thread_manager.translate_side_effects_join(
+            args,
+            transition_function_call,
+            &current_function.memory,
+        );
+    }
+
     /// Handler for the case `FunctionCall::ThreadSpawn`.
     pub fn call_thread_spawn(
         &mut self,
@@ -190,22 +220,28 @@ impl<'tcx> Translator<'tcx> {
         );
     }
 
-    /// Handler for the case `FunctionCall::ThreadJoin`.
-    pub fn call_thread_join(
+    /// Handler for the function `std::sync::Arc::<T>::new`
+    pub fn call_arc_new(
         &mut self,
         args: &[rustc_middle::mir::Operand<'tcx>],
+        destination: rustc_middle::mir::Place<'tcx>,
         start_place: &PlaceRef,
         end_place: &PlaceRef,
     ) {
-        let transition_function_call =
-            self.thread_manager
-                .translate_call_join(start_place, end_place, &mut self.net);
+        let current_function = self.call_stack.peek_mut();
+        let body = self.tcx.optimized_mir(current_function.def_id);
+        let first_argument = args
+            .get(0)
+            .expect("BUG: `std::sync::Arc::<T>::new` should receive at least one argument");
 
-        let current_function = self.call_stack.peek();
-        self.thread_manager.translate_side_effects_join(
-            args,
-            transition_function_call,
-            &current_function.memory,
-        );
+        if let Some((return_value_local, local_with_mutex)) =
+            identify_arc_new_with_mutex(first_argument, destination, body)
+        {
+            current_function
+                .memory
+                .link_local_to_same_mutex(return_value_local, local_with_mutex);
+        }
+        // The rest is similar to any foreign function.
+        self.call_foreign("std::sync::Arc::<T>::new", start_place, end_place, None);
     }
 }

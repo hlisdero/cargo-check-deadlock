@@ -21,6 +21,18 @@ pub fn is_mutex_lock(function_name: &str) -> bool {
     function_name == "std::sync::Mutex::<T>::lock"
 }
 
+/// Checks whether the function name corresponds to `std::sync::Arc::<T>::new`.
+#[inline]
+pub fn is_arc_new(function_name: &str) -> bool {
+    function_name == "std::sync::Arc::<T>::new"
+}
+
+/// Checks whether the function name corresponds to `std::ops::Deref::deref`.
+#[inline]
+pub fn is_deref(function_name: &str) -> bool {
+    function_name == "std::ops::Deref::deref"
+}
+
 /// Identifies MIR assignments of the form: `_X = &_Y` where:
 /// - `_X` is of type `&std::sync::Mutex<T>` and
 /// - `_Y` is of type `std::sync::Mutex<T>`.
@@ -95,4 +107,28 @@ fn is_mutex_reference_declaration(local_decl: &rustc_middle::mir::LocalDecl) -> 
         // Not a mutex
         false
     }
+}
+
+/// Identify calls to `std::sync::Arc::<T>::new` where the type of
+/// the contained value is `std::sync::Mutex<T>`
+///
+/// Returns a 2-tuple containing the left-hand side and the right-hand side.
+/// Returns `None` if the call does not have this form.
+pub fn identify_arc_new_with_mutex(
+    operand: &rustc_middle::mir::Operand,
+    destination: rustc_middle::mir::Place,
+    body: &rustc_middle::mir::Body,
+) -> Option<(rustc_middle::mir::Local, rustc_middle::mir::Local)> {
+    if let rustc_middle::mir::Operand::Move(place) = operand {
+        // The first argument must be a local variable with no projections.
+        let Some(contained_value_local) = place.as_local() else {
+            return None;
+        };
+        let local_decl = &body.local_decls[contained_value_local];
+        if is_mutex_declaration(local_decl) {
+            let return_value = place_to_local(&destination);
+            return Some((return_value, contained_value_local));
+        }
+    }
+    None
 }
