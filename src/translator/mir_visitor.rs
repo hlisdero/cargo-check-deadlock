@@ -122,9 +122,7 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
                 from_hir_call: _,
                 fn_span: _,
             } => {
-                let function_call =
-                    self.prepare_function_call(func, args.clone(), destination, target, cleanup);
-                self.call_function(function_call);
+                self.call_function(func, args, destination, target, cleanup);
             }
             TerminatorKind::Assert {
                 cond: _,

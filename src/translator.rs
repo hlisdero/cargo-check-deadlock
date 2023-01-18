@@ -30,17 +30,15 @@ mod special_function;
 mod sync;
 
 use crate::error_handling::ERR_NO_MAIN_FUNCTION_FOUND;
-use crate::naming::function::foreign_call_transition_label;
 use crate::naming::program::{PROGRAM_END, PROGRAM_PANIC, PROGRAM_START};
 use crate::stack::Stack;
 use crate::translator::function_call::FunctionCall;
 use crate::translator::mir_function::MirFunction;
-use crate::translator::multithreading::{is_thread_join, is_thread_spawn, ThreadManager};
+use crate::translator::multithreading::ThreadManager;
 use crate::translator::special_function::{
-    call_diverging_function, call_foreign_function, call_panic_function, is_foreign_function,
-    is_panic_function,
+    call_diverging_function, call_panic_function, is_panic_function,
 };
-use crate::translator::sync::{is_mutex_lock, is_mutex_new, MutexManager};
+use crate::translator::sync::MutexManager;
 use crate::utils::{extract_def_id_of_called_function_from_operand, place_to_local};
 use netcrab::petri_net::{PetriNet, PlaceRef};
 use rustc_middle::mir::visit::Visitor;
@@ -148,278 +146,64 @@ impl<'tcx> Translator<'tcx> {
         self.call_stack.pop();
     }
 
-    /// Prepares the function call depending on the type of function.
-    /// The return `FunctionCall` enum has all the information required for the function call.
-    ///
-    /// This is the handler for the enum variant `TerminatorKind::Call` in the MIR Visitor.
-    /// <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/mir/enum.TerminatorKind.html#variant.Call>
-    fn prepare_function_call(
-        &mut self,
-        func: &rustc_middle::mir::Operand<'tcx>,
-        args: Vec<rustc_middle::mir::Operand<'tcx>>,
-        destination: rustc_middle::mir::Place<'tcx>,
-        target: Option<rustc_middle::mir::BasicBlock>,
-        cleanup: Option<rustc_middle::mir::BasicBlock>,
-    ) -> FunctionCall<'tcx> {
-        let current_function = self.call_stack.peek_mut();
-        let function_def_id =
-            extract_def_id_of_called_function_from_operand(func, current_function.def_id, self.tcx);
-        let function_name = self.tcx.def_path_str(function_def_id);
-
-        if is_panic_function(&function_name) {
-            let start_place = current_function.get_start_place_for_function_call();
-            return FunctionCall::Panic {
-                function_name: current_function.name.clone(),
-                start_place,
-            };
-        }
-
-        let Some(return_block) = target else {
-            let start_place = current_function.get_start_place_for_function_call();
-            return FunctionCall::Diverging { function_name, start_place };
-        };
-
-        let (start_place, end_place, cleanup_place) =
-            current_function.get_place_refs_for_function_call(return_block, cleanup, &mut self.net);
-
-        if is_mutex_new(&function_name) {
-            return FunctionCall::MutexNew {
-                destination,
-                start_place,
-                end_place,
-                cleanup_place,
-            };
-        }
-
-        if is_mutex_lock(&function_name) {
-            return FunctionCall::MutexLock {
-                args,
-                destination,
-                start_place,
-                end_place,
-                cleanup_place,
-            };
-        }
-
-        if is_thread_spawn(&function_name) {
-            return FunctionCall::ThreadSpawn {
-                args,
-                destination,
-                start_place,
-                end_place,
-            };
-        }
-
-        if is_thread_join(&function_name) {
-            return FunctionCall::ThreadJoin {
-                args,
-                start_place,
-                end_place,
-            };
-        }
-        // Default case for standard and core library calls
-        if is_foreign_function(function_def_id, self.tcx) {
-            return FunctionCall::Foreign {
-                function_name,
-                start_place,
-                end_place,
-                cleanup_place,
-            };
-        }
-        // Default case: A function with MIR representation
-        FunctionCall::MirFunction {
-            function_def_id,
-            start_place,
-            end_place,
-        }
-    }
-
     /// Jumps from the current function on the top of the stack
     /// to a new function called inside the current function.
     ///
     /// Translates functions in a shortened way in the following cases:
     /// - Foreign functions i.e., linked via extern { ... }).
     /// - Functions that do not have a MIR representation.
-    /// - Functions in a list of excluded functions defined by `translator::special_function::FUNCTIONS_EXCLUDED_FROM_TRANSLATION`.
-    /// - Functions that call a mutex synchronization primitive such as `std::sync::Mutex::lock`.
     /// - Functions that do not return (diverging functions).
     /// - Functions that represent a `panic` i.e., functions that starts an unwind of the stack.
-    fn call_function(&mut self, function_call: FunctionCall<'tcx>) {
-        match function_call {
-            FunctionCall::Diverging {
-                function_name,
-                start_place,
-            } => call_diverging_function(&start_place, &function_name, &mut self.net),
-            FunctionCall::Foreign {
-                function_name,
-                start_place,
-                end_place,
-                cleanup_place,
-            } => self.call_foreign(&function_name, &start_place, &end_place, cleanup_place),
-            FunctionCall::MirFunction {
-                function_def_id,
-                start_place,
-                end_place,
-            } => {
-                self.call_mir_function(function_def_id, start_place, end_place);
-            }
-            FunctionCall::MutexNew {
-                destination,
-                start_place,
-                end_place,
-                cleanup_place,
-            } => {
-                self.call_mutex_new(destination, &start_place, &end_place, cleanup_place);
-            }
-            FunctionCall::MutexLock {
-                args,
-                destination,
-                start_place,
-                end_place,
-                cleanup_place,
-            } => {
-                self.call_mutex_lock(&args, destination, &start_place, &end_place, cleanup_place);
-            }
-            FunctionCall::Panic {
-                function_name,
-                start_place,
-            } => call_panic_function(
+    /// - Functions for mutexes: `std::sync::Mutex::new` and `std::sync::Mutex::lock`.
+    /// - Functions for threads: `std::thread::spawn` and `std::thread::JoinHandle::<T>::join`
+    /// - Functions that call the Rust standard library or the Rust core library.
+    ///
+    /// This is the handler for the enum variant `TerminatorKind::Call` in the MIR Visitor.
+    /// <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/mir/enum.TerminatorKind.html#variant.Call>
+    fn call_function(
+        &mut self,
+        func: &rustc_middle::mir::Operand<'tcx>,
+        args: &[rustc_middle::mir::Operand<'tcx>],
+        destination: rustc_middle::mir::Place<'tcx>,
+        target: Option<rustc_middle::mir::BasicBlock>,
+        cleanup: Option<rustc_middle::mir::BasicBlock>,
+    ) {
+        let current_function = self.call_stack.peek_mut();
+        let function_def_id =
+            extract_def_id_of_called_function_from_operand(func, current_function.def_id, self.tcx);
+        let function_name = self.tcx.def_path_str(function_def_id);
+
+        if is_panic_function(&function_name) {
+            // Function call which starts an abnormal termination of the program.
+            // Non-recursive call for the translation process.
+            let start_place = current_function.get_start_place_for_function_call();
+            call_panic_function(
                 &start_place,
                 &self.program_panic,
-                &function_name,
+                &current_function.name,
                 &mut self.net,
-            ),
-            FunctionCall::ThreadSpawn {
-                args,
-                destination,
-                start_place,
-                end_place,
-            } => {
-                self.call_thread_spawn(&args, destination, &start_place, &end_place);
-            }
-            FunctionCall::ThreadJoin {
-                args,
-                start_place,
-                end_place,
-            } => {
-                self.call_thread_join(&args, &start_place, &end_place);
-            }
+            );
+            return;
         }
-    }
 
-    /// Handler for the case `FunctionCall::MirFunction`
-    fn call_mir_function(
-        &mut self,
-        function_def_id: rustc_hir::def_id::DefId,
-        start_place: PlaceRef,
-        end_place: PlaceRef,
-    ) {
-        self.push_function_to_call_stack(function_def_id, start_place, end_place);
-        self.translate_top_call_stack();
-    }
+        let Some(return_block) = target else {
+            // Call to a function which does not return (Return type: -> !).
+            // Non-recursive call for the translation process.
+            let start_place = current_function.get_start_place_for_function_call();
+            call_diverging_function(&start_place, &function_name, &mut self.net);
+            return;
+        };
 
-    /// Handler for the case `FunctionCall::Foreign`
-    fn call_foreign(
-        &mut self,
-        function_name: &str,
-        start_place: &PlaceRef,
-        end_place: &PlaceRef,
-        cleanup_place: Option<PlaceRef>,
-    ) {
-        let transition_label = &foreign_call_transition_label(function_name);
-        call_foreign_function(
-            start_place,
-            end_place,
-            cleanup_place,
-            transition_label,
-            &mut self.net,
-        );
-    }
+        let place_refs_for_function_call =
+            current_function.get_place_refs_for_function_call(return_block, cleanup, &mut self.net);
 
-    /// Handler for the case `FunctionCall::MutexNew`.
-    fn call_mutex_new(
-        &mut self,
-        destination: rustc_middle::mir::Place<'tcx>,
-        start_place: &PlaceRef,
-        end_place: &PlaceRef,
-        cleanup_place: Option<PlaceRef>,
-    ) {
-        self.mutex_manager
-            .translate_call_new(start_place, end_place, cleanup_place, &mut self.net);
-
-        let current_function = self.call_stack.peek_mut();
-        self.mutex_manager.translate_side_effects_new(
-            destination,
-            &mut self.net,
-            &mut current_function.memory,
-        );
-    }
-
-    /// Handler for the case `FunctionCall::MutexLock`.
-    fn call_mutex_lock(
-        &mut self,
-        args: &[rustc_middle::mir::Operand<'tcx>],
-        destination: rustc_middle::mir::Place<'tcx>,
-        start_place: &PlaceRef,
-        end_place: &PlaceRef,
-        cleanup_place: Option<PlaceRef>,
-    ) {
-        let transition_function_call = self.mutex_manager.translate_call_lock(
-            start_place,
-            end_place,
-            cleanup_place,
-            &mut self.net,
-        );
-
-        let current_function = self.call_stack.peek_mut();
-        self.mutex_manager.translate_side_effects_lock(
+        let function_call = FunctionCall::new(function_def_id, self.tcx);
+        self.start_function_call(
+            &function_call,
+            function_def_id,
             args,
             destination,
-            &transition_function_call,
-            &mut self.net,
-            &mut current_function.memory,
-        );
-    }
-
-    /// Handler for the case `FunctionCall::ThreadSpawn`.
-    fn call_thread_spawn(
-        &mut self,
-        args: &[rustc_middle::mir::Operand<'tcx>],
-        destination: rustc_middle::mir::Place<'tcx>,
-        start_place: &PlaceRef,
-        end_place: &PlaceRef,
-    ) {
-        let transition_function_call =
-            self.thread_manager
-                .translate_call_spawn(start_place, end_place, &mut self.net);
-
-        let current_function = self.call_stack.peek_mut();
-        self.thread_manager.translate_side_effects_spawn(
-            args,
-            destination,
-            transition_function_call,
-            &mut current_function.memory,
-            current_function.def_id,
-            self.tcx,
-        );
-    }
-
-    /// Handler for the case `FunctionCall::ThreadJoin`.
-    fn call_thread_join(
-        &mut self,
-        args: &[rustc_middle::mir::Operand<'tcx>],
-        start_place: &PlaceRef,
-        end_place: &PlaceRef,
-    ) {
-        let transition_function_call =
-            self.thread_manager
-                .translate_call_join(start_place, end_place, &mut self.net);
-
-        let current_function = self.call_stack.peek();
-        self.thread_manager.translate_side_effects_join(
-            args,
-            transition_function_call,
-            &current_function.memory,
+            place_refs_for_function_call,
         );
     }
 
