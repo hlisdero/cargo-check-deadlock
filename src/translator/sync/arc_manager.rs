@@ -16,7 +16,7 @@ pub struct ArcManager {
 }
 
 impl ArcManager {
-    /// Returns a new empty `ArcManager`
+    /// Returns a new empty `ArcManager`.
     pub fn new() -> Self {
         Self::default()
     }
@@ -75,7 +75,7 @@ impl ArcManager {
         }
     }
 
-    /// Translates the side effects for `std::sync::Arc::<T>::new` i.e.,
+    /// Translates the side effects for `std::ops::Deref::deref` i.e.,
     /// detecting whether the return value should be linked to a mutex (because the `Arc` contains one).
     /// Receives a reference to the memory of the caller function to
     /// link the return local variable to the existing mutex.
@@ -87,7 +87,7 @@ impl ArcManager {
     ) {
         let first_argument = args
             .get(0)
-            .expect("BUG: `std::ops::Deref` should receive at least one argument");
+            .expect("BUG: `std::ops::Deref::deref` should receive at least one argument");
 
         if let Some((return_value_local, local_with_mutex)) =
             detect_deref_arc_with_mutex(first_argument, return_value, body)

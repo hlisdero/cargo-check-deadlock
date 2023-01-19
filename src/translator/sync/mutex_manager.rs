@@ -22,7 +22,7 @@ pub struct MutexManager {
 pub struct MutexRef(usize);
 
 impl MutexManager {
-    /// Returns a new empty `MutexManager`
+    /// Returns a new empty `MutexManager`.
     pub fn new() -> Self {
         Self::default()
     }
