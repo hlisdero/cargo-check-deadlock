@@ -17,7 +17,6 @@ mod memory;
 mod statement;
 mod terminator;
 
-use crate::naming::basic_block::start_place_label;
 use basic_block::BasicBlock;
 use netcrab::petri_net::{PetriNet, PlaceRef};
 use std::collections::HashMap;
@@ -67,16 +66,12 @@ impl MirFunction {
     /// Prepares the start place for the next block.
     /// If it is the first block, then the start place of the function
     /// is the same as the start place of the block.
-    /// Otherwise a new start place is created and returned.
-    fn prepare_start_place_for_next_basic_block(
-        &self,
-        index: usize,
-        net: &mut PetriNet,
-    ) -> PlaceRef {
+    /// Otherwise returns `None` and the basic block will create a start place.
+    fn prepare_start_place_for_next_basic_block(&self) -> Option<PlaceRef> {
         if self.basic_blocks.is_empty() {
-            self.start_place.clone()
+            Some(self.start_place.clone())
         } else {
-            net.add_place(&start_place_label(&self.name, index))
+            None
         }
     }
 
@@ -136,8 +131,8 @@ impl MirFunction {
     fn add_basic_block(&mut self, block_number: rustc_middle::mir::BasicBlock, net: &mut PetriNet) {
         // Extracts the value of this index as a usize.
         let index = block_number.index();
-        let start_place = self.prepare_start_place_for_next_basic_block(index, net);
-        let basic_block = BasicBlock::new(&self.name, index, start_place);
+        let start_place = self.prepare_start_place_for_next_basic_block();
+        let basic_block = BasicBlock::new(&self.name, index, start_place, net);
         if self
             .basic_blocks
             .insert(block_number, basic_block)

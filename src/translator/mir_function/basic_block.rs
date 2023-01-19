@@ -9,7 +9,7 @@ use super::statement::Statement;
 use crate::error_handling::handle_err_add_arc;
 use crate::naming::basic_block::{
     assert_cleanup_transition_label, assert_transition_label, drop_transition_label,
-    drop_unwind_transition_label, end_place_label, goto_transition_label,
+    drop_unwind_transition_label, end_place_label, goto_transition_label, start_place_label,
     switch_int_transition_label, unreachable_transition_label, unwind_transition_label,
 };
 use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
@@ -28,8 +28,18 @@ pub struct BasicBlock {
 
 impl BasicBlock {
     /// Creates a new basic block and adds its representation to the Petri net.
+    /// Creates a new start place for the basic block if it is not provided.
     /// Assumes that the end place is the same as the start place until a statement is added.
-    pub fn new(function_name: &str, index: usize, start_place: PlaceRef) -> Self {
+    pub fn new(
+        function_name: &str,
+        index: usize,
+        start_place: Option<PlaceRef>,
+        net: &mut PetriNet,
+    ) -> Self {
+        let start_place = start_place.map_or_else(
+            || net.add_place(&start_place_label(function_name, index)),
+            |start_place| start_place,
+        );
         Self {
             function_name: function_name.to_string(),
             index,
