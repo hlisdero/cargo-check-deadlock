@@ -5,13 +5,13 @@
 //! The `BasicBlock` stores one reference to the start and end place in the Petri net.
 //! It also stores a vector of `Statement` which forms a chain of places and transitions.
 
+use super::statement::Statement;
 use crate::error_handling::handle_err_add_arc;
 use crate::naming::basic_block::{
     assert_cleanup_transition_label, assert_transition_label, drop_transition_label,
     drop_unwind_transition_label, end_place_label, goto_transition_label,
     switch_int_transition_label, unreachable_transition_label, unwind_transition_label,
 };
-use crate::translator::mir_function::statement::Statement;
 use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
 
 pub struct BasicBlock {

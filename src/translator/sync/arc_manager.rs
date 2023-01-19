@@ -3,10 +3,10 @@
 //! It is mainly used in conjunction with the `MutexManager` to keep track of the mutexes
 //! when they are wrapped around a `std::sync::Arc`.
 
+use super::{detect_deref_arc_with_mutex, detect_mutex_inside_arc_new};
 use crate::naming::arc::function_transition_label;
 use crate::translator::mir_function::Memory;
 use crate::translator::special_function::call_foreign_function;
-use crate::translator::sync::{detect_deref_arc_with_mutex, detect_mutex_inside_arc_new};
 use netcrab::petri_net::{PetriNet, PlaceRef};
 
 #[derive(Default)]

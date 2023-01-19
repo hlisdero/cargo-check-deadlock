@@ -7,6 +7,7 @@ mod thread_manager;
 mod thread_span;
 
 use crate::utils::place_to_local;
+
 pub use thread_manager::ThreadManager;
 pub use thread_manager::ThreadRef;
 pub use thread_span::ThreadSpan;

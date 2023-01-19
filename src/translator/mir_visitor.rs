@@ -6,12 +6,12 @@
 //! For an introduction to MIR see:
 //! <https://rustc-dev-guide.rust-lang.org/mir/index.html>
 
+use super::Translator;
 use crate::translator::multithreading::identify_assign_of_local_with_join_handle;
 use crate::translator::sync::{
     detect_assignment_copy_reference_to_mutex, detect_assignment_reference_to_arc_with_mutex,
     detect_assignment_reference_to_mutex,
 };
-use crate::translator::Translator;
 use rustc_middle::mir::visit::Visitor;
 use rustc_middle::mir::TerminatorKind;
 

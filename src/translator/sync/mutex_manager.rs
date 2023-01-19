@@ -3,11 +3,11 @@
 //! The `MutexManager` stores the mutexes discovered so far in the code.
 //! It also performs the translation for each mutex function.
 
+use super::mutex::Mutex;
 use crate::naming::mutex::function_transition_label;
 use crate::translator::mir_function::Memory;
 use crate::translator::place_to_local;
 use crate::translator::special_function::call_foreign_function;
-use crate::translator::sync::mutex::Mutex;
 use crate::utils::extract_self_reference_from_arguments_for_function_call;
 use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
 

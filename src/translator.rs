@@ -32,16 +32,14 @@ mod sync;
 use crate::error_handling::ERR_NO_MAIN_FUNCTION_FOUND;
 use crate::naming::program::{PROGRAM_END, PROGRAM_PANIC, PROGRAM_START};
 use crate::stack::Stack;
-use crate::translator::function_call::FunctionCall;
-use crate::translator::mir_function::MirFunction;
-use crate::translator::multithreading::ThreadManager;
-use crate::translator::special_function::{
-    call_diverging_function, call_panic_function, is_panic_function,
-};
-use crate::translator::sync::{ArcManager, MutexManager};
 use crate::utils::{extract_def_id_of_called_function_from_operand, place_to_local};
+use function_call::FunctionCall;
+use mir_function::MirFunction;
+use multithreading::ThreadManager;
 use netcrab::petri_net::{PetriNet, PlaceRef};
 use rustc_middle::mir::visit::Visitor;
+use special_function::{call_diverging_function, call_panic_function, is_panic_function};
+use sync::{ArcManager, MutexManager};
 
 pub struct Translator<'tcx> {
     tcx: rustc_middle::ty::TyCtxt<'tcx>,

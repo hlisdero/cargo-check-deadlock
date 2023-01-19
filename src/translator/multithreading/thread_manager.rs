@@ -6,14 +6,13 @@
 //! Once the translation of the main thread is over, each thread stored
 //! here will be translated in order.
 
+use super::ThreadSpan;
 use crate::naming::thread::function_transition_label;
 use crate::translator::mir_function::Memory;
-use crate::translator::multithreading::ThreadSpan;
 use crate::translator::special_function::call_foreign_function;
-use crate::utils::place_to_local;
 use crate::utils::{
     extract_def_id_of_called_function_from_operand,
-    extract_self_reference_from_arguments_for_function_call,
+    extract_self_reference_from_arguments_for_function_call, place_to_local,
 };
 use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
 use std::collections::VecDeque;

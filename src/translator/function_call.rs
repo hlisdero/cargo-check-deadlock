@@ -1,11 +1,11 @@
 //! Submodule for defining the function calls supported by the translator and
 //! the specific handler methods for every one of them.
 
+use super::Translator;
 use crate::naming::function::foreign_call_transition_label;
 use crate::translator::multithreading::{is_thread_join, is_thread_spawn};
 use crate::translator::special_function::{call_foreign_function, is_foreign_function};
 use crate::translator::sync::{is_arc_new, is_deref, is_mutex_lock, is_mutex_new, ArcManager};
-use crate::translator::Translator;
 use netcrab::petri_net::PlaceRef;
 
 /// Types of function calls that the translator supports.

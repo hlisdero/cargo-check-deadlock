@@ -18,10 +18,11 @@ mod statement;
 mod terminator;
 
 use crate::naming::basic_block::start_place_label;
-use crate::translator::mir_function::basic_block::BasicBlock;
-pub use crate::translator::mir_function::memory::Memory;
+use basic_block::BasicBlock;
 use netcrab::petri_net::{PetriNet, PlaceRef};
 use std::collections::HashMap;
+
+pub use memory::Memory;
 
 pub struct MirFunction {
     /// The ID that uniquely identifies the function in this crate in the HIR representation.
