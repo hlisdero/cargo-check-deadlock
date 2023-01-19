@@ -29,7 +29,6 @@ mod multithreading;
 mod special_function;
 mod sync;
 
-use crate::counter::Counter;
 use crate::error_handling::ERR_NO_MAIN_FUNCTION_FOUND;
 use crate::naming::program::{PROGRAM_END, PROGRAM_PANIC, PROGRAM_START};
 use crate::stack::Stack;
@@ -39,7 +38,7 @@ use crate::translator::multithreading::ThreadManager;
 use crate::translator::special_function::{
     call_diverging_function, call_panic_function, is_panic_function,
 };
-use crate::translator::sync::MutexManager;
+use crate::translator::sync::{ArcManager, MutexManager};
 use crate::utils::{extract_def_id_of_called_function_from_operand, place_to_local};
 use netcrab::petri_net::{PetriNet, PlaceRef};
 use rustc_middle::mir::visit::Visitor;
@@ -52,8 +51,8 @@ pub struct Translator<'tcx> {
     program_end: PlaceRef,
     program_panic: PlaceRef,
     call_stack: Stack<MirFunction>,
-    function_counter: Counter,
     mutex_manager: MutexManager,
+    arc_manager: ArcManager,
     thread_manager: ThreadManager,
 }
 
@@ -79,8 +78,8 @@ impl<'tcx> Translator<'tcx> {
             program_end,
             program_panic,
             call_stack: Stack::new(),
-            function_counter: Counter::new(),
             mutex_manager: MutexManager::new(),
+            arc_manager: ArcManager::new(),
             thread_manager: ThreadManager::new(),
         }
     }

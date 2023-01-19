@@ -3,10 +3,12 @@
 //! It defines which functions are supported and how to detect them.
 //! It exposes only the necessary definitions to the outside modules.
 
+mod arc_manager;
 mod mutex;
 mod mutex_manager;
 
 use crate::utils::place_to_local;
+pub use arc_manager::ArcManager;
 pub use mutex_manager::{MutexManager, MutexRef};
 
 /// Checks whether the function name corresponds to `std::sync::Mutex::<T>::new`.

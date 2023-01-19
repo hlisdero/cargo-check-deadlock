@@ -1,14 +1,10 @@
 //! Submodule for defining the function calls supported by the translator and
 //! the specific handler methods for every one of them.
 
-use crate::naming::arc::function_transition_label;
 use crate::naming::function::foreign_call_transition_label;
 use crate::translator::multithreading::{is_thread_join, is_thread_spawn};
 use crate::translator::special_function::{call_foreign_function, is_foreign_function};
-use crate::translator::sync::{
-    detect_deref_arc_with_mutex, detect_mutex_inside_arc_new, is_arc_new, is_deref, is_mutex_lock,
-    is_mutex_new,
-};
+use crate::translator::sync::{is_arc_new, is_deref, is_mutex_lock, is_mutex_new, ArcManager};
 use crate::translator::Translator;
 use netcrab::petri_net::PlaceRef;
 
@@ -238,29 +234,16 @@ impl<'tcx> Translator<'tcx> {
         start_place: &PlaceRef,
         end_place: &PlaceRef,
     ) {
+        self.arc_manager
+            .translate_call_new(start_place, end_place, &mut self.net);
+
         let current_function = self.call_stack.peek_mut();
         let body = self.tcx.optimized_mir(current_function.def_id);
-        let first_argument = args
-            .get(0)
-            .expect("BUG: `std::sync::Arc::<T>::new` should receive at least one argument");
-
-        if let Some((return_value_local, local_with_mutex)) =
-            detect_mutex_inside_arc_new(first_argument, destination, body)
-        {
-            current_function
-                .memory
-                .link_local_to_same_mutex(return_value_local, local_with_mutex);
-        }
-        let function_name = "std::sync::Arc::<T>::new";
-        let count = self.function_counter.get_count(function_name);
-        self.function_counter.increment(function_name.to_string());
-        let transition_label = &function_transition_label(function_name, count);
-        call_foreign_function(
-            start_place,
-            end_place,
-            None,
-            transition_label,
-            &mut self.net,
+        ArcManager::translate_side_effects_new(
+            args,
+            destination,
+            body,
+            &mut current_function.memory,
         );
     }
 
@@ -273,30 +256,16 @@ impl<'tcx> Translator<'tcx> {
         end_place: &PlaceRef,
         cleanup_place: Option<PlaceRef>,
     ) {
+        self.arc_manager
+            .translate_call_deref(start_place, end_place, cleanup_place, &mut self.net);
+
         let current_function = self.call_stack.peek_mut();
         let body = self.tcx.optimized_mir(current_function.def_id);
-        let first_argument = args
-            .get(0)
-            .expect("BUG: `std::ops::Deref` should receive at least one argument");
-
-        if let Some((return_value_local, local_with_mutex)) =
-            detect_deref_arc_with_mutex(first_argument, destination, body)
-        {
-            current_function
-                .memory
-                .link_local_to_same_mutex(return_value_local, local_with_mutex);
-        }
-
-        let function_name = "std::ops::Deref";
-        let count = self.function_counter.get_count(function_name);
-        self.function_counter.increment(function_name.to_string());
-        let transition_label = &function_transition_label(function_name, count);
-        call_foreign_function(
-            start_place,
-            end_place,
-            cleanup_place,
-            transition_label,
-            &mut self.net,
+        ArcManager::translate_side_effects_deref(
+            args,
+            destination,
+            body,
+            &mut current_function.memory,
         );
     }
 }
