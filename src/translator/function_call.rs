@@ -6,8 +6,8 @@ use crate::naming::function::foreign_call_transition_label;
 use crate::translator::multithreading::{is_thread_join, is_thread_spawn};
 use crate::translator::special_function::{call_foreign_function, is_foreign_function};
 use crate::translator::sync::{
-    identify_arc_new_with_mutex, identify_deref_arc_with_mutex, is_arc_new, is_deref,
-    is_mutex_lock, is_mutex_new,
+    detect_deref_arc_with_mutex, detect_mutex_inside_arc_new, is_arc_new, is_deref, is_mutex_lock,
+    is_mutex_new,
 };
 use crate::translator::Translator;
 use netcrab::petri_net::PlaceRef;
@@ -245,7 +245,7 @@ impl<'tcx> Translator<'tcx> {
             .expect("BUG: `std::sync::Arc::<T>::new` should receive at least one argument");
 
         if let Some((return_value_local, local_with_mutex)) =
-            identify_arc_new_with_mutex(first_argument, destination, body)
+            detect_mutex_inside_arc_new(first_argument, destination, body)
         {
             current_function
                 .memory
@@ -280,7 +280,7 @@ impl<'tcx> Translator<'tcx> {
             .expect("BUG: `std::ops::Deref` should receive at least one argument");
 
         if let Some((return_value_local, local_with_mutex)) =
-            identify_deref_arc_with_mutex(first_argument, destination, body)
+            detect_deref_arc_with_mutex(first_argument, destination, body)
         {
             current_function
                 .memory

@@ -8,9 +8,8 @@
 
 use crate::translator::multithreading::identify_assign_of_local_with_join_handle;
 use crate::translator::sync::{
-    identify_assign_of_copy_of_reference_of_local_with_mutex,
-    identify_assign_of_reference_of_arc_with_mutex,
-    identify_assign_of_reference_of_local_with_mutex,
+    detect_assignment_copy_reference_to_mutex, detect_assignment_reference_to_arc_with_mutex,
+    detect_assignment_reference_to_mutex,
 };
 use crate::translator::Translator;
 use rustc_middle::mir::visit::Visitor;
@@ -39,20 +38,15 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
         let function = self.call_stack.peek_mut();
         let body = self.tcx.optimized_mir(function.def_id);
 
-        if let Some((lhs, rhs)) =
-            identify_assign_of_reference_of_local_with_mutex(place, rvalue, body)
-        {
+        if let Some((lhs, rhs)) = detect_assignment_reference_to_mutex(place, rvalue, body) {
             function.memory.link_local_to_same_mutex(lhs, rhs);
         }
 
-        if let Some((lhs, rhs)) =
-            identify_assign_of_copy_of_reference_of_local_with_mutex(place, rvalue, body)
-        {
+        if let Some((lhs, rhs)) = detect_assignment_copy_reference_to_mutex(place, rvalue, body) {
             function.memory.link_local_to_same_mutex(lhs, rhs);
         }
 
-        if let Some((lhs, rhs)) =
-            identify_assign_of_reference_of_arc_with_mutex(place, rvalue, body)
+        if let Some((lhs, rhs)) = detect_assignment_reference_to_arc_with_mutex(place, rvalue, body)
         {
             function.memory.link_local_to_same_mutex(lhs, rhs);
         }

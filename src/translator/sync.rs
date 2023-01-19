@@ -33,13 +33,13 @@ pub fn is_deref(function_name: &str) -> bool {
     function_name == "std::ops::Deref::deref"
 }
 
-/// Identifies MIR assignments of the form: `_X = &_Y` where:
+/// Detects MIR assignments of the form: `_X = &_Y` where:
 /// - `_X` is of type `&std::sync::Mutex<T>` and
 /// - `_Y` is of type `std::sync::Mutex<T>`.
 ///
 /// Returns a 2-tuple containing the left-hand side and the right-hand side.
 /// Returns `None` if the assignment does not have this form.
-pub fn identify_assign_of_reference_of_local_with_mutex(
+pub fn detect_assignment_reference_to_mutex(
     place: &rustc_middle::mir::Place,
     rvalue: &rustc_middle::mir::Rvalue,
     body: &rustc_middle::mir::Body,
@@ -58,13 +58,13 @@ pub fn identify_assign_of_reference_of_local_with_mutex(
     None
 }
 
-/// Identifies MIR assignments of the form: `_X = _Y` where:
+/// Detects MIR assignments of the form: `_X = _Y` where:
 /// - `_X` is of type `&std::sync::Mutex<T>` and
 /// - `_Y` is of type `&std::sync::Mutex<T>`.
 ///
 /// Returns a 2-tuple containing the left-hand side and the right-hand side.
 /// Returns `None` if the assignment does not have this form.
-pub fn identify_assign_of_copy_of_reference_of_local_with_mutex(
+pub fn detect_assignment_copy_reference_to_mutex(
     place: &rustc_middle::mir::Place,
     rvalue: &rustc_middle::mir::Rvalue,
     body: &rustc_middle::mir::Body,
@@ -83,12 +83,12 @@ pub fn identify_assign_of_copy_of_reference_of_local_with_mutex(
     None
 }
 
-/// Identifies calls to `std::sync::Arc::<T>::new` where the type of
-/// the contained value is `std::sync::Mutex<T>`
+/// Detects calls to `std::sync::Arc::<T>::new` where the type of
+/// the argument is `std::sync::Mutex<T>`
 ///
-/// Returns a 2-tuple containing the left-hand side and the right-hand side.
+/// Returns a 2-tuple containing the return value and the argument to the function.
 /// Returns `None` if the call does not have this form.
-pub fn identify_arc_new_with_mutex(
+pub fn detect_mutex_inside_arc_new(
     operand: &rustc_middle::mir::Operand,
     destination: rustc_middle::mir::Place,
     body: &rustc_middle::mir::Body,
@@ -107,12 +107,12 @@ pub fn identify_arc_new_with_mutex(
     None
 }
 
-/// Identifies calls to `std::ops::Deref` where the type of
-/// the contained value is `std::sync::Arc<std::sync::Mutex<T>>`
+/// Detects calls to `std::ops::Deref` where the type of
+/// the argument is `std::sync::Arc<std::sync::Mutex<T>>`
 ///
-/// Returns a 2-tuple containing the left-hand side and the right-hand side.
+/// Returns a 2-tuple containing the return value and the argument to the function.
 /// Returns `None` if the call does not have this form.
-pub fn identify_deref_arc_with_mutex(
+pub fn detect_deref_arc_with_mutex(
     operand: &rustc_middle::mir::Operand,
     destination: rustc_middle::mir::Place,
     body: &rustc_middle::mir::Body,
@@ -131,13 +131,13 @@ pub fn identify_deref_arc_with_mutex(
     None
 }
 
-/// Identifies MIR assignments of the form: `_X = &_Y` where:
+/// Detects MIR assignments of the form: `_X = &_Y` where:
 /// - `_X` is of type `&std::sync::Arc<std::sync::Mutex<T>>` and
 /// - `_Y` is of type `std::sync::Arc<std::sync::Mutex<T>>`.
 ///
 /// Returns a 2-tuple containing the left-hand side and the right-hand side.
 /// Returns `None` if the assignment does not have this form.
-pub fn identify_assign_of_reference_of_arc_with_mutex(
+pub fn detect_assignment_reference_to_arc_with_mutex(
     place: &rustc_middle::mir::Place,
     rvalue: &rustc_middle::mir::Rvalue,
     body: &rustc_middle::mir::Body,
