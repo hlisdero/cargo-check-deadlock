@@ -49,7 +49,7 @@ impl ArcManager {
         net: &mut PetriNet,
     ) {
         let index = self.deref_counter;
-        let transition_label = &function_transition_label("std::ops::Deref", index);
+        let transition_label = &function_transition_label("std::ops::Deref::deref", index);
         self.deref_counter += 1;
         call_foreign_function(start_place, end_place, cleanup_place, transition_label, net);
     }
