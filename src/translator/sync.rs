@@ -7,7 +7,7 @@ mod arc_manager;
 mod mutex;
 mod mutex_manager;
 
-use crate::utils::place_to_local;
+use crate::utils::{is_local_decl_with_concrete_type, place_to_local};
 
 pub use arc_manager::ArcManager;
 pub use mutex_manager::{MutexManager, MutexRef};
@@ -53,7 +53,7 @@ pub fn detect_assignment_reference_to_mutex(
             return None;
         };
         let local_decl = &body.local_decls[rhs];
-        if is_mutex_declaration(local_decl) {
+        if is_local_decl_with_concrete_type(local_decl, "std::sync::Mutex<T>") {
             let lhs = place_to_local(place);
             return Some((lhs, rhs));
         }
@@ -78,7 +78,7 @@ pub fn detect_assignment_copy_reference_to_mutex(
             return None;
         };
         let local_decl = &body.local_decls[rhs];
-        if is_reference_mutex_declaration(local_decl) {
+        if is_local_decl_with_concrete_type(local_decl, "&std::sync::Mutex<T>") {
             let lhs = place_to_local(place);
             return Some((lhs, rhs));
         }
@@ -102,7 +102,7 @@ pub fn detect_mutex_inside_arc_new(
             return None;
         };
         let local_decl = &body.local_decls[contained_value_local];
-        if is_mutex_declaration(local_decl) {
+        if is_local_decl_with_concrete_type(local_decl, "std::sync::Mutex<T>") {
             let return_value = place_to_local(&destination);
             return Some((return_value, contained_value_local));
         }
@@ -126,7 +126,7 @@ pub fn detect_deref_arc_with_mutex(
             return None;
         };
         let local_decl = &body.local_decls[contained_value_local];
-        if is_reference_arc_with_mutex_declaration(local_decl) {
+        if is_local_decl_with_concrete_type(local_decl, "&std::sync::Arc<std::sync::Mutex<T>>") {
             let return_value = place_to_local(&destination);
             return Some((return_value, contained_value_local));
         }
@@ -151,62 +151,10 @@ pub fn detect_assignment_reference_to_arc_with_mutex(
             return None;
         };
         let local_decl = &body.local_decls[rhs];
-        if is_arc_with_mutex_declaration(local_decl) {
+        if is_local_decl_with_concrete_type(local_decl, "std::sync::Arc<std::sync::Mutex<T>>") {
             let lhs = place_to_local(place);
             return Some((lhs, rhs));
         }
     }
     None
-}
-
-/// Checks whether the type of a local declaration is `std::sync::Mutex<T>`,
-/// where `T` is a concrete type and not a type parameter.
-fn is_mutex_declaration(local_decl: &rustc_middle::mir::LocalDecl) -> bool {
-    let ty_string = local_decl.ty.to_string();
-    if ty_string.starts_with("std::sync::Mutex<") && ty_string.ends_with('>') {
-        // True if mutex with concrete type
-        ty_string != "std::sync::Mutex<T>"
-    } else {
-        // Not a mutex
-        false
-    }
-}
-
-/// Checks whether the type of a local declaration is `&std::sync::Mutex<T>`,
-/// where `T` is a concrete type and not a type parameter.
-fn is_reference_mutex_declaration(local_decl: &rustc_middle::mir::LocalDecl) -> bool {
-    let ty_string = local_decl.ty.to_string();
-    if ty_string.starts_with("&std::sync::Mutex<") && ty_string.ends_with('>') {
-        // True if mutex reference with concrete type
-        ty_string != "&std::sync::Mutex<T>"
-    } else {
-        // Not a mutex
-        false
-    }
-}
-
-/// Checks whether the type of a local declaration is `std::sync::Arc<std::sync::Mutex<T>>`,
-/// where `T` is a concrete type and not a type parameter.
-fn is_arc_with_mutex_declaration(local_decl: &rustc_middle::mir::LocalDecl) -> bool {
-    let ty_string = local_decl.ty.to_string();
-    if ty_string.starts_with("std::sync::Arc<std::sync::Mutex<") && ty_string.ends_with(">>") {
-        // True if arc with mutex with concrete type
-        ty_string != "std::sync::Arc<std::sync::Mutex<T>>"
-    } else {
-        // Not a mutex
-        false
-    }
-}
-
-/// Checks whether the type of a local declaration is `&std::sync::Arc<std::sync::Mutex<T>>`,
-/// where `T` is a concrete type and not a type parameter.
-fn is_reference_arc_with_mutex_declaration(local_decl: &rustc_middle::mir::LocalDecl) -> bool {
-    let ty_string = local_decl.ty.to_string();
-    if ty_string.starts_with("&std::sync::Arc<std::sync::Mutex<") && ty_string.ends_with(">>") {
-        // True if mutex reference with concrete type
-        ty_string != "&std::sync::Arc<std::sync::Mutex<T>>"
-    } else {
-        // Not a mutex
-        false
-    }
 }

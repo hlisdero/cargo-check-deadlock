@@ -68,3 +68,34 @@ pub fn extract_self_reference_from_arguments_for_function_call<'tcx>(
         };
     *self_ref
 }
+
+/// Checks whether the type of a local declaration matches a given string of the form:
+/// `module::submodule::type<T>`. The function checks that `T` is a concrete type (e.g. "i32")
+/// and not a type parameter ("T") for the `local_decl`.
+pub fn is_local_decl_with_concrete_type(
+    local_decl: &rustc_middle::mir::LocalDecl,
+    expected_ty_str: &str,
+) -> bool {
+    let expected_parts: Vec<&str> = expected_ty_str.split(&['<', '>']).collect();
+
+    let ty_string = local_decl.ty.to_string();
+    let parts: Vec<&str> = ty_string.split(&['<', '>']).collect();
+    // `expected_ty_str` should follow: "std::sync::Mutex<T>" --> ["std::sync::Mutex", "T", ""]
+    // `ty_string` should follow: "std::sync::Mutex<i32>" --> ["std::sync::Mutex", "i32", ""]
+    if parts.len() != expected_parts.len() {
+        return false;
+    }
+
+    for (part, expected_part) in std::iter::zip(parts, expected_parts) {
+        if expected_part == "T" {
+            if part == expected_part {
+                // The type should be concrete. If we find "T", it is not.
+                return false;
+            }
+        } else if part != expected_part {
+            // The parts should match one by one (except for the concrete type part)
+            return false;
+        }
+    }
+    true
+}

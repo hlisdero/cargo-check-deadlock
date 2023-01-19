@@ -6,7 +6,7 @@
 mod thread_manager;
 mod thread_span;
 
-use crate::utils::place_to_local;
+use crate::utils::{is_local_decl_with_concrete_type, place_to_local};
 
 pub use thread_manager::ThreadManager;
 pub use thread_manager::ThreadRef;
@@ -41,23 +41,10 @@ pub fn detect_assignment_join_handle(
             return None
         };
         let local_decl = &body.local_decls[rhs];
-        if is_join_handle_declaration(local_decl) {
+        if is_local_decl_with_concrete_type(local_decl, "std::thread::JoinHandle<T>") {
             let lhs = place_to_local(place);
             return Some((lhs, rhs));
         }
     }
     None
-}
-
-/// Checks whether the type of a local declaration is `std::thread::JoinHandle<T>`,
-/// where `T` is a concrete type and not a type parameter.
-fn is_join_handle_declaration(local_decl: &rustc_middle::mir::LocalDecl) -> bool {
-    let ty_string = local_decl.ty.to_string();
-    if ty_string.starts_with("std::thread::JoinHandle<") && ty_string.ends_with('>') {
-        // True if join handle with concrete type
-        ty_string != "std::thread::JoinHandle<T>"
-    } else {
-        // Not a join handle
-        false
-    }
 }
