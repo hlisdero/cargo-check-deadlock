@@ -1,21 +1,25 @@
 //! Submodule for defining the function calls supported by the translator and
 //! the specific handler methods for every one of them.
 
+use crate::naming::arc::function_transition_label;
 use crate::naming::function::foreign_call_transition_label;
 use crate::translator::multithreading::{is_thread_join, is_thread_spawn};
 use crate::translator::special_function::{call_foreign_function, is_foreign_function};
 use crate::translator::sync::{
-    identify_arc_new_with_mutex, is_arc_new, is_mutex_lock, is_mutex_new,
+    identify_arc_new_with_mutex, identify_deref_arc_with_mutex, is_arc_new, is_deref,
+    is_mutex_lock, is_mutex_new,
 };
 use crate::translator::Translator;
-
 use netcrab::petri_net::PlaceRef;
 
 /// Types of function calls that the translator supports.
 pub enum FunctionCall {
-    /// Abridged function call.
+    /// Call to `std::sync::Arc::<T>::new`
     /// Non-recursive call for the translation process.
     ArcNew,
+    /// Call to `std::ops::Deref::deref`
+    /// Non-recursive call for the translation process.
+    Deref,
     /// Abridged function call.
     /// Non-recursive call for the translation process.
     Foreign,
@@ -43,6 +47,9 @@ impl FunctionCall {
 
         if is_arc_new(&function_name) {
             return Self::ArcNew;
+        }
+        if is_deref(&function_name) {
+            return Self::Deref;
         }
         if is_mutex_new(&function_name) {
             return Self::MutexNew;
@@ -82,6 +89,9 @@ impl<'tcx> Translator<'tcx> {
         match function_call {
             FunctionCall::ArcNew => {
                 self.call_arc_new(args, destination, &start_place, &end_place);
+            }
+            FunctionCall::Deref => {
+                self.call_deref(args, destination, &start_place, &end_place, cleanup_place);
             }
             FunctionCall::MirFunction => {
                 self.call_mir_function(function_def_id, start_place, end_place);
@@ -241,7 +251,52 @@ impl<'tcx> Translator<'tcx> {
                 .memory
                 .link_local_to_same_mutex(return_value_local, local_with_mutex);
         }
-        // The rest is similar to any foreign function.
-        self.call_foreign("std::sync::Arc::<T>::new", start_place, end_place, None);
+        let function_name = "std::sync::Arc::<T>::new";
+        let count = self.function_counter.get_count(function_name);
+        self.function_counter.increment(function_name.to_string());
+        let transition_label = &function_transition_label(function_name, count);
+        call_foreign_function(
+            start_place,
+            end_place,
+            None,
+            transition_label,
+            &mut self.net,
+        );
+    }
+
+    /// Handler for the function `std::ops::Deref::deref`
+    pub fn call_deref(
+        &mut self,
+        args: &[rustc_middle::mir::Operand<'tcx>],
+        destination: rustc_middle::mir::Place<'tcx>,
+        start_place: &PlaceRef,
+        end_place: &PlaceRef,
+        cleanup_place: Option<PlaceRef>,
+    ) {
+        let current_function = self.call_stack.peek_mut();
+        let body = self.tcx.optimized_mir(current_function.def_id);
+        let first_argument = args
+            .get(0)
+            .expect("BUG: `std::ops::Deref` should receive at least one argument");
+
+        if let Some((return_value_local, local_with_mutex)) =
+            identify_deref_arc_with_mutex(first_argument, destination, body)
+        {
+            current_function
+                .memory
+                .link_local_to_same_mutex(return_value_local, local_with_mutex);
+        }
+
+        let function_name = "std::ops::Deref";
+        let count = self.function_counter.get_count(function_name);
+        self.function_counter.increment(function_name.to_string());
+        let transition_label = &function_transition_label(function_name, count);
+        call_foreign_function(
+            start_place,
+            end_place,
+            cleanup_place,
+            transition_label,
+            &mut self.net,
+        );
     }
 }

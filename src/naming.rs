@@ -8,6 +8,7 @@
 //! See the reference for more information:
 //! <https://doc.rust-lang.org/stable/reference/attributes/codegen.html>
 
+pub mod arc;
 pub mod basic_block;
 pub mod function;
 pub mod mutex;

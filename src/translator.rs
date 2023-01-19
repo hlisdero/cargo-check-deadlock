@@ -29,6 +29,7 @@ mod multithreading;
 mod special_function;
 mod sync;
 
+use crate::counter::Counter;
 use crate::error_handling::ERR_NO_MAIN_FUNCTION_FOUND;
 use crate::naming::program::{PROGRAM_END, PROGRAM_PANIC, PROGRAM_START};
 use crate::stack::Stack;
@@ -51,6 +52,7 @@ pub struct Translator<'tcx> {
     program_end: PlaceRef,
     program_panic: PlaceRef,
     call_stack: Stack<MirFunction>,
+    function_counter: Counter,
     mutex_manager: MutexManager,
     thread_manager: ThreadManager,
 }
@@ -77,6 +79,7 @@ impl<'tcx> Translator<'tcx> {
             program_end,
             program_panic,
             call_stack: Stack::new(),
+            function_counter: Counter::new(),
             mutex_manager: MutexManager::new(),
             thread_manager: ThreadManager::new(),
         }

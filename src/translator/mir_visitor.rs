@@ -9,6 +9,7 @@
 use crate::translator::multithreading::identify_assign_of_local_with_join_handle;
 use crate::translator::sync::{
     identify_assign_of_copy_of_reference_of_local_with_mutex,
+    identify_assign_of_reference_of_arc_with_mutex,
     identify_assign_of_reference_of_local_with_mutex,
 };
 use crate::translator::Translator;
@@ -46,6 +47,12 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
 
         if let Some((lhs, rhs)) =
             identify_assign_of_copy_of_reference_of_local_with_mutex(place, rvalue, body)
+        {
+            function.memory.link_local_to_same_mutex(lhs, rhs);
+        }
+
+        if let Some((lhs, rhs)) =
+            identify_assign_of_reference_of_arc_with_mutex(place, rvalue, body)
         {
             function.memory.link_local_to_same_mutex(lhs, rhs);
         }
