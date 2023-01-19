@@ -24,12 +24,13 @@ pub fn is_thread_join(function_name: &str) -> bool {
     function_name == "std::thread::JoinHandle::<T>::join"
 }
 
-/// Identify MIR assignments of the form: `_X = move _Y` where:
+/// Detects MIR assignments of the form: `_X = move _Y` where:
 /// - `_X` is of type `std::thread::JoinHandle<T>` and
 /// - `_Y` is of type `std::thread::JoinHandle<T>`.
 ///
-/// Link the local on the left-hand side to the join handle on the right-hand side.
-pub fn identify_assign_of_local_with_join_handle(
+/// Returns a 2-tuple containing the left-hand side and the right-hand side.
+/// Returns `None` if the assignment does not have this form.
+pub fn detect_assignment_join_handle(
     place: &rustc_middle::mir::Place,
     rvalue: &rustc_middle::mir::Rvalue,
     body: &rustc_middle::mir::Body,

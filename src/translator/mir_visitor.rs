@@ -7,7 +7,7 @@
 //! <https://rustc-dev-guide.rust-lang.org/mir/index.html>
 
 use super::Translator;
-use crate::translator::multithreading::identify_assign_of_local_with_join_handle;
+use crate::translator::multithreading::detect_assignment_join_handle;
 use crate::translator::sync::{
     detect_assignment_copy_reference_to_mutex, detect_assignment_reference_to_arc_with_mutex,
     detect_assignment_reference_to_mutex,
@@ -51,7 +51,7 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
             function.memory.link_local_to_same_mutex(lhs, rhs);
         }
 
-        if let Some((lhs, rhs)) = identify_assign_of_local_with_join_handle(place, rvalue, body) {
+        if let Some((lhs, rhs)) = detect_assignment_join_handle(place, rvalue, body) {
             function.memory.link_local_to_same_join_handle(lhs, rhs);
         }
 
