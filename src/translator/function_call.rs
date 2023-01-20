@@ -226,7 +226,7 @@ impl<'tcx> Translator<'tcx> {
         );
     }
 
-    /// Handler for the function `std::sync::Arc::<T>::new`
+    /// Handler for the the case `FunctionCall::ArcNew`.
     pub fn call_arc_new(
         &mut self,
         args: &[rustc_middle::mir::Operand<'tcx>],
@@ -247,7 +247,7 @@ impl<'tcx> Translator<'tcx> {
         );
     }
 
-    /// Handler for the function `std::ops::Deref::deref`
+    /// Handler for the the case `FunctionCall::Deref`.
     pub fn call_deref(
         &mut self,
         args: &[rustc_middle::mir::Operand<'tcx>],
