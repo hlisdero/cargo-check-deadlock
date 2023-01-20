@@ -24,7 +24,6 @@ pub fn prepare_rustc_config(
         input: config::Input::File(source_file_path),
         crate_cfg: rustc_hash::FxHashSet::default(),
         crate_check_cfg: CheckCfg::default(),
-        input_path: None,
         output_dir: None,
         output_file: None,
         file_loader: None,
