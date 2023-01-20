@@ -111,7 +111,7 @@ pub fn detect_mutex_inside_arc_new(
 }
 
 /// Detects calls to `std::ops::Deref::deref` where the type of
-/// the argument is `std::sync::Arc<std::sync::Mutex<T>>`
+/// the argument is `&std::sync::Arc<std::sync::Mutex<T>>`
 ///
 /// Returns a 2-tuple containing the return value and the argument to the function.
 /// Returns `None` if the call does not have this form.
