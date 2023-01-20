@@ -5,7 +5,9 @@ use super::Translator;
 use crate::naming::function::foreign_call_transition_label;
 use crate::translator::multithreading::{is_thread_join, is_thread_spawn};
 use crate::translator::special_function::{call_foreign_function, is_foreign_function};
-use crate::translator::sync::{is_arc_new, is_deref, is_mutex_lock, is_mutex_new, ArcManager};
+use crate::translator::sync::{
+    is_arc_new, is_clone, is_deref, is_mutex_lock, is_mutex_new, ArcManager,
+};
 use netcrab::petri_net::PlaceRef;
 
 /// Types of function calls that the translator supports.
@@ -13,6 +15,9 @@ pub enum FunctionCall {
     /// Call to `std::sync::Arc::<T>::new`
     /// Non-recursive call for the translation process.
     ArcNew,
+    /// Call to `std::clone::Clone::clone`
+    /// Non-recursive call for the translation process.
+    Clone,
     /// Call to `std::ops::Deref::deref`
     /// Non-recursive call for the translation process.
     Deref,
@@ -43,6 +48,9 @@ impl FunctionCall {
 
         if is_arc_new(&function_name) {
             return Self::ArcNew;
+        }
+        if is_clone(&function_name) {
+            return Self::Clone;
         }
         if is_deref(&function_name) {
             return Self::Deref;
@@ -85,6 +93,9 @@ impl<'tcx> Translator<'tcx> {
         match function_call {
             FunctionCall::ArcNew => {
                 self.call_arc_new(args, destination, &start_place, &end_place);
+            }
+            FunctionCall::Clone => {
+                self.call_clone(args, destination, &start_place, &end_place, cleanup_place)
             }
             FunctionCall::Deref => {
                 self.call_deref(args, destination, &start_place, &end_place, cleanup_place);
@@ -240,6 +251,28 @@ impl<'tcx> Translator<'tcx> {
         let current_function = self.call_stack.peek_mut();
         let body = self.tcx.optimized_mir(current_function.def_id);
         ArcManager::translate_side_effects_new(
+            args,
+            destination,
+            body,
+            &mut current_function.memory,
+        );
+    }
+
+    /// Handler for the the case `FunctionCall::Clone`.
+    pub fn call_clone(
+        &mut self,
+        args: &[rustc_middle::mir::Operand<'tcx>],
+        destination: rustc_middle::mir::Place<'tcx>,
+        start_place: &PlaceRef,
+        end_place: &PlaceRef,
+        cleanup_place: Option<PlaceRef>,
+    ) {
+        self.arc_manager
+            .translate_call_clone(start_place, end_place, cleanup_place, &mut self.net);
+
+        let current_function = self.call_stack.peek_mut();
+        let body = self.tcx.optimized_mir(current_function.def_id);
+        ArcManager::translate_side_effects_clone(
             args,
             destination,
             body,
