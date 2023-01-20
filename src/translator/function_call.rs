@@ -122,7 +122,7 @@ impl<'tcx> Translator<'tcx> {
     }
 
     /// Handler for the case `FunctionCall::MirFunction`
-    pub fn call_mir_function(
+    fn call_mir_function(
         &mut self,
         function_def_id: rustc_hir::def_id::DefId,
         start_place: PlaceRef,
@@ -133,7 +133,7 @@ impl<'tcx> Translator<'tcx> {
     }
 
     /// Handler for the case `FunctionCall::Foreign`
-    pub fn call_foreign(
+    fn call_foreign(
         &mut self,
         function_name: &str,
         start_place: &PlaceRef,
@@ -151,7 +151,7 @@ impl<'tcx> Translator<'tcx> {
     }
 
     /// Handler for the case `FunctionCall::MutexLock`.
-    pub fn call_mutex_lock(
+    fn call_mutex_lock(
         &mut self,
         args: &[rustc_middle::mir::Operand<'tcx>],
         destination: rustc_middle::mir::Place<'tcx>,
@@ -177,7 +177,7 @@ impl<'tcx> Translator<'tcx> {
     }
 
     /// Handler for the case `FunctionCall::MutexNew`.
-    pub fn call_mutex_new(
+    fn call_mutex_new(
         &mut self,
         destination: rustc_middle::mir::Place<'tcx>,
         start_place: &PlaceRef,
@@ -196,7 +196,7 @@ impl<'tcx> Translator<'tcx> {
     }
 
     /// Handler for the case `FunctionCall::ThreadJoin`.
-    pub fn call_thread_join(
+    fn call_thread_join(
         &mut self,
         args: &[rustc_middle::mir::Operand<'tcx>],
         start_place: &PlaceRef,
@@ -215,7 +215,7 @@ impl<'tcx> Translator<'tcx> {
     }
 
     /// Handler for the case `FunctionCall::ThreadSpawn`.
-    pub fn call_thread_spawn(
+    fn call_thread_spawn(
         &mut self,
         args: &[rustc_middle::mir::Operand<'tcx>],
         destination: rustc_middle::mir::Place<'tcx>,
@@ -238,7 +238,7 @@ impl<'tcx> Translator<'tcx> {
     }
 
     /// Handler for the the case `FunctionCall::ArcNew`.
-    pub fn call_arc_new(
+    fn call_arc_new(
         &mut self,
         args: &[rustc_middle::mir::Operand<'tcx>],
         destination: rustc_middle::mir::Place<'tcx>,
@@ -259,7 +259,7 @@ impl<'tcx> Translator<'tcx> {
     }
 
     /// Handler for the the case `FunctionCall::Clone`.
-    pub fn call_clone(
+    fn call_clone(
         &mut self,
         args: &[rustc_middle::mir::Operand<'tcx>],
         destination: rustc_middle::mir::Place<'tcx>,
@@ -281,7 +281,7 @@ impl<'tcx> Translator<'tcx> {
     }
 
     /// Handler for the the case `FunctionCall::Deref`.
-    pub fn call_deref(
+    fn call_deref(
         &mut self,
         args: &[rustc_middle::mir::Operand<'tcx>],
         destination: rustc_middle::mir::Place<'tcx>,
