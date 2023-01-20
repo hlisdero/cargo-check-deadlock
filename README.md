@@ -89,6 +89,27 @@ Three files called `net.lola`, `net.pnml` and `net.dot` should appear in the CWD
 
 _Note: For more examples, please refer to the integration tests._
 
+## Visualizing the results
+
+### Locally
+
+To see the MIR representation of the source code, you can compile the code with the corresponding flag: `rustc --emit=mir <path_to_source_code>`
+
+To graph a net in `.dot` format, install the `dot` tool following the instructions on the [GraphViz website](https://graphviz.org/download/).
+
+Run `dot -Tpng net.dot -o outfile.png` to generate a PNG image from the resulting `.dot` file.
+
+Run `dot -Tsvg net.dot -o outfile.svg` to generate a SVG image from the resulting `.dot` file.
+
+More information and other formats can be found in the [documentation](https://graphviz.org/doc/info/command.html).
+
+### Online
+
+To see the MIR representation of the source code, you may use the [Rust Playground](https://play.rust-lang.org/).
+Simply select the option "MIR" instead of "Run" in the dropdown menu.
+
+To graph a given DOT result, you may use the [Graphviz Online tool](https://dreampuf.github.io/GraphvizOnline/) by [dreampuf](https://github.com/dreampuf).
+
 ## Contributing
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
