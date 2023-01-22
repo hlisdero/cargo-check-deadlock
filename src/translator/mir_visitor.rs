@@ -7,10 +7,8 @@
 //! <https://rustc-dev-guide.rust-lang.org/mir/index.html>
 
 use super::Translator;
-use crate::translator::multithreading::detect_join_handle;
-use crate::translator::sync::{
-    detect_copy_reference_to_mutex, detect_reference_to_arc_with_mutex, detect_reference_to_mutex,
-};
+use crate::translator::multithreading::is_join_handle;
+use crate::translator::sync::{is_arc_with_mutex, is_mutex, is_reference_to_mutex};
 use rustc_middle::mir::visit::Visitor;
 use rustc_middle::mir::TerminatorKind;
 
@@ -36,23 +34,28 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
     ) {
         let function = self.call_stack.peek_mut();
 
-        if let rustc_middle::mir::Rvalue::Use(operand) = rvalue {
-            if let Some(rhs) = detect_copy_reference_to_mutex(operand, function.def_id, self.tcx) {
-                function.memory.link_place_to_same_mutex(*place, rhs);
-            }
-
-            if let Some(rhs) = detect_join_handle(operand, function.def_id, self.tcx) {
-                function.memory.link_place_to_same_join_handle(*place, rhs);
+        // MIR assignments of the form: `_X = _Y`
+        if let rustc_middle::mir::Rvalue::Use(rustc_middle::mir::Operand::Copy(rhs)) = rvalue {
+            if is_reference_to_mutex(rhs, function.def_id, self.tcx) {
+                function.memory.link_place_to_same_mutex(*place, *rhs);
             }
         }
 
+        // MIR assignments of the form: `_X = move _Y`
+        if let rustc_middle::mir::Rvalue::Use(rustc_middle::mir::Operand::Move(rhs)) = rvalue {
+            if is_join_handle(rhs, function.def_id, self.tcx) {
+                function.memory.link_place_to_same_join_handle(*place, *rhs);
+            }
+        }
+
+        // MIR assignments of the form: `_X = &_Y`
         if let rustc_middle::mir::Rvalue::Ref(_, _, rhs) = rvalue {
-            if let Some(rhs) = detect_reference_to_mutex(rhs, function.def_id, self.tcx) {
-                function.memory.link_place_to_same_mutex(*place, rhs);
+            if is_mutex(rhs, function.def_id, self.tcx) {
+                function.memory.link_place_to_same_mutex(*place, *rhs);
             }
 
-            if let Some(rhs) = detect_reference_to_arc_with_mutex(rhs, function.def_id, self.tcx) {
-                function.memory.link_place_to_same_mutex(*place, rhs);
+            if is_arc_with_mutex(rhs, function.def_id, self.tcx) {
+                function.memory.link_place_to_same_mutex(*place, *rhs);
             }
         }
 

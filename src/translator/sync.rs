@@ -42,42 +42,24 @@ pub fn is_clone(function_name: &str) -> bool {
     function_name == "std::clone::Clone::clone"
 }
 
-/// Detects MIR assignments of the form: `_X = &_Y` where:
-/// - `_X` is of type `&std::sync::Mutex<T>` and
-/// - `_Y` is of type `std::sync::Mutex<T>`.
-///
-/// Returns the right-hand side place if the assignment has this form.
-/// Returns `None` if the assignment does not have this form.
-pub fn detect_reference_to_mutex<'tcx>(
+/// Checks whether the place has type `std::sync::Mutex<T>`.
+pub fn is_mutex<'tcx>(
     place: &rustc_middle::mir::Place<'tcx>,
     caller_function_def_id: rustc_hir::def_id::DefId,
     tcx: rustc_middle::ty::TyCtxt<'tcx>,
-) -> Option<rustc_middle::mir::Place<'tcx>> {
+) -> bool {
     let place_ty = get_place_type(place, caller_function_def_id, tcx);
-    if is_place_ty_with_concrete_type(&place_ty, "std::sync::Mutex<T>") {
-        return Some(*place);
-    }
-    None
+    is_place_ty_with_concrete_type(&place_ty, "std::sync::Mutex<T>")
 }
 
-/// Detects MIR assignments of the form: `_X = _Y` where:
-/// - `_X` is of type `&std::sync::Mutex<T>` and
-/// - `_Y` is of type `&std::sync::Mutex<T>`.
-///
-/// Returns the right-hand side place if the assignment has this form.
-/// Returns `None` if the assignment does not have this form.
-pub fn detect_copy_reference_to_mutex<'tcx>(
-    operand: &rustc_middle::mir::Operand<'tcx>,
+/// Checks whether the place has type `&std::sync::Mutex<T>`.
+pub fn is_reference_to_mutex<'tcx>(
+    place: &rustc_middle::mir::Place<'tcx>,
     caller_function_def_id: rustc_hir::def_id::DefId,
     tcx: rustc_middle::ty::TyCtxt<'tcx>,
-) -> Option<rustc_middle::mir::Place<'tcx>> {
-    if let rustc_middle::mir::Operand::Copy(rhs) = operand {
-        let place_ty = get_place_type(rhs, caller_function_def_id, tcx);
-        if is_place_ty_with_concrete_type(&place_ty, "&std::sync::Mutex<T>") {
-            return Some(*rhs);
-        }
-    }
-    None
+) -> bool {
+    let place_ty = get_place_type(place, caller_function_def_id, tcx);
+    is_place_ty_with_concrete_type(&place_ty, "&std::sync::Mutex<T>")
 }
 
 /// Detects calls to `std::sync::Arc::<T>::new` where the type of
@@ -97,11 +79,7 @@ pub fn detect_mutex_inside_arc_new<'tcx>(
     None
 }
 
-/// Detects calls to `std::ops::Deref::deref` where the type of
-/// the argument is `&std::sync::Arc<std::sync::Mutex<T>>`
-///
-/// Returns the place of the function argument if the call has this form.
-/// Returns `None` if the call does not have this form.
+/// Checks whether the place has type `&std::sync::Arc<std::sync::Mutex<T>>`.
 pub fn detect_deref_arc_with_mutex<'tcx>(
     place: &rustc_middle::mir::Place<'tcx>,
     caller_function_def_id: rustc_hir::def_id::DefId,
@@ -114,22 +92,14 @@ pub fn detect_deref_arc_with_mutex<'tcx>(
     None
 }
 
-/// Detects MIR assignments of the form: `_X = &_Y` where:
-/// - `_X` is of type `&std::sync::Arc<std::sync::Mutex<T>>` and
-/// - `_Y` is of type `std::sync::Arc<std::sync::Mutex<T>>`.
-///
-/// Returns the right-hand side place if the assignment has this form.
-/// Returns `None` if the assignment does not have this form.
-pub fn detect_reference_to_arc_with_mutex<'tcx>(
+/// Checks whether the place has type `std::sync::Arc<std::sync::Mutex<T>>`.
+pub fn is_arc_with_mutex<'tcx>(
     place: &rustc_middle::mir::Place<'tcx>,
     caller_function_def_id: rustc_hir::def_id::DefId,
     tcx: rustc_middle::ty::TyCtxt<'tcx>,
-) -> Option<rustc_middle::mir::Place<'tcx>> {
+) -> bool {
     let place_ty = get_place_type(place, caller_function_def_id, tcx);
-    if is_place_ty_with_concrete_type(&place_ty, "std::sync::Arc<std::sync::Mutex<T>>") {
-        return Some(*place);
-    }
-    None
+    is_place_ty_with_concrete_type(&place_ty, "std::sync::Arc<std::sync::Mutex<T>>")
 }
 
 /// Detects calls to `std::clone::Clone::clone` where the type of
