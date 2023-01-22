@@ -95,7 +95,7 @@ impl<'tcx> Translator<'tcx> {
                 self.call_arc_new(args, destination, &start_place, &end_place);
             }
             FunctionCall::Clone => {
-                self.call_clone(args, destination, &start_place, &end_place, cleanup_place)
+                self.call_clone(args, destination, &start_place, &end_place, cleanup_place);
             }
             FunctionCall::Deref => {
                 self.call_deref(args, destination, &start_place, &end_place, cleanup_place);
