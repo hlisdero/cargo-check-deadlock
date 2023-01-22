@@ -12,8 +12,7 @@
 //! More info:
 //! <https://rustc-dev-guide.rust-lang.org/mir/index.html#mir-data-types>
 
-use crate::translator::multithreading::ThreadRef;
-use crate::translator::sync::MutexRef;
+use crate::translator::sync::{MutexRef, ThreadRef};
 use std::collections::HashMap;
 
 #[derive(Default)]

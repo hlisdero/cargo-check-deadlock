@@ -25,7 +25,6 @@
 mod function_call;
 mod mir_function;
 mod mir_visitor;
-mod multithreading;
 mod special_function;
 mod sync;
 
@@ -35,11 +34,10 @@ use crate::stack::Stack;
 use crate::utils::extract_def_id_of_called_function_from_operand;
 use function_call::FunctionCall;
 use mir_function::MirFunction;
-use multithreading::ThreadManager;
 use netcrab::petri_net::{PetriNet, PlaceRef};
 use rustc_middle::mir::visit::Visitor;
 use special_function::{call_diverging_function, call_panic_function, is_panic_function};
-use sync::{ArcManager, MutexManager};
+use sync::{ArcManager, MutexManager, ThreadManager};
 
 pub struct Translator<'tcx> {
     tcx: rustc_middle::ty::TyCtxt<'tcx>,
