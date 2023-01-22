@@ -3,11 +3,8 @@
 
 use super::Translator;
 use crate::naming::function::foreign_call_transition_label;
-use crate::translator::multithreading::{is_thread_join, is_thread_spawn};
 use crate::translator::special_function::{call_foreign_function, is_foreign_function};
-use crate::translator::sync::{
-    is_arc_new, is_clone, is_deref, is_mutex_lock, is_mutex_new, ArcManager,
-};
+use crate::translator::sync::ArcManager;
 use netcrab::petri_net::PlaceRef;
 
 /// Types of function calls that the translator supports.
@@ -46,26 +43,8 @@ impl FunctionCall {
     pub fn new(function_def_id: rustc_hir::def_id::DefId, tcx: rustc_middle::ty::TyCtxt) -> Self {
         let function_name = tcx.def_path_str(function_def_id);
 
-        if is_arc_new(&function_name) {
-            return Self::ArcNew;
-        }
-        if is_clone(&function_name) {
-            return Self::Clone;
-        }
-        if is_deref(&function_name) {
-            return Self::Deref;
-        }
-        if is_mutex_new(&function_name) {
-            return Self::MutexNew;
-        }
-        if is_mutex_lock(&function_name) {
-            return Self::MutexLock;
-        }
-        if is_thread_spawn(&function_name) {
-            return Self::ThreadSpawn;
-        }
-        if is_thread_join(&function_name) {
-            return Self::ThreadJoin;
+        if let Some(function_call) = Self::is_supported_function(&function_name) {
+            return function_call;
         }
         // Default case for standard and core library calls
         if is_foreign_function(function_def_id, tcx) {
@@ -73,6 +52,22 @@ impl FunctionCall {
         }
         // Default case: A function with MIR representation
         Self::MirFunction
+    }
+
+    /// Checks if the function is one of the supported synchronization or
+    /// multithreading functions.
+    /// Returns the corresponding variant for the function or `None` otherwise.
+    fn is_supported_function(function_name: &str) -> Option<Self> {
+        match function_name {
+            "std::sync::Arc::<T>::new" => Some(Self::ArcNew),
+            "std::clone::Clone::clone" => Some(Self::Clone),
+            "std::ops::Deref::deref" => Some(Self::Deref),
+            "std::sync::Mutex::<T>::new" => Some(Self::MutexNew),
+            "std::sync::Mutex::<T>::lock" => Some(Self::MutexLock),
+            "std::thread::spawn" => Some(Self::ThreadSpawn),
+            "std::thread::JoinHandle::<T>::join" => Some(Self::ThreadJoin),
+            _ => None,
+        }
     }
 }
 
