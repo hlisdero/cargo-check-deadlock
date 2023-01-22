@@ -50,6 +50,15 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
             ) {
                 function.memory.link_place_to_same_join_handle(*place, *rhs);
             }
+
+            if is_place_with_concrete_type(
+                rhs,
+                "std::sync::Arc<std::sync::Mutex<T>>",
+                function.def_id,
+                self.tcx,
+            ) {
+                function.memory.link_place_to_same_mutex(*place, *rhs);
+            }
         }
 
         // MIR assignments of the form: `_X = &_Y`
