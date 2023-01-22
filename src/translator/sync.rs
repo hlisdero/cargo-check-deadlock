@@ -11,7 +11,6 @@ mod thread_span;
 
 pub use arc_manager::ArcManager;
 pub use mutex_manager::{MutexManager, MutexRef};
-
 pub use thread_manager::ThreadManager;
 pub use thread_manager::ThreadRef;
 pub use thread_span::ThreadSpan;
