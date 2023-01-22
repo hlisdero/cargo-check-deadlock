@@ -62,36 +62,6 @@ pub fn is_reference_to_mutex<'tcx>(
     is_place_ty_with_concrete_type(&place_ty, "&std::sync::Mutex<T>")
 }
 
-/// Detects calls to `std::sync::Arc::<T>::new` where the type of
-/// the argument is `std::sync::Mutex<T>`
-///
-/// Returns the place of the function argument if the call has this form.
-/// Returns `None` if the call does not have this form.
-pub fn detect_mutex_inside_arc_new<'tcx>(
-    place: &rustc_middle::mir::Place<'tcx>,
-    caller_function_def_id: rustc_hir::def_id::DefId,
-    tcx: rustc_middle::ty::TyCtxt<'tcx>,
-) -> Option<rustc_middle::mir::Place<'tcx>> {
-    let place_ty = get_place_type(place, caller_function_def_id, tcx);
-    if is_place_ty_with_concrete_type(&place_ty, "std::sync::Mutex<T>") {
-        return Some(*place);
-    }
-    None
-}
-
-/// Checks whether the place has type `&std::sync::Arc<std::sync::Mutex<T>>`.
-pub fn detect_deref_arc_with_mutex<'tcx>(
-    place: &rustc_middle::mir::Place<'tcx>,
-    caller_function_def_id: rustc_hir::def_id::DefId,
-    tcx: rustc_middle::ty::TyCtxt<'tcx>,
-) -> Option<rustc_middle::mir::Place<'tcx>> {
-    let place_ty = get_place_type(place, caller_function_def_id, tcx);
-    if is_place_ty_with_concrete_type(&place_ty, "&std::sync::Arc<std::sync::Mutex<T>>") {
-        return Some(*place);
-    }
-    None
-}
-
 /// Checks whether the place has type `std::sync::Arc<std::sync::Mutex<T>>`.
 pub fn is_arc_with_mutex<'tcx>(
     place: &rustc_middle::mir::Place<'tcx>,
@@ -102,19 +72,12 @@ pub fn is_arc_with_mutex<'tcx>(
     is_place_ty_with_concrete_type(&place_ty, "std::sync::Arc<std::sync::Mutex<T>>")
 }
 
-/// Detects calls to `std::clone::Clone::clone` where the type of
-/// the argument is `&std::sync::Arc<std::sync::Mutex<T>>`
-///
-/// Returns the place of the function argument if the call has this form.
-/// Returns `None` if the call does not have this form.
-pub fn detect_clone_arc_with_mutex<'tcx>(
+/// Checks whether the place has type `&std::sync::Arc<std::sync::Mutex<T>>`.
+pub fn is_reference_to_arc_with_mutex<'tcx>(
     place: &rustc_middle::mir::Place<'tcx>,
     caller_function_def_id: rustc_hir::def_id::DefId,
     tcx: rustc_middle::ty::TyCtxt<'tcx>,
-) -> Option<rustc_middle::mir::Place<'tcx>> {
+) -> bool {
     let place_ty = get_place_type(place, caller_function_def_id, tcx);
-    if is_place_ty_with_concrete_type(&place_ty, "&std::sync::Arc<std::sync::Mutex<T>>") {
-        return Some(*place);
-    }
-    None
+    is_place_ty_with_concrete_type(&place_ty, "&std::sync::Arc<std::sync::Mutex<T>>")
 }

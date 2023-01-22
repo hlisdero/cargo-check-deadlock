@@ -3,9 +3,7 @@
 //! It is mainly used in conjunction with the `MutexManager` to keep track of the mutexes
 //! when they are wrapped around a `std::sync::Arc`.
 
-use super::{
-    detect_clone_arc_with_mutex, detect_deref_arc_with_mutex, detect_mutex_inside_arc_new,
-};
+use super::{is_mutex, is_reference_to_arc_with_mutex};
 use crate::translator::mir_function::Memory;
 use crate::translator::special_function::call_foreign_function;
 use crate::{
@@ -88,10 +86,8 @@ impl ArcManager {
         tcx: rustc_middle::ty::TyCtxt<'tcx>,
     ) {
         let first_argument = extract_first_argument_for_function_call(args);
-        if let Some(place_with_mutex) =
-            detect_mutex_inside_arc_new(&first_argument, caller_function_def_id, tcx)
-        {
-            memory.link_place_to_same_mutex(return_value, place_with_mutex);
+        if is_mutex(&first_argument, caller_function_def_id, tcx) {
+            memory.link_place_to_same_mutex(return_value, first_argument);
         }
     }
 
@@ -107,10 +103,8 @@ impl ArcManager {
         tcx: rustc_middle::ty::TyCtxt<'tcx>,
     ) {
         let first_argument = extract_first_argument_for_function_call(args);
-        if let Some(place_with_mutex) =
-            detect_deref_arc_with_mutex(&first_argument, caller_function_def_id, tcx)
-        {
-            memory.link_place_to_same_mutex(return_value, place_with_mutex);
+        if is_reference_to_arc_with_mutex(&first_argument, caller_function_def_id, tcx) {
+            memory.link_place_to_same_mutex(return_value, first_argument);
         }
     }
 
@@ -126,10 +120,8 @@ impl ArcManager {
         tcx: rustc_middle::ty::TyCtxt<'tcx>,
     ) {
         let first_argument = extract_first_argument_for_function_call(args);
-        if let Some(place_with_mutex) =
-            detect_clone_arc_with_mutex(&first_argument, caller_function_def_id, tcx)
-        {
-            memory.link_place_to_same_mutex(return_value, place_with_mutex);
+        if is_reference_to_arc_with_mutex(&first_argument, caller_function_def_id, tcx) {
+            memory.link_place_to_same_mutex(return_value, first_argument);
         }
     }
 }
