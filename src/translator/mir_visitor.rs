@@ -36,23 +36,25 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
         location: rustc_middle::mir::Location,
     ) {
         let function = self.call_stack.peek_mut();
-        let body = self.tcx.optimized_mir(function.def_id);
 
-        if let Some((lhs, rhs)) = detect_assignment_reference_to_mutex(place, rvalue, body) {
-            function.memory.link_local_to_same_mutex(lhs, rhs);
+        if let Some(rhs) = detect_assignment_reference_to_mutex(rvalue, function.def_id, self.tcx) {
+            function.memory.link_place_to_same_mutex(*place, rhs);
         }
 
-        if let Some((lhs, rhs)) = detect_assignment_copy_reference_to_mutex(place, rvalue, body) {
-            function.memory.link_local_to_same_mutex(lhs, rhs);
-        }
-
-        if let Some((lhs, rhs)) = detect_assignment_reference_to_arc_with_mutex(place, rvalue, body)
+        if let Some(rhs) =
+            detect_assignment_copy_reference_to_mutex(rvalue, function.def_id, self.tcx)
         {
-            function.memory.link_local_to_same_mutex(lhs, rhs);
+            function.memory.link_place_to_same_mutex(*place, rhs);
         }
 
-        if let Some((lhs, rhs)) = detect_assignment_join_handle(place, rvalue, body) {
-            function.memory.link_local_to_same_join_handle(lhs, rhs);
+        if let Some(rhs) =
+            detect_assignment_reference_to_arc_with_mutex(rvalue, function.def_id, self.tcx)
+        {
+            function.memory.link_place_to_same_mutex(*place, rhs);
+        }
+
+        if let Some(rhs) = detect_assignment_join_handle(rvalue, function.def_id, self.tcx) {
+            function.memory.link_place_to_same_join_handle(*place, rhs);
         }
 
         self.super_assign(place, rvalue, location);

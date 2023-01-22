@@ -32,7 +32,7 @@ mod sync;
 use crate::error_handling::ERR_NO_MAIN_FUNCTION_FOUND;
 use crate::naming::program::{PROGRAM_END, PROGRAM_PANIC, PROGRAM_START};
 use crate::stack::Stack;
-use crate::utils::{extract_def_id_of_called_function_from_operand, place_to_local};
+use crate::utils::extract_def_id_of_called_function_from_operand;
 use function_call::FunctionCall;
 use mir_function::MirFunction;
 use multithreading::ThreadManager;
@@ -48,7 +48,7 @@ pub struct Translator<'tcx> {
     program_start: PlaceRef,
     program_end: PlaceRef,
     program_panic: PlaceRef,
-    call_stack: Stack<MirFunction>,
+    call_stack: Stack<MirFunction<'tcx>>,
     mutex_manager: MutexManager,
     arc_manager: ArcManager,
     thread_manager: ThreadManager,

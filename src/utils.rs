@@ -3,19 +3,6 @@
 //! These functions should involve some kind of processing of the compiler types
 //! which does not need additional translation data structures.
 
-/// Convert the `Place` directly to a `Local`.
-/// <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/mir/syntax/struct.Place.html#method.as_local>
-///
-/// # Panics
-///
-/// If `place` is not a simple local variable without projections, then the function panics.
-/// <https://rustc-dev-guide.rust-lang.org/mir/index.html#mir-data-types>
-pub fn place_to_local(place: &rustc_middle::mir::Place) -> rustc_middle::mir::Local {
-    place
-        .as_local()
-        .expect("BUG: The place should be a local variable with no projections")
-}
-
 /// Extracts the definition ID of the called function from the `rustc_middle::mir::Operand`.
 ///
 /// First obtains the type (`rustc_middle::ty::Ty`) of the operand for every possible case.
@@ -37,7 +24,7 @@ pub fn extract_def_id_of_called_function_from_operand<'tcx>(
             // Find the type through the local declarations of the caller function.
             // The `Place` (memory location) of the called function should be declared there and we can query its type.
             let body = tcx.optimized_mir(caller_function_def_id);
-            let place_ty = place.ty(&body.local_decls, tcx);
+            let place_ty = place.ty(body, tcx);
             place_ty.ty
         }
         rustc_middle::mir::Operand::Constant(constant) => constant.ty(),
@@ -69,16 +56,16 @@ pub fn extract_self_reference_from_arguments_for_function_call<'tcx>(
     *self_ref
 }
 
-/// Checks whether the type of a local declaration matches a given string of the form:
+/// Checks whether the type of a place matches a given string of the form:
 /// `module::submodule::type<T>`. The function checks that `T` is a concrete type (e.g. "i32")
 /// and not a type parameter ("T") for the `local_decl`.
-pub fn is_local_decl_with_concrete_type(
-    local_decl: &rustc_middle::mir::LocalDecl,
+pub fn is_place_ty_with_concrete_type(
+    place_ty: &rustc_middle::mir::tcx::PlaceTy,
     expected_ty_str: &str,
 ) -> bool {
     let expected_parts: Vec<&str> = expected_ty_str.split(&['<', '>']).collect();
 
-    let ty_string = local_decl.ty.to_string();
+    let ty_string = place_ty.ty.to_string();
     let parts: Vec<&str> = ty_string.split(&['<', '>']).collect();
     // `expected_ty_str` should follow: "std::sync::Mutex<T>" --> ["std::sync::Mutex", "T", ""]
     // `ty_string` should follow: "std::sync::Mutex<i32>" --> ["std::sync::Mutex", "i32", ""]

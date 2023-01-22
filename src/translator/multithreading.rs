@@ -6,7 +6,7 @@
 mod thread_manager;
 mod thread_span;
 
-use crate::utils::{is_local_decl_with_concrete_type, place_to_local};
+use crate::utils::is_place_ty_with_concrete_type;
 
 pub use thread_manager::ThreadManager;
 pub use thread_manager::ThreadRef;
@@ -28,22 +28,20 @@ pub fn is_thread_join(function_name: &str) -> bool {
 /// - `_X` is of type `std::thread::JoinHandle<T>` and
 /// - `_Y` is of type `std::thread::JoinHandle<T>`.
 ///
-/// Returns a 2-tuple containing the left-hand side and the right-hand side.
+/// Returns the right-hand side place if the assignment has this form.
 /// Returns `None` if the assignment does not have this form.
-pub fn detect_assignment_join_handle(
-    place: &rustc_middle::mir::Place,
-    rvalue: &rustc_middle::mir::Rvalue,
-    body: &rustc_middle::mir::Body,
-) -> Option<(rustc_middle::mir::Local, rustc_middle::mir::Local)> {
+pub fn detect_assignment_join_handle<'tcx>(
+    rvalue: &rustc_middle::mir::Rvalue<'tcx>,
+    caller_function_def_id: rustc_hir::def_id::DefId,
+    tcx: rustc_middle::ty::TyCtxt<'tcx>,
+) -> Option<rustc_middle::mir::Place<'tcx>> {
     if let rustc_middle::mir::Rvalue::Use(rustc_middle::mir::Operand::Move(rhs)) = rvalue {
-        // The right hand side must be a local variable with no projections.
-        let Some(rhs) = rhs.as_local() else {
-            return None
-        };
-        let local_decl = &body.local_decls[rhs];
-        if is_local_decl_with_concrete_type(local_decl, "std::thread::JoinHandle<T>") {
-            let lhs = place_to_local(place);
-            return Some((lhs, rhs));
+        // Find the type through the local declarations of the caller function.
+        // The `Place` (memory location) of the called function should be declared there and we can query its type.
+        let body = tcx.optimized_mir(caller_function_def_id);
+        let place_ty = rhs.ty(body, tcx);
+        if is_place_ty_with_concrete_type(&place_ty, "std::thread::JoinHandle<T>") {
+            return Some(*rhs);
         }
     }
     None

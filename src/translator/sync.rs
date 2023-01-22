@@ -7,7 +7,7 @@ mod arc_manager;
 mod mutex;
 mod mutex_manager;
 
-use crate::utils::{is_local_decl_with_concrete_type, place_to_local};
+use crate::utils::is_place_ty_with_concrete_type;
 
 pub use arc_manager::ArcManager;
 pub use mutex_manager::{MutexManager, MutexRef};
@@ -46,22 +46,20 @@ pub fn is_clone(function_name: &str) -> bool {
 /// - `_X` is of type `&std::sync::Mutex<T>` and
 /// - `_Y` is of type `std::sync::Mutex<T>`.
 ///
-/// Returns a 2-tuple containing the left-hand side and the right-hand side.
+/// Returns the right-hand side place if the assignment has this form.
 /// Returns `None` if the assignment does not have this form.
-pub fn detect_assignment_reference_to_mutex(
-    place: &rustc_middle::mir::Place,
-    rvalue: &rustc_middle::mir::Rvalue,
-    body: &rustc_middle::mir::Body,
-) -> Option<(rustc_middle::mir::Local, rustc_middle::mir::Local)> {
+pub fn detect_assignment_reference_to_mutex<'tcx>(
+    rvalue: &rustc_middle::mir::Rvalue<'tcx>,
+    caller_function_def_id: rustc_hir::def_id::DefId,
+    tcx: rustc_middle::ty::TyCtxt<'tcx>,
+) -> Option<rustc_middle::mir::Place<'tcx>> {
     if let rustc_middle::mir::Rvalue::Ref(_, _, rhs) = rvalue {
-        // The right hand side must be a local variable with no projections.
-        let Some(rhs) = rhs.as_local() else {
-            return None;
-        };
-        let local_decl = &body.local_decls[rhs];
-        if is_local_decl_with_concrete_type(local_decl, "std::sync::Mutex<T>") {
-            let lhs = place_to_local(place);
-            return Some((lhs, rhs));
+        // Find the type through the local declarations of the caller function.
+        // The `Place` (memory location) of the called function should be declared there and we can query its type.
+        let body = tcx.optimized_mir(caller_function_def_id);
+        let place_ty = rhs.ty(body, tcx);
+        if is_place_ty_with_concrete_type(&place_ty, "std::sync::Mutex<T>") {
+            return Some(*rhs);
         }
     }
     None
@@ -71,22 +69,20 @@ pub fn detect_assignment_reference_to_mutex(
 /// - `_X` is of type `&std::sync::Mutex<T>` and
 /// - `_Y` is of type `&std::sync::Mutex<T>`.
 ///
-/// Returns a 2-tuple containing the left-hand side and the right-hand side.
+/// Returns the right-hand side place if the assignment has this form.
 /// Returns `None` if the assignment does not have this form.
-pub fn detect_assignment_copy_reference_to_mutex(
-    place: &rustc_middle::mir::Place,
-    rvalue: &rustc_middle::mir::Rvalue,
-    body: &rustc_middle::mir::Body,
-) -> Option<(rustc_middle::mir::Local, rustc_middle::mir::Local)> {
+pub fn detect_assignment_copy_reference_to_mutex<'tcx>(
+    rvalue: &rustc_middle::mir::Rvalue<'tcx>,
+    caller_function_def_id: rustc_hir::def_id::DefId,
+    tcx: rustc_middle::ty::TyCtxt<'tcx>,
+) -> Option<rustc_middle::mir::Place<'tcx>> {
     if let rustc_middle::mir::Rvalue::Use(rustc_middle::mir::Operand::Copy(rhs)) = rvalue {
-        // The right hand side must be a local variable with no projections.
-        let Some(rhs) = rhs.as_local() else {
-            return None;
-        };
-        let local_decl = &body.local_decls[rhs];
-        if is_local_decl_with_concrete_type(local_decl, "&std::sync::Mutex<T>") {
-            let lhs = place_to_local(place);
-            return Some((lhs, rhs));
+        // Find the type through the local declarations of the caller function.
+        // The `Place` (memory location) of the called function should be declared there and we can query its type.
+        let body = tcx.optimized_mir(caller_function_def_id);
+        let place_ty = rhs.ty(body, tcx);
+        if is_place_ty_with_concrete_type(&place_ty, "&std::sync::Mutex<T>") {
+            return Some(*rhs);
         }
     }
     None
@@ -95,22 +91,20 @@ pub fn detect_assignment_copy_reference_to_mutex(
 /// Detects calls to `std::sync::Arc::<T>::new` where the type of
 /// the argument is `std::sync::Mutex<T>`
 ///
-/// Returns a 2-tuple containing the return value and the argument to the function.
+/// Returns the place of the function argument if the call has this form.
 /// Returns `None` if the call does not have this form.
-pub fn detect_mutex_inside_arc_new(
-    operand: &rustc_middle::mir::Operand,
-    destination: rustc_middle::mir::Place,
-    body: &rustc_middle::mir::Body,
-) -> Option<(rustc_middle::mir::Local, rustc_middle::mir::Local)> {
+pub fn detect_mutex_inside_arc_new<'tcx>(
+    operand: &rustc_middle::mir::Operand<'tcx>,
+    caller_function_def_id: rustc_hir::def_id::DefId,
+    tcx: rustc_middle::ty::TyCtxt<'tcx>,
+) -> Option<rustc_middle::mir::Place<'tcx>> {
     if let rustc_middle::mir::Operand::Move(place) = operand {
-        // The first argument must be a local variable with no projections.
-        let Some(contained_value_local) = place.as_local() else {
-            return None;
-        };
-        let local_decl = &body.local_decls[contained_value_local];
-        if is_local_decl_with_concrete_type(local_decl, "std::sync::Mutex<T>") {
-            let return_value = place_to_local(&destination);
-            return Some((return_value, contained_value_local));
+        // Find the type through the local declarations of the caller function.
+        // The `Place` (memory location) of the called function should be declared there and we can query its type.
+        let body = tcx.optimized_mir(caller_function_def_id);
+        let place_ty = place.ty(body, tcx);
+        if is_place_ty_with_concrete_type(&place_ty, "std::sync::Mutex<T>") {
+            return Some(*place);
         }
     }
     None
@@ -119,22 +113,20 @@ pub fn detect_mutex_inside_arc_new(
 /// Detects calls to `std::ops::Deref::deref` where the type of
 /// the argument is `&std::sync::Arc<std::sync::Mutex<T>>`
 ///
-/// Returns a 2-tuple containing the return value and the argument to the function.
+/// Returns the place of the function argument if the call has this form.
 /// Returns `None` if the call does not have this form.
-pub fn detect_deref_arc_with_mutex(
-    operand: &rustc_middle::mir::Operand,
-    destination: rustc_middle::mir::Place,
-    body: &rustc_middle::mir::Body,
-) -> Option<(rustc_middle::mir::Local, rustc_middle::mir::Local)> {
+pub fn detect_deref_arc_with_mutex<'tcx>(
+    operand: &rustc_middle::mir::Operand<'tcx>,
+    caller_function_def_id: rustc_hir::def_id::DefId,
+    tcx: rustc_middle::ty::TyCtxt<'tcx>,
+) -> Option<rustc_middle::mir::Place<'tcx>> {
     if let rustc_middle::mir::Operand::Move(place) = operand {
-        // The first argument must be a local variable with no projections.
-        let Some(contained_value_local) = place.as_local() else {
-            return None;
-        };
-        let local_decl = &body.local_decls[contained_value_local];
-        if is_local_decl_with_concrete_type(local_decl, "&std::sync::Arc<std::sync::Mutex<T>>") {
-            let return_value = place_to_local(&destination);
-            return Some((return_value, contained_value_local));
+        // Find the type through the local declarations of the caller function.
+        // The `Place` (memory location) of the called function should be declared there and we can query its type.
+        let body = tcx.optimized_mir(caller_function_def_id);
+        let place_ty = place.ty(body, tcx);
+        if is_place_ty_with_concrete_type(&place_ty, "&std::sync::Arc<std::sync::Mutex<T>>") {
+            return Some(*place);
         }
     }
     None
@@ -144,22 +136,20 @@ pub fn detect_deref_arc_with_mutex(
 /// - `_X` is of type `&std::sync::Arc<std::sync::Mutex<T>>` and
 /// - `_Y` is of type `std::sync::Arc<std::sync::Mutex<T>>`.
 ///
-/// Returns a 2-tuple containing the left-hand side and the right-hand side.
+/// Returns the right-hand side place if the assignment has this form.
 /// Returns `None` if the assignment does not have this form.
-pub fn detect_assignment_reference_to_arc_with_mutex(
-    place: &rustc_middle::mir::Place,
-    rvalue: &rustc_middle::mir::Rvalue,
-    body: &rustc_middle::mir::Body,
-) -> Option<(rustc_middle::mir::Local, rustc_middle::mir::Local)> {
+pub fn detect_assignment_reference_to_arc_with_mutex<'tcx>(
+    rvalue: &rustc_middle::mir::Rvalue<'tcx>,
+    caller_function_def_id: rustc_hir::def_id::DefId,
+    tcx: rustc_middle::ty::TyCtxt<'tcx>,
+) -> Option<rustc_middle::mir::Place<'tcx>> {
     if let rustc_middle::mir::Rvalue::Ref(_, _, rhs) = rvalue {
-        // The right hand side must be a local variable with no projections.
-        let Some(rhs) = rhs.as_local() else {
-            return None;
-        };
-        let local_decl = &body.local_decls[rhs];
-        if is_local_decl_with_concrete_type(local_decl, "std::sync::Arc<std::sync::Mutex<T>>") {
-            let lhs = place_to_local(place);
-            return Some((lhs, rhs));
+        // Find the type through the local declarations of the caller function.
+        // The `Place` (memory location) of the called function should be declared there and we can query its type.
+        let body = tcx.optimized_mir(caller_function_def_id);
+        let place_ty = rhs.ty(body, tcx);
+        if is_place_ty_with_concrete_type(&place_ty, "std::sync::Arc<std::sync::Mutex<T>>") {
+            return Some(*rhs);
         }
     }
     None
@@ -168,22 +158,20 @@ pub fn detect_assignment_reference_to_arc_with_mutex(
 /// Detects calls to `std::clone::Clone::clone` where the type of
 /// the argument is `&std::sync::Arc<std::sync::Mutex<T>>`
 ///
-/// Returns a 2-tuple containing the return value and the argument to the function.
+/// Returns the place of the function argument if the call has this form.
 /// Returns `None` if the call does not have this form.
-pub fn detect_clone_arc_with_mutex(
-    operand: &rustc_middle::mir::Operand,
-    destination: rustc_middle::mir::Place,
-    body: &rustc_middle::mir::Body,
-) -> Option<(rustc_middle::mir::Local, rustc_middle::mir::Local)> {
+pub fn detect_clone_arc_with_mutex<'tcx>(
+    operand: &rustc_middle::mir::Operand<'tcx>,
+    caller_function_def_id: rustc_hir::def_id::DefId,
+    tcx: rustc_middle::ty::TyCtxt<'tcx>,
+) -> Option<rustc_middle::mir::Place<'tcx>> {
     if let rustc_middle::mir::Operand::Move(place) = operand {
-        // The first argument must be a local variable with no projections.
-        let Some(contained_value_local) = place.as_local() else {
-            return None;
-        };
-        let local_decl = &body.local_decls[contained_value_local];
-        if is_local_decl_with_concrete_type(local_decl, "&std::sync::Arc<std::sync::Mutex<T>>") {
-            let return_value = place_to_local(&destination);
-            return Some((return_value, contained_value_local));
+        // Find the type through the local declarations of the caller function.
+        // The `Place` (memory location) of the called function should be declared there and we can query its type.
+        let body = tcx.optimized_mir(caller_function_def_id);
+        let place_ty = place.ty(body, tcx);
+        if is_place_ty_with_concrete_type(&place_ty, "&std::sync::Arc<std::sync::Mutex<T>>") {
+            return Some(*place);
         }
     }
     None

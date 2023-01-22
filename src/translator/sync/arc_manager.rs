@@ -78,20 +78,21 @@ impl ArcManager {
     /// detecting whether the return value should be linked to a mutex (because the `Arc` contains one).
     /// Receives a reference to the memory of the caller function to
     /// link the return local variable to the existing mutex.
-    pub fn translate_side_effects_new(
-        args: &[rustc_middle::mir::Operand],
-        return_value: rustc_middle::mir::Place,
-        body: &rustc_middle::mir::Body,
-        memory: &mut Memory,
+    pub fn translate_side_effects_new<'tcx>(
+        args: &[rustc_middle::mir::Operand<'tcx>],
+        return_value: rustc_middle::mir::Place<'tcx>,
+        memory: &mut Memory<'tcx>,
+        caller_function_def_id: rustc_hir::def_id::DefId,
+        tcx: rustc_middle::ty::TyCtxt<'tcx>,
     ) {
         let first_argument = args
             .get(0)
             .expect("BUG: `std::sync::Arc::<T>::new` should receive at least one argument");
 
-        if let Some((return_value_local, local_with_mutex)) =
-            detect_mutex_inside_arc_new(first_argument, return_value, body)
+        if let Some(place_with_mutex) =
+            detect_mutex_inside_arc_new(first_argument, caller_function_def_id, tcx)
         {
-            memory.link_local_to_same_mutex(return_value_local, local_with_mutex);
+            memory.link_place_to_same_mutex(return_value, place_with_mutex);
         }
     }
 
@@ -99,20 +100,21 @@ impl ArcManager {
     /// detecting whether the return value should be linked to a mutex (because the `Arc` contains one).
     /// Receives a reference to the memory of the caller function to
     /// link the return local variable to the existing mutex.
-    pub fn translate_side_effects_deref(
-        args: &[rustc_middle::mir::Operand],
-        return_value: rustc_middle::mir::Place,
-        body: &rustc_middle::mir::Body,
-        memory: &mut Memory,
+    pub fn translate_side_effects_deref<'tcx>(
+        args: &[rustc_middle::mir::Operand<'tcx>],
+        return_value: rustc_middle::mir::Place<'tcx>,
+        memory: &mut Memory<'tcx>,
+        caller_function_def_id: rustc_hir::def_id::DefId,
+        tcx: rustc_middle::ty::TyCtxt<'tcx>,
     ) {
         let first_argument = args
             .get(0)
             .expect("BUG: `std::ops::Deref::deref` should receive at least one argument");
 
-        if let Some((return_value_local, local_with_mutex)) =
-            detect_deref_arc_with_mutex(first_argument, return_value, body)
+        if let Some(place_with_mutex) =
+            detect_deref_arc_with_mutex(first_argument, caller_function_def_id, tcx)
         {
-            memory.link_local_to_same_mutex(return_value_local, local_with_mutex);
+            memory.link_place_to_same_mutex(return_value, place_with_mutex);
         }
     }
 
@@ -120,20 +122,21 @@ impl ArcManager {
     /// detecting whether the return value should be linked to a mutex (because the `Arc` contains one).
     /// Receives a reference to the memory of the caller function to
     /// link the return local variable to the existing mutex.
-    pub fn translate_side_effects_clone(
-        args: &[rustc_middle::mir::Operand],
-        return_value: rustc_middle::mir::Place,
-        body: &rustc_middle::mir::Body,
-        memory: &mut Memory,
+    pub fn translate_side_effects_clone<'tcx>(
+        args: &[rustc_middle::mir::Operand<'tcx>],
+        return_value: rustc_middle::mir::Place<'tcx>,
+        memory: &mut Memory<'tcx>,
+        caller_function_def_id: rustc_hir::def_id::DefId,
+        tcx: rustc_middle::ty::TyCtxt<'tcx>,
     ) {
         let first_argument = args
             .get(0)
             .expect("BUG: `std::clone::Clone::clone` should receive at least one argument");
 
-        if let Some((return_value_local, local_with_mutex)) =
-            detect_clone_arc_with_mutex(first_argument, return_value, body)
+        if let Some(place_with_mutex) =
+            detect_clone_arc_with_mutex(first_argument, caller_function_def_id, tcx)
         {
-            memory.link_local_to_same_mutex(return_value_local, local_with_mutex);
+            memory.link_place_to_same_mutex(return_value, place_with_mutex);
         }
     }
 }

@@ -23,7 +23,7 @@ use std::collections::HashMap;
 
 pub use memory::Memory;
 
-pub struct MirFunction {
+pub struct MirFunction<'tcx> {
     /// The ID that uniquely identifies the function in this crate in the HIR representation.
     /// <https://doc.rust-lang.org/stable/nightly-rustc/rustc_hir/def_id/struct.DefId.html>
     pub def_id: rustc_hir::def_id::DefId,
@@ -38,10 +38,10 @@ pub struct MirFunction {
     /// A mapping between the basic block number and our representation of the basic block.
     basic_blocks: HashMap<rustc_middle::mir::BasicBlock, BasicBlock>,
     /// A representation of the memory of the function.
-    pub memory: Memory,
+    pub memory: Memory<'tcx>,
 }
 
-impl MirFunction {
+impl<'tcx> MirFunction<'tcx> {
     /// Creates a new function.
     /// Uses the `rustc_middle::ty::TyCtxt` to get the MIR body and the name of the function.
     pub fn new(

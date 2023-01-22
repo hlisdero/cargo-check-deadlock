@@ -6,7 +6,6 @@
 use super::mutex::Mutex;
 use crate::naming::mutex::function_transition_label;
 use crate::translator::mir_function::Memory;
-use crate::translator::place_to_local;
 use crate::translator::special_function::call_foreign_function;
 use crate::utils::extract_self_reference_from_arguments_for_function_call;
 use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
@@ -65,55 +64,49 @@ impl MutexManager {
     /// the specific logic of creating a new mutex.
     /// Receives a reference to the memory of the caller function to
     /// link the return local variable to the new mutex.
-    pub fn translate_side_effects_new(
+    pub fn translate_side_effects_new<'tcx>(
         &mut self,
-        return_value: rustc_middle::mir::Place,
+        return_value: rustc_middle::mir::Place<'tcx>,
         net: &mut PetriNet,
-        memory: &mut Memory,
+        memory: &mut Memory<'tcx>,
     ) {
         let mutex_ref = self.add_mutex(net);
         // The return value contains a new mutex. Link the local variable to it.
-        let return_value_local = place_to_local(&return_value);
-        memory.link_local_to_mutex(return_value_local, mutex_ref);
+        memory.link_place_to_mutex(return_value, mutex_ref);
     }
 
     /// Translates the side effects for `std::sync::Mutex::<T>::lock` i.e.,
     /// the specific logic of locking a mutex.
     /// Receives a reference to the memory of the caller function to retrieve the mutex contained
     /// in the local variable for the call and to link the return local variable to the new lock guard.
-    pub fn translate_side_effects_lock(
+    pub fn translate_side_effects_lock<'tcx>(
         &self,
-        args: &[rustc_middle::mir::Operand],
-        return_value: rustc_middle::mir::Place,
+        args: &[rustc_middle::mir::Operand<'tcx>],
+        return_value: rustc_middle::mir::Place<'tcx>,
         transition_function_call: &TransitionRef,
         net: &mut PetriNet,
-        memory: &mut Memory,
+        memory: &mut Memory<'tcx>,
     ) {
         // Retrieve the mutex from the local variable passed to the function as an argument.
         let self_ref = extract_self_reference_from_arguments_for_function_call(args);
-        let local_with_mutex = place_to_local(&self_ref);
-        let mutex_ref = memory.get_linked_mutex(local_with_mutex);
+        let mutex_ref = memory.get_linked_mutex(self_ref);
         self.add_lock_guard(mutex_ref, transition_function_call, net);
         // The return value contains a new lock guard. Link the local variable to it.
-        let return_value_local = place_to_local(&return_value);
-        memory.link_local_to_lock_guard(return_value_local, mutex_ref.clone());
+        memory.link_place_to_lock_guard(return_value, mutex_ref.clone());
     }
 
     /// Checks whether the variable to be dropped is a lock guard and
     /// if that is the case, adds an unlock guard for the mutex corresponding
     /// to the lock guard. Otherwise do nothing.
-    pub fn handle_lock_guard_drop(
+    pub fn handle_lock_guard_drop<'tcx>(
         &self,
-        place: rustc_middle::mir::Place,
+        place: rustc_middle::mir::Place<'tcx>,
         transition_drop: &TransitionRef,
-        memory: &Memory,
+        memory: &Memory<'tcx>,
         net: &mut PetriNet,
     ) {
-        let Some(local_to_be_dropped) = place.as_local() else {
-            return;
-        };
-        if memory.is_linked_to_local_guard(local_to_be_dropped) {
-            let mutex_ref = memory.get_linked_lock_guard(local_to_be_dropped);
+        if memory.is_linked_to_place_guard(place) {
+            let mutex_ref = memory.get_linked_lock_guard(place);
             self.add_unlock_guard(mutex_ref, transition_drop, net);
         }
     }

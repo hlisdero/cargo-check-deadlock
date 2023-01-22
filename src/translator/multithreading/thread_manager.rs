@@ -12,7 +12,7 @@ use crate::translator::mir_function::Memory;
 use crate::translator::special_function::call_foreign_function;
 use crate::utils::{
     extract_def_id_of_called_function_from_operand,
-    extract_self_reference_from_arguments_for_function_call, place_to_local,
+    extract_self_reference_from_arguments_for_function_call,
 };
 use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
 use std::collections::VecDeque;
@@ -74,9 +74,9 @@ impl ThreadManager {
     pub fn translate_side_effects_spawn<'tcx>(
         &mut self,
         args: &[rustc_middle::mir::Operand<'tcx>],
-        return_value: rustc_middle::mir::Place,
+        return_value: rustc_middle::mir::Place<'tcx>,
         transition_function_call: TransitionRef,
-        memory: &mut Memory,
+        memory: &mut Memory<'tcx>,
         caller_function_def_id: rustc_hir::def_id::DefId,
         tcx: rustc_middle::ty::TyCtxt<'tcx>,
     ) {
@@ -90,24 +90,22 @@ impl ThreadManager {
         );
         let thread_ref = self.add_thread_span(transition_function_call, thread_function_def_id);
         // The return value contains a new join handle. Link the local variable to it.
-        let return_value_local = place_to_local(&return_value);
-        memory.link_local_to_join_handle(return_value_local, thread_ref);
+        memory.link_place_to_join_handle(return_value, thread_ref);
     }
 
     /// Translates the side effects for `std::thread::JoinHandle::<T>::join` i.e.,
     /// the specific logic of joining an existing thread.
     /// Receives a reference to the memory of the caller function to retrieve
     /// the join handle linked to the local variable.
-    pub fn translate_side_effects_join(
+    pub fn translate_side_effects_join<'tcx>(
         &mut self,
-        args: &[rustc_middle::mir::Operand],
+        args: &[rustc_middle::mir::Operand<'tcx>],
         transition_function_call: TransitionRef,
-        memory: &Memory,
+        memory: &Memory<'tcx>,
     ) {
         // Retrieve the join handle from the local variable passed to the function as an argument.
         let self_ref = extract_self_reference_from_arguments_for_function_call(args);
-        let local_with_join_handle = place_to_local(&self_ref);
-        let thread_ref = memory.get_linked_join_handle(local_with_join_handle);
+        let thread_ref = memory.get_linked_join_handle(self_ref);
         self.set_join_transition(thread_ref, transition_function_call);
     }
 

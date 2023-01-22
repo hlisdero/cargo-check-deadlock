@@ -249,12 +249,12 @@ impl<'tcx> Translator<'tcx> {
             .translate_call_new(start_place, end_place, &mut self.net);
 
         let current_function = self.call_stack.peek_mut();
-        let body = self.tcx.optimized_mir(current_function.def_id);
         ArcManager::translate_side_effects_new(
             args,
             destination,
-            body,
             &mut current_function.memory,
+            current_function.def_id,
+            self.tcx,
         );
     }
 
@@ -271,12 +271,12 @@ impl<'tcx> Translator<'tcx> {
             .translate_call_clone(start_place, end_place, cleanup_place, &mut self.net);
 
         let current_function = self.call_stack.peek_mut();
-        let body = self.tcx.optimized_mir(current_function.def_id);
         ArcManager::translate_side_effects_clone(
             args,
             destination,
-            body,
             &mut current_function.memory,
+            current_function.def_id,
+            self.tcx,
         );
     }
 
@@ -293,12 +293,12 @@ impl<'tcx> Translator<'tcx> {
             .translate_call_deref(start_place, end_place, cleanup_place, &mut self.net);
 
         let current_function = self.call_stack.peek_mut();
-        let body = self.tcx.optimized_mir(current_function.def_id);
         ArcManager::translate_side_effects_deref(
             args,
             destination,
-            body,
             &mut current_function.memory,
+            current_function.def_id,
+            self.tcx,
         );
     }
 }

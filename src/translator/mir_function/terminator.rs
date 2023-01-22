@@ -6,7 +6,7 @@ use crate::error_handling::handle_err_add_arc;
 use crate::naming::function::return_transition_label;
 use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
 
-impl MirFunction {
+impl<'tcx> MirFunction<'tcx> {
     /// Connects the active basic block to the target basic block.
     ///
     /// # Panics
