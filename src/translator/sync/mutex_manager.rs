@@ -7,7 +7,7 @@ use super::mutex::Mutex;
 use crate::naming::mutex::function_transition_label;
 use crate::translator::mir_function::Memory;
 use crate::translator::special_function::call_foreign_function;
-use crate::utils::extract_self_reference_from_arguments_for_function_call;
+use crate::utils::extract_first_argument_for_function_call;
 use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
 
 #[derive(Default)]
@@ -88,7 +88,7 @@ impl MutexManager {
         memory: &mut Memory<'tcx>,
     ) {
         // Retrieve the mutex from the local variable passed to the function as an argument.
-        let self_ref = extract_self_reference_from_arguments_for_function_call(args);
+        let self_ref = extract_first_argument_for_function_call(args);
         let mutex_ref = memory.get_linked_mutex(self_ref);
         self.add_lock_guard(mutex_ref, transition_function_call, net);
         // The return value contains a new lock guard. Link the local variable to it.

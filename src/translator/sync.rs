@@ -88,15 +88,13 @@ pub fn detect_assignment_copy_reference_to_mutex<'tcx>(
 /// Returns the place of the function argument if the call has this form.
 /// Returns `None` if the call does not have this form.
 pub fn detect_mutex_inside_arc_new<'tcx>(
-    operand: &rustc_middle::mir::Operand<'tcx>,
+    place: &rustc_middle::mir::Place<'tcx>,
     caller_function_def_id: rustc_hir::def_id::DefId,
     tcx: rustc_middle::ty::TyCtxt<'tcx>,
 ) -> Option<rustc_middle::mir::Place<'tcx>> {
-    if let rustc_middle::mir::Operand::Move(place) = operand {
-        let place_ty = get_place_type(place, caller_function_def_id, tcx);
-        if is_place_ty_with_concrete_type(&place_ty, "std::sync::Mutex<T>") {
-            return Some(*place);
-        }
+    let place_ty = get_place_type(place, caller_function_def_id, tcx);
+    if is_place_ty_with_concrete_type(&place_ty, "std::sync::Mutex<T>") {
+        return Some(*place);
     }
     None
 }
@@ -107,15 +105,13 @@ pub fn detect_mutex_inside_arc_new<'tcx>(
 /// Returns the place of the function argument if the call has this form.
 /// Returns `None` if the call does not have this form.
 pub fn detect_deref_arc_with_mutex<'tcx>(
-    operand: &rustc_middle::mir::Operand<'tcx>,
+    place: &rustc_middle::mir::Place<'tcx>,
     caller_function_def_id: rustc_hir::def_id::DefId,
     tcx: rustc_middle::ty::TyCtxt<'tcx>,
 ) -> Option<rustc_middle::mir::Place<'tcx>> {
-    if let rustc_middle::mir::Operand::Move(place) = operand {
-        let place_ty = get_place_type(place, caller_function_def_id, tcx);
-        if is_place_ty_with_concrete_type(&place_ty, "&std::sync::Arc<std::sync::Mutex<T>>") {
-            return Some(*place);
-        }
+    let place_ty = get_place_type(place, caller_function_def_id, tcx);
+    if is_place_ty_with_concrete_type(&place_ty, "&std::sync::Arc<std::sync::Mutex<T>>") {
+        return Some(*place);
     }
     None
 }
@@ -146,15 +142,13 @@ pub fn detect_assignment_reference_to_arc_with_mutex<'tcx>(
 /// Returns the place of the function argument if the call has this form.
 /// Returns `None` if the call does not have this form.
 pub fn detect_clone_arc_with_mutex<'tcx>(
-    operand: &rustc_middle::mir::Operand<'tcx>,
+    place: &rustc_middle::mir::Place<'tcx>,
     caller_function_def_id: rustc_hir::def_id::DefId,
     tcx: rustc_middle::ty::TyCtxt<'tcx>,
 ) -> Option<rustc_middle::mir::Place<'tcx>> {
-    if let rustc_middle::mir::Operand::Move(place) = operand {
-        let place_ty = get_place_type(place, caller_function_def_id, tcx);
-        if is_place_ty_with_concrete_type(&place_ty, "&std::sync::Arc<std::sync::Mutex<T>>") {
-            return Some(*place);
-        }
+    let place_ty = get_place_type(place, caller_function_def_id, tcx);
+    if is_place_ty_with_concrete_type(&place_ty, "&std::sync::Arc<std::sync::Mutex<T>>") {
+        return Some(*place);
     }
     None
 }

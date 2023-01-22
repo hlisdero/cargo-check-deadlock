@@ -11,8 +11,7 @@ use crate::naming::thread::function_transition_label;
 use crate::translator::mir_function::Memory;
 use crate::translator::special_function::call_foreign_function;
 use crate::utils::{
-    extract_def_id_of_called_function_from_operand,
-    extract_self_reference_from_arguments_for_function_call,
+    extract_def_id_of_called_function_from_operand, extract_first_argument_for_function_call,
 };
 use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
 use std::collections::VecDeque;
@@ -104,7 +103,7 @@ impl ThreadManager {
         memory: &Memory<'tcx>,
     ) {
         // Retrieve the join handle from the local variable passed to the function as an argument.
-        let self_ref = extract_self_reference_from_arguments_for_function_call(args);
+        let self_ref = extract_first_argument_for_function_call(args);
         let thread_ref = memory.get_linked_join_handle(self_ref);
         self.set_join_transition(thread_ref, transition_function_call);
     }

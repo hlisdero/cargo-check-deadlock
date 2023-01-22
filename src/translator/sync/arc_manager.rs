@@ -6,9 +6,11 @@
 use super::{
     detect_clone_arc_with_mutex, detect_deref_arc_with_mutex, detect_mutex_inside_arc_new,
 };
-use crate::naming::arc::function_transition_label;
 use crate::translator::mir_function::Memory;
 use crate::translator::special_function::call_foreign_function;
+use crate::{
+    naming::arc::function_transition_label, utils::extract_first_argument_for_function_call,
+};
 use netcrab::petri_net::{PetriNet, PlaceRef};
 
 #[derive(Default)]
@@ -85,12 +87,9 @@ impl ArcManager {
         caller_function_def_id: rustc_hir::def_id::DefId,
         tcx: rustc_middle::ty::TyCtxt<'tcx>,
     ) {
-        let first_argument = args
-            .get(0)
-            .expect("BUG: `std::sync::Arc::<T>::new` should receive at least one argument");
-
+        let first_argument = extract_first_argument_for_function_call(args);
         if let Some(place_with_mutex) =
-            detect_mutex_inside_arc_new(first_argument, caller_function_def_id, tcx)
+            detect_mutex_inside_arc_new(&first_argument, caller_function_def_id, tcx)
         {
             memory.link_place_to_same_mutex(return_value, place_with_mutex);
         }
@@ -107,12 +106,9 @@ impl ArcManager {
         caller_function_def_id: rustc_hir::def_id::DefId,
         tcx: rustc_middle::ty::TyCtxt<'tcx>,
     ) {
-        let first_argument = args
-            .get(0)
-            .expect("BUG: `std::ops::Deref::deref` should receive at least one argument");
-
+        let first_argument = extract_first_argument_for_function_call(args);
         if let Some(place_with_mutex) =
-            detect_deref_arc_with_mutex(first_argument, caller_function_def_id, tcx)
+            detect_deref_arc_with_mutex(&first_argument, caller_function_def_id, tcx)
         {
             memory.link_place_to_same_mutex(return_value, place_with_mutex);
         }
@@ -129,12 +125,9 @@ impl ArcManager {
         caller_function_def_id: rustc_hir::def_id::DefId,
         tcx: rustc_middle::ty::TyCtxt<'tcx>,
     ) {
-        let first_argument = args
-            .get(0)
-            .expect("BUG: `std::clone::Clone::clone` should receive at least one argument");
-
+        let first_argument = extract_first_argument_for_function_call(args);
         if let Some(place_with_mutex) =
-            detect_clone_arc_with_mutex(first_argument, caller_function_def_id, tcx)
+            detect_clone_arc_with_mutex(&first_argument, caller_function_def_id, tcx)
         {
             memory.link_place_to_same_mutex(return_value, place_with_mutex);
         }

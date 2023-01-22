@@ -43,17 +43,19 @@ pub fn extract_def_id_of_called_function_from_operand<'tcx>(
     }
 }
 
-/// Extracts the self reference from the function arguments.
+/// Extracts the first argument from the arguments for the function call.
+///
+/// This is also useful for obtaining the self reference for method calls.
 /// For example: The call `mutex.lock()` desugars to `std::sync::Mutex::lock(&mutex)`
 /// where `&self` is the first argument.
-pub fn extract_self_reference_from_arguments_for_function_call<'tcx>(
+pub fn extract_first_argument_for_function_call<'tcx>(
     args: &[rustc_middle::mir::Operand<'tcx>],
 ) -> rustc_middle::mir::Place<'tcx> {
-    let rustc_middle::mir::Operand::Move(self_ref) = args.get(0)
-            .expect("BUG: Function should receive a reference to self as the 0-th function argument") else { 
-                panic!("BUG: The self reference should be passed by moving");
+    let rustc_middle::mir::Operand::Move(first_arg) = args.get(0)
+            .expect("BUG: Function should receive at least one argument") else { 
+                panic!("BUG: The first argument should be passed by moving");
         };
-    *self_ref
+    *first_arg
 }
 
 /// Finds the type of the place through the local declarations of the caller function.
