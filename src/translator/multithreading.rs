@@ -6,7 +6,7 @@
 mod thread_manager;
 mod thread_span;
 
-use crate::utils::is_place_ty_with_concrete_type;
+use crate::utils::{get_place_type, is_place_ty_with_concrete_type};
 
 pub use thread_manager::ThreadManager;
 pub use thread_manager::ThreadRef;
@@ -36,10 +36,7 @@ pub fn detect_assignment_join_handle<'tcx>(
     tcx: rustc_middle::ty::TyCtxt<'tcx>,
 ) -> Option<rustc_middle::mir::Place<'tcx>> {
     if let rustc_middle::mir::Rvalue::Use(rustc_middle::mir::Operand::Move(rhs)) = rvalue {
-        // Find the type through the local declarations of the caller function.
-        // The `Place` (memory location) of the called function should be declared there and we can query its type.
-        let body = tcx.optimized_mir(caller_function_def_id);
-        let place_ty = rhs.ty(body, tcx);
+        let place_ty = get_place_type(rhs, caller_function_def_id, tcx);
         if is_place_ty_with_concrete_type(&place_ty, "std::thread::JoinHandle<T>") {
             return Some(*rhs);
         }

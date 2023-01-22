@@ -7,7 +7,7 @@ mod arc_manager;
 mod mutex;
 mod mutex_manager;
 
-use crate::utils::is_place_ty_with_concrete_type;
+use crate::utils::{get_place_type, is_place_ty_with_concrete_type};
 
 pub use arc_manager::ArcManager;
 pub use mutex_manager::{MutexManager, MutexRef};
@@ -54,10 +54,7 @@ pub fn detect_assignment_reference_to_mutex<'tcx>(
     tcx: rustc_middle::ty::TyCtxt<'tcx>,
 ) -> Option<rustc_middle::mir::Place<'tcx>> {
     if let rustc_middle::mir::Rvalue::Ref(_, _, rhs) = rvalue {
-        // Find the type through the local declarations of the caller function.
-        // The `Place` (memory location) of the called function should be declared there and we can query its type.
-        let body = tcx.optimized_mir(caller_function_def_id);
-        let place_ty = rhs.ty(body, tcx);
+        let place_ty = get_place_type(rhs, caller_function_def_id, tcx);
         if is_place_ty_with_concrete_type(&place_ty, "std::sync::Mutex<T>") {
             return Some(*rhs);
         }
@@ -77,10 +74,7 @@ pub fn detect_assignment_copy_reference_to_mutex<'tcx>(
     tcx: rustc_middle::ty::TyCtxt<'tcx>,
 ) -> Option<rustc_middle::mir::Place<'tcx>> {
     if let rustc_middle::mir::Rvalue::Use(rustc_middle::mir::Operand::Copy(rhs)) = rvalue {
-        // Find the type through the local declarations of the caller function.
-        // The `Place` (memory location) of the called function should be declared there and we can query its type.
-        let body = tcx.optimized_mir(caller_function_def_id);
-        let place_ty = rhs.ty(body, tcx);
+        let place_ty = get_place_type(rhs, caller_function_def_id, tcx);
         if is_place_ty_with_concrete_type(&place_ty, "&std::sync::Mutex<T>") {
             return Some(*rhs);
         }
@@ -99,10 +93,7 @@ pub fn detect_mutex_inside_arc_new<'tcx>(
     tcx: rustc_middle::ty::TyCtxt<'tcx>,
 ) -> Option<rustc_middle::mir::Place<'tcx>> {
     if let rustc_middle::mir::Operand::Move(place) = operand {
-        // Find the type through the local declarations of the caller function.
-        // The `Place` (memory location) of the called function should be declared there and we can query its type.
-        let body = tcx.optimized_mir(caller_function_def_id);
-        let place_ty = place.ty(body, tcx);
+        let place_ty = get_place_type(place, caller_function_def_id, tcx);
         if is_place_ty_with_concrete_type(&place_ty, "std::sync::Mutex<T>") {
             return Some(*place);
         }
@@ -121,10 +112,7 @@ pub fn detect_deref_arc_with_mutex<'tcx>(
     tcx: rustc_middle::ty::TyCtxt<'tcx>,
 ) -> Option<rustc_middle::mir::Place<'tcx>> {
     if let rustc_middle::mir::Operand::Move(place) = operand {
-        // Find the type through the local declarations of the caller function.
-        // The `Place` (memory location) of the called function should be declared there and we can query its type.
-        let body = tcx.optimized_mir(caller_function_def_id);
-        let place_ty = place.ty(body, tcx);
+        let place_ty = get_place_type(place, caller_function_def_id, tcx);
         if is_place_ty_with_concrete_type(&place_ty, "&std::sync::Arc<std::sync::Mutex<T>>") {
             return Some(*place);
         }
@@ -144,10 +132,7 @@ pub fn detect_assignment_reference_to_arc_with_mutex<'tcx>(
     tcx: rustc_middle::ty::TyCtxt<'tcx>,
 ) -> Option<rustc_middle::mir::Place<'tcx>> {
     if let rustc_middle::mir::Rvalue::Ref(_, _, rhs) = rvalue {
-        // Find the type through the local declarations of the caller function.
-        // The `Place` (memory location) of the called function should be declared there and we can query its type.
-        let body = tcx.optimized_mir(caller_function_def_id);
-        let place_ty = rhs.ty(body, tcx);
+        let place_ty = get_place_type(rhs, caller_function_def_id, tcx);
         if is_place_ty_with_concrete_type(&place_ty, "std::sync::Arc<std::sync::Mutex<T>>") {
             return Some(*rhs);
         }
@@ -166,10 +151,7 @@ pub fn detect_clone_arc_with_mutex<'tcx>(
     tcx: rustc_middle::ty::TyCtxt<'tcx>,
 ) -> Option<rustc_middle::mir::Place<'tcx>> {
     if let rustc_middle::mir::Operand::Move(place) = operand {
-        // Find the type through the local declarations of the caller function.
-        // The `Place` (memory location) of the called function should be declared there and we can query its type.
-        let body = tcx.optimized_mir(caller_function_def_id);
-        let place_ty = place.ty(body, tcx);
+        let place_ty = get_place_type(place, caller_function_def_id, tcx);
         if is_place_ty_with_concrete_type(&place_ty, "&std::sync::Arc<std::sync::Mutex<T>>") {
             return Some(*place);
         }

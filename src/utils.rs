@@ -56,6 +56,18 @@ pub fn extract_self_reference_from_arguments_for_function_call<'tcx>(
     *self_ref
 }
 
+/// Finds the type of the place through the local declarations of the caller function.
+/// The `Place` (memory location) should be declared there and we can query its type.
+/// <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/mir/struct.Place.html#method.ty>
+pub fn get_place_type<'tcx>(
+    place: &rustc_middle::mir::Place<'tcx>,
+    caller_function_def_id: rustc_hir::def_id::DefId,
+    tcx: rustc_middle::ty::TyCtxt<'tcx>,
+) -> rustc_middle::mir::tcx::PlaceTy<'tcx> {
+    let body = tcx.optimized_mir(caller_function_def_id);
+    place.ty(body, tcx)
+}
+
 /// Checks whether the type of a place matches a given string of the form:
 /// `module::submodule::type<T>`. The function checks that `T` is a concrete type (e.g. "i32")
 /// and not a type parameter ("T") for the `local_decl`.
