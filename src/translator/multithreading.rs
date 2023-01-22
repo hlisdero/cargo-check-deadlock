@@ -30,12 +30,12 @@ pub fn is_thread_join(function_name: &str) -> bool {
 ///
 /// Returns the right-hand side place if the assignment has this form.
 /// Returns `None` if the assignment does not have this form.
-pub fn detect_assignment_join_handle<'tcx>(
-    rvalue: &rustc_middle::mir::Rvalue<'tcx>,
+pub fn detect_join_handle<'tcx>(
+    operand: &rustc_middle::mir::Operand<'tcx>,
     caller_function_def_id: rustc_hir::def_id::DefId,
     tcx: rustc_middle::ty::TyCtxt<'tcx>,
 ) -> Option<rustc_middle::mir::Place<'tcx>> {
-    if let rustc_middle::mir::Rvalue::Use(rustc_middle::mir::Operand::Move(rhs)) = rvalue {
+    if let rustc_middle::mir::Operand::Move(rhs) = operand {
         let place_ty = get_place_type(rhs, caller_function_def_id, tcx);
         if is_place_ty_with_concrete_type(&place_ty, "std::thread::JoinHandle<T>") {
             return Some(*rhs);
