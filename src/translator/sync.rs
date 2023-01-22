@@ -7,8 +7,6 @@ mod arc_manager;
 mod mutex;
 mod mutex_manager;
 
-use crate::utils::{get_place_type, is_place_ty_with_concrete_type};
-
 pub use arc_manager::ArcManager;
 pub use mutex_manager::{MutexManager, MutexRef};
 
@@ -40,44 +38,4 @@ pub fn is_deref(function_name: &str) -> bool {
 #[inline]
 pub fn is_clone(function_name: &str) -> bool {
     function_name == "std::clone::Clone::clone"
-}
-
-/// Checks whether the place has type `std::sync::Mutex<T>`.
-pub fn is_mutex<'tcx>(
-    place: &rustc_middle::mir::Place<'tcx>,
-    caller_function_def_id: rustc_hir::def_id::DefId,
-    tcx: rustc_middle::ty::TyCtxt<'tcx>,
-) -> bool {
-    let place_ty = get_place_type(place, caller_function_def_id, tcx);
-    is_place_ty_with_concrete_type(&place_ty, "std::sync::Mutex<T>")
-}
-
-/// Checks whether the place has type `&std::sync::Mutex<T>`.
-pub fn is_reference_to_mutex<'tcx>(
-    place: &rustc_middle::mir::Place<'tcx>,
-    caller_function_def_id: rustc_hir::def_id::DefId,
-    tcx: rustc_middle::ty::TyCtxt<'tcx>,
-) -> bool {
-    let place_ty = get_place_type(place, caller_function_def_id, tcx);
-    is_place_ty_with_concrete_type(&place_ty, "&std::sync::Mutex<T>")
-}
-
-/// Checks whether the place has type `std::sync::Arc<std::sync::Mutex<T>>`.
-pub fn is_arc_with_mutex<'tcx>(
-    place: &rustc_middle::mir::Place<'tcx>,
-    caller_function_def_id: rustc_hir::def_id::DefId,
-    tcx: rustc_middle::ty::TyCtxt<'tcx>,
-) -> bool {
-    let place_ty = get_place_type(place, caller_function_def_id, tcx);
-    is_place_ty_with_concrete_type(&place_ty, "std::sync::Arc<std::sync::Mutex<T>>")
-}
-
-/// Checks whether the place has type `&std::sync::Arc<std::sync::Mutex<T>>`.
-pub fn is_reference_to_arc_with_mutex<'tcx>(
-    place: &rustc_middle::mir::Place<'tcx>,
-    caller_function_def_id: rustc_hir::def_id::DefId,
-    tcx: rustc_middle::ty::TyCtxt<'tcx>,
-) -> bool {
-    let place_ty = get_place_type(place, caller_function_def_id, tcx);
-    is_place_ty_with_concrete_type(&place_ty, "&std::sync::Arc<std::sync::Mutex<T>>")
 }

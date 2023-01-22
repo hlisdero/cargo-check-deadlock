@@ -7,8 +7,7 @@
 //! <https://rustc-dev-guide.rust-lang.org/mir/index.html>
 
 use super::Translator;
-use crate::translator::multithreading::is_join_handle;
-use crate::translator::sync::{is_arc_with_mutex, is_mutex, is_reference_to_mutex};
+use crate::utils::is_place_with_concrete_type;
 use rustc_middle::mir::visit::Visitor;
 use rustc_middle::mir::TerminatorKind;
 
@@ -36,25 +35,35 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
 
         // MIR assignments of the form: `_X = _Y`
         if let rustc_middle::mir::Rvalue::Use(rustc_middle::mir::Operand::Copy(rhs)) = rvalue {
-            if is_reference_to_mutex(rhs, function.def_id, self.tcx) {
+            if is_place_with_concrete_type(rhs, "&std::sync::Mutex<T>", function.def_id, self.tcx) {
                 function.memory.link_place_to_same_mutex(*place, *rhs);
             }
         }
 
         // MIR assignments of the form: `_X = move _Y`
         if let rustc_middle::mir::Rvalue::Use(rustc_middle::mir::Operand::Move(rhs)) = rvalue {
-            if is_join_handle(rhs, function.def_id, self.tcx) {
+            if is_place_with_concrete_type(
+                rhs,
+                "std::thread::JoinHandle<T>",
+                function.def_id,
+                self.tcx,
+            ) {
                 function.memory.link_place_to_same_join_handle(*place, *rhs);
             }
         }
 
         // MIR assignments of the form: `_X = &_Y`
         if let rustc_middle::mir::Rvalue::Ref(_, _, rhs) = rvalue {
-            if is_mutex(rhs, function.def_id, self.tcx) {
+            if is_place_with_concrete_type(rhs, "std::sync::Mutex<T>", function.def_id, self.tcx) {
                 function.memory.link_place_to_same_mutex(*place, *rhs);
             }
 
-            if is_arc_with_mutex(rhs, function.def_id, self.tcx) {
+            if is_place_with_concrete_type(
+                rhs,
+                "std::sync::Arc<std::sync::Mutex<T>>",
+                function.def_id,
+                self.tcx,
+            ) {
                 function.memory.link_place_to_same_mutex(*place, *rhs);
             }
         }

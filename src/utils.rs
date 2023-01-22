@@ -58,25 +58,20 @@ pub fn extract_first_argument_for_function_call<'tcx>(
     *first_arg
 }
 
-/// Finds the type of the place through the local declarations of the caller function.
-/// The `Place` (memory location) should be declared there and we can query its type.
+/// Checks whether the type of a place matches a given string of the form: `module::submodule::type<T>`.
+/// The function checks that `T` is a concrete type (e.g. "i32") and not a type parameter ("T") for the `place`.
+///
+/// Uses the method `Place::ty` to get the type of the `place`.
+/// It finds the type of the place through the local declarations of the caller function where it is declared.
 /// <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/mir/struct.Place.html#method.ty>
-pub fn get_place_type<'tcx>(
+pub fn is_place_with_concrete_type<'tcx>(
     place: &rustc_middle::mir::Place<'tcx>,
+    expected_ty_str: &str,
     caller_function_def_id: rustc_hir::def_id::DefId,
     tcx: rustc_middle::ty::TyCtxt<'tcx>,
-) -> rustc_middle::mir::tcx::PlaceTy<'tcx> {
-    let body = tcx.optimized_mir(caller_function_def_id);
-    place.ty(body, tcx)
-}
-
-/// Checks whether the type of a place matches a given string of the form:
-/// `module::submodule::type<T>`. The function checks that `T` is a concrete type (e.g. "i32")
-/// and not a type parameter ("T") for the `local_decl`.
-pub fn is_place_ty_with_concrete_type(
-    place_ty: &rustc_middle::mir::tcx::PlaceTy,
-    expected_ty_str: &str,
 ) -> bool {
+    let body = tcx.optimized_mir(caller_function_def_id);
+    let place_ty = place.ty(body, tcx);
     let expected_parts: Vec<&str> = expected_ty_str.split(&['<', '>']).collect();
 
     let ty_string = place_ty.ty.to_string();

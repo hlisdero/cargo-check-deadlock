@@ -3,9 +3,9 @@
 //! It is mainly used in conjunction with the `MutexManager` to keep track of the mutexes
 //! when they are wrapped around a `std::sync::Arc`.
 
-use super::{is_mutex, is_reference_to_arc_with_mutex};
 use crate::translator::mir_function::Memory;
 use crate::translator::special_function::call_foreign_function;
+use crate::utils::is_place_with_concrete_type;
 use crate::{
     naming::arc::function_transition_label, utils::extract_first_argument_for_function_call,
 };
@@ -86,7 +86,12 @@ impl ArcManager {
         tcx: rustc_middle::ty::TyCtxt<'tcx>,
     ) {
         let first_argument = extract_first_argument_for_function_call(args);
-        if is_mutex(&first_argument, caller_function_def_id, tcx) {
+        if is_place_with_concrete_type(
+            &first_argument,
+            "std::sync::Mutex<T>",
+            caller_function_def_id,
+            tcx,
+        ) {
             memory.link_place_to_same_mutex(return_value, first_argument);
         }
     }
@@ -103,7 +108,12 @@ impl ArcManager {
         tcx: rustc_middle::ty::TyCtxt<'tcx>,
     ) {
         let first_argument = extract_first_argument_for_function_call(args);
-        if is_reference_to_arc_with_mutex(&first_argument, caller_function_def_id, tcx) {
+        if is_place_with_concrete_type(
+            &first_argument,
+            "&std::sync::Arc<std::sync::Mutex<T>>",
+            caller_function_def_id,
+            tcx,
+        ) {
             memory.link_place_to_same_mutex(return_value, first_argument);
         }
     }
@@ -120,7 +130,12 @@ impl ArcManager {
         tcx: rustc_middle::ty::TyCtxt<'tcx>,
     ) {
         let first_argument = extract_first_argument_for_function_call(args);
-        if is_reference_to_arc_with_mutex(&first_argument, caller_function_def_id, tcx) {
+        if is_place_with_concrete_type(
+            &first_argument,
+            "&std::sync::Arc<std::sync::Mutex<T>>",
+            caller_function_def_id,
+            tcx,
+        ) {
             memory.link_place_to_same_mutex(return_value, first_argument);
         }
     }
