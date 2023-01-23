@@ -25,7 +25,7 @@ use crate::naming::thread::{end_place_label, start_place_label};
 use crate::translator::mir_function::{Memory, MutexEntries};
 use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
 
-pub struct ThreadSpan<'tcx> {
+pub struct Thread<'tcx> {
     /// The transition from which the thread branches off at the start.
     spawn_transition: TransitionRef,
     /// The definition ID that uniquely identifies the function run by the thread.
@@ -38,7 +38,7 @@ pub struct ThreadSpan<'tcx> {
     index: usize,
 }
 
-impl<'tcx> ThreadSpan<'tcx> {
+impl<'tcx> Thread<'tcx> {
     /// Creates a new thread span without a join transition.
     /// The join transition must be set later.
     pub const fn new(

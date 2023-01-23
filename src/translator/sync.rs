@@ -6,10 +6,10 @@
 mod arc_manager;
 mod mutex;
 mod mutex_manager;
+mod thread;
 mod thread_manager;
-mod thread_span;
 
 pub use arc_manager::ArcManager;
 pub use mutex_manager::{MutexManager, MutexRef};
+pub use thread::Thread;
 pub use thread_manager::{ThreadManager, ThreadRef};
-pub use thread_span::ThreadSpan;

@@ -6,7 +6,7 @@
 //! Once the translation of the main thread is over, each thread stored
 //! here will be translated in order.
 
-use super::ThreadSpan;
+use super::Thread;
 use crate::naming::thread::function_transition_label;
 use crate::translator::mir_function::{Memory, MutexEntries};
 use crate::translator::special_function::call_foreign_function;
@@ -18,7 +18,7 @@ use std::collections::VecDeque;
 
 #[derive(Default)]
 pub struct ThreadManager<'tcx> {
-    threads: VecDeque<ThreadSpan<'tcx>>,
+    threads: VecDeque<Thread<'tcx>>,
     thread_join_counter: usize,
 }
 
@@ -121,7 +121,7 @@ impl<'tcx> ThreadManager<'tcx> {
         mutexes: MutexEntries<'tcx>,
     ) -> ThreadRef {
         let index = self.threads.len();
-        self.threads.push_front(ThreadSpan::new(
+        self.threads.push_front(Thread::new(
             spawn_transition,
             thread_function_def_id,
             mutexes,
@@ -143,7 +143,7 @@ impl<'tcx> ThreadManager<'tcx> {
     }
 
     /// Removes the last element from the threads vector and returns it, or `None` if it is empty.
-    pub fn pop_thread(&mut self) -> Option<ThreadSpan<'tcx>> {
+    pub fn pop_thread(&mut self) -> Option<Thread<'tcx>> {
         self.threads.pop_front()
     }
 }
