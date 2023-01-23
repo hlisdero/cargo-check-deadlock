@@ -89,7 +89,7 @@ impl MutexManager {
     ) {
         // Retrieve the mutex from the local variable passed to the function as an argument.
         let self_ref = extract_first_argument_for_function_call(args);
-        let mutex_ref = memory.get_linked_mutex(self_ref);
+        let mutex_ref = memory.get_linked_mutex(&self_ref);
         self.add_lock_guard(mutex_ref, transition_function_call, net);
         // The return value contains a new lock guard. Link the local variable to it.
         memory.link_place_to_lock_guard(return_value, mutex_ref.clone());
@@ -106,7 +106,7 @@ impl MutexManager {
         net: &mut PetriNet,
     ) {
         if memory.is_linked_to_place_guard(place) {
-            let mutex_ref = memory.get_linked_lock_guard(place);
+            let mutex_ref = memory.get_linked_lock_guard(&place);
             self.add_unlock_guard(mutex_ref, transition_drop, net);
         }
     }

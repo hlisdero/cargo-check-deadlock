@@ -90,9 +90,9 @@ impl<'tcx> Memory<'tcx> {
     /// # Panics
     ///
     /// If the place is not linked to a mutex, then the function panics.
-    pub fn get_linked_mutex(&self, place: rustc_middle::mir::Place<'tcx>) -> &MutexRef {
+    pub fn get_linked_mutex(&self, place: &rustc_middle::mir::Place<'tcx>) -> &MutexRef {
         self.places_linked_to_mutexes
-            .get(&place)
+            .get(place)
             .expect("BUG: The place should be linked to a mutex")
     }
 
@@ -101,9 +101,9 @@ impl<'tcx> Memory<'tcx> {
     /// # Panics
     ///
     /// If the place is not linked to a lock guard, then the function panics.
-    pub fn get_linked_lock_guard(&self, place: rustc_middle::mir::Place<'tcx>) -> &MutexRef {
+    pub fn get_linked_lock_guard(&self, place: &rustc_middle::mir::Place<'tcx>) -> &MutexRef {
         self.places_linked_to_lock_guards
-            .get(&place)
+            .get(place)
             .expect("BUG: The place should be linked to a lock guard")
     }
 
@@ -112,9 +112,9 @@ impl<'tcx> Memory<'tcx> {
     /// # Panics
     ///
     /// If the place is not linked to a join handle, then the function panics.
-    pub fn get_linked_join_handle(&self, place: rustc_middle::mir::Place<'tcx>) -> &ThreadRef {
+    pub fn get_linked_join_handle(&self, place: &rustc_middle::mir::Place<'tcx>) -> &ThreadRef {
         self.places_linked_to_join_handles
-            .get(&place)
+            .get(place)
             .expect("BUG: The place should be linked to a join handle")
     }
 
@@ -136,7 +136,7 @@ impl<'tcx> Memory<'tcx> {
         place_to_be_linked: rustc_middle::mir::Place<'tcx>,
         place_linked_to_mutex: rustc_middle::mir::Place<'tcx>,
     ) {
-        let mutex_ref = self.get_linked_mutex(place_linked_to_mutex);
+        let mutex_ref = self.get_linked_mutex(&place_linked_to_mutex);
         self.link_place_to_mutex(place_to_be_linked, mutex_ref.clone());
     }
 
@@ -153,7 +153,7 @@ impl<'tcx> Memory<'tcx> {
         place_to_be_linked: rustc_middle::mir::Place<'tcx>,
         place_linked_to_join_handle: rustc_middle::mir::Place<'tcx>,
     ) {
-        let thread_ref = self.get_linked_join_handle(place_linked_to_join_handle);
+        let thread_ref = self.get_linked_join_handle(&place_linked_to_join_handle);
         self.link_place_to_join_handle(place_to_be_linked, thread_ref.clone());
     }
 }

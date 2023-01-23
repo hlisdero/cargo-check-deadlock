@@ -104,7 +104,7 @@ impl ThreadManager {
     ) {
         // Retrieve the join handle from the local variable passed to the function as an argument.
         let self_ref = extract_first_argument_for_function_call(args);
-        let thread_ref = memory.get_linked_join_handle(self_ref);
+        let thread_ref = memory.get_linked_join_handle(&self_ref);
         self.set_join_transition(thread_ref, transition_function_call);
     }
 
