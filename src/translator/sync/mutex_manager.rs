@@ -4,10 +4,7 @@
 //! It also performs the translation for each mutex function.
 
 use super::mutex::Mutex;
-use crate::naming::mutex::{
-    lock_transition_label, lock_unwind_transition_label, new_transition_label,
-    new_unwind_transition_label,
-};
+use crate::naming::mutex::{lock_transition_labels, new_transition_labels};
 use crate::translator::mir_function::Memory;
 use crate::translator::special_function::call_foreign_function;
 use crate::utils::extract_first_argument_for_function_call;
@@ -41,14 +38,11 @@ impl MutexManager {
         net: &mut PetriNet,
     ) -> TransitionRef {
         let index = self.mutexes.len();
-        let transition_label = new_transition_label(index);
-        let unwind_transition_label = new_unwind_transition_label(index);
         call_foreign_function(
             start_place,
             end_place,
             cleanup_place,
-            &transition_label,
-            &unwind_transition_label,
+            &new_transition_labels(index),
             net,
         )
     }
@@ -67,14 +61,11 @@ impl MutexManager {
     ) -> TransitionRef {
         let index = self.lock_counter;
         self.lock_counter += 1;
-        let transition_label = lock_transition_label(index);
-        let unwind_transition_label = lock_unwind_transition_label(index);
         call_foreign_function(
             start_place,
             end_place,
             cleanup_place,
-            &transition_label,
-            &unwind_transition_label,
+            &lock_transition_labels(index),
             net,
         )
     }

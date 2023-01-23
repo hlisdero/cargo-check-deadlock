@@ -65,11 +65,10 @@ pub fn call_foreign_function(
     start_place: &PlaceRef,
     end_place: &PlaceRef,
     cleanup_place: Option<PlaceRef>,
-    transition_label: &str,
-    unwind_transition_label: &str,
+    transition_labels: &(String, String),
     net: &mut PetriNet,
 ) -> TransitionRef {
-    let transition_foreign_call = net.add_transition(transition_label);
+    let transition_foreign_call = net.add_transition(&transition_labels.0);
     net.add_arc_place_transition(start_place, &transition_foreign_call)
         .unwrap_or_else(|_| {
             handle_err_add_arc("foreign call start place", "foreign call transition");
@@ -80,7 +79,7 @@ pub fn call_foreign_function(
         });
 
     if let Some(cleanup_place) = cleanup_place {
-        let transition_unwind_call = net.add_transition(unwind_transition_label);
+        let transition_unwind_call = net.add_transition(&transition_labels.1);
         net.add_arc_place_transition(start_place, &transition_unwind_call)
             .unwrap_or_else(|_| {
                 handle_err_add_arc("foreign call start place", "foreign call transition unwind");

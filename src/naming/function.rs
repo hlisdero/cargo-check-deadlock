@@ -18,16 +18,13 @@ pub fn return_transition_label(function_name: &str) -> String {
     format!("{}_RETURN", sanitize(function_name))
 }
 
-/// Label of the transition for a call to a foreign function.
+/// Label of the transitions for a call to a foreign function.
 #[inline]
-pub fn foreign_call_transition_label(function_name: &str) -> String {
-    format!("{}_CALL", sanitize(function_name))
-}
-
-/// Label of the unwind transition for a call to a foreign function.
-#[inline]
-pub fn foreign_call_unwind_transition_label(function_name: &str) -> String {
-    format!("{}_CALL_UNWIND", sanitize(function_name))
+pub fn foreign_call_transition_labels(function_name: &str) -> (String, String) {
+    (
+        format!("{}_CALL", sanitize(function_name)),
+        format!("{}_CALL_UNWIND", sanitize(function_name)),
+    )
 }
 
 /// Label of the transition that represents a diverging function call (a function that does not return).

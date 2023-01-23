@@ -2,9 +2,7 @@
 //! the specific handler methods for every one of them.
 
 use super::Translator;
-use crate::naming::function::{
-    foreign_call_transition_label, foreign_call_unwind_transition_label,
-};
+use crate::naming::function::foreign_call_transition_labels;
 use crate::translator::special_function::{call_foreign_function, is_foreign_function};
 use crate::translator::sync::ArcManager;
 use netcrab::petri_net::PlaceRef;
@@ -137,14 +135,11 @@ impl<'tcx> Translator<'tcx> {
         end_place: &PlaceRef,
         cleanup_place: Option<PlaceRef>,
     ) {
-        let transition_label = &foreign_call_transition_label(function_name);
-        let unwind_transition_label = &foreign_call_unwind_transition_label(function_name);
         call_foreign_function(
             start_place,
             end_place,
             cleanup_place,
-            transition_label,
-            unwind_transition_label,
+            &foreign_call_transition_labels(function_name),
             &mut self.net,
         );
     }

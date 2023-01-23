@@ -16,26 +16,20 @@ pub fn place_label(index: usize) -> String {
     format!("MUTEX_{index}")
 }
 
-/// Label of the transition that represents a call to `std::sync::Mutex::<T>::new`.
+/// Label of the transitions that represent a call to `std::sync::Mutex::<T>::new`.
 #[inline]
-pub fn new_transition_label(index: usize) -> String {
-    format!("std_sync_Mutex_T_new_{index}")
+pub fn new_transition_labels(index: usize) -> (String, String) {
+    (
+        format!("std_sync_Mutex_T_new_{index}"),
+        format!("std_sync_Mutex_T_new_{index}_UNWIND"),
+    )
 }
 
-/// Label of the unwind transition for a call to `std::sync::Mutex::<T>::new`.
+/// Label of the transitions that represent a call to `std::sync::Mutex::<T>::lock`.
 #[inline]
-pub fn new_unwind_transition_label(index: usize) -> String {
-    format!("std_sync_Mutex_T_new_{index}_UNWIND")
-}
-
-/// Label of the transition that represents a call to `std::sync::Mutex::<T>::lock`.
-#[inline]
-pub fn lock_transition_label(index: usize) -> String {
-    format!("std_sync_Mutex_T_lock_{index}")
-}
-
-/// Label of the unwind transition for a call to `std::sync::Mutex::<T>::lock`.
-#[inline]
-pub fn lock_unwind_transition_label(index: usize) -> String {
-    format!("std_sync_Mutex_T_lock_{index}_UNWIND")
+pub fn lock_transition_labels(index: usize) -> (String, String) {
+    (
+        format!("std_sync_Mutex_T_lock_{index}"),
+        format!("std_sync_Mutex_T_lock_{index}_UNWIND"),
+    )
 }

@@ -3,10 +3,7 @@
 //! It is mainly used in conjunction with the `MutexManager` to keep track of the mutexes
 //! when they are wrapped around a `std::sync::Arc`.
 
-use crate::naming::arc::{
-    clone_transition_label, clone_unwind_transition_label, deref_transition_label,
-    deref_unwind_transition_label, new_transition_label, new_unwind_transition_label,
-};
+use crate::naming::arc::{clone_transition_labels, deref_transition_labels, new_transition_labels};
 use crate::translator::mir_function::Memory;
 use crate::translator::special_function::call_foreign_function;
 use crate::utils::extract_first_argument_for_function_call;
@@ -38,14 +35,11 @@ impl ArcManager {
     ) {
         let index = self.arc_counter;
         self.arc_counter += 1;
-        let transition_label = new_transition_label(index);
-        let unwind_transition_label = new_unwind_transition_label(index);
         call_foreign_function(
             start_place,
             end_place,
             None,
-            &transition_label,
-            &unwind_transition_label,
+            &new_transition_labels(index),
             net,
         );
     }
@@ -63,14 +57,11 @@ impl ArcManager {
     ) {
         let index = self.deref_counter;
         self.deref_counter += 1;
-        let transition_label = deref_transition_label(index);
-        let unwind_transition_label = deref_unwind_transition_label(index);
         call_foreign_function(
             start_place,
             end_place,
             cleanup_place,
-            &transition_label,
-            &unwind_transition_label,
+            &deref_transition_labels(index),
             net,
         );
     }
@@ -88,14 +79,11 @@ impl ArcManager {
     ) {
         let index = self.clone_counter;
         self.clone_counter += 1;
-        let transition_label = clone_transition_label(index);
-        let unwind_transition_label = clone_unwind_transition_label(index);
         call_foreign_function(
             start_place,
             end_place,
             cleanup_place,
-            &transition_label,
-            &unwind_transition_label,
+            &clone_transition_labels(index),
             net,
         );
     }
