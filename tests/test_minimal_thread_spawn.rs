@@ -5,8 +5,8 @@ const MINIMAL_THREAD_SPAWN_DOT_OUTPUT: &str = r#"digraph petrinet {
     PROGRAM_END [shape="circle" xlabel="PROGRAM_END" label=""];
     PROGRAM_PANIC [shape="circle" xlabel="PROGRAM_PANIC" label=""];
     PROGRAM_START [shape="circle" xlabel="PROGRAM_START" label="•"];
-    THREAD_END_0 [shape="circle" xlabel="THREAD_END_0" label=""];
-    THREAD_START_0 [shape="circle" xlabel="THREAD_START_0" label=""];
+    THREAD_0_END [shape="circle" xlabel="THREAD_0_END" label=""];
+    THREAD_0_START [shape="circle" xlabel="THREAD_0_START" label=""];
     main_BB1 [shape="circle" xlabel="main_BB1" label=""];
     main_BB1_END_PLACE [shape="circle" xlabel="main_BB1_END_PLACE" label=""];
     main_BB2 [shape="circle" xlabel="main_BB2" label=""];
@@ -18,8 +18,8 @@ const MINIMAL_THREAD_SPAWN_DOT_OUTPUT: &str = r#"digraph petrinet {
     std_thread_JoinHandle_T_join_0 [shape="box" xlabel="" label="std_thread_JoinHandle_T_join_0"];
     std_thread_spawn_0 [shape="box" xlabel="" label="std_thread_spawn_0"];
     PROGRAM_START -> std_thread_spawn_0;
-    THREAD_END_0 -> std_thread_JoinHandle_T_join_0;
-    THREAD_START_0 -> main__closure_0__RETURN;
+    THREAD_0_END -> std_thread_JoinHandle_T_join_0;
+    THREAD_0_START -> main__closure_0__RETURN;
     main_BB1 -> main_BB1_STMT0;
     main_BB1_END_PLACE -> std_thread_JoinHandle_T_join_0;
     main_BB2 -> main_DROP_2;
@@ -27,9 +27,9 @@ const MINIMAL_THREAD_SPAWN_DOT_OUTPUT: &str = r#"digraph petrinet {
     main_BB1_STMT0 -> main_BB1_END_PLACE;
     main_DROP_2 -> main_BB3;
     main_RETURN -> PROGRAM_END;
-    main__closure_0__RETURN -> THREAD_END_0;
+    main__closure_0__RETURN -> THREAD_0_END;
     std_thread_JoinHandle_T_join_0 -> main_BB2;
-    std_thread_spawn_0 -> THREAD_START_0;
+    std_thread_spawn_0 -> THREAD_0_START;
     std_thread_spawn_0 -> main_BB1;
 }
 "#;
@@ -38,8 +38,8 @@ const MINIMAL_THREAD_SPAWN_LOLA_OUTPUT: &str = r#"PLACE
     PROGRAM_END,
     PROGRAM_PANIC,
     PROGRAM_START,
-    THREAD_END_0,
-    THREAD_START_0,
+    THREAD_0_END,
+    THREAD_0_START,
     main_BB1,
     main_BB1_END_PLACE,
     main_BB2,
@@ -64,12 +64,12 @@ TRANSITION main_RETURN
     PROGRAM_END : 1;
 TRANSITION main__closure_0__RETURN
   CONSUME
-    THREAD_START_0 : 1;
+    THREAD_0_START : 1;
   PRODUCE
-    THREAD_END_0 : 1;
+    THREAD_0_END : 1;
 TRANSITION std_thread_JoinHandle_T_join_0
   CONSUME
-    THREAD_END_0 : 1,
+    THREAD_0_END : 1,
     main_BB1_END_PLACE : 1;
   PRODUCE
     main_BB2 : 1;
@@ -77,7 +77,7 @@ TRANSITION std_thread_spawn_0
   CONSUME
     PROGRAM_START : 1;
   PRODUCE
-    THREAD_START_0 : 1,
+    THREAD_0_START : 1,
     main_BB1 : 1;
 "#;
 
@@ -103,14 +103,14 @@ const MINIMAL_THREAD_SPAWN_PNML_OUTPUT: &str = r#"<?xml version="1.0" encoding="
           <text>1</text>
         </initialMarking>
       </place>
-      <place id="THREAD_END_0">
+      <place id="THREAD_0_END">
         <name>
-          <text>THREAD_END_0</text>
+          <text>THREAD_0_END</text>
         </name>
       </place>
-      <place id="THREAD_START_0">
+      <place id="THREAD_0_START">
         <name>
-          <text>THREAD_START_0</text>
+          <text>THREAD_0_START</text>
         </name>
       </place>
       <place id="main_BB1">
@@ -171,17 +171,17 @@ const MINIMAL_THREAD_SPAWN_PNML_OUTPUT: &str = r#"<?xml version="1.0" encoding="
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="THREAD_END_0" target="std_thread_JoinHandle_T_join_0" id="(THREAD_END_0, std_thread_JoinHandle_T_join_0)">
+      <arc source="THREAD_0_END" target="std_thread_JoinHandle_T_join_0" id="(THREAD_0_END, std_thread_JoinHandle_T_join_0)">
         <name>
-          <text>(THREAD_END_0, std_thread_JoinHandle_T_join_0)</text>
+          <text>(THREAD_0_END, std_thread_JoinHandle_T_join_0)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="THREAD_START_0" target="main__closure_0__RETURN" id="(THREAD_START_0, main__closure_0__RETURN)">
+      <arc source="THREAD_0_START" target="main__closure_0__RETURN" id="(THREAD_0_START, main__closure_0__RETURN)">
         <name>
-          <text>(THREAD_START_0, main__closure_0__RETURN)</text>
+          <text>(THREAD_0_START, main__closure_0__RETURN)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -243,9 +243,9 @@ const MINIMAL_THREAD_SPAWN_PNML_OUTPUT: &str = r#"<?xml version="1.0" encoding="
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main__closure_0__RETURN" target="THREAD_END_0" id="(main__closure_0__RETURN, THREAD_END_0)">
+      <arc source="main__closure_0__RETURN" target="THREAD_0_END" id="(main__closure_0__RETURN, THREAD_0_END)">
         <name>
-          <text>(main__closure_0__RETURN, THREAD_END_0)</text>
+          <text>(main__closure_0__RETURN, THREAD_0_END)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -259,9 +259,9 @@ const MINIMAL_THREAD_SPAWN_PNML_OUTPUT: &str = r#"<?xml version="1.0" encoding="
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_thread_spawn_0" target="THREAD_START_0" id="(std_thread_spawn_0, THREAD_START_0)">
+      <arc source="std_thread_spawn_0" target="THREAD_0_START" id="(std_thread_spawn_0, THREAD_0_START)">
         <name>
-          <text>(std_thread_spawn_0, THREAD_START_0)</text>
+          <text>(std_thread_spawn_0, THREAD_0_START)</text>
         </name>
         <inscription>
           <text>1</text>

@@ -21,11 +21,11 @@ pub fn function_transition_label(function_name: &str, index: usize) -> String {
 /// Label of the place that models the thread start state.
 #[inline]
 pub fn start_place_label(index: usize) -> String {
-    format!("THREAD_START_{index}")
+    format!("THREAD_{index}_START")
 }
 
 /// Label of the place that models the thread end state.
 #[inline]
 pub fn end_place_label(index: usize) -> String {
-    format!("THREAD_END_{index}")
+    format!("THREAD_{index}_END")
 }
