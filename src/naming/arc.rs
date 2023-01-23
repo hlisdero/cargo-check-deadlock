@@ -10,10 +10,38 @@
 //! See the reference for more information:
 //! <https://doc.rust-lang.org/stable/reference/attributes/codegen.html>
 
-use super::sanitize;
-
-/// Label of the transition that represents a call to a function of `std::sync::Arc`.
+/// Label of the transition that represents a call to `std::sync::Arc::<T>::new`.
 #[inline]
-pub fn function_transition_label(function_name: &str, index: usize) -> String {
-    format!("{}_{index}", sanitize(function_name))
+pub fn new_transition_label(index: usize) -> String {
+    format!("std_sync_Arc_T_new_{index}")
+}
+
+/// Label of the unwind transition for a call to `std::sync::Arc::<T>::new`.
+#[inline]
+pub fn new_unwind_transition_label(index: usize) -> String {
+    format!("std_sync_Arc_T_new_{index}_UNWIND")
+}
+
+/// Label of the transition that represents a call to `std::clone::Clone::clone`.
+#[inline]
+pub fn clone_transition_label(index: usize) -> String {
+    format!("std_clone_Clone_clone_{index}")
+}
+
+/// Label of the unwind transition for a call to `std::clone::Clone::clone`.
+#[inline]
+pub fn clone_unwind_transition_label(index: usize) -> String {
+    format!("std_clone_Clone_clone_{index}_UNWIND")
+}
+
+/// Label of the transition that represents a call to `std::ops::Deref::deref`.
+#[inline]
+pub fn deref_transition_label(index: usize) -> String {
+    format!("std_ops_Deref_deref_{index}")
+}
+
+/// Label of the unwind transition for a call to `std::ops::Deref::deref`.
+#[inline]
+pub fn deref_unwind_transition_label(index: usize) -> String {
+    format!("std_ops_Deref_deref_{index}_UNWIND")
 }

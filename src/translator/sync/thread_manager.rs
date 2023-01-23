@@ -7,7 +7,10 @@
 //! here will be translated in order.
 
 use super::Thread;
-use crate::naming::thread::function_transition_label;
+use crate::naming::thread::{
+    join_transition_label, join_unwind_transition_label, spawn_transition_label,
+    spawn_unwind_transition_label,
+};
 use crate::translator::mir_function::{Memory, MutexEntries};
 use crate::translator::special_function::call_foreign_function;
 use crate::utils::{
@@ -44,8 +47,16 @@ impl<'tcx> ThreadManager<'tcx> {
         net: &mut PetriNet,
     ) -> TransitionRef {
         let index = self.threads.len();
-        let transition_label = &function_transition_label("std::thread::spawn", index);
-        call_foreign_function(start_place, end_place, cleanup_place, transition_label, net)
+        let transition_label = spawn_transition_label(index);
+        let unwind_transition_label = spawn_unwind_transition_label(index);
+        call_foreign_function(
+            start_place,
+            end_place,
+            cleanup_place,
+            &transition_label,
+            &unwind_transition_label,
+            net,
+        )
     }
 
     /// Translates a call to `std::thread::JoinHandle::<T>::join` using
@@ -61,9 +72,16 @@ impl<'tcx> ThreadManager<'tcx> {
         net: &mut PetriNet,
     ) -> TransitionRef {
         let index = self.thread_join_counter;
-        let transition_label =
-            &function_transition_label("std::thread::JoinHandle::<T>::join", index);
-        call_foreign_function(start_place, end_place, cleanup_place, transition_label, net)
+        let transition_label = join_transition_label(index);
+        let unwind_transition_label = join_unwind_transition_label(index);
+        call_foreign_function(
+            start_place,
+            end_place,
+            cleanup_place,
+            &transition_label,
+            &unwind_transition_label,
+            net,
+        )
     }
 
     /// Translates the side effects for `std::thread::spawn` i.e.,

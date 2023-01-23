@@ -4,7 +4,10 @@
 //! It also performs the translation for each mutex function.
 
 use super::mutex::Mutex;
-use crate::naming::mutex::function_transition_label;
+use crate::naming::mutex::{
+    lock_transition_label, lock_unwind_transition_label, new_transition_label,
+    new_unwind_transition_label,
+};
 use crate::translator::mir_function::Memory;
 use crate::translator::special_function::call_foreign_function;
 use crate::utils::extract_first_argument_for_function_call;
@@ -38,8 +41,16 @@ impl MutexManager {
         net: &mut PetriNet,
     ) -> TransitionRef {
         let index = self.mutexes.len();
-        let transition_label = &function_transition_label("std::sync::Mutex::<T>::new", index);
-        call_foreign_function(start_place, end_place, cleanup_place, transition_label, net)
+        let transition_label = new_transition_label(index);
+        let unwind_transition_label = new_unwind_transition_label(index);
+        call_foreign_function(
+            start_place,
+            end_place,
+            cleanup_place,
+            &transition_label,
+            &unwind_transition_label,
+            net,
+        )
     }
 
     /// Translates a call to `std::sync::Mutex::<T>::lock` using
@@ -55,9 +66,17 @@ impl MutexManager {
         net: &mut PetriNet,
     ) -> TransitionRef {
         let index = self.lock_counter;
-        let transition_label = &function_transition_label("std::sync::Mutex::<T>::lock", index);
         self.lock_counter += 1;
-        call_foreign_function(start_place, end_place, cleanup_place, transition_label, net)
+        let transition_label = lock_transition_label(index);
+        let unwind_transition_label = lock_unwind_transition_label(index);
+        call_foreign_function(
+            start_place,
+            end_place,
+            cleanup_place,
+            &transition_label,
+            &unwind_transition_label,
+            net,
+        )
     }
 
     /// Translates the side effects for `std::sync::Mutex::<T>::new` i.e.,

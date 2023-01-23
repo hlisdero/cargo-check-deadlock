@@ -58,13 +58,15 @@ pub fn is_foreign_function(
 
 /// Creates an abridged Petri net representation of a function call.
 /// Connects the start place and end place through a new transition.
-/// If an optional cleanup place is provided, it connects the transition to this place too.
+/// If an optional cleanup place is provided, it connects the start
+/// place and cleanup place through a second new transition.
 /// Returns the transition reference representing the function call.
 pub fn call_foreign_function(
     start_place: &PlaceRef,
     end_place: &PlaceRef,
     cleanup_place: Option<PlaceRef>,
     transition_label: &str,
+    unwind_transition_label: &str,
     net: &mut PetriNet,
 ) -> TransitionRef {
     let transition_foreign_call = net.add_transition(transition_label);
@@ -78,9 +80,14 @@ pub fn call_foreign_function(
         });
 
     if let Some(cleanup_place) = cleanup_place {
-        net.add_arc_transition_place(&transition_foreign_call, &cleanup_place)
+        let transition_unwind_call = net.add_transition(unwind_transition_label);
+        net.add_arc_place_transition(start_place, &transition_unwind_call)
             .unwrap_or_else(|_| {
-                handle_err_add_arc("foreign call transition", "cleanup place");
+                handle_err_add_arc("foreign call start place", "foreign call transition unwind");
+            });
+        net.add_arc_transition_place(&transition_unwind_call, &cleanup_place)
+            .unwrap_or_else(|_| {
+                handle_err_add_arc("foreign call transition unwind", "cleanup place");
             });
     }
 

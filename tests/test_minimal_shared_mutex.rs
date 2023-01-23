@@ -72,14 +72,21 @@ const MINIMAL_SHARED_MUTEX_DOT_OUTPUT: &str = r#"digraph petrinet {
     main__closure_0__RETURN [shape="box" xlabel="" label="main__closure_0__RETURN"];
     main__closure_0__UNWIND_6 [shape="box" xlabel="" label="main__closure_0__UNWIND_6"];
     std_clone_Clone_clone_0 [shape="box" xlabel="" label="std_clone_Clone_clone_0"];
+    std_clone_Clone_clone_0_UNWIND [shape="box" xlabel="" label="std_clone_Clone_clone_0_UNWIND"];
     std_ops_Deref_deref_0 [shape="box" xlabel="" label="std_ops_Deref_deref_0"];
+    std_ops_Deref_deref_0_UNWIND [shape="box" xlabel="" label="std_ops_Deref_deref_0_UNWIND"];
     std_ops_Deref_deref_1 [shape="box" xlabel="" label="std_ops_Deref_deref_1"];
+    std_ops_Deref_deref_1_UNWIND [shape="box" xlabel="" label="std_ops_Deref_deref_1_UNWIND"];
     std_sync_Arc_T_new_0 [shape="box" xlabel="" label="std_sync_Arc_T_new_0"];
     std_sync_Mutex_T_lock_0 [shape="box" xlabel="" label="std_sync_Mutex_T_lock_0"];
+    std_sync_Mutex_T_lock_0_UNWIND [shape="box" xlabel="" label="std_sync_Mutex_T_lock_0_UNWIND"];
     std_sync_Mutex_T_lock_1 [shape="box" xlabel="" label="std_sync_Mutex_T_lock_1"];
+    std_sync_Mutex_T_lock_1_UNWIND [shape="box" xlabel="" label="std_sync_Mutex_T_lock_1_UNWIND"];
     std_sync_Mutex_T_new_0 [shape="box" xlabel="" label="std_sync_Mutex_T_new_0"];
     std_thread_JoinHandle_T_join_0 [shape="box" xlabel="" label="std_thread_JoinHandle_T_join_0"];
+    std_thread_JoinHandle_T_join_0_UNWIND [shape="box" xlabel="" label="std_thread_JoinHandle_T_join_0_UNWIND"];
     std_thread_spawn_0 [shape="box" xlabel="" label="std_thread_spawn_0"];
+    std_thread_spawn_0_UNWIND [shape="box" xlabel="" label="std_thread_spawn_0_UNWIND"];
     MUTEX_0 -> std_sync_Mutex_T_lock_0;
     MUTEX_0 -> std_sync_Mutex_T_lock_1;
     PROGRAM_START -> main_BB0_STMT0;
@@ -96,16 +103,21 @@ const MINIMAL_SHARED_MUTEX_DOT_OUTPUT: &str = r#"digraph petrinet {
     main_BB15 -> main_SWITCH_INT_14;
     main_BB2 -> main_BB2_STMT0;
     main_BB2_END_PLACE -> std_clone_Clone_clone_0;
+    main_BB2_END_PLACE -> std_clone_Clone_clone_0_UNWIND;
     main_BB3 -> main_BB3_STMT0;
     main_BB3_END_PLACE -> std_thread_spawn_0;
+    main_BB3_END_PLACE -> std_thread_spawn_0_UNWIND;
     main_BB3_STMT0_END -> main_BB3_STMT1;
     main_BB4 -> main_BB4_STMT0;
     main_BB4_END_PLACE -> std_ops_Deref_deref_0;
+    main_BB4_END_PLACE -> std_ops_Deref_deref_0_UNWIND;
     main_BB4_STMT0_END -> main_BB4_STMT1;
     main_BB5 -> main_BB5_STMT0;
     main_BB5_END_PLACE -> std_sync_Mutex_T_lock_0;
+    main_BB5_END_PLACE -> std_sync_Mutex_T_lock_0_UNWIND;
     main_BB6 -> main_BB6_STMT0;
     main_BB6_END_PLACE -> std_thread_JoinHandle_T_join_0;
+    main_BB6_END_PLACE -> std_thread_JoinHandle_T_join_0_UNWIND;
     main_BB6_STMT0_END -> main_BB6_STMT1;
     main_BB7 -> main_DROP_7;
     main_BB7 -> main_DROP_UNWIND_7;
@@ -114,8 +126,10 @@ const MINIMAL_SHARED_MUTEX_DOT_OUTPUT: &str = r#"digraph petrinet {
     main_BB9 -> main_BB9_STMT0;
     main_BB9_END_PLACE -> main_DROP_9;
     main__closure_0__BB0_END_PLACE -> std_ops_Deref_deref_1;
+    main__closure_0__BB0_END_PLACE -> std_ops_Deref_deref_1_UNWIND;
     main__closure_0__BB1 -> main__closure_0__BB1_STMT0;
     main__closure_0__BB1_END_PLACE -> std_sync_Mutex_T_lock_1;
+    main__closure_0__BB1_END_PLACE -> std_sync_Mutex_T_lock_1_UNWIND;
     main__closure_0__BB2 -> main__closure_0__DROP_2;
     main__closure_0__BB2 -> main__closure_0__DROP_UNWIND_2;
     main__closure_0__BB3 -> main__closure_0__DROP_3;
@@ -155,23 +169,23 @@ const MINIMAL_SHARED_MUTEX_DOT_OUTPUT: &str = r#"digraph petrinet {
     main__closure_0__DROP_UNWIND_2 -> main__closure_0__BB5;
     main__closure_0__RETURN -> THREAD_0_END;
     main__closure_0__UNWIND_6 -> PROGRAM_PANIC;
-    std_clone_Clone_clone_0 -> main_BB12;
     std_clone_Clone_clone_0 -> main_BB3;
-    std_ops_Deref_deref_0 -> main_BB15;
+    std_clone_Clone_clone_0_UNWIND -> main_BB12;
     std_ops_Deref_deref_0 -> main_BB5;
+    std_ops_Deref_deref_0_UNWIND -> main_BB15;
     std_ops_Deref_deref_1 -> main__closure_0__BB1;
-    std_ops_Deref_deref_1 -> main__closure_0__BB5;
+    std_ops_Deref_deref_1_UNWIND -> main__closure_0__BB5;
     std_sync_Arc_T_new_0 -> main_BB2;
-    std_sync_Mutex_T_lock_0 -> main_BB15;
     std_sync_Mutex_T_lock_0 -> main_BB6;
+    std_sync_Mutex_T_lock_0_UNWIND -> main_BB15;
     std_sync_Mutex_T_lock_1 -> main__closure_0__BB2;
-    std_sync_Mutex_T_lock_1 -> main__closure_0__BB5;
+    std_sync_Mutex_T_lock_1_UNWIND -> main__closure_0__BB5;
     std_sync_Mutex_T_new_0 -> main_BB1;
-    std_thread_JoinHandle_T_join_0 -> main_BB11;
     std_thread_JoinHandle_T_join_0 -> main_BB7;
+    std_thread_JoinHandle_T_join_0_UNWIND -> main_BB11;
     std_thread_spawn_0 -> THREAD_0_START;
-    std_thread_spawn_0 -> main_BB12;
     std_thread_spawn_0 -> main_BB4;
+    std_thread_spawn_0_UNWIND -> main_BB12;
 }
 "#;
 
@@ -376,19 +390,31 @@ TRANSITION std_clone_Clone_clone_0
   CONSUME
     main_BB2_END_PLACE : 1;
   PRODUCE
-    main_BB12 : 1,
     main_BB3 : 1;
+TRANSITION std_clone_Clone_clone_0_UNWIND
+  CONSUME
+    main_BB2_END_PLACE : 1;
+  PRODUCE
+    main_BB12 : 1;
 TRANSITION std_ops_Deref_deref_0
   CONSUME
     main_BB4_END_PLACE : 1;
   PRODUCE
-    main_BB15 : 1,
     main_BB5 : 1;
+TRANSITION std_ops_Deref_deref_0_UNWIND
+  CONSUME
+    main_BB4_END_PLACE : 1;
+  PRODUCE
+    main_BB15 : 1;
 TRANSITION std_ops_Deref_deref_1
   CONSUME
     main__closure_0__BB0_END_PLACE : 1;
   PRODUCE
-    main__closure_0__BB1 : 1,
+    main__closure_0__BB1 : 1;
+TRANSITION std_ops_Deref_deref_1_UNWIND
+  CONSUME
+    main__closure_0__BB0_END_PLACE : 1;
+  PRODUCE
     main__closure_0__BB5 : 1;
 TRANSITION std_sync_Arc_T_new_0
   CONSUME
@@ -400,14 +426,22 @@ TRANSITION std_sync_Mutex_T_lock_0
     MUTEX_0 : 1,
     main_BB5_END_PLACE : 1;
   PRODUCE
-    main_BB15 : 1,
     main_BB6 : 1;
+TRANSITION std_sync_Mutex_T_lock_0_UNWIND
+  CONSUME
+    main_BB5_END_PLACE : 1;
+  PRODUCE
+    main_BB15 : 1;
 TRANSITION std_sync_Mutex_T_lock_1
   CONSUME
     MUTEX_0 : 1,
     main__closure_0__BB1_END_PLACE : 1;
   PRODUCE
-    main__closure_0__BB2 : 1,
+    main__closure_0__BB2 : 1;
+TRANSITION std_sync_Mutex_T_lock_1_UNWIND
+  CONSUME
+    main__closure_0__BB1_END_PLACE : 1;
+  PRODUCE
     main__closure_0__BB5 : 1;
 TRANSITION std_sync_Mutex_T_new_0
   CONSUME
@@ -419,15 +453,23 @@ TRANSITION std_thread_JoinHandle_T_join_0
     THREAD_0_END : 1,
     main_BB6_END_PLACE : 1;
   PRODUCE
-    main_BB11 : 1,
     main_BB7 : 1;
+TRANSITION std_thread_JoinHandle_T_join_0_UNWIND
+  CONSUME
+    main_BB6_END_PLACE : 1;
+  PRODUCE
+    main_BB11 : 1;
 TRANSITION std_thread_spawn_0
   CONSUME
     main_BB3_END_PLACE : 1;
   PRODUCE
     THREAD_0_START : 1,
-    main_BB12 : 1,
     main_BB4 : 1;
+TRANSITION std_thread_spawn_0_UNWIND
+  CONSUME
+    main_BB3_END_PLACE : 1;
+  PRODUCE
+    main_BB12 : 1;
 "#;
 
 const MINIMAL_SHARED_MUTEX_PNML_OUTPUT: &str = r#"<?xml version="1.0" encoding="utf-8"?>
@@ -790,14 +832,29 @@ const MINIMAL_SHARED_MUTEX_PNML_OUTPUT: &str = r#"<?xml version="1.0" encoding="
           <text>std_clone_Clone_clone_0</text>
         </name>
       </transition>
+      <transition id="std_clone_Clone_clone_0_UNWIND">
+        <name>
+          <text>std_clone_Clone_clone_0_UNWIND</text>
+        </name>
+      </transition>
       <transition id="std_ops_Deref_deref_0">
         <name>
           <text>std_ops_Deref_deref_0</text>
         </name>
       </transition>
+      <transition id="std_ops_Deref_deref_0_UNWIND">
+        <name>
+          <text>std_ops_Deref_deref_0_UNWIND</text>
+        </name>
+      </transition>
       <transition id="std_ops_Deref_deref_1">
         <name>
           <text>std_ops_Deref_deref_1</text>
+        </name>
+      </transition>
+      <transition id="std_ops_Deref_deref_1_UNWIND">
+        <name>
+          <text>std_ops_Deref_deref_1_UNWIND</text>
         </name>
       </transition>
       <transition id="std_sync_Arc_T_new_0">
@@ -810,9 +867,19 @@ const MINIMAL_SHARED_MUTEX_PNML_OUTPUT: &str = r#"<?xml version="1.0" encoding="
           <text>std_sync_Mutex_T_lock_0</text>
         </name>
       </transition>
+      <transition id="std_sync_Mutex_T_lock_0_UNWIND">
+        <name>
+          <text>std_sync_Mutex_T_lock_0_UNWIND</text>
+        </name>
+      </transition>
       <transition id="std_sync_Mutex_T_lock_1">
         <name>
           <text>std_sync_Mutex_T_lock_1</text>
+        </name>
+      </transition>
+      <transition id="std_sync_Mutex_T_lock_1_UNWIND">
+        <name>
+          <text>std_sync_Mutex_T_lock_1_UNWIND</text>
         </name>
       </transition>
       <transition id="std_sync_Mutex_T_new_0">
@@ -825,9 +892,19 @@ const MINIMAL_SHARED_MUTEX_PNML_OUTPUT: &str = r#"<?xml version="1.0" encoding="
           <text>std_thread_JoinHandle_T_join_0</text>
         </name>
       </transition>
+      <transition id="std_thread_JoinHandle_T_join_0_UNWIND">
+        <name>
+          <text>std_thread_JoinHandle_T_join_0_UNWIND</text>
+        </name>
+      </transition>
       <transition id="std_thread_spawn_0">
         <name>
           <text>std_thread_spawn_0</text>
+        </name>
+      </transition>
+      <transition id="std_thread_spawn_0_UNWIND">
+        <name>
+          <text>std_thread_spawn_0_UNWIND</text>
         </name>
       </transition>
       <arc source="MUTEX_0" target="std_sync_Mutex_T_lock_0" id="(MUTEX_0, std_sync_Mutex_T_lock_0)">
@@ -958,6 +1035,14 @@ const MINIMAL_SHARED_MUTEX_PNML_OUTPUT: &str = r#"<?xml version="1.0" encoding="
           <text>1</text>
         </inscription>
       </arc>
+      <arc source="main_BB2_END_PLACE" target="std_clone_Clone_clone_0_UNWIND" id="(main_BB2_END_PLACE, std_clone_Clone_clone_0_UNWIND)">
+        <name>
+          <text>(main_BB2_END_PLACE, std_clone_Clone_clone_0_UNWIND)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
       <arc source="main_BB3" target="main_BB3_STMT0" id="(main_BB3, main_BB3_STMT0)">
         <name>
           <text>(main_BB3, main_BB3_STMT0)</text>
@@ -969,6 +1054,14 @@ const MINIMAL_SHARED_MUTEX_PNML_OUTPUT: &str = r#"<?xml version="1.0" encoding="
       <arc source="main_BB3_END_PLACE" target="std_thread_spawn_0" id="(main_BB3_END_PLACE, std_thread_spawn_0)">
         <name>
           <text>(main_BB3_END_PLACE, std_thread_spawn_0)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main_BB3_END_PLACE" target="std_thread_spawn_0_UNWIND" id="(main_BB3_END_PLACE, std_thread_spawn_0_UNWIND)">
+        <name>
+          <text>(main_BB3_END_PLACE, std_thread_spawn_0_UNWIND)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -998,6 +1091,14 @@ const MINIMAL_SHARED_MUTEX_PNML_OUTPUT: &str = r#"<?xml version="1.0" encoding="
           <text>1</text>
         </inscription>
       </arc>
+      <arc source="main_BB4_END_PLACE" target="std_ops_Deref_deref_0_UNWIND" id="(main_BB4_END_PLACE, std_ops_Deref_deref_0_UNWIND)">
+        <name>
+          <text>(main_BB4_END_PLACE, std_ops_Deref_deref_0_UNWIND)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
       <arc source="main_BB4_STMT0_END" target="main_BB4_STMT1" id="(main_BB4_STMT0_END, main_BB4_STMT1)">
         <name>
           <text>(main_BB4_STMT0_END, main_BB4_STMT1)</text>
@@ -1022,6 +1123,14 @@ const MINIMAL_SHARED_MUTEX_PNML_OUTPUT: &str = r#"<?xml version="1.0" encoding="
           <text>1</text>
         </inscription>
       </arc>
+      <arc source="main_BB5_END_PLACE" target="std_sync_Mutex_T_lock_0_UNWIND" id="(main_BB5_END_PLACE, std_sync_Mutex_T_lock_0_UNWIND)">
+        <name>
+          <text>(main_BB5_END_PLACE, std_sync_Mutex_T_lock_0_UNWIND)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
       <arc source="main_BB6" target="main_BB6_STMT0" id="(main_BB6, main_BB6_STMT0)">
         <name>
           <text>(main_BB6, main_BB6_STMT0)</text>
@@ -1033,6 +1142,14 @@ const MINIMAL_SHARED_MUTEX_PNML_OUTPUT: &str = r#"<?xml version="1.0" encoding="
       <arc source="main_BB6_END_PLACE" target="std_thread_JoinHandle_T_join_0" id="(main_BB6_END_PLACE, std_thread_JoinHandle_T_join_0)">
         <name>
           <text>(main_BB6_END_PLACE, std_thread_JoinHandle_T_join_0)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main_BB6_END_PLACE" target="std_thread_JoinHandle_T_join_0_UNWIND" id="(main_BB6_END_PLACE, std_thread_JoinHandle_T_join_0_UNWIND)">
+        <name>
+          <text>(main_BB6_END_PLACE, std_thread_JoinHandle_T_join_0_UNWIND)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -1102,6 +1219,14 @@ const MINIMAL_SHARED_MUTEX_PNML_OUTPUT: &str = r#"<?xml version="1.0" encoding="
           <text>1</text>
         </inscription>
       </arc>
+      <arc source="main__closure_0__BB0_END_PLACE" target="std_ops_Deref_deref_1_UNWIND" id="(main__closure_0__BB0_END_PLACE, std_ops_Deref_deref_1_UNWIND)">
+        <name>
+          <text>(main__closure_0__BB0_END_PLACE, std_ops_Deref_deref_1_UNWIND)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
       <arc source="main__closure_0__BB1" target="main__closure_0__BB1_STMT0" id="(main__closure_0__BB1, main__closure_0__BB1_STMT0)">
         <name>
           <text>(main__closure_0__BB1, main__closure_0__BB1_STMT0)</text>
@@ -1113,6 +1238,14 @@ const MINIMAL_SHARED_MUTEX_PNML_OUTPUT: &str = r#"<?xml version="1.0" encoding="
       <arc source="main__closure_0__BB1_END_PLACE" target="std_sync_Mutex_T_lock_1" id="(main__closure_0__BB1_END_PLACE, std_sync_Mutex_T_lock_1)">
         <name>
           <text>(main__closure_0__BB1_END_PLACE, std_sync_Mutex_T_lock_1)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main__closure_0__BB1_END_PLACE" target="std_sync_Mutex_T_lock_1_UNWIND" id="(main__closure_0__BB1_END_PLACE, std_sync_Mutex_T_lock_1_UNWIND)">
+        <name>
+          <text>(main__closure_0__BB1_END_PLACE, std_sync_Mutex_T_lock_1_UNWIND)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -1430,14 +1563,6 @@ const MINIMAL_SHARED_MUTEX_PNML_OUTPUT: &str = r#"<?xml version="1.0" encoding="
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_clone_Clone_clone_0" target="main_BB12" id="(std_clone_Clone_clone_0, main_BB12)">
-        <name>
-          <text>(std_clone_Clone_clone_0, main_BB12)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
       <arc source="std_clone_Clone_clone_0" target="main_BB3" id="(std_clone_Clone_clone_0, main_BB3)">
         <name>
           <text>(std_clone_Clone_clone_0, main_BB3)</text>
@@ -1446,9 +1571,9 @@ const MINIMAL_SHARED_MUTEX_PNML_OUTPUT: &str = r#"<?xml version="1.0" encoding="
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_ops_Deref_deref_0" target="main_BB15" id="(std_ops_Deref_deref_0, main_BB15)">
+      <arc source="std_clone_Clone_clone_0_UNWIND" target="main_BB12" id="(std_clone_Clone_clone_0_UNWIND, main_BB12)">
         <name>
-          <text>(std_ops_Deref_deref_0, main_BB15)</text>
+          <text>(std_clone_Clone_clone_0_UNWIND, main_BB12)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -1462,6 +1587,14 @@ const MINIMAL_SHARED_MUTEX_PNML_OUTPUT: &str = r#"<?xml version="1.0" encoding="
           <text>1</text>
         </inscription>
       </arc>
+      <arc source="std_ops_Deref_deref_0_UNWIND" target="main_BB15" id="(std_ops_Deref_deref_0_UNWIND, main_BB15)">
+        <name>
+          <text>(std_ops_Deref_deref_0_UNWIND, main_BB15)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
       <arc source="std_ops_Deref_deref_1" target="main__closure_0__BB1" id="(std_ops_Deref_deref_1, main__closure_0__BB1)">
         <name>
           <text>(std_ops_Deref_deref_1, main__closure_0__BB1)</text>
@@ -1470,9 +1603,9 @@ const MINIMAL_SHARED_MUTEX_PNML_OUTPUT: &str = r#"<?xml version="1.0" encoding="
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_ops_Deref_deref_1" target="main__closure_0__BB5" id="(std_ops_Deref_deref_1, main__closure_0__BB5)">
+      <arc source="std_ops_Deref_deref_1_UNWIND" target="main__closure_0__BB5" id="(std_ops_Deref_deref_1_UNWIND, main__closure_0__BB5)">
         <name>
-          <text>(std_ops_Deref_deref_1, main__closure_0__BB5)</text>
+          <text>(std_ops_Deref_deref_1_UNWIND, main__closure_0__BB5)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -1486,17 +1619,17 @@ const MINIMAL_SHARED_MUTEX_PNML_OUTPUT: &str = r#"<?xml version="1.0" encoding="
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_sync_Mutex_T_lock_0" target="main_BB15" id="(std_sync_Mutex_T_lock_0, main_BB15)">
+      <arc source="std_sync_Mutex_T_lock_0" target="main_BB6" id="(std_sync_Mutex_T_lock_0, main_BB6)">
         <name>
-          <text>(std_sync_Mutex_T_lock_0, main_BB15)</text>
+          <text>(std_sync_Mutex_T_lock_0, main_BB6)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_sync_Mutex_T_lock_0" target="main_BB6" id="(std_sync_Mutex_T_lock_0, main_BB6)">
+      <arc source="std_sync_Mutex_T_lock_0_UNWIND" target="main_BB15" id="(std_sync_Mutex_T_lock_0_UNWIND, main_BB15)">
         <name>
-          <text>(std_sync_Mutex_T_lock_0, main_BB6)</text>
+          <text>(std_sync_Mutex_T_lock_0_UNWIND, main_BB15)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -1510,9 +1643,9 @@ const MINIMAL_SHARED_MUTEX_PNML_OUTPUT: &str = r#"<?xml version="1.0" encoding="
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_sync_Mutex_T_lock_1" target="main__closure_0__BB5" id="(std_sync_Mutex_T_lock_1, main__closure_0__BB5)">
+      <arc source="std_sync_Mutex_T_lock_1_UNWIND" target="main__closure_0__BB5" id="(std_sync_Mutex_T_lock_1_UNWIND, main__closure_0__BB5)">
         <name>
-          <text>(std_sync_Mutex_T_lock_1, main__closure_0__BB5)</text>
+          <text>(std_sync_Mutex_T_lock_1_UNWIND, main__closure_0__BB5)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -1526,17 +1659,17 @@ const MINIMAL_SHARED_MUTEX_PNML_OUTPUT: &str = r#"<?xml version="1.0" encoding="
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_thread_JoinHandle_T_join_0" target="main_BB11" id="(std_thread_JoinHandle_T_join_0, main_BB11)">
+      <arc source="std_thread_JoinHandle_T_join_0" target="main_BB7" id="(std_thread_JoinHandle_T_join_0, main_BB7)">
         <name>
-          <text>(std_thread_JoinHandle_T_join_0, main_BB11)</text>
+          <text>(std_thread_JoinHandle_T_join_0, main_BB7)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_thread_JoinHandle_T_join_0" target="main_BB7" id="(std_thread_JoinHandle_T_join_0, main_BB7)">
+      <arc source="std_thread_JoinHandle_T_join_0_UNWIND" target="main_BB11" id="(std_thread_JoinHandle_T_join_0_UNWIND, main_BB11)">
         <name>
-          <text>(std_thread_JoinHandle_T_join_0, main_BB7)</text>
+          <text>(std_thread_JoinHandle_T_join_0_UNWIND, main_BB11)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -1550,17 +1683,17 @@ const MINIMAL_SHARED_MUTEX_PNML_OUTPUT: &str = r#"<?xml version="1.0" encoding="
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_thread_spawn_0" target="main_BB12" id="(std_thread_spawn_0, main_BB12)">
+      <arc source="std_thread_spawn_0" target="main_BB4" id="(std_thread_spawn_0, main_BB4)">
         <name>
-          <text>(std_thread_spawn_0, main_BB12)</text>
+          <text>(std_thread_spawn_0, main_BB4)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_thread_spawn_0" target="main_BB4" id="(std_thread_spawn_0, main_BB4)">
+      <arc source="std_thread_spawn_0_UNWIND" target="main_BB12" id="(std_thread_spawn_0_UNWIND, main_BB12)">
         <name>
-          <text>(std_thread_spawn_0, main_BB4)</text>
+          <text>(std_thread_spawn_0_UNWIND, main_BB12)</text>
         </name>
         <inscription>
           <text>1</text>

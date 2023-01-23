@@ -10,16 +10,32 @@
 //! See the reference for more information:
 //! <https://doc.rust-lang.org/stable/reference/attributes/codegen.html>
 
-use super::sanitize;
-
 /// Label of the single place that models every `Mutex`.
 #[inline]
 pub fn place_label(index: usize) -> String {
     format!("MUTEX_{index}")
 }
 
-/// Label of the transition that represents a call to a function of `std::sync::Mutex<T>`.
+/// Label of the transition that represents a call to `std::sync::Mutex::<T>::new`.
 #[inline]
-pub fn function_transition_label(function_name: &str, index: usize) -> String {
-    format!("{}_{index}", sanitize(function_name))
+pub fn new_transition_label(index: usize) -> String {
+    format!("std_sync_Mutex_T_new_{index}")
+}
+
+/// Label of the unwind transition for a call to `std::sync::Mutex::<T>::new`.
+#[inline]
+pub fn new_unwind_transition_label(index: usize) -> String {
+    format!("std_sync_Mutex_T_new_{index}_UNWIND")
+}
+
+/// Label of the transition that represents a call to `std::sync::Mutex::<T>::lock`.
+#[inline]
+pub fn lock_transition_label(index: usize) -> String {
+    format!("std_sync_Mutex_T_lock_{index}")
+}
+
+/// Label of the unwind transition for a call to `std::sync::Mutex::<T>::lock`.
+#[inline]
+pub fn lock_unwind_transition_label(index: usize) -> String {
+    format!("std_sync_Mutex_T_lock_{index}_UNWIND")
 }

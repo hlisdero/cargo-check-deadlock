@@ -46,8 +46,10 @@ const TWO_MUTEXES_TWO_FUNCTIONS_DOT_OUTPUT: &str = r#"digraph petrinet {
     second_deadlock_UNWIND_7 [shape="box" xlabel="" label="second_deadlock_UNWIND_7"];
     std_sync_Mutex_T_lock_0 [shape="box" xlabel="" label="std_sync_Mutex_T_lock_0"];
     std_sync_Mutex_T_lock_1 [shape="box" xlabel="" label="std_sync_Mutex_T_lock_1"];
+    std_sync_Mutex_T_lock_1_UNWIND [shape="box" xlabel="" label="std_sync_Mutex_T_lock_1_UNWIND"];
     std_sync_Mutex_T_lock_2 [shape="box" xlabel="" label="std_sync_Mutex_T_lock_2"];
     std_sync_Mutex_T_lock_3 [shape="box" xlabel="" label="std_sync_Mutex_T_lock_3"];
+    std_sync_Mutex_T_lock_3_UNWIND [shape="box" xlabel="" label="std_sync_Mutex_T_lock_3_UNWIND"];
     std_sync_Mutex_T_new_0 [shape="box" xlabel="" label="std_sync_Mutex_T_new_0"];
     std_sync_Mutex_T_new_1 [shape="box" xlabel="" label="std_sync_Mutex_T_new_1"];
     MUTEX_0 -> std_sync_Mutex_T_lock_0;
@@ -59,6 +61,7 @@ const TWO_MUTEXES_TWO_FUNCTIONS_DOT_OUTPUT: &str = r#"digraph petrinet {
     first_deadlock_BB1_END_PLACE -> std_sync_Mutex_T_lock_0;
     first_deadlock_BB2 -> first_deadlock_BB2_STMT0;
     first_deadlock_BB2_END_PLACE -> std_sync_Mutex_T_lock_1;
+    first_deadlock_BB2_END_PLACE -> std_sync_Mutex_T_lock_1_UNWIND;
     first_deadlock_BB3 -> first_deadlock_DROP_3;
     first_deadlock_BB3 -> first_deadlock_DROP_UNWIND_3;
     first_deadlock_BB4 -> first_deadlock_DROP_4;
@@ -71,6 +74,7 @@ const TWO_MUTEXES_TWO_FUNCTIONS_DOT_OUTPUT: &str = r#"digraph petrinet {
     second_deadlock_BB1_END_PLACE -> std_sync_Mutex_T_lock_2;
     second_deadlock_BB2 -> second_deadlock_BB2_STMT0;
     second_deadlock_BB2_END_PLACE -> std_sync_Mutex_T_lock_3;
+    second_deadlock_BB2_END_PLACE -> std_sync_Mutex_T_lock_3_UNWIND;
     second_deadlock_BB3 -> second_deadlock_DROP_3;
     second_deadlock_BB3 -> second_deadlock_DROP_UNWIND_3;
     second_deadlock_BB4 -> second_deadlock_DROP_4;
@@ -102,10 +106,10 @@ const TWO_MUTEXES_TWO_FUNCTIONS_DOT_OUTPUT: &str = r#"digraph petrinet {
     second_deadlock_UNWIND_7 -> PROGRAM_PANIC;
     std_sync_Mutex_T_lock_0 -> first_deadlock_BB2;
     std_sync_Mutex_T_lock_1 -> first_deadlock_BB3;
-    std_sync_Mutex_T_lock_1 -> first_deadlock_BB6;
+    std_sync_Mutex_T_lock_1_UNWIND -> first_deadlock_BB6;
     std_sync_Mutex_T_lock_2 -> second_deadlock_BB2;
     std_sync_Mutex_T_lock_3 -> second_deadlock_BB3;
-    std_sync_Mutex_T_lock_3 -> second_deadlock_BB6;
+    std_sync_Mutex_T_lock_3_UNWIND -> second_deadlock_BB6;
     std_sync_Mutex_T_new_0 -> first_deadlock_BB1;
     std_sync_Mutex_T_new_1 -> second_deadlock_BB1;
 }
@@ -244,7 +248,11 @@ TRANSITION std_sync_Mutex_T_lock_1
     MUTEX_0 : 1,
     first_deadlock_BB2_END_PLACE : 1;
   PRODUCE
-    first_deadlock_BB3 : 1,
+    first_deadlock_BB3 : 1;
+TRANSITION std_sync_Mutex_T_lock_1_UNWIND
+  CONSUME
+    first_deadlock_BB2_END_PLACE : 1;
+  PRODUCE
     first_deadlock_BB6 : 1;
 TRANSITION std_sync_Mutex_T_lock_2
   CONSUME
@@ -257,7 +265,11 @@ TRANSITION std_sync_Mutex_T_lock_3
     MUTEX_1 : 1,
     second_deadlock_BB2_END_PLACE : 1;
   PRODUCE
-    second_deadlock_BB3 : 1,
+    second_deadlock_BB3 : 1;
+TRANSITION std_sync_Mutex_T_lock_3_UNWIND
+  CONSUME
+    second_deadlock_BB2_END_PLACE : 1;
+  PRODUCE
     second_deadlock_BB6 : 1;
 TRANSITION std_sync_Mutex_T_new_0
   CONSUME
@@ -504,6 +516,11 @@ const TWO_MUTEXES_TWO_FUNCTIONS_PNML_OUTPUT: &str = r#"<?xml version="1.0" encod
           <text>std_sync_Mutex_T_lock_1</text>
         </name>
       </transition>
+      <transition id="std_sync_Mutex_T_lock_1_UNWIND">
+        <name>
+          <text>std_sync_Mutex_T_lock_1_UNWIND</text>
+        </name>
+      </transition>
       <transition id="std_sync_Mutex_T_lock_2">
         <name>
           <text>std_sync_Mutex_T_lock_2</text>
@@ -512,6 +529,11 @@ const TWO_MUTEXES_TWO_FUNCTIONS_PNML_OUTPUT: &str = r#"<?xml version="1.0" encod
       <transition id="std_sync_Mutex_T_lock_3">
         <name>
           <text>std_sync_Mutex_T_lock_3</text>
+        </name>
+      </transition>
+      <transition id="std_sync_Mutex_T_lock_3_UNWIND">
+        <name>
+          <text>std_sync_Mutex_T_lock_3_UNWIND</text>
         </name>
       </transition>
       <transition id="std_sync_Mutex_T_new_0">
@@ -591,6 +613,14 @@ const TWO_MUTEXES_TWO_FUNCTIONS_PNML_OUTPUT: &str = r#"<?xml version="1.0" encod
       <arc source="first_deadlock_BB2_END_PLACE" target="std_sync_Mutex_T_lock_1" id="(first_deadlock_BB2_END_PLACE, std_sync_Mutex_T_lock_1)">
         <name>
           <text>(first_deadlock_BB2_END_PLACE, std_sync_Mutex_T_lock_1)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="first_deadlock_BB2_END_PLACE" target="std_sync_Mutex_T_lock_1_UNWIND" id="(first_deadlock_BB2_END_PLACE, std_sync_Mutex_T_lock_1_UNWIND)">
+        <name>
+          <text>(first_deadlock_BB2_END_PLACE, std_sync_Mutex_T_lock_1_UNWIND)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -687,6 +717,14 @@ const TWO_MUTEXES_TWO_FUNCTIONS_PNML_OUTPUT: &str = r#"<?xml version="1.0" encod
       <arc source="second_deadlock_BB2_END_PLACE" target="std_sync_Mutex_T_lock_3" id="(second_deadlock_BB2_END_PLACE, std_sync_Mutex_T_lock_3)">
         <name>
           <text>(second_deadlock_BB2_END_PLACE, std_sync_Mutex_T_lock_3)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="second_deadlock_BB2_END_PLACE" target="std_sync_Mutex_T_lock_3_UNWIND" id="(second_deadlock_BB2_END_PLACE, std_sync_Mutex_T_lock_3_UNWIND)">
+        <name>
+          <text>(second_deadlock_BB2_END_PLACE, std_sync_Mutex_T_lock_3_UNWIND)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -940,9 +978,9 @@ const TWO_MUTEXES_TWO_FUNCTIONS_PNML_OUTPUT: &str = r#"<?xml version="1.0" encod
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_sync_Mutex_T_lock_1" target="first_deadlock_BB6" id="(std_sync_Mutex_T_lock_1, first_deadlock_BB6)">
+      <arc source="std_sync_Mutex_T_lock_1_UNWIND" target="first_deadlock_BB6" id="(std_sync_Mutex_T_lock_1_UNWIND, first_deadlock_BB6)">
         <name>
-          <text>(std_sync_Mutex_T_lock_1, first_deadlock_BB6)</text>
+          <text>(std_sync_Mutex_T_lock_1_UNWIND, first_deadlock_BB6)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -964,9 +1002,9 @@ const TWO_MUTEXES_TWO_FUNCTIONS_PNML_OUTPUT: &str = r#"<?xml version="1.0" encod
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_sync_Mutex_T_lock_3" target="second_deadlock_BB6" id="(std_sync_Mutex_T_lock_3, second_deadlock_BB6)">
+      <arc source="std_sync_Mutex_T_lock_3_UNWIND" target="second_deadlock_BB6" id="(std_sync_Mutex_T_lock_3_UNWIND, second_deadlock_BB6)">
         <name>
-          <text>(std_sync_Mutex_T_lock_3, second_deadlock_BB6)</text>
+          <text>(std_sync_Mutex_T_lock_3_UNWIND, second_deadlock_BB6)</text>
         </name>
         <inscription>
           <text>1</text>

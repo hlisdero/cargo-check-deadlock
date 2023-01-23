@@ -18,10 +18,16 @@ pub fn return_transition_label(function_name: &str) -> String {
     format!("{}_RETURN", sanitize(function_name))
 }
 
-/// Label of the transition for a foreign function item.
+/// Label of the transition for a call to a foreign function.
 #[inline]
 pub fn foreign_call_transition_label(function_name: &str) -> String {
-    format!("{}_FOREIGN_CALL", sanitize(function_name))
+    format!("{}_CALL", sanitize(function_name))
+}
+
+/// Label of the unwind transition for a call to a foreign function.
+#[inline]
+pub fn foreign_call_unwind_transition_label(function_name: &str) -> String {
+    format!("{}_CALL_UNWIND", sanitize(function_name))
 }
 
 /// Label of the transition that represents a diverging function call (a function that does not return).
@@ -30,7 +36,7 @@ pub fn diverging_call_transition_label(function_name: &str) -> String {
     format!("{}_DIVERGING_CALL", sanitize(function_name))
 }
 
-/// Label of the transition that represents a call to a `panic!` or an `abort`.
+/// Label of the transition that represents a call to a `panic!`.
 #[inline]
 pub fn panic_transition_label(function_name: &str) -> String {
     format!("{}_PANIC", sanitize(function_name))

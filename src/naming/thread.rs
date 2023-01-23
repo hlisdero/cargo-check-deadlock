@@ -10,12 +10,28 @@
 //! See the reference for more information:
 //! <https://doc.rust-lang.org/stable/reference/attributes/codegen.html>
 
-use super::sanitize;
-
-/// Label of the transition that represents a call to a function of `std::thread`.
+/// Label of the transition that represents a call to `std::thread::spawn`.
 #[inline]
-pub fn function_transition_label(function_name: &str, index: usize) -> String {
-    format!("{}_{index}", sanitize(function_name))
+pub fn spawn_transition_label(index: usize) -> String {
+    format!("std_thread_spawn_{index}")
+}
+
+/// Label of the unwind transition for a call to `std::thread::spawn`.
+#[inline]
+pub fn spawn_unwind_transition_label(index: usize) -> String {
+    format!("std_thread_spawn_{index}_UNWIND")
+}
+
+/// Label of the transition that represents a call to `std::thread::JoinHandle::<T>::join`.
+#[inline]
+pub fn join_transition_label(index: usize) -> String {
+    format!("std_thread_JoinHandle_T_join_{index}")
+}
+
+/// Label of the unwind transition for a call to `std::thread::JoinHandle::<T>::join`.
+#[inline]
+pub fn join_unwind_transition_label(index: usize) -> String {
+    format!("std_thread_JoinHandle_T_join_{index}_UNWIND")
 }
 
 /// Label of the place that models the thread start state.

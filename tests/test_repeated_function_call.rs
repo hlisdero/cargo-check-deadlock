@@ -34,16 +34,16 @@ const REPEATED_FUNCTION_CALL_DOT_OUTPUT: &str = r#"digraph petrinet {
     main_SWITCH_INT_5 [shape="box" xlabel="" label="main_SWITCH_INT_5"];
     main_SWITCH_INT_6 [shape="box" xlabel="" label="main_SWITCH_INT_6"];
     main_UNREACHABLE_5 [shape="box" xlabel="" label="main_UNREACHABLE_5"];
-    std_iter_IntoIterator_into_iter_FOREIGN_CALL [shape="box" xlabel="" label="std_iter_IntoIterator_into_iter_FOREIGN_CALL"];
-    std_iter_Iterator_next_FOREIGN_CALL [shape="box" xlabel="" label="std_iter_Iterator_next_FOREIGN_CALL"];
+    std_iter_IntoIterator_into_iter_CALL [shape="box" xlabel="" label="std_iter_IntoIterator_into_iter_CALL"];
+    std_iter_Iterator_next_CALL [shape="box" xlabel="" label="std_iter_Iterator_next_CALL"];
     PROGRAM_START -> main_BB0_STMT0;
-    main_BB0_END_PLACE -> std_iter_IntoIterator_into_iter_FOREIGN_CALL;
+    main_BB0_END_PLACE -> std_iter_IntoIterator_into_iter_CALL;
     main_BB0_STMT0_END -> main_BB0_STMT1;
     main_BB0_STMT1_END -> main_BB0_STMT2;
     main_BB1 -> main_BB1_STMT0;
     main_BB1_END_PLACE -> main_GOTO_1;
     main_BB2 -> main_BB2_STMT0;
-    main_BB2_END_PLACE -> std_iter_Iterator_next_FOREIGN_CALL;
+    main_BB2_END_PLACE -> std_iter_Iterator_next_CALL;
     main_BB2_STMT0_END -> main_BB2_STMT1;
     main_BB3 -> main_BB3_STMT0;
     main_BB3_END_PLACE -> main_SWITCH_INT_4;
@@ -68,8 +68,8 @@ const REPEATED_FUNCTION_CALL_DOT_OUTPUT: &str = r#"digraph petrinet {
     main_SWITCH_INT_5 -> main_BB5;
     main_SWITCH_INT_6 -> main_BB6;
     main_UNREACHABLE_5 -> PROGRAM_END;
-    std_iter_IntoIterator_into_iter_FOREIGN_CALL -> main_BB1;
-    std_iter_Iterator_next_FOREIGN_CALL -> main_BB3;
+    std_iter_IntoIterator_into_iter_CALL -> main_BB1;
+    std_iter_Iterator_next_CALL -> main_BB3;
 }
 "#;
 
@@ -169,12 +169,12 @@ TRANSITION main_UNREACHABLE_5
     main_BB5 : 1;
   PRODUCE
     PROGRAM_END : 1;
-TRANSITION std_iter_IntoIterator_into_iter_FOREIGN_CALL
+TRANSITION std_iter_IntoIterator_into_iter_CALL
   CONSUME
     main_BB0_END_PLACE : 1;
   PRODUCE
     main_BB1 : 1;
-TRANSITION std_iter_Iterator_next_FOREIGN_CALL
+TRANSITION std_iter_Iterator_next_CALL
   CONSUME
     main_BB2_END_PLACE : 1;
   PRODUCE
@@ -348,14 +348,14 @@ const REPEATED_FUNCTION_CALL_PNML_OUTPUT: &str = r#"<?xml version="1.0" encoding
           <text>main_UNREACHABLE_5</text>
         </name>
       </transition>
-      <transition id="std_iter_IntoIterator_into_iter_FOREIGN_CALL">
+      <transition id="std_iter_IntoIterator_into_iter_CALL">
         <name>
-          <text>std_iter_IntoIterator_into_iter_FOREIGN_CALL</text>
+          <text>std_iter_IntoIterator_into_iter_CALL</text>
         </name>
       </transition>
-      <transition id="std_iter_Iterator_next_FOREIGN_CALL">
+      <transition id="std_iter_Iterator_next_CALL">
         <name>
-          <text>std_iter_Iterator_next_FOREIGN_CALL</text>
+          <text>std_iter_Iterator_next_CALL</text>
         </name>
       </transition>
       <arc source="PROGRAM_START" target="main_BB0_STMT0" id="(PROGRAM_START, main_BB0_STMT0)">
@@ -366,9 +366,9 @@ const REPEATED_FUNCTION_CALL_PNML_OUTPUT: &str = r#"<?xml version="1.0" encoding
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB0_END_PLACE" target="std_iter_IntoIterator_into_iter_FOREIGN_CALL" id="(main_BB0_END_PLACE, std_iter_IntoIterator_into_iter_FOREIGN_CALL)">
+      <arc source="main_BB0_END_PLACE" target="std_iter_IntoIterator_into_iter_CALL" id="(main_BB0_END_PLACE, std_iter_IntoIterator_into_iter_CALL)">
         <name>
-          <text>(main_BB0_END_PLACE, std_iter_IntoIterator_into_iter_FOREIGN_CALL)</text>
+          <text>(main_BB0_END_PLACE, std_iter_IntoIterator_into_iter_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -414,9 +414,9 @@ const REPEATED_FUNCTION_CALL_PNML_OUTPUT: &str = r#"<?xml version="1.0" encoding
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB2_END_PLACE" target="std_iter_Iterator_next_FOREIGN_CALL" id="(main_BB2_END_PLACE, std_iter_Iterator_next_FOREIGN_CALL)">
+      <arc source="main_BB2_END_PLACE" target="std_iter_Iterator_next_CALL" id="(main_BB2_END_PLACE, std_iter_Iterator_next_CALL)">
         <name>
-          <text>(main_BB2_END_PLACE, std_iter_Iterator_next_FOREIGN_CALL)</text>
+          <text>(main_BB2_END_PLACE, std_iter_Iterator_next_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -614,17 +614,17 @@ const REPEATED_FUNCTION_CALL_PNML_OUTPUT: &str = r#"<?xml version="1.0" encoding
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_iter_IntoIterator_into_iter_FOREIGN_CALL" target="main_BB1" id="(std_iter_IntoIterator_into_iter_FOREIGN_CALL, main_BB1)">
+      <arc source="std_iter_IntoIterator_into_iter_CALL" target="main_BB1" id="(std_iter_IntoIterator_into_iter_CALL, main_BB1)">
         <name>
-          <text>(std_iter_IntoIterator_into_iter_FOREIGN_CALL, main_BB1)</text>
+          <text>(std_iter_IntoIterator_into_iter_CALL, main_BB1)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_iter_Iterator_next_FOREIGN_CALL" target="main_BB3" id="(std_iter_Iterator_next_FOREIGN_CALL, main_BB3)">
+      <arc source="std_iter_Iterator_next_CALL" target="main_BB3" id="(std_iter_Iterator_next_CALL, main_BB3)">
         <name>
-          <text>(std_iter_Iterator_next_FOREIGN_CALL, main_BB3)</text>
+          <text>(std_iter_Iterator_next_CALL, main_BB3)</text>
         </name>
         <inscription>
           <text>1</text>

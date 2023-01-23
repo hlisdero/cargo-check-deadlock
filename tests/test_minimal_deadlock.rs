@@ -25,6 +25,7 @@ const MINIMAL_DEADLOCK_DOT_OUTPUT: &str = r#"digraph petrinet {
     main_UNWIND_7 [shape="box" xlabel="" label="main_UNWIND_7"];
     std_sync_Mutex_T_lock_0 [shape="box" xlabel="" label="std_sync_Mutex_T_lock_0"];
     std_sync_Mutex_T_lock_1 [shape="box" xlabel="" label="std_sync_Mutex_T_lock_1"];
+    std_sync_Mutex_T_lock_1_UNWIND [shape="box" xlabel="" label="std_sync_Mutex_T_lock_1_UNWIND"];
     std_sync_Mutex_T_new_0 [shape="box" xlabel="" label="std_sync_Mutex_T_new_0"];
     MUTEX_0 -> std_sync_Mutex_T_lock_0;
     MUTEX_0 -> std_sync_Mutex_T_lock_1;
@@ -33,6 +34,7 @@ const MINIMAL_DEADLOCK_DOT_OUTPUT: &str = r#"digraph petrinet {
     main_BB1_END_PLACE -> std_sync_Mutex_T_lock_0;
     main_BB2 -> main_BB2_STMT0;
     main_BB2_END_PLACE -> std_sync_Mutex_T_lock_1;
+    main_BB2_END_PLACE -> std_sync_Mutex_T_lock_1_UNWIND;
     main_BB3 -> main_DROP_3;
     main_BB3 -> main_DROP_UNWIND_3;
     main_BB4 -> main_DROP_4;
@@ -52,7 +54,7 @@ const MINIMAL_DEADLOCK_DOT_OUTPUT: &str = r#"digraph petrinet {
     main_UNWIND_7 -> PROGRAM_PANIC;
     std_sync_Mutex_T_lock_0 -> main_BB2;
     std_sync_Mutex_T_lock_1 -> main_BB3;
-    std_sync_Mutex_T_lock_1 -> main_BB6;
+    std_sync_Mutex_T_lock_1_UNWIND -> main_BB6;
     std_sync_Mutex_T_new_0 -> main_BB1;
 }
 "#;
@@ -129,7 +131,11 @@ TRANSITION std_sync_Mutex_T_lock_1
     MUTEX_0 : 1,
     main_BB2_END_PLACE : 1;
   PRODUCE
-    main_BB3 : 1,
+    main_BB3 : 1;
+TRANSITION std_sync_Mutex_T_lock_1_UNWIND
+  CONSUME
+    main_BB2_END_PLACE : 1;
+  PRODUCE
     main_BB6 : 1;
 TRANSITION std_sync_Mutex_T_new_0
   CONSUME
@@ -263,6 +269,11 @@ const MINIMAL_DEADLOCK_PNML_OUTPUT: &str = r#"<?xml version="1.0" encoding="utf-
           <text>std_sync_Mutex_T_lock_1</text>
         </name>
       </transition>
+      <transition id="std_sync_Mutex_T_lock_1_UNWIND">
+        <name>
+          <text>std_sync_Mutex_T_lock_1_UNWIND</text>
+        </name>
+      </transition>
       <transition id="std_sync_Mutex_T_new_0">
         <name>
           <text>std_sync_Mutex_T_new_0</text>
@@ -319,6 +330,14 @@ const MINIMAL_DEADLOCK_PNML_OUTPUT: &str = r#"<?xml version="1.0" encoding="utf-
       <arc source="main_BB2_END_PLACE" target="std_sync_Mutex_T_lock_1" id="(main_BB2_END_PLACE, std_sync_Mutex_T_lock_1)">
         <name>
           <text>(main_BB2_END_PLACE, std_sync_Mutex_T_lock_1)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main_BB2_END_PLACE" target="std_sync_Mutex_T_lock_1_UNWIND" id="(main_BB2_END_PLACE, std_sync_Mutex_T_lock_1_UNWIND)">
+        <name>
+          <text>(main_BB2_END_PLACE, std_sync_Mutex_T_lock_1_UNWIND)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -476,9 +495,9 @@ const MINIMAL_DEADLOCK_PNML_OUTPUT: &str = r#"<?xml version="1.0" encoding="utf-
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_sync_Mutex_T_lock_1" target="main_BB6" id="(std_sync_Mutex_T_lock_1, main_BB6)">
+      <arc source="std_sync_Mutex_T_lock_1_UNWIND" target="main_BB6" id="(std_sync_Mutex_T_lock_1_UNWIND, main_BB6)">
         <name>
-          <text>(std_sync_Mutex_T_lock_1, main_BB6)</text>
+          <text>(std_sync_Mutex_T_lock_1_UNWIND, main_BB6)</text>
         </name>
         <inscription>
           <text>1</text>

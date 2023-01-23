@@ -16,11 +16,13 @@ const MINIMAL_MATCH_STATEMENT_DOT_OUTPUT: &str = r#"digraph petrinet {
     main_DROP_4 [shape="box" xlabel="" label="main_DROP_4"];
     main_RETURN [shape="box" xlabel="" label="main_RETURN"];
     main_UNWIND_5 [shape="box" xlabel="" label="main_UNWIND_5"];
-    std_env_args_FOREIGN_CALL [shape="box" xlabel="" label="std_env_args_FOREIGN_CALL"];
-    std_iter_ExactSizeIterator_len_FOREIGN_CALL [shape="box" xlabel="" label="std_iter_ExactSizeIterator_len_FOREIGN_CALL"];
-    PROGRAM_START -> std_env_args_FOREIGN_CALL;
+    std_env_args_CALL [shape="box" xlabel="" label="std_env_args_CALL"];
+    std_iter_ExactSizeIterator_len_CALL [shape="box" xlabel="" label="std_iter_ExactSizeIterator_len_CALL"];
+    std_iter_ExactSizeIterator_len_CALL_UNWIND [shape="box" xlabel="" label="std_iter_ExactSizeIterator_len_CALL_UNWIND"];
+    PROGRAM_START -> std_env_args_CALL;
     main_BB1 -> main_BB1_STMT0;
-    main_BB1_END_PLACE -> std_iter_ExactSizeIterator_len_FOREIGN_CALL;
+    main_BB1_END_PLACE -> std_iter_ExactSizeIterator_len_CALL;
+    main_BB1_END_PLACE -> std_iter_ExactSizeIterator_len_CALL_UNWIND;
     main_BB2 -> main_DROP_2;
     main_BB3 -> main_RETURN;
     main_BB4 -> main_DROP_4;
@@ -30,9 +32,9 @@ const MINIMAL_MATCH_STATEMENT_DOT_OUTPUT: &str = r#"digraph petrinet {
     main_DROP_4 -> main_BB5;
     main_RETURN -> PROGRAM_END;
     main_UNWIND_5 -> PROGRAM_PANIC;
-    std_env_args_FOREIGN_CALL -> main_BB1;
-    std_iter_ExactSizeIterator_len_FOREIGN_CALL -> main_BB2;
-    std_iter_ExactSizeIterator_len_FOREIGN_CALL -> main_BB4;
+    std_env_args_CALL -> main_BB1;
+    std_iter_ExactSizeIterator_len_CALL -> main_BB2;
+    std_iter_ExactSizeIterator_len_CALL_UNWIND -> main_BB4;
 }
 "#;
 
@@ -74,16 +76,20 @@ TRANSITION main_UNWIND_5
     main_BB5 : 1;
   PRODUCE
     PROGRAM_PANIC : 1;
-TRANSITION std_env_args_FOREIGN_CALL
+TRANSITION std_env_args_CALL
   CONSUME
     PROGRAM_START : 1;
   PRODUCE
     main_BB1 : 1;
-TRANSITION std_iter_ExactSizeIterator_len_FOREIGN_CALL
+TRANSITION std_iter_ExactSizeIterator_len_CALL
   CONSUME
     main_BB1_END_PLACE : 1;
   PRODUCE
-    main_BB2 : 1,
+    main_BB2 : 1;
+TRANSITION std_iter_ExactSizeIterator_len_CALL_UNWIND
+  CONSUME
+    main_BB1_END_PLACE : 1;
+  PRODUCE
     main_BB4 : 1;
 "#;
 
@@ -164,19 +170,24 @@ const MINIMAL_MATCH_STATEMENT_PNML_OUTPUT: &str = r#"<?xml version="1.0" encodin
           <text>main_UNWIND_5</text>
         </name>
       </transition>
-      <transition id="std_env_args_FOREIGN_CALL">
+      <transition id="std_env_args_CALL">
         <name>
-          <text>std_env_args_FOREIGN_CALL</text>
+          <text>std_env_args_CALL</text>
         </name>
       </transition>
-      <transition id="std_iter_ExactSizeIterator_len_FOREIGN_CALL">
+      <transition id="std_iter_ExactSizeIterator_len_CALL">
         <name>
-          <text>std_iter_ExactSizeIterator_len_FOREIGN_CALL</text>
+          <text>std_iter_ExactSizeIterator_len_CALL</text>
         </name>
       </transition>
-      <arc source="PROGRAM_START" target="std_env_args_FOREIGN_CALL" id="(PROGRAM_START, std_env_args_FOREIGN_CALL)">
+      <transition id="std_iter_ExactSizeIterator_len_CALL_UNWIND">
         <name>
-          <text>(PROGRAM_START, std_env_args_FOREIGN_CALL)</text>
+          <text>std_iter_ExactSizeIterator_len_CALL_UNWIND</text>
+        </name>
+      </transition>
+      <arc source="PROGRAM_START" target="std_env_args_CALL" id="(PROGRAM_START, std_env_args_CALL)">
+        <name>
+          <text>(PROGRAM_START, std_env_args_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -190,9 +201,17 @@ const MINIMAL_MATCH_STATEMENT_PNML_OUTPUT: &str = r#"<?xml version="1.0" encodin
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB1_END_PLACE" target="std_iter_ExactSizeIterator_len_FOREIGN_CALL" id="(main_BB1_END_PLACE, std_iter_ExactSizeIterator_len_FOREIGN_CALL)">
+      <arc source="main_BB1_END_PLACE" target="std_iter_ExactSizeIterator_len_CALL" id="(main_BB1_END_PLACE, std_iter_ExactSizeIterator_len_CALL)">
         <name>
-          <text>(main_BB1_END_PLACE, std_iter_ExactSizeIterator_len_FOREIGN_CALL)</text>
+          <text>(main_BB1_END_PLACE, std_iter_ExactSizeIterator_len_CALL)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main_BB1_END_PLACE" target="std_iter_ExactSizeIterator_len_CALL_UNWIND" id="(main_BB1_END_PLACE, std_iter_ExactSizeIterator_len_CALL_UNWIND)">
+        <name>
+          <text>(main_BB1_END_PLACE, std_iter_ExactSizeIterator_len_CALL_UNWIND)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -270,25 +289,25 @@ const MINIMAL_MATCH_STATEMENT_PNML_OUTPUT: &str = r#"<?xml version="1.0" encodin
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_env_args_FOREIGN_CALL" target="main_BB1" id="(std_env_args_FOREIGN_CALL, main_BB1)">
+      <arc source="std_env_args_CALL" target="main_BB1" id="(std_env_args_CALL, main_BB1)">
         <name>
-          <text>(std_env_args_FOREIGN_CALL, main_BB1)</text>
+          <text>(std_env_args_CALL, main_BB1)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_iter_ExactSizeIterator_len_FOREIGN_CALL" target="main_BB2" id="(std_iter_ExactSizeIterator_len_FOREIGN_CALL, main_BB2)">
+      <arc source="std_iter_ExactSizeIterator_len_CALL" target="main_BB2" id="(std_iter_ExactSizeIterator_len_CALL, main_BB2)">
         <name>
-          <text>(std_iter_ExactSizeIterator_len_FOREIGN_CALL, main_BB2)</text>
+          <text>(std_iter_ExactSizeIterator_len_CALL, main_BB2)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_iter_ExactSizeIterator_len_FOREIGN_CALL" target="main_BB4" id="(std_iter_ExactSizeIterator_len_FOREIGN_CALL, main_BB4)">
+      <arc source="std_iter_ExactSizeIterator_len_CALL_UNWIND" target="main_BB4" id="(std_iter_ExactSizeIterator_len_CALL_UNWIND, main_BB4)">
         <name>
-          <text>(std_iter_ExactSizeIterator_len_FOREIGN_CALL, main_BB4)</text>
+          <text>(std_iter_ExactSizeIterator_len_CALL_UNWIND, main_BB4)</text>
         </name>
         <inscription>
           <text>1</text>

@@ -3,12 +3,14 @@
 //! It is mainly used in conjunction with the `MutexManager` to keep track of the mutexes
 //! when they are wrapped around a `std::sync::Arc`.
 
+use crate::naming::arc::{
+    clone_transition_label, clone_unwind_transition_label, deref_transition_label,
+    deref_unwind_transition_label, new_transition_label, new_unwind_transition_label,
+};
 use crate::translator::mir_function::Memory;
 use crate::translator::special_function::call_foreign_function;
+use crate::utils::extract_first_argument_for_function_call;
 use crate::utils::is_place_with_concrete_type;
-use crate::{
-    naming::arc::function_transition_label, utils::extract_first_argument_for_function_call,
-};
 use netcrab::petri_net::{PetriNet, PlaceRef};
 
 #[derive(Default)]
@@ -35,9 +37,17 @@ impl ArcManager {
         net: &mut PetriNet,
     ) {
         let index = self.arc_counter;
-        let transition_label = &function_transition_label("std::sync::Arc::<T>::new", index);
         self.arc_counter += 1;
-        call_foreign_function(start_place, end_place, None, transition_label, net);
+        let transition_label = new_transition_label(index);
+        let unwind_transition_label = new_unwind_transition_label(index);
+        call_foreign_function(
+            start_place,
+            end_place,
+            None,
+            &transition_label,
+            &unwind_transition_label,
+            net,
+        );
     }
 
     /// Translates a call to `std::ops::Deref::deref` using
@@ -52,9 +62,17 @@ impl ArcManager {
         net: &mut PetriNet,
     ) {
         let index = self.deref_counter;
-        let transition_label = &function_transition_label("std::ops::Deref::deref", index);
         self.deref_counter += 1;
-        call_foreign_function(start_place, end_place, cleanup_place, transition_label, net);
+        let transition_label = deref_transition_label(index);
+        let unwind_transition_label = deref_unwind_transition_label(index);
+        call_foreign_function(
+            start_place,
+            end_place,
+            cleanup_place,
+            &transition_label,
+            &unwind_transition_label,
+            net,
+        );
     }
 
     /// Translates a call to `std::clone::Clone::clone` using
@@ -69,9 +87,17 @@ impl ArcManager {
         net: &mut PetriNet,
     ) {
         let index = self.clone_counter;
-        let transition_label = &function_transition_label("std::clone::Clone::clone", index);
         self.clone_counter += 1;
-        call_foreign_function(start_place, end_place, cleanup_place, transition_label, net);
+        let transition_label = clone_transition_label(index);
+        let unwind_transition_label = clone_unwind_transition_label(index);
+        call_foreign_function(
+            start_place,
+            end_place,
+            cleanup_place,
+            &transition_label,
+            &unwind_transition_label,
+            net,
+        );
     }
 
     /// Translates the side effects for `std::sync::Arc::<T>::new` i.e.,
