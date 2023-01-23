@@ -40,12 +40,12 @@ impl ThreadManager {
         &self,
         start_place: &PlaceRef,
         end_place: &PlaceRef,
+        cleanup_place: Option<PlaceRef>,
         net: &mut PetriNet,
     ) -> TransitionRef {
         let index = self.threads.len();
         let transition_label = &function_transition_label("std::thread::spawn", index);
-        // There is no cleanup place for the supported functions in `std::thread`.
-        call_foreign_function(start_place, end_place, None, transition_label, net)
+        call_foreign_function(start_place, end_place, cleanup_place, transition_label, net)
     }
 
     /// Translates a call to `std::thread::JoinHandle::<T>::join` using
@@ -57,13 +57,13 @@ impl ThreadManager {
         &self,
         start_place: &PlaceRef,
         end_place: &PlaceRef,
+        cleanup_place: Option<PlaceRef>,
         net: &mut PetriNet,
     ) -> TransitionRef {
         let index = self.thread_join_counter;
         let transition_label =
             &function_transition_label("std::thread::JoinHandle::<T>::join", index);
-        // There is no cleanup place for the supported functions in `std::thread`.
-        call_foreign_function(start_place, end_place, None, transition_label, net)
+        call_foreign_function(start_place, end_place, cleanup_place, transition_label, net)
     }
 
     /// Translates the side effects for `std::thread::spawn` i.e.,

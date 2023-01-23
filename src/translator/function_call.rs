@@ -108,10 +108,10 @@ impl<'tcx> Translator<'tcx> {
                 self.call_mutex_new(destination, &start_place, &end_place, cleanup_place);
             }
             FunctionCall::ThreadJoin => {
-                self.call_thread_join(args, &start_place, &end_place);
+                self.call_thread_join(args, &start_place, &end_place, cleanup_place);
             }
             FunctionCall::ThreadSpawn => {
-                self.call_thread_spawn(args, destination, &start_place, &end_place);
+                self.call_thread_spawn(args, destination, &start_place, &end_place, cleanup_place);
             }
         }
     }
@@ -196,10 +196,14 @@ impl<'tcx> Translator<'tcx> {
         args: &[rustc_middle::mir::Operand<'tcx>],
         start_place: &PlaceRef,
         end_place: &PlaceRef,
+        cleanup_place: Option<PlaceRef>,
     ) {
-        let transition_function_call =
-            self.thread_manager
-                .translate_call_join(start_place, end_place, &mut self.net);
+        let transition_function_call = self.thread_manager.translate_call_join(
+            start_place,
+            end_place,
+            cleanup_place,
+            &mut self.net,
+        );
 
         let current_function = self.call_stack.peek();
         self.thread_manager.translate_side_effects_join(
@@ -216,10 +220,14 @@ impl<'tcx> Translator<'tcx> {
         destination: rustc_middle::mir::Place<'tcx>,
         start_place: &PlaceRef,
         end_place: &PlaceRef,
+        cleanup_place: Option<PlaceRef>,
     ) {
-        let transition_function_call =
-            self.thread_manager
-                .translate_call_spawn(start_place, end_place, &mut self.net);
+        let transition_function_call = self.thread_manager.translate_call_spawn(
+            start_place,
+            end_place,
+            cleanup_place,
+            &mut self.net,
+        );
 
         let current_function = self.call_stack.peek_mut();
         self.thread_manager.translate_side_effects_spawn(
