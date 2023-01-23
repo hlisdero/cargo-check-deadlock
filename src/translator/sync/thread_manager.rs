@@ -59,13 +59,14 @@ impl<'tcx> ThreadManager<'tcx> {
     /// the function is called to generate a unique label.
     /// Returns the transition that represents the function call.
     pub fn translate_call_join(
-        &self,
+        &mut self,
         start_place: &PlaceRef,
         end_place: &PlaceRef,
         cleanup_place: Option<PlaceRef>,
         net: &mut PetriNet,
     ) -> TransitionRef {
         let index = self.thread_join_counter;
+        self.thread_join_counter += 1;
         call_foreign_function(
             start_place,
             end_place,
