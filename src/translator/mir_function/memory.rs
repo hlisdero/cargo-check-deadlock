@@ -22,6 +22,9 @@ pub struct Memory<'tcx> {
     places_linked_to_join_handles: HashMap<rustc_middle::mir::Place<'tcx>, ThreadRef>,
 }
 
+/// An auxiliary type for passing memory entries from one function to the other.
+pub type MutexEntries<'tcx> = Vec<(rustc_middle::mir::Place<'tcx>, MutexRef)>;
+
 impl<'tcx> Memory<'tcx> {
     /// Creates a new memory with empty mappings.
     pub fn new() -> Self {
@@ -94,6 +97,24 @@ impl<'tcx> Memory<'tcx> {
         self.places_linked_to_mutexes
             .get(place)
             .expect("BUG: The place should be linked to a mutex")
+    }
+
+    /// Finds all the mutexes linked to the given place.
+    /// It takes into consideration that the place may have several fields (a subtype of projections).
+    /// <https://rustc-dev-guide.rust-lang.org/mir/index.html?highlight=Projections#mir-data-types>
+    /// Returns a vector of places which share the same local.
+    pub fn find_mutexes_linked_to_place(
+        &self,
+        place: rustc_middle::mir::Place<'tcx>,
+    ) -> MutexEntries<'tcx> {
+        let mut result: MutexEntries<'tcx> = Vec::new();
+        for mutex_place in self.places_linked_to_mutexes.keys() {
+            if mutex_place.local == place.local {
+                let mutex_ref = self.get_linked_mutex(mutex_place);
+                result.push((*mutex_place, mutex_ref.clone()));
+            }
+        }
+        result
     }
 
     /// Returns the mutex for the lock guard linked to the given place.

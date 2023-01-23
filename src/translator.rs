@@ -49,7 +49,7 @@ pub struct Translator<'tcx> {
     call_stack: Stack<MirFunction<'tcx>>,
     mutex_manager: MutexManager,
     arc_manager: ArcManager,
-    thread_manager: ThreadManager,
+    thread_manager: ThreadManager<'tcx>,
 }
 
 impl<'tcx> Translator<'tcx> {
@@ -207,8 +207,9 @@ impl<'tcx> Translator<'tcx> {
 
     /// Main translation loop for the threads.
     /// Gets a thread from the thread manager and translates it.
+    /// If mutexes were passed to the thread, move them to the memory of the thread function.
     fn translate_threads(&mut self) {
-        while let Some(thread_span) = self.thread_manager.pop_thread() {
+        while let Some(mut thread_span) = self.thread_manager.pop_thread() {
             let (thread_function_def_id, thread_start_place, thread_end_place) =
                 thread_span.prepare_for_translation(&mut self.net);
 
@@ -217,6 +218,8 @@ impl<'tcx> Translator<'tcx> {
                 thread_start_place,
                 thread_end_place,
             );
+            let new_function = self.call_stack.peek_mut();
+            thread_span.move_mutexes(&mut new_function.memory);
             self.translate_top_call_stack();
         }
     }

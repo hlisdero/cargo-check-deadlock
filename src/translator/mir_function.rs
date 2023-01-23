@@ -21,7 +21,7 @@ use basic_block::BasicBlock;
 use netcrab::petri_net::{PetriNet, PlaceRef};
 use std::collections::HashMap;
 
-pub use memory::Memory;
+pub use memory::{Memory, MutexEntries};
 
 pub struct MirFunction<'tcx> {
     /// The ID that uniquely identifies the function in this crate in the HIR representation.

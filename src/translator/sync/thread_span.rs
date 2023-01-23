@@ -22,30 +22,35 @@
 
 use crate::error_handling::handle_err_add_arc;
 use crate::naming::thread::{end_place_label, start_place_label};
+use crate::translator::mir_function::{Memory, MutexEntries};
 use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
 
-pub struct ThreadSpan {
+pub struct ThreadSpan<'tcx> {
     /// The transition from which the thread branches off at the start.
     spawn_transition: TransitionRef,
     /// The definition ID that uniquely identifies the function run by the thread.
     thread_function_def_id: rustc_hir::def_id::DefId,
+    /// The mutexes passed to the thread.
+    mutexes: MutexEntries<'tcx>,
     /// The transition to which the thread joins in at the end.
     join_transition: Option<TransitionRef>,
     /// An index to identify the thread span.
     index: usize,
 }
 
-impl ThreadSpan {
+impl<'tcx> ThreadSpan<'tcx> {
     /// Creates a new thread span without a join transition.
     /// The join transition must be set later.
     pub const fn new(
         spawn_transition: TransitionRef,
         thread_function_def_id: rustc_hir::def_id::DefId,
+        mutexes: MutexEntries<'tcx>,
         index: usize,
     ) -> Self {
         Self {
             spawn_transition,
             thread_function_def_id,
+            mutexes,
             join_transition: None,
             index,
         }
@@ -54,6 +59,18 @@ impl ThreadSpan {
     /// Sets the transition that models joining this thread.
     pub fn set_join_transition(&mut self, join_transition: TransitionRef) {
         self.join_transition = Some(join_transition);
+    }
+
+    /// Moves the memory entries corresponding to the mutexes to the new function's memory.
+    /// Modifies each place so that the local points to `_1` since `std::thread::spawn`
+    /// only receives one argument.
+    pub fn move_mutexes(&mut self, memory: &mut Memory<'tcx>) {
+        while let Some((mut mutex_place, mutex_ref)) = self.mutexes.pop() {
+            // Local is a simple index: We can create our own and overwrite the previous value.
+            // <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/mir/struct.Local.html>
+            mutex_place.local = rustc_middle::mir::Local::from(1u32);
+            memory.link_place_to_mutex(mutex_place, mutex_ref);
+        }
     }
 
     /// Prepares the thread span for translation.

@@ -8,7 +8,7 @@
 
 use super::ThreadSpan;
 use crate::naming::thread::function_transition_label;
-use crate::translator::mir_function::Memory;
+use crate::translator::mir_function::{Memory, MutexEntries};
 use crate::translator::special_function::call_foreign_function;
 use crate::utils::{
     extract_def_id_of_called_function_from_operand, extract_first_argument_for_function_call,
@@ -17,8 +17,8 @@ use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
 use std::collections::VecDeque;
 
 #[derive(Default)]
-pub struct ThreadManager {
-    threads: VecDeque<ThreadSpan>,
+pub struct ThreadManager<'tcx> {
+    threads: VecDeque<ThreadSpan<'tcx>>,
     thread_join_counter: usize,
 }
 
@@ -26,7 +26,7 @@ pub struct ThreadManager {
 #[derive(Clone)]
 pub struct ThreadRef(usize);
 
-impl ThreadManager {
+impl<'tcx> ThreadManager<'tcx> {
     /// Returns a new empty `ThreadManager`.
     pub fn new() -> Self {
         Self::default()
@@ -70,7 +70,7 @@ impl ThreadManager {
     /// the specific logic of spawning a new thread.
     /// Receives a reference to the memory of the caller function to
     /// link the return local variable to the new join handle.
-    pub fn translate_side_effects_spawn<'tcx>(
+    pub fn translate_side_effects_spawn(
         &mut self,
         args: &[rustc_middle::mir::Operand<'tcx>],
         return_value: rustc_middle::mir::Place<'tcx>,
@@ -87,7 +87,12 @@ impl ThreadManager {
             caller_function_def_id,
             tcx,
         );
-        let thread_ref = self.add_thread_span(transition_function_call, thread_function_def_id);
+
+        let first_argument = extract_first_argument_for_function_call(args);
+        let mutexes = memory.find_mutexes_linked_to_place(first_argument);
+
+        let thread_ref =
+            self.add_thread_span(transition_function_call, thread_function_def_id, mutexes);
         // The return value contains a new join handle. Link the local variable to it.
         memory.link_place_to_join_handle(return_value, thread_ref);
     }
@@ -96,7 +101,7 @@ impl ThreadManager {
     /// the specific logic of joining an existing thread.
     /// Receives a reference to the memory of the caller function to retrieve
     /// the join handle linked to the local variable.
-    pub fn translate_side_effects_join<'tcx>(
+    pub fn translate_side_effects_join(
         &mut self,
         args: &[rustc_middle::mir::Operand<'tcx>],
         transition_function_call: TransitionRef,
@@ -113,11 +118,13 @@ impl ThreadManager {
         &mut self,
         spawn_transition: TransitionRef,
         thread_function_def_id: rustc_hir::def_id::DefId,
+        mutexes: MutexEntries<'tcx>,
     ) -> ThreadRef {
         let index = self.threads.len();
         self.threads.push_front(ThreadSpan::new(
             spawn_transition,
             thread_function_def_id,
+            mutexes,
             index,
         ));
         ThreadRef(index)
@@ -136,7 +143,7 @@ impl ThreadManager {
     }
 
     /// Removes the last element from the threads vector and returns it, or `None` if it is empty.
-    pub fn pop_thread(&mut self) -> Option<ThreadSpan> {
+    pub fn pop_thread(&mut self) -> Option<ThreadSpan<'tcx>> {
         self.threads.pop_front()
     }
 }
