@@ -1,0 +1,166 @@
+PLACE
+    MUTEX_0,
+    MUTEX_1,
+    PROGRAM_END,
+    PROGRAM_PANIC,
+    PROGRAM_START,
+    first_deadlock_BB1,
+    first_deadlock_BB1_END_PLACE,
+    first_deadlock_BB2,
+    first_deadlock_BB2_END_PLACE,
+    first_deadlock_BB3,
+    first_deadlock_BB4,
+    first_deadlock_BB5,
+    first_deadlock_BB6,
+    first_deadlock_BB7,
+    main_BB1,
+    main_BB2,
+    second_deadlock_BB1,
+    second_deadlock_BB1_END_PLACE,
+    second_deadlock_BB2,
+    second_deadlock_BB2_END_PLACE,
+    second_deadlock_BB3,
+    second_deadlock_BB4,
+    second_deadlock_BB5,
+    second_deadlock_BB6,
+    second_deadlock_BB7;
+
+MARKING
+    MUTEX_0 : 1,
+    MUTEX_1 : 1,
+    PROGRAM_START : 1,
+TRANSITION first_deadlock_BB1_STMT0
+  CONSUME
+    first_deadlock_BB1 : 1;
+  PRODUCE
+    first_deadlock_BB1_END_PLACE : 1;
+TRANSITION first_deadlock_BB2_STMT0
+  CONSUME
+    first_deadlock_BB2 : 1;
+  PRODUCE
+    first_deadlock_BB2_END_PLACE : 1;
+TRANSITION first_deadlock_DROP_3
+  CONSUME
+    first_deadlock_BB3 : 1;
+  PRODUCE
+    MUTEX_0 : 1,
+    first_deadlock_BB4 : 1;
+TRANSITION first_deadlock_DROP_4
+  CONSUME
+    first_deadlock_BB4 : 1;
+  PRODUCE
+    MUTEX_0 : 1,
+    first_deadlock_BB5 : 1;
+TRANSITION first_deadlock_DROP_6
+  CONSUME
+    first_deadlock_BB6 : 1;
+  PRODUCE
+    MUTEX_0 : 1,
+    first_deadlock_BB7 : 1;
+TRANSITION first_deadlock_DROP_UNWIND_3
+  CONSUME
+    first_deadlock_BB3 : 1;
+  PRODUCE
+    first_deadlock_BB6 : 1;
+TRANSITION first_deadlock_RETURN
+  CONSUME
+    first_deadlock_BB5 : 1;
+  PRODUCE
+    main_BB1 : 1;
+TRANSITION first_deadlock_UNWIND_7
+  CONSUME
+    first_deadlock_BB7 : 1;
+  PRODUCE
+    PROGRAM_PANIC : 1;
+TRANSITION main_RETURN
+  CONSUME
+    main_BB2 : 1;
+  PRODUCE
+    PROGRAM_END : 1;
+TRANSITION second_deadlock_BB1_STMT0
+  CONSUME
+    second_deadlock_BB1 : 1;
+  PRODUCE
+    second_deadlock_BB1_END_PLACE : 1;
+TRANSITION second_deadlock_BB2_STMT0
+  CONSUME
+    second_deadlock_BB2 : 1;
+  PRODUCE
+    second_deadlock_BB2_END_PLACE : 1;
+TRANSITION second_deadlock_DROP_3
+  CONSUME
+    second_deadlock_BB3 : 1;
+  PRODUCE
+    MUTEX_1 : 1,
+    second_deadlock_BB4 : 1;
+TRANSITION second_deadlock_DROP_4
+  CONSUME
+    second_deadlock_BB4 : 1;
+  PRODUCE
+    MUTEX_1 : 1,
+    second_deadlock_BB5 : 1;
+TRANSITION second_deadlock_DROP_6
+  CONSUME
+    second_deadlock_BB6 : 1;
+  PRODUCE
+    MUTEX_1 : 1,
+    second_deadlock_BB7 : 1;
+TRANSITION second_deadlock_DROP_UNWIND_3
+  CONSUME
+    second_deadlock_BB3 : 1;
+  PRODUCE
+    second_deadlock_BB6 : 1;
+TRANSITION second_deadlock_RETURN
+  CONSUME
+    second_deadlock_BB5 : 1;
+  PRODUCE
+    main_BB2 : 1;
+TRANSITION second_deadlock_UNWIND_7
+  CONSUME
+    second_deadlock_BB7 : 1;
+  PRODUCE
+    PROGRAM_PANIC : 1;
+TRANSITION std_sync_Mutex_T_lock_0
+  CONSUME
+    MUTEX_0 : 1,
+    first_deadlock_BB1_END_PLACE : 1;
+  PRODUCE
+    first_deadlock_BB2 : 1;
+TRANSITION std_sync_Mutex_T_lock_1
+  CONSUME
+    MUTEX_0 : 1,
+    first_deadlock_BB2_END_PLACE : 1;
+  PRODUCE
+    first_deadlock_BB3 : 1;
+TRANSITION std_sync_Mutex_T_lock_1_UNWIND
+  CONSUME
+    first_deadlock_BB2_END_PLACE : 1;
+  PRODUCE
+    first_deadlock_BB6 : 1;
+TRANSITION std_sync_Mutex_T_lock_2
+  CONSUME
+    MUTEX_1 : 1,
+    second_deadlock_BB1_END_PLACE : 1;
+  PRODUCE
+    second_deadlock_BB2 : 1;
+TRANSITION std_sync_Mutex_T_lock_3
+  CONSUME
+    MUTEX_1 : 1,
+    second_deadlock_BB2_END_PLACE : 1;
+  PRODUCE
+    second_deadlock_BB3 : 1;
+TRANSITION std_sync_Mutex_T_lock_3_UNWIND
+  CONSUME
+    second_deadlock_BB2_END_PLACE : 1;
+  PRODUCE
+    second_deadlock_BB6 : 1;
+TRANSITION std_sync_Mutex_T_new_0
+  CONSUME
+    PROGRAM_START : 1;
+  PRODUCE
+    first_deadlock_BB1 : 1;
+TRANSITION std_sync_Mutex_T_new_1
+  CONSUME
+    main_BB1 : 1;
+  PRODUCE
+    second_deadlock_BB1 : 1;

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<pnml xmlns="http://www.pnml.org/version-2009/grammar/pnml">
+  <net id="net0" type="http://www.pnml.org/version-2009/grammar/ptnet">
+    <page id="page0">
+      <place id="PROGRAM_END">
+        <name>
+          <text>PROGRAM_END</text>
+        </name>
+      </place>
+      <place id="PROGRAM_PANIC">
+        <name>
+          <text>PROGRAM_PANIC</text>
+        </name>
+      </place>
+      <place id="PROGRAM_START">
+        <name>
+          <text>PROGRAM_START</text>
+        </name>
+        <initialMarking>
+          <text>1</text>
+        </initialMarking>
+      </place>
+      <transition id="std_process_abort_DIVERGING_CALL">
+        <name>
+          <text>std_process_abort_DIVERGING_CALL</text>
+        </name>
+      </transition>
+      <arc source="PROGRAM_START" target="std_process_abort_DIVERGING_CALL" id="(PROGRAM_START, std_process_abort_DIVERGING_CALL)">
+        <name>
+          <text>(PROGRAM_START, std_process_abort_DIVERGING_CALL)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+    </page>
+  </net>
+</pnml>

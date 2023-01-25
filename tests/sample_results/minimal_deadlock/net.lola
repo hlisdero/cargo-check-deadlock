@@ -1,0 +1,83 @@
+PLACE
+    MUTEX_0,
+    PROGRAM_END,
+    PROGRAM_PANIC,
+    PROGRAM_START,
+    main_BB1,
+    main_BB1_END_PLACE,
+    main_BB2,
+    main_BB2_END_PLACE,
+    main_BB3,
+    main_BB4,
+    main_BB5,
+    main_BB6,
+    main_BB7;
+
+MARKING
+    MUTEX_0 : 1,
+    PROGRAM_START : 1,
+TRANSITION main_BB1_STMT0
+  CONSUME
+    main_BB1 : 1;
+  PRODUCE
+    main_BB1_END_PLACE : 1;
+TRANSITION main_BB2_STMT0
+  CONSUME
+    main_BB2 : 1;
+  PRODUCE
+    main_BB2_END_PLACE : 1;
+TRANSITION main_DROP_3
+  CONSUME
+    main_BB3 : 1;
+  PRODUCE
+    MUTEX_0 : 1,
+    main_BB4 : 1;
+TRANSITION main_DROP_4
+  CONSUME
+    main_BB4 : 1;
+  PRODUCE
+    MUTEX_0 : 1,
+    main_BB5 : 1;
+TRANSITION main_DROP_6
+  CONSUME
+    main_BB6 : 1;
+  PRODUCE
+    MUTEX_0 : 1,
+    main_BB7 : 1;
+TRANSITION main_DROP_UNWIND_3
+  CONSUME
+    main_BB3 : 1;
+  PRODUCE
+    main_BB6 : 1;
+TRANSITION main_RETURN
+  CONSUME
+    main_BB5 : 1;
+  PRODUCE
+    PROGRAM_END : 1;
+TRANSITION main_UNWIND_7
+  CONSUME
+    main_BB7 : 1;
+  PRODUCE
+    PROGRAM_PANIC : 1;
+TRANSITION std_sync_Mutex_T_lock_0
+  CONSUME
+    MUTEX_0 : 1,
+    main_BB1_END_PLACE : 1;
+  PRODUCE
+    main_BB2 : 1;
+TRANSITION std_sync_Mutex_T_lock_1
+  CONSUME
+    MUTEX_0 : 1,
+    main_BB2_END_PLACE : 1;
+  PRODUCE
+    main_BB3 : 1;
+TRANSITION std_sync_Mutex_T_lock_1_UNWIND
+  CONSUME
+    main_BB2_END_PLACE : 1;
+  PRODUCE
+    main_BB6 : 1;
+TRANSITION std_sync_Mutex_T_new_0
+  CONSUME
+    PROGRAM_START : 1;
+  PRODUCE
+    main_BB1 : 1;

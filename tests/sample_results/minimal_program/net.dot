@@ -1,0 +1,8 @@
+digraph petrinet {
+    PROGRAM_END [shape="circle" xlabel="PROGRAM_END" label=""];
+    PROGRAM_PANIC [shape="circle" xlabel="PROGRAM_PANIC" label=""];
+    PROGRAM_START [shape="circle" xlabel="PROGRAM_START" label="•"];
+    main_RETURN [shape="box" xlabel="" label="main_RETURN"];
+    PROGRAM_START -> main_RETURN;
+    main_RETURN -> PROGRAM_END;
+}

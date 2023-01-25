@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<pnml xmlns="http://www.pnml.org/version-2009/grammar/pnml">
+  <net id="net0" type="http://www.pnml.org/version-2009/grammar/ptnet">
+    <page id="page0">
+      <place id="PROGRAM_END">
+        <name>
+          <text>PROGRAM_END</text>
+        </name>
+      </place>
+      <place id="PROGRAM_PANIC">
+        <name>
+          <text>PROGRAM_PANIC</text>
+        </name>
+      </place>
+      <place id="PROGRAM_START">
+        <name>
+          <text>PROGRAM_START</text>
+        </name>
+        <initialMarking>
+          <text>1</text>
+        </initialMarking>
+      </place>
+      <place id="THREAD_0_END">
+        <name>
+          <text>THREAD_0_END</text>
+        </name>
+      </place>
+      <place id="THREAD_0_START">
+        <name>
+          <text>THREAD_0_START</text>
+        </name>
+      </place>
+      <place id="main_BB1">
+        <name>
+          <text>main_BB1</text>
+        </name>
+      </place>
+      <place id="main_BB1_END_PLACE">
+        <name>
+          <text>main_BB1_END_PLACE</text>
+        </name>
+      </place>
+      <place id="main_BB2">
+        <name>
+          <text>main_BB2</text>
+        </name>
+      </place>
+      <place id="main_BB3">
+        <name>
+          <text>main_BB3</text>
+        </name>
+      </place>
+      <transition id="main_BB1_STMT0">
+        <name>
+          <text>main_BB1_STMT0</text>
+        </name>
+      </transition>
+      <transition id="main_DROP_2">
+        <name>
+          <text>main_DROP_2</text>
+        </name>
+      </transition>
+      <transition id="main_RETURN">
+        <name>
+          <text>main_RETURN</text>
+        </name>
+      </transition>
+      <transition id="main__closure_0__RETURN">
+        <name>
+          <text>main__closure_0__RETURN</text>
+        </name>
+      </transition>
+      <transition id="std_thread_JoinHandle_T_join_0">
+        <name>
+          <text>std_thread_JoinHandle_T_join_0</text>
+        </name>
+      </transition>
+      <transition id="std_thread_spawn_0">
+        <name>
+          <text>std_thread_spawn_0</text>
+        </name>
+      </transition>
+      <arc source="PROGRAM_START" target="std_thread_spawn_0" id="(PROGRAM_START, std_thread_spawn_0)">
+        <name>
+          <text>(PROGRAM_START, std_thread_spawn_0)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="THREAD_0_END" target="std_thread_JoinHandle_T_join_0" id="(THREAD_0_END, std_thread_JoinHandle_T_join_0)">
+        <name>
+          <text>(THREAD_0_END, std_thread_JoinHandle_T_join_0)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="THREAD_0_START" target="main__closure_0__RETURN" id="(THREAD_0_START, main__closure_0__RETURN)">
+        <name>
+          <text>(THREAD_0_START, main__closure_0__RETURN)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main_BB1" target="main_BB1_STMT0" id="(main_BB1, main_BB1_STMT0)">
+        <name>
+          <text>(main_BB1, main_BB1_STMT0)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main_BB1_END_PLACE" target="std_thread_JoinHandle_T_join_0" id="(main_BB1_END_PLACE, std_thread_JoinHandle_T_join_0)">
+        <name>
+          <text>(main_BB1_END_PLACE, std_thread_JoinHandle_T_join_0)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main_BB2" target="main_DROP_2" id="(main_BB2, main_DROP_2)">
+        <name>
+          <text>(main_BB2, main_DROP_2)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main_BB3" target="main_RETURN" id="(main_BB3, main_RETURN)">
+        <name>
+          <text>(main_BB3, main_RETURN)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main_BB1_STMT0" target="main_BB1_END_PLACE" id="(main_BB1_STMT0, main_BB1_END_PLACE)">
+        <name>
+          <text>(main_BB1_STMT0, main_BB1_END_PLACE)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main_DROP_2" target="main_BB3" id="(main_DROP_2, main_BB3)">
+        <name>
+          <text>(main_DROP_2, main_BB3)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main_RETURN" target="PROGRAM_END" id="(main_RETURN, PROGRAM_END)">
+        <name>
+          <text>(main_RETURN, PROGRAM_END)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main__closure_0__RETURN" target="THREAD_0_END" id="(main__closure_0__RETURN, THREAD_0_END)">
+        <name>
+          <text>(main__closure_0__RETURN, THREAD_0_END)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="std_thread_JoinHandle_T_join_0" target="main_BB2" id="(std_thread_JoinHandle_T_join_0, main_BB2)">
+        <name>
+          <text>(std_thread_JoinHandle_T_join_0, main_BB2)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="std_thread_spawn_0" target="THREAD_0_START" id="(std_thread_spawn_0, THREAD_0_START)">
+        <name>
+          <text>(std_thread_spawn_0, THREAD_0_START)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="std_thread_spawn_0" target="main_BB1" id="(std_thread_spawn_0, main_BB1)">
+        <name>
+          <text>(std_thread_spawn_0, main_BB1)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+    </page>
+  </net>
+</pnml>

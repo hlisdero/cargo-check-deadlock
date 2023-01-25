@@ -1,5 +1,5 @@
 use assert_cmd::prelude::*; // Add methods on commands
-use std::{io::Read, process::Command}; // Run programs
+use std::process::Command; // Run programs
 
 /// Asserts that the contents of the given output file correspond to the expected file contents
 /// after running `granite2` on the given source code file.
@@ -13,7 +13,7 @@ pub fn assert_output_file(
     source_code_file: &str,
     output_format: &str,
     output_filename: &str,
-    expected_file_contents: &str,
+    expected_contents_filename: &str,
 ) {
     let mut cmd = Command::cargo_bin("granite2").expect("Command not found");
 
@@ -22,10 +22,11 @@ pub fn assert_output_file(
         .arg(format!("--output-format={output_format}"));
     cmd.assert().success();
 
-    let mut file = std::fs::File::open(output_filename).expect("Could not open output file");
-    let mut file_contents = String::new();
-    file.read_to_string(&mut file_contents)
-        .expect("Could not read output file");
+    let file_contents =
+        std::fs::read_to_string(output_filename).expect("Could not read output file to string");
+
+    let expected_file_contents = std::fs::read_to_string(expected_contents_filename)
+        .expect("Could not read file with expected contents to string");
 
     assert_eq!(file_contents, expected_file_contents);
     std::fs::remove_file(output_filename).expect("Could not delete output file");

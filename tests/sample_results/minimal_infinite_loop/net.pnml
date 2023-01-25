@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<pnml xmlns="http://www.pnml.org/version-2009/grammar/pnml">
+  <net id="net0" type="http://www.pnml.org/version-2009/grammar/ptnet">
+    <page id="page0">
+      <place id="PROGRAM_END">
+        <name>
+          <text>PROGRAM_END</text>
+        </name>
+      </place>
+      <place id="PROGRAM_PANIC">
+        <name>
+          <text>PROGRAM_PANIC</text>
+        </name>
+      </place>
+      <place id="PROGRAM_START">
+        <name>
+          <text>PROGRAM_START</text>
+        </name>
+        <initialMarking>
+          <text>1</text>
+        </initialMarking>
+      </place>
+      <place id="main_BB1">
+        <name>
+          <text>main_BB1</text>
+        </name>
+      </place>
+      <transition id="main_GOTO_0">
+        <name>
+          <text>main_GOTO_0</text>
+        </name>
+      </transition>
+      <transition id="main_GOTO_1">
+        <name>
+          <text>main_GOTO_1</text>
+        </name>
+      </transition>
+      <arc source="PROGRAM_START" target="main_GOTO_0" id="(PROGRAM_START, main_GOTO_0)">
+        <name>
+          <text>(PROGRAM_START, main_GOTO_0)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main_BB1" target="main_GOTO_1" id="(main_BB1, main_GOTO_1)">
+        <name>
+          <text>(main_BB1, main_GOTO_1)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main_GOTO_0" target="main_BB1" id="(main_GOTO_0, main_BB1)">
+        <name>
+          <text>(main_GOTO_0, main_BB1)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main_GOTO_1" target="main_BB1" id="(main_GOTO_1, main_BB1)">
+        <name>
+          <text>(main_GOTO_1, main_BB1)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+    </page>
+  </net>
+</pnml>

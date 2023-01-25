@@ -1,0 +1,53 @@
+PLACE
+    PROGRAM_END,
+    PROGRAM_PANIC,
+    PROGRAM_START,
+    main_BB1,
+    main_BB1_END_PLACE,
+    main_BB2,
+    main_BB3,
+    main_BB4,
+    main_BB5;
+
+MARKING
+    PROGRAM_START : 1,
+TRANSITION main_BB1_STMT0
+  CONSUME
+    main_BB1 : 1;
+  PRODUCE
+    main_BB1_END_PLACE : 1;
+TRANSITION main_DROP_2
+  CONSUME
+    main_BB2 : 1;
+  PRODUCE
+    main_BB3 : 1;
+TRANSITION main_DROP_4
+  CONSUME
+    main_BB4 : 1;
+  PRODUCE
+    main_BB5 : 1;
+TRANSITION main_RETURN
+  CONSUME
+    main_BB3 : 1;
+  PRODUCE
+    PROGRAM_END : 1;
+TRANSITION main_UNWIND_5
+  CONSUME
+    main_BB5 : 1;
+  PRODUCE
+    PROGRAM_PANIC : 1;
+TRANSITION std_env_args_CALL
+  CONSUME
+    PROGRAM_START : 1;
+  PRODUCE
+    main_BB1 : 1;
+TRANSITION std_iter_ExactSizeIterator_len_CALL
+  CONSUME
+    main_BB1_END_PLACE : 1;
+  PRODUCE
+    main_BB2 : 1;
+TRANSITION std_iter_ExactSizeIterator_len_CALL_UNWIND
+  CONSUME
+    main_BB1_END_PLACE : 1;
+  PRODUCE
+    main_BB4 : 1;

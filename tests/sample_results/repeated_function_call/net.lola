@@ -1,0 +1,106 @@
+PLACE
+    PROGRAM_END,
+    PROGRAM_PANIC,
+    PROGRAM_START,
+    main_BB0_END_PLACE,
+    main_BB0_STMT0_END,
+    main_BB0_STMT1_END,
+    main_BB1,
+    main_BB1_END_PLACE,
+    main_BB2,
+    main_BB2_END_PLACE,
+    main_BB2_STMT0_END,
+    main_BB3,
+    main_BB3_END_PLACE,
+    main_BB4,
+    main_BB4_END_PLACE,
+    main_BB5,
+    main_BB6;
+
+MARKING
+    PROGRAM_START : 1,
+TRANSITION call_RETURN
+  CONSUME
+    main_BB4_END_PLACE : 1;
+  PRODUCE
+    main_BB2 : 1;
+TRANSITION main_BB0_STMT0
+  CONSUME
+    PROGRAM_START : 1;
+  PRODUCE
+    main_BB0_STMT0_END : 1;
+TRANSITION main_BB0_STMT1
+  CONSUME
+    main_BB0_STMT0_END : 1;
+  PRODUCE
+    main_BB0_STMT1_END : 1;
+TRANSITION main_BB0_STMT2
+  CONSUME
+    main_BB0_STMT1_END : 1;
+  PRODUCE
+    main_BB0_END_PLACE : 1;
+TRANSITION main_BB1_STMT0
+  CONSUME
+    main_BB1 : 1;
+  PRODUCE
+    main_BB1_END_PLACE : 1;
+TRANSITION main_BB2_STMT0
+  CONSUME
+    main_BB2 : 1;
+  PRODUCE
+    main_BB2_STMT0_END : 1;
+TRANSITION main_BB2_STMT1
+  CONSUME
+    main_BB2_STMT0_END : 1;
+  PRODUCE
+    main_BB2_END_PLACE : 1;
+TRANSITION main_BB3_STMT0
+  CONSUME
+    main_BB3 : 1;
+  PRODUCE
+    main_BB3_END_PLACE : 1;
+TRANSITION main_BB4_STMT0
+  CONSUME
+    main_BB4 : 1;
+  PRODUCE
+    main_BB4_END_PLACE : 1;
+TRANSITION main_GOTO_1
+  CONSUME
+    main_BB1_END_PLACE : 1;
+  PRODUCE
+    main_BB2 : 1;
+TRANSITION main_RETURN
+  CONSUME
+    main_BB6 : 1;
+  PRODUCE
+    PROGRAM_END : 1;
+TRANSITION main_SWITCH_INT_4
+  CONSUME
+    main_BB3_END_PLACE : 1;
+  PRODUCE
+    main_BB4 : 1;
+TRANSITION main_SWITCH_INT_5
+  CONSUME
+    main_BB3_END_PLACE : 1;
+  PRODUCE
+    main_BB5 : 1;
+TRANSITION main_SWITCH_INT_6
+  CONSUME
+    main_BB3_END_PLACE : 1;
+  PRODUCE
+    main_BB6 : 1;
+TRANSITION main_UNREACHABLE_5
+  CONSUME
+    main_BB5 : 1;
+  PRODUCE
+    PROGRAM_END : 1;
+TRANSITION std_iter_IntoIterator_into_iter_CALL
+  CONSUME
+    main_BB0_END_PLACE : 1;
+  PRODUCE
+    main_BB1 : 1;
+TRANSITION std_iter_Iterator_next_CALL
+  CONSUME
+    main_BB2_END_PLACE : 1;
+  PRODUCE
+    main_BB3 : 1;

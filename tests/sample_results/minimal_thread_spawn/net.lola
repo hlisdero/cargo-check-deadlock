@@ -1,0 +1,45 @@
+PLACE
+    PROGRAM_END,
+    PROGRAM_PANIC,
+    PROGRAM_START,
+    THREAD_0_END,
+    THREAD_0_START,
+    main_BB1,
+    main_BB1_END_PLACE,
+    main_BB2,
+    main_BB3;
+
+MARKING
+    PROGRAM_START : 1,
+TRANSITION main_BB1_STMT0
+  CONSUME
+    main_BB1 : 1;
+  PRODUCE
+    main_BB1_END_PLACE : 1;
+TRANSITION main_DROP_2
+  CONSUME
+    main_BB2 : 1;
+  PRODUCE
+    main_BB3 : 1;
+TRANSITION main_RETURN
+  CONSUME
+    main_BB3 : 1;
+  PRODUCE
+    PROGRAM_END : 1;
+TRANSITION main__closure_0__RETURN
+  CONSUME
+    THREAD_0_START : 1;
+  PRODUCE
+    THREAD_0_END : 1;
+TRANSITION std_thread_JoinHandle_T_join_0
+  CONSUME
+    THREAD_0_END : 1,
+    main_BB1_END_PLACE : 1;
+  PRODUCE
+    main_BB2 : 1;
+TRANSITION std_thread_spawn_0
+  CONSUME
+    PROGRAM_START : 1;
+  PRODUCE
+    THREAD_0_START : 1,
+    main_BB1 : 1;

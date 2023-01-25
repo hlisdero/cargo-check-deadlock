@@ -1,0 +1,12 @@
+digraph petrinet {
+    PROGRAM_END [shape="circle" xlabel="PROGRAM_END" label=""];
+    PROGRAM_PANIC [shape="circle" xlabel="PROGRAM_PANIC" label=""];
+    PROGRAM_START [shape="circle" xlabel="PROGRAM_START" label="•"];
+    main_BB1 [shape="circle" xlabel="main_BB1" label=""];
+    main_GOTO_0 [shape="box" xlabel="" label="main_GOTO_0"];
+    main_GOTO_1 [shape="box" xlabel="" label="main_GOTO_1"];
+    PROGRAM_START -> main_GOTO_0;
+    main_BB1 -> main_GOTO_1;
+    main_GOTO_0 -> main_BB1;
+    main_GOTO_1 -> main_BB1;
+}
