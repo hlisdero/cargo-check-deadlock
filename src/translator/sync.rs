@@ -4,6 +4,7 @@
 //! It exposes only the necessary definitions to the outside modules.
 
 mod arc_manager;
+mod condvar;
 mod mutex;
 mod mutex_manager;
 mod thread;

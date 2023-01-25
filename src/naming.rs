@@ -10,6 +10,7 @@
 
 pub mod arc;
 pub mod basic_block;
+pub mod condvar;
 pub mod function;
 pub mod mutex;
 pub mod program;
