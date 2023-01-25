@@ -6,6 +6,6 @@
 **/*.rs.bk
 
 # Petri net output in the three different formats
-net.dot
-net.lola
-net.pnml
+/net.dot
+/net.lola
+/net.pnml
