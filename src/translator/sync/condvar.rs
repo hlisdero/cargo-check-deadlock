@@ -67,7 +67,7 @@ impl Condvar {
             .unwrap_or_else(|_| handle_err_add_arc("lost signal place", "lost signal translation"));
         net.add_arc_place_transition(&signal_input, &lost_signal_transition)
             .unwrap_or_else(|_| {
-                handle_err_add_arc("signal input place", "lost signal translation")
+                handle_err_add_arc("signal input place", "lost signal translation");
             });
         net.add_arc_place_transition(&wait_input, &signal_transition)
             .unwrap_or_else(|_| handle_err_add_arc("wait input place", "signal translation"));
