@@ -7,7 +7,6 @@
 //! <https://rustc-dev-guide.rust-lang.org/mir/index.html>
 
 use super::Translator;
-use crate::utils::is_place_with_concrete_type;
 use rustc_middle::mir::visit::Visitor;
 use rustc_middle::mir::TerminatorKind;
 
@@ -31,71 +30,17 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
         rvalue: &rustc_middle::mir::Rvalue<'tcx>,
         location: rustc_middle::mir::Location,
     ) {
-        let function = self.call_stack.peek_mut();
-
         match rvalue {
-            // MIR assignments of the form: `_X = _Y`
             rustc_middle::mir::Rvalue::Use(rustc_middle::mir::Operand::Copy(rhs)) => {
-                if is_place_with_concrete_type(
-                    rhs,
-                    "&std::sync::Mutex<T>",
-                    function.def_id,
-                    self.tcx,
-                ) {
-                    function.memory.link_place_to_same_mutex(*place, *rhs);
-                }
+                self.handle_use_copy_assignment(place, rhs);
             }
-            // MIR assignments of the form: `_X = move _Y`
             rustc_middle::mir::Rvalue::Use(rustc_middle::mir::Operand::Move(rhs)) => {
-                if is_place_with_concrete_type(
-                    rhs,
-                    "std::thread::JoinHandle<T>",
-                    function.def_id,
-                    self.tcx,
-                ) {
-                    function.memory.link_place_to_same_join_handle(*place, *rhs);
-                } else if is_place_with_concrete_type(
-                    rhs,
-                    "std::sync::Arc<std::sync::Mutex<T>>",
-                    function.def_id,
-                    self.tcx,
-                ) {
-                    function.memory.link_place_to_same_mutex(*place, *rhs);
-                } else if is_place_with_concrete_type(
-                    rhs,
-                    "std::sync::MutexGuard<'a, T>",
-                    function.def_id,
-                    self.tcx,
-                ) {
-                    function.memory.link_place_to_same_lock_guard(*place, *rhs);
-                }
+                self.handle_use_move_assignment(place, rhs);
             }
-            // MIR assignments of the form: `_X = &_Y`
             rustc_middle::mir::Rvalue::Ref(_, _, rhs) => {
-                if is_place_with_concrete_type(
-                    rhs,
-                    "std::sync::Mutex<T>",
-                    function.def_id,
-                    self.tcx,
-                ) {
-                    function.memory.link_place_to_same_mutex(*place, *rhs);
-                } else if is_place_with_concrete_type(
-                    rhs,
-                    "std::sync::Arc<std::sync::Mutex<T>>",
-                    function.def_id,
-                    self.tcx,
-                ) {
-                    function.memory.link_place_to_same_mutex(*place, *rhs);
-                } else if is_place_with_concrete_type(
-                    rhs,
-                    "std::sync::Condvar",
-                    function.def_id,
-                    self.tcx,
-                ) {
-                    function.memory.link_place_to_same_condvar(*place, *rhs);
-                }
+                self.handle_ref_assignment(place, rhs);
             }
-            // No need to do anything for the other cases now.
+            // No need to do anything for the other cases for now.
             _ => {}
         }
 

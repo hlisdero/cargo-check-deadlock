@@ -31,7 +31,7 @@ mod sync;
 use crate::error_handling::ERR_NO_MAIN_FUNCTION_FOUND;
 use crate::naming::program::{PROGRAM_END, PROGRAM_PANIC, PROGRAM_START};
 use crate::stack::Stack;
-use crate::utils::extract_def_id_of_called_function_from_operand;
+use crate::utils::{extract_def_id_of_called_function_from_operand, is_place_with_concrete_type};
 use function_call::FunctionCall;
 use mir_function::MirFunction;
 use netcrab::petri_net::{PetriNet, PlaceRef};
@@ -223,6 +223,77 @@ impl<'tcx> Translator<'tcx> {
             let new_function = self.call_stack.peek_mut();
             thread_span.move_mutexes(&mut new_function.memory);
             self.translate_top_call_stack();
+        }
+    }
+
+    /// Handles MIR assignments of the form: `_X = _Y`
+    /// This is the handler for the enum variant `rustc_middle::mir::Rvalue::Use` in the MIR Visitor
+    /// when the argument is of the type `rustc_middle::mir::Operand::Copy`.
+    /// <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/mir/enum.Rvalue.html#variant.Use>
+    /// <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/mir/syntax/enum.Operand.html#variant.Copy>
+    fn handle_use_copy_assignment(
+        &mut self,
+        place: &rustc_middle::mir::Place<'tcx>,
+        rhs: &rustc_middle::mir::Place<'tcx>,
+    ) {
+        let function = self.call_stack.peek_mut();
+        if is_place_with_concrete_type(rhs, "&std::sync::Mutex<T>", function.def_id, self.tcx) {
+            function.memory.link_place_to_same_mutex(*place, *rhs);
+        }
+    }
+
+    /// Handles MIR assignments of the form: `_X = move _Y`
+    /// This is the handler for the enum variant `rustc_middle::mir::Rvalue::Use` in the MIR Visitor
+    /// when the argument is of the type `rustc_middle::mir::Operand::Move`.
+    /// <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/mir/enum.Rvalue.html#variant.Use>
+    /// <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/mir/syntax/enum.Operand.html#variant.Move>
+    fn handle_use_move_assignment(
+        &mut self,
+        place: &rustc_middle::mir::Place<'tcx>,
+        rhs: &rustc_middle::mir::Place<'tcx>,
+    ) {
+        let function = self.call_stack.peek_mut();
+        if is_place_with_concrete_type(rhs, "std::thread::JoinHandle<T>", function.def_id, self.tcx)
+        {
+            function.memory.link_place_to_same_join_handle(*place, *rhs);
+        } else if is_place_with_concrete_type(
+            rhs,
+            "std::sync::Arc<std::sync::Mutex<T>>",
+            function.def_id,
+            self.tcx,
+        ) {
+            function.memory.link_place_to_same_mutex(*place, *rhs);
+        } else if is_place_with_concrete_type(
+            rhs,
+            "std::sync::MutexGuard<'a, T>",
+            function.def_id,
+            self.tcx,
+        ) {
+            function.memory.link_place_to_same_lock_guard(*place, *rhs);
+        }
+    }
+
+    /// Handles MIR assignments of the form: `_X = &_Y`
+    /// This is the handler for the enum variant `rustc_middle::mir::Rvalue::Ref` in the MIR Visitor.
+    /// <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/mir/enum.Rvalue.html#variant.Ref>
+    fn handle_ref_assignment(
+        &mut self,
+        place: &rustc_middle::mir::Place<'tcx>,
+        rhs: &rustc_middle::mir::Place<'tcx>,
+    ) {
+        let function = self.call_stack.peek_mut();
+        if is_place_with_concrete_type(rhs, "std::sync::Mutex<T>", function.def_id, self.tcx)
+            || is_place_with_concrete_type(
+                rhs,
+                "std::sync::Arc<std::sync::Mutex<T>>",
+                function.def_id,
+                self.tcx,
+            )
+        {
+            function.memory.link_place_to_same_mutex(*place, *rhs);
+        } else if is_place_with_concrete_type(rhs, "std::sync::Condvar", function.def_id, self.tcx)
+        {
+            function.memory.link_place_to_same_condvar(*place, *rhs);
         }
     }
 }
