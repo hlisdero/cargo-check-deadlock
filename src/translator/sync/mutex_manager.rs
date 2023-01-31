@@ -123,7 +123,7 @@ impl MutexManager {
 
     /// Adds a new mutex and creates its corresponding representation in the Petri net.
     /// Returns a reference to the new mutex.
-    pub fn add_mutex(&mut self, net: &mut PetriNet) -> MutexRef {
+    fn add_mutex(&mut self, net: &mut PetriNet) -> MutexRef {
         let index = self.mutexes.len();
         self.mutexes.push(Mutex::new(index, net));
         MutexRef(index)
@@ -136,7 +136,7 @@ impl MutexManager {
     /// # Panics
     ///
     /// If the mutex reference is invalid, then the function panics.
-    pub fn add_lock_guard(
+    fn add_lock_guard(
         &self,
         mutex_ref: &MutexRef,
         transition_lock: &TransitionRef,
@@ -153,7 +153,7 @@ impl MutexManager {
     /// # Panics
     ///
     /// If the mutex reference is invalid, then the function panics.
-    pub fn add_unlock_guard(
+    fn add_unlock_guard(
         &self,
         mutex_ref: &MutexRef,
         transition_lock: &TransitionRef,

@@ -124,7 +124,7 @@ impl<'tcx> ThreadManager<'tcx> {
     }
 
     /// Adds a new thread span and returns a reference to it.
-    pub fn add_thread_span(
+    fn add_thread_span(
         &mut self,
         spawn_transition: TransitionRef,
         thread_function_def_id: rustc_hir::def_id::DefId,
