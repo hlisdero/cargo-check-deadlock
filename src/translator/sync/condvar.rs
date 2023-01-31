@@ -64,15 +64,15 @@ impl Condvar {
         let signal_transition = net.add_transition(&t2);
 
         net.add_arc_place_transition(&lost_signal_possible, &lost_signal_transition)
-            .unwrap_or_else(|_| handle_err_add_arc("lost signal place", "lost signal translation"));
+            .unwrap_or_else(|_| handle_err_add_arc("lost signal place", "lost signal transition"));
         net.add_arc_place_transition(&signal_input, &lost_signal_transition)
             .unwrap_or_else(|_| {
-                handle_err_add_arc("signal input place", "lost signal translation");
+                handle_err_add_arc("signal input place", "lost signal transition");
             });
         net.add_arc_place_transition(&wait_input, &signal_transition)
-            .unwrap_or_else(|_| handle_err_add_arc("wait input place", "signal translation"));
-        net.add_arc_place_transition(&lost_signal_possible, &lost_signal_transition)
-            .unwrap_or_else(|_| handle_err_add_arc("lost signal place", "lost signal translation"));
+            .unwrap_or_else(|_| handle_err_add_arc("wait input place", "signal transition"));
+        net.add_arc_place_transition(&signal_input, &signal_transition)
+            .unwrap_or_else(|_| handle_err_add_arc("signal input place", "signal transition"));
 
         net.add_arc_transition_place(&lost_signal_transition, &lost_signal_possible)
             .unwrap_or_else(|_| handle_err_add_arc("lost signal transition", "lost signal place"));
@@ -92,7 +92,7 @@ impl Condvar {
     }
 
     /// Links the Petri net model of the condition variable to the representation of
-    /// a call to `std::sync::Condvar::<T>::wait()`.
+    /// a call to `std::sync::Condvar::wait`.
     /// Connects the `lost_signal_possible` place to the `wait_start_transition` transition.
     /// Connects the `wait_start_transition` transition to the `wait_input` place.
     /// Connects the `signal_output` place to the `wait_end_transition` transition.
@@ -111,7 +111,7 @@ impl Condvar {
     }
 
     /// Links the Petri net model of the condition variable to the representation of
-    /// a call to `std::sync::Condvar::<T>::notify_one()`.
+    /// a call to `std::sync::Condvar::notify_one`.
     /// Connects the `signal_transition` transition to the `signal_input` place.
     pub fn link_to_notify_one_call(&self, signal_transition: &TransitionRef, net: &mut PetriNet) {
         net.add_arc_transition_place(signal_transition, &self.signal_input)
