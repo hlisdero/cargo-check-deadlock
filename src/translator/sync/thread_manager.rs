@@ -10,9 +10,7 @@ use super::Thread;
 use crate::naming::thread::{join_transition_labels, spawn_transition_labels};
 use crate::translator::mir_function::{Memory, MutexEntries};
 use crate::translator::special_function::call_foreign_function;
-use crate::utils::{
-    extract_def_id_of_called_function_from_operand, extract_first_argument_for_function_call,
-};
+use crate::utils::{extract_def_id_of_called_function_from_operand, extract_nth_argument};
 use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
 use std::collections::VecDeque;
 
@@ -98,8 +96,8 @@ impl<'tcx> ThreadManager<'tcx> {
             tcx,
         );
 
-        let first_argument = extract_first_argument_for_function_call(args);
-        let mutexes = memory.find_mutexes_linked_to_place(first_argument);
+        let closure_for_spawn = extract_nth_argument(args, 0);
+        let mutexes = memory.find_mutexes_linked_to_place(closure_for_spawn);
 
         let thread_ref =
             self.add_thread_span(transition_function_call, thread_function_def_id, mutexes);
@@ -118,7 +116,7 @@ impl<'tcx> ThreadManager<'tcx> {
         memory: &Memory<'tcx>,
     ) {
         // Retrieve the join handle from the local variable passed to the function as an argument.
-        let self_ref = extract_first_argument_for_function_call(args);
+        let self_ref = extract_nth_argument(args, 0);
         let thread_ref = memory.get_linked_join_handle(&self_ref);
         self.set_join_transition(thread_ref, transition_function_call);
     }

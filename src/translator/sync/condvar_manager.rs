@@ -9,9 +9,7 @@ use crate::error_handling::handle_err_add_arc;
 use crate::naming::condvar::{new_transition_labels, wait_transition_labels};
 use crate::translator::mir_function::Memory;
 use crate::translator::special_function::call_foreign_function;
-use crate::utils::{
-    extract_first_argument_for_function_call, extract_second_argument_for_function_call,
-};
+use crate::utils::extract_nth_argument;
 use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
 
 #[derive(Default)]
@@ -95,13 +93,13 @@ impl CondvarManager {
         memory: &mut Memory<'tcx>,
     ) {
         // Retrieve the lock guard from the local variable passed to the function as an argument.
-        let lock_guard = extract_second_argument_for_function_call(args);
+        let lock_guard = extract_nth_argument(args, 1);
         let mutex_ref = memory.get_linked_lock_guard(&lock_guard);
         // Unlock the mutex when waiting, lock it when the waiting ends.
         mutex_manager.add_unlock_guard(mutex_ref, &wait_transitions.0, net);
         mutex_manager.add_lock_guard(mutex_ref, &wait_transitions.1, net);
         // Retrieve the condvar from the local variable passed to the function as an argument.
-        let self_ref = extract_first_argument_for_function_call(args);
+        let self_ref = extract_nth_argument(args, 0);
         let condvar_ref = memory.get_linked_condvar(&self_ref);
         self.link_to_wait_call(condvar_ref, wait_transitions, net);
     }

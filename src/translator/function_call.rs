@@ -5,7 +5,7 @@ use super::Translator;
 use crate::naming::function::foreign_call_transition_labels;
 use crate::translator::special_function::{call_foreign_function, is_foreign_function};
 use crate::translator::sync::ArcManager;
-use crate::utils::extract_first_argument_for_function_call;
+use crate::utils::extract_nth_argument;
 use netcrab::petri_net::PlaceRef;
 
 /// Types of function calls that the translator supports.
@@ -380,12 +380,13 @@ impl<'tcx> Translator<'tcx> {
         cleanup_place: Option<PlaceRef>,
     ) {
         let current_function = self.call_stack.peek_mut();
-        let self_ref = extract_first_argument_for_function_call(args);
+        let self_ref = extract_nth_argument(args, 0);
         if current_function.memory.is_linked_to_lock_guard(self_ref) {
             current_function
                 .memory
                 .link_place_to_same_lock_guard(destination, self_ref);
         }
+        // Reuse the `FunctionCall::Foreign` case. Nothing special to do.
         self.call_foreign(
             "std::result::Result::<T, E>::unwrap",
             start_place,

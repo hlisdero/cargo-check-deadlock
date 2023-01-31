@@ -43,30 +43,20 @@ pub fn extract_def_id_of_called_function_from_operand<'tcx>(
     }
 }
 
-/// Extracts the first argument from the arguments for the function call.
+/// Extracts the n-th argument from the arguments for the function call.
 ///
 /// This is also useful for obtaining the self reference for method calls.
 /// For example: The call `mutex.lock()` desugars to `std::sync::Mutex::lock(&mutex)`
 /// where `&self` is the first argument.
-pub fn extract_first_argument_for_function_call<'tcx>(
+pub fn extract_nth_argument<'tcx>(
     args: &[rustc_middle::mir::Operand<'tcx>],
+    index: usize,
 ) -> rustc_middle::mir::Place<'tcx> {
-    let rustc_middle::mir::Operand::Move(first_arg) = args.get(0)
-            .expect("BUG: Function should receive at least one argument") else { 
-                panic!("BUG: The first argument should be passed by moving");
+    let rustc_middle::mir::Operand::Move(argument) = args.get(index)
+            .expect("BUG: Function should receive at least `index` arguments") else { 
+                panic!("BUG: The function argument should be passed by moving");
         };
-    *first_arg
-}
-
-/// Extracts the second argument from the arguments for the function call.
-pub fn extract_second_argument_for_function_call<'tcx>(
-    args: &[rustc_middle::mir::Operand<'tcx>],
-) -> rustc_middle::mir::Place<'tcx> {
-    let rustc_middle::mir::Operand::Move(second_arg) = args.get(1)
-            .expect("BUG: Function should receive at least two arguments") else { 
-                panic!("BUG: The second argument should be passed by moving");
-        };
-    *second_arg
+    *argument
 }
 
 /// Checks whether the type of a place matches a given string of the form: `module::submodule::type<T>`.

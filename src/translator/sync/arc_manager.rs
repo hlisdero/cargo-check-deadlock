@@ -6,7 +6,7 @@
 use crate::naming::arc::{clone_transition_labels, deref_transition_labels, new_transition_labels};
 use crate::translator::mir_function::Memory;
 use crate::translator::special_function::call_foreign_function;
-use crate::utils::extract_first_argument_for_function_call;
+use crate::utils::extract_nth_argument;
 use crate::utils::is_place_with_concrete_type;
 use netcrab::petri_net::{PetriNet, PlaceRef};
 
@@ -99,7 +99,7 @@ impl ArcManager {
         caller_function_def_id: rustc_hir::def_id::DefId,
         tcx: rustc_middle::ty::TyCtxt<'tcx>,
     ) {
-        let first_argument = extract_first_argument_for_function_call(args);
+        let first_argument = extract_nth_argument(args, 0);
         if is_place_with_concrete_type(
             &first_argument,
             "std::sync::Mutex<T>",
@@ -121,14 +121,14 @@ impl ArcManager {
         caller_function_def_id: rustc_hir::def_id::DefId,
         tcx: rustc_middle::ty::TyCtxt<'tcx>,
     ) {
-        let first_argument = extract_first_argument_for_function_call(args);
+        let self_ref = extract_nth_argument(args, 0);
         if is_place_with_concrete_type(
-            &first_argument,
+            &self_ref,
             "&std::sync::Arc<std::sync::Mutex<T>>",
             caller_function_def_id,
             tcx,
         ) {
-            memory.link_place_to_same_mutex(return_value, first_argument);
+            memory.link_place_to_same_mutex(return_value, self_ref);
         }
     }
 
@@ -143,14 +143,14 @@ impl ArcManager {
         caller_function_def_id: rustc_hir::def_id::DefId,
         tcx: rustc_middle::ty::TyCtxt<'tcx>,
     ) {
-        let first_argument = extract_first_argument_for_function_call(args);
+        let self_ref = extract_nth_argument(args, 0);
         if is_place_with_concrete_type(
-            &first_argument,
+            &self_ref,
             "&std::sync::Arc<std::sync::Mutex<T>>",
             caller_function_def_id,
             tcx,
         ) {
-            memory.link_place_to_same_mutex(return_value, first_argument);
+            memory.link_place_to_same_mutex(return_value, self_ref);
         }
     }
 }
