@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="utf-8"?>
+<pnml xmlns="http://www.pnml.org/version-2009/grammar/pnml">
+  <net id="net0" type="http://www.pnml.org/version-2009/grammar/ptnet">
+    <page id="page0">
+      <place id="CONDVAR_0_P1">
+        <name>
+          <text>CONDVAR_0_P1</text>
+        </name>
+        <initialMarking>
+          <text>1</text>
+        </initialMarking>
+      </place>
+      <place id="CONDVAR_0_P2">
+        <name>
+          <text>CONDVAR_0_P2</text>
+        </name>
+      </place>
+      <place id="CONDVAR_0_P3">
+        <name>
+          <text>CONDVAR_0_P3</text>
+        </name>
+      </place>
+      <place id="CONDVAR_0_P4">
+        <name>
+          <text>CONDVAR_0_P4</text>
+        </name>
+      </place>
+      <place id="MUTEX_0">
+        <name>
+          <text>MUTEX_0</text>
+        </name>
+        <initialMarking>
+          <text>1</text>
+        </initialMarking>
+      </place>
+      <place id="PROGRAM_END">
+        <name>
+          <text>PROGRAM_END</text>
+        </name>
+      </place>
+      <place id="PROGRAM_PANIC">
+        <name>
+          <text>PROGRAM_PANIC</text>
+        </name>
+      </place>
+      <place id="PROGRAM_START">
+        <name>
+          <text>PROGRAM_START</text>
+        </name>
+        <initialMarking>
+          <text>1</text>
+        </initialMarking>
+      </place>
+      <place id="main_BB1">
+        <name>
+          <text>main_BB1</text>
+        </name>
+      </place>
+      <place id="main_BB2">
+        <name>
+          <text>main_BB2</text>
+        </name>
+      </place>
+      <place id="main_BB2_END_PLACE">
+        <name>
+          <text>main_BB2_END_PLACE</text>
+        </name>
+      </place>
+      <place id="main_BB3">
+        <name>
+          <text>main_BB3</text>
+        </name>
+      </place>
+      <place id="main_BB4">
+        <name>
+          <text>main_BB4</text>
+        </name>
+      </place>
+      <place id="main_BB4_END_PLACE">
+        <name>
+          <text>main_BB4_END_PLACE</text>
+        </name>
+      </place>
+      <place id="main_BB4_STMT0_END">
+        <name>
+          <text>main_BB4_STMT0_END</text>
+        </name>
+      </place>
+      <place id="main_BB5">
+        <name>
+          <text>main_BB5</text>
+        </name>
+      </place>
+      <place id="main_BB6">
+        <name>
+          <text>main_BB6</text>
+        </name>
+      </place>
+      <transition id="CONDVAR_0_T1">
+        <name>
+          <text>CONDVAR_0_T1</text>
+        </name>
+      </transition>
+      <transition id="CONDVAR_0_T2">
+        <name>
+          <text>CONDVAR_0_T2</text>
+        </name>
+      </transition>
+      <transition id="main_BB2_STMT0">
+        <name>
+          <text>main_BB2_STMT0</text>
+        </name>
+      </transition>
+      <transition id="main_BB4_STMT0">
+        <name>
+          <text>main_BB4_STMT0</text>
+        </name>
+      </transition>
+      <transition id="main_BB4_STMT1">
+        <name>
+          <text>main_BB4_STMT1</text>
+        </name>
+      </transition>
+      <transition id="main_DROP_5">
+        <name>
+          <text>main_DROP_5</text>
+        </name>
+      </transition>
+      <transition id="main_RETURN">
+        <name>
+          <text>main_RETURN</text>
+        </name>
+      </transition>
+      <transition id="std_result_Result_unwrap_CALL">
+        <name>
+          <text>std_result_Result_unwrap_CALL</text>
+        </name>
+      </transition>
+      <transition id="std_sync_Condvar_new_0">
+        <name>
+          <text>std_sync_Condvar_new_0</text>
+        </name>
+      </transition>
+      <transition id="std_sync_Condvar_wait_0_END">
+        <name>
+          <text>std_sync_Condvar_wait_0_END</text>
+        </name>
+      </transition>
+      <transition id="std_sync_Condvar_wait_0_START">
+        <name>
+          <text>std_sync_Condvar_wait_0_START</text>
+        </name>
+      </transition>
+      <transition id="std_sync_Mutex_T_lock_0">
+        <name>
+          <text>std_sync_Mutex_T_lock_0</text>
+        </name>
+      </transition>
+      <transition id="std_sync_Mutex_T_new_0">
+        <name>
+          <text>std_sync_Mutex_T_new_0</text>
+        </name>
+      </transition>
+      <arc source="CONDVAR_0_P1" target="CONDVAR_0_T1" id="(CONDVAR_0_P1, CONDVAR_0_T1)">
+        <name>
+          <text>(CONDVAR_0_P1, CONDVAR_0_T1)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="CONDVAR_0_P1" target="std_sync_Condvar_wait_0_START" id="(CONDVAR_0_P1, std_sync_Condvar_wait_0_START)">
+        <name>
+          <text>(CONDVAR_0_P1, std_sync_Condvar_wait_0_START)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="CONDVAR_0_P2" target="CONDVAR_0_T1" id="(CONDVAR_0_P2, CONDVAR_0_T1)">
+        <name>
+          <text>(CONDVAR_0_P2, CONDVAR_0_T1)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="CONDVAR_0_P2" target="CONDVAR_0_T2" id="(CONDVAR_0_P2, CONDVAR_0_T2)">
+        <name>
+          <text>(CONDVAR_0_P2, CONDVAR_0_T2)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="CONDVAR_0_P3" target="CONDVAR_0_T2" id="(CONDVAR_0_P3, CONDVAR_0_T2)">
+        <name>
+          <text>(CONDVAR_0_P3, CONDVAR_0_T2)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="CONDVAR_0_P4" target="std_sync_Condvar_wait_0_END" id="(CONDVAR_0_P4, std_sync_Condvar_wait_0_END)">
+        <name>
+          <text>(CONDVAR_0_P4, std_sync_Condvar_wait_0_END)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="MUTEX_0" target="std_sync_Condvar_wait_0_END" id="(MUTEX_0, std_sync_Condvar_wait_0_END)">
+        <name>
+          <text>(MUTEX_0, std_sync_Condvar_wait_0_END)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="MUTEX_0" target="std_sync_Mutex_T_lock_0" id="(MUTEX_0, std_sync_Mutex_T_lock_0)">
+        <name>
+          <text>(MUTEX_0, std_sync_Mutex_T_lock_0)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="PROGRAM_START" target="std_sync_Mutex_T_new_0" id="(PROGRAM_START, std_sync_Mutex_T_new_0)">
+        <name>
+          <text>(PROGRAM_START, std_sync_Mutex_T_new_0)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main_BB1" target="std_sync_Condvar_new_0" id="(main_BB1, std_sync_Condvar_new_0)">
+        <name>
+          <text>(main_BB1, std_sync_Condvar_new_0)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main_BB2" target="main_BB2_STMT0" id="(main_BB2, main_BB2_STMT0)">
+        <name>
+          <text>(main_BB2, main_BB2_STMT0)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main_BB2_END_PLACE" target="std_sync_Mutex_T_lock_0" id="(main_BB2_END_PLACE, std_sync_Mutex_T_lock_0)">
+        <name>
+          <text>(main_BB2_END_PLACE, std_sync_Mutex_T_lock_0)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main_BB3" target="std_result_Result_unwrap_CALL" id="(main_BB3, std_result_Result_unwrap_CALL)">
+        <name>
+          <text>(main_BB3, std_result_Result_unwrap_CALL)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main_BB4" target="main_BB4_STMT0" id="(main_BB4, main_BB4_STMT0)">
+        <name>
+          <text>(main_BB4, main_BB4_STMT0)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main_BB4_END_PLACE" target="std_sync_Condvar_wait_0_START" id="(main_BB4_END_PLACE, std_sync_Condvar_wait_0_START)">
+        <name>
+          <text>(main_BB4_END_PLACE, std_sync_Condvar_wait_0_START)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main_BB4_STMT0_END" target="main_BB4_STMT1" id="(main_BB4_STMT0_END, main_BB4_STMT1)">
+        <name>
+          <text>(main_BB4_STMT0_END, main_BB4_STMT1)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main_BB5" target="main_DROP_5" id="(main_BB5, main_DROP_5)">
+        <name>
+          <text>(main_BB5, main_DROP_5)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main_BB6" target="main_RETURN" id="(main_BB6, main_RETURN)">
+        <name>
+          <text>(main_BB6, main_RETURN)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="CONDVAR_0_T1" target="CONDVAR_0_P1" id="(CONDVAR_0_T1, CONDVAR_0_P1)">
+        <name>
+          <text>(CONDVAR_0_T1, CONDVAR_0_P1)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="CONDVAR_0_T2" target="CONDVAR_0_P1" id="(CONDVAR_0_T2, CONDVAR_0_P1)">
+        <name>
+          <text>(CONDVAR_0_T2, CONDVAR_0_P1)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="CONDVAR_0_T2" target="CONDVAR_0_P4" id="(CONDVAR_0_T2, CONDVAR_0_P4)">
+        <name>
+          <text>(CONDVAR_0_T2, CONDVAR_0_P4)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main_BB2_STMT0" target="main_BB2_END_PLACE" id="(main_BB2_STMT0, main_BB2_END_PLACE)">
+        <name>
+          <text>(main_BB2_STMT0, main_BB2_END_PLACE)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main_BB4_STMT0" target="main_BB4_STMT0_END" id="(main_BB4_STMT0, main_BB4_STMT0_END)">
+        <name>
+          <text>(main_BB4_STMT0, main_BB4_STMT0_END)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main_BB4_STMT1" target="main_BB4_END_PLACE" id="(main_BB4_STMT1, main_BB4_END_PLACE)">
+        <name>
+          <text>(main_BB4_STMT1, main_BB4_END_PLACE)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main_DROP_5" target="main_BB6" id="(main_DROP_5, main_BB6)">
+        <name>
+          <text>(main_DROP_5, main_BB6)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main_RETURN" target="PROGRAM_END" id="(main_RETURN, PROGRAM_END)">
+        <name>
+          <text>(main_RETURN, PROGRAM_END)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="std_result_Result_unwrap_CALL" target="main_BB4" id="(std_result_Result_unwrap_CALL, main_BB4)">
+        <name>
+          <text>(std_result_Result_unwrap_CALL, main_BB4)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="std_sync_Condvar_new_0" target="main_BB2" id="(std_sync_Condvar_new_0, main_BB2)">
+        <name>
+          <text>(std_sync_Condvar_new_0, main_BB2)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="std_sync_Condvar_wait_0_END" target="main_BB5" id="(std_sync_Condvar_wait_0_END, main_BB5)">
+        <name>
+          <text>(std_sync_Condvar_wait_0_END, main_BB5)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="std_sync_Condvar_wait_0_START" target="CONDVAR_0_P3" id="(std_sync_Condvar_wait_0_START, CONDVAR_0_P3)">
+        <name>
+          <text>(std_sync_Condvar_wait_0_START, CONDVAR_0_P3)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="std_sync_Condvar_wait_0_START" target="MUTEX_0" id="(std_sync_Condvar_wait_0_START, MUTEX_0)">
+        <name>
+          <text>(std_sync_Condvar_wait_0_START, MUTEX_0)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="std_sync_Mutex_T_lock_0" target="main_BB3" id="(std_sync_Mutex_T_lock_0, main_BB3)">
+        <name>
+          <text>(std_sync_Mutex_T_lock_0, main_BB3)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="std_sync_Mutex_T_new_0" target="main_BB1" id="(std_sync_Mutex_T_new_0, main_BB1)">
+        <name>
+          <text>(std_sync_Mutex_T_new_0, main_BB1)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+    </page>
+  </net>
+</pnml>

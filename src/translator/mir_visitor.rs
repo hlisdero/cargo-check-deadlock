@@ -62,7 +62,7 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
 
             if is_place_with_concrete_type(
                 rhs,
-                "std::sync::MutexGuard<'a, T>>",
+                "std::sync::MutexGuard<'a, T>",
                 function.def_id,
                 self.tcx,
             ) {
@@ -83,6 +83,10 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
                 self.tcx,
             ) {
                 function.memory.link_place_to_same_mutex(*place, *rhs);
+            }
+
+            if is_place_with_concrete_type(rhs, "std::sync::Condvar", function.def_id, self.tcx) {
+                function.memory.link_place_to_same_condvar(*place, *rhs);
             }
         }
 

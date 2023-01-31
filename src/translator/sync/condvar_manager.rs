@@ -84,8 +84,8 @@ impl CondvarManager {
 
     /// Translates the side effects for `std::sync::Condvar::wait` i.e.,
     /// the specific logic of waiting on a condition variable.
-    /// Receives a reference to the memory of the caller function to retrieve the mutex
-    /// linked to the lock guard contained in the local variable for the call.
+    /// Receives a reference to the memory of the caller function to retrieve the lock guard
+    /// contained in the local variable for the call.
     pub fn translate_side_effects_wait<'tcx>(
         &self,
         args: &[rustc_middle::mir::Operand<'tcx>],
@@ -94,13 +94,12 @@ impl CondvarManager {
         mutex_manager: &mut MutexManager,
         memory: &mut Memory<'tcx>,
     ) {
-        // Retrieve the mutex from the local variable passed to the function as an argument.
+        // Retrieve the lock guard from the local variable passed to the function as an argument.
         let lock_guard = extract_second_argument_for_function_call(args);
-        let mutex_ref = memory.get_linked_mutex(&lock_guard);
+        let mutex_ref = memory.get_linked_lock_guard(&lock_guard);
         // Unlock the mutex when waiting, lock it when the waiting ends.
         mutex_manager.add_unlock_guard(mutex_ref, &wait_transitions.0, net);
         mutex_manager.add_lock_guard(mutex_ref, &wait_transitions.1, net);
-
         // Retrieve the condvar from the local variable passed to the function as an argument.
         let self_ref = extract_first_argument_for_function_call(args);
         let condvar_ref = memory.get_linked_condvar(&self_ref);
