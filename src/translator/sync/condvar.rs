@@ -41,8 +41,6 @@ pub struct Condvar {
     signal_input: PlaceRef,
     wait_input: PlaceRef,
     signal_output: PlaceRef,
-    lost_signal_transition: TransitionRef,
-    signal_transition: TransitionRef,
 }
 
 impl Condvar {
@@ -86,8 +84,6 @@ impl Condvar {
             signal_input,
             wait_input,
             signal_output,
-            lost_signal_transition,
-            signal_transition,
         }
     }
 
