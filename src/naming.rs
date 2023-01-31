@@ -28,4 +28,5 @@ fn sanitize(function_name: &str) -> String {
         .replace("<T>", "T")
         .replace("::", "_")
         .replace(['{', '}', '#'], "_")
+        .replace("Result_<T, E>", "Result")
 }
