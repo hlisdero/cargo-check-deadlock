@@ -58,6 +58,17 @@ pub fn extract_first_argument_for_function_call<'tcx>(
     *first_arg
 }
 
+/// Extracts the second argument from the arguments for the function call.
+pub fn extract_second_argument_for_function_call<'tcx>(
+    args: &[rustc_middle::mir::Operand<'tcx>],
+) -> rustc_middle::mir::Place<'tcx> {
+    let rustc_middle::mir::Operand::Move(second_arg) = args.get(1)
+            .expect("BUG: Function should receive at least two arguments") else { 
+                panic!("BUG: The second argument should be passed by moving");
+        };
+    *second_arg
+}
+
 /// Checks whether the type of a place matches a given string of the form: `module::submodule::type<T>`.
 /// The function checks that `T` is a concrete type (e.g. "i32") and not a type parameter ("T") for the `place`.
 ///

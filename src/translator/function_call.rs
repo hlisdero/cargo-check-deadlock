@@ -5,6 +5,7 @@ use super::Translator;
 use crate::naming::function::foreign_call_transition_labels;
 use crate::translator::special_function::{call_foreign_function, is_foreign_function};
 use crate::translator::sync::ArcManager;
+use crate::utils::extract_first_argument_for_function_call;
 use netcrab::petri_net::PlaceRef;
 
 /// Types of function calls that the translator supports.
@@ -18,6 +19,9 @@ pub enum FunctionCall {
     /// Call to `std::sync::Condvar::new`
     /// Non-recursive call for the translation process.
     CondVarNew,
+    /// Call to `std::sync::Condvar::wait`
+    /// Non-recursive call for the translation process.
+    CondVarWait,
     /// Call to `std::ops::Deref::deref`
     /// Non-recursive call for the translation process.
     Deref,
@@ -39,6 +43,9 @@ pub enum FunctionCall {
     /// Call to `std::thread::spawn`.
     /// Non-recursive call for the translation process.
     ThreadSpawn,
+    /// Call to `std::result::Result::<T, E>::unwrap`.
+    /// Non-recursive call for the translation process.
+    Unwrap,
 }
 
 impl FunctionCall {
@@ -64,8 +71,10 @@ impl FunctionCall {
         match function_name {
             "std::clone::Clone::clone" => Some(Self::Clone),
             "std::ops::Deref::deref" => Some(Self::Deref),
+            "std::result::Result::<T, E>::unwrap" => Some(Self::Unwrap),
             "std::sync::Arc::<T>::new" => Some(Self::ArcNew),
             "std::sync::Condvar::new" => Some(Self::CondVarNew),
+            "std::sync::Condvar::wait" => Some(Self::CondVarWait),
             "std::sync::Mutex::<T>::new" => Some(Self::MutexNew),
             "std::sync::Mutex::<T>::lock" => Some(Self::MutexLock),
             "std::thread::spawn" => Some(Self::ThreadSpawn),
@@ -99,6 +108,9 @@ impl<'tcx> Translator<'tcx> {
             FunctionCall::CondVarNew => {
                 self.call_condvar_new(destination, &start_place, &end_place, cleanup_place);
             }
+            FunctionCall::CondVarWait => {
+                self.call_condvar_wait(args, &start_place, &end_place);
+            }
             FunctionCall::Deref => {
                 self.call_deref(args, destination, &start_place, &end_place, cleanup_place);
             }
@@ -119,6 +131,9 @@ impl<'tcx> Translator<'tcx> {
             }
             FunctionCall::ThreadSpawn => {
                 self.call_thread_spawn(args, destination, &start_place, &end_place, cleanup_place);
+            }
+            FunctionCall::Unwrap => {
+                self.call_unwrap(args, destination, &start_place, &end_place, cleanup_place);
             }
         }
     }
@@ -331,6 +346,51 @@ impl<'tcx> Translator<'tcx> {
             destination,
             &mut self.net,
             &mut current_function.memory,
+        );
+    }
+
+    /// Handler for the case `FunctionCall::CondVarWait`.
+    fn call_condvar_wait(
+        &mut self,
+        args: &[rustc_middle::mir::Operand<'tcx>],
+        start_place: &PlaceRef,
+        end_place: &PlaceRef,
+    ) {
+        let wait_transitions =
+            self.condvar_manager
+                .translate_call_wait(start_place, end_place, &mut self.net);
+
+        let current_function = self.call_stack.peek_mut();
+        self.condvar_manager.translate_side_effects_wait(
+            args,
+            &wait_transitions,
+            &mut self.net,
+            &mut self.mutex_manager,
+            &mut current_function.memory,
+        );
+    }
+
+    /// Handler for the the case `FunctionCall::Unwrap`.
+    fn call_unwrap(
+        &mut self,
+        args: &[rustc_middle::mir::Operand<'tcx>],
+        destination: rustc_middle::mir::Place<'tcx>,
+        start_place: &PlaceRef,
+        end_place: &PlaceRef,
+        cleanup_place: Option<PlaceRef>,
+    ) {
+        let current_function = self.call_stack.peek_mut();
+        let self_ref = extract_first_argument_for_function_call(args);
+        if current_function.memory.is_linked_to_lock_guard(self_ref) {
+            current_function
+                .memory
+                .link_place_to_same_lock_guard(destination, self_ref);
+        }
+        self.call_foreign(
+            "std::result::Result::<T, E>::unwrap",
+            start_place,
+            end_place,
+            cleanup_place,
         );
     }
 }

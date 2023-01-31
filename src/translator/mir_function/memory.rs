@@ -174,7 +174,7 @@ impl<'tcx> Memory<'tcx> {
     }
 
     /// Checks whether the place is linked to a lock guard.
-    pub fn is_linked_to_place_guard(&self, place: rustc_middle::mir::Place<'tcx>) -> bool {
+    pub fn is_linked_to_lock_guard(&self, place: rustc_middle::mir::Place<'tcx>) -> bool {
         self.places_linked_to_lock_guards.contains_key(&place)
     }
 
@@ -193,6 +193,23 @@ impl<'tcx> Memory<'tcx> {
     ) {
         let mutex_ref = self.get_linked_mutex(&place_linked_to_mutex);
         self.link_place_to_mutex(place_to_be_linked, mutex_ref.clone());
+    }
+
+    /// Links a place to the lock guard linked to another place.
+    /// After this operation both places point to the same lock guard, i.e.,
+    /// the first place is an alias for the second place.
+    ///
+    /// # Panics
+    ///
+    /// If the place to be linked is already linked to a lock guard, then the function panics.
+    /// If the place linked to a lock guard is not linked to a lock guard, then the function panics.
+    pub fn link_place_to_same_lock_guard(
+        &mut self,
+        place_to_be_linked: rustc_middle::mir::Place<'tcx>,
+        place_linked_to_lock_guard: rustc_middle::mir::Place<'tcx>,
+    ) {
+        let mutex_ref = self.get_linked_lock_guard(&place_linked_to_lock_guard);
+        self.link_place_to_lock_guard(place_to_be_linked, mutex_ref.clone());
     }
 
     /// Links a place to the join handle linked to another place.

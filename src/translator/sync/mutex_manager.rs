@@ -115,7 +115,7 @@ impl MutexManager {
         memory: &Memory<'tcx>,
         net: &mut PetriNet,
     ) {
-        if memory.is_linked_to_place_guard(place) {
+        if memory.is_linked_to_lock_guard(place) {
             let mutex_ref = memory.get_linked_lock_guard(&place);
             self.add_unlock_guard(mutex_ref, transition_drop, net);
         }
@@ -136,7 +136,7 @@ impl MutexManager {
     /// # Panics
     ///
     /// If the mutex reference is invalid, then the function panics.
-    fn add_lock_guard(
+    pub fn add_lock_guard(
         &self,
         mutex_ref: &MutexRef,
         transition_lock: &TransitionRef,
@@ -153,7 +153,7 @@ impl MutexManager {
     /// # Panics
     ///
     /// If the mutex reference is invalid, then the function panics.
-    fn add_unlock_guard(
+    pub fn add_unlock_guard(
         &self,
         mutex_ref: &MutexRef,
         transition_lock: &TransitionRef,
