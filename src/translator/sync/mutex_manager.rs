@@ -5,10 +5,11 @@
 
 use super::mutex::Mutex;
 use crate::naming::mutex::{lock_transition_labels, new_transition_labels};
+use crate::translator::function_call::FunctionPlaces;
 use crate::translator::mir_function::Memory;
 use crate::translator::special_function::call_foreign_function;
 use crate::utils::extract_nth_argument;
-use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
+use netcrab::petri_net::{PetriNet, TransitionRef};
 
 #[derive(Default)]
 pub struct MutexManager {
@@ -32,19 +33,11 @@ impl MutexManager {
     /// Returns the transition that represents the function call.
     pub fn translate_call_new(
         &self,
-        start_place: &PlaceRef,
-        end_place: &PlaceRef,
-        cleanup_place: Option<PlaceRef>,
+        function_call_places: &FunctionPlaces,
         net: &mut PetriNet,
     ) -> TransitionRef {
         let index = self.mutexes.len();
-        call_foreign_function(
-            start_place,
-            end_place,
-            cleanup_place,
-            &new_transition_labels(index),
-            net,
-        )
+        call_foreign_function(function_call_places, &new_transition_labels(index), net)
     }
 
     /// Translates a call to `std::sync::Mutex::<T>::lock` using
@@ -54,20 +47,12 @@ impl MutexManager {
     /// Returns the transition that represents the function call.
     pub fn translate_call_lock(
         &mut self,
-        start_place: &PlaceRef,
-        end_place: &PlaceRef,
-        cleanup_place: Option<PlaceRef>,
+        function_call_places: &FunctionPlaces,
         net: &mut PetriNet,
     ) -> TransitionRef {
         let index = self.lock_counter;
         self.lock_counter += 1;
-        call_foreign_function(
-            start_place,
-            end_place,
-            cleanup_place,
-            &lock_transition_labels(index),
-            net,
-        )
+        call_foreign_function(function_call_places, &lock_transition_labels(index), net)
     }
 
     /// Translates the side effects for `std::sync::Mutex::<T>::new` i.e.,

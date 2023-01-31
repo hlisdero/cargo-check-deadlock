@@ -17,6 +17,7 @@ mod memory;
 mod statement;
 mod terminator;
 
+use crate::translator::function_call::FunctionPlaces;
 use basic_block::BasicBlock;
 use netcrab::petri_net::{PetriNet, PlaceRef};
 use std::collections::HashMap;
@@ -210,7 +211,7 @@ impl<'tcx> MirFunction<'tcx> {
         block_number: rustc_middle::mir::BasicBlock,
         cleanup_block_number: Option<rustc_middle::mir::BasicBlock>,
         net: &mut PetriNet,
-    ) -> (PlaceRef, PlaceRef, Option<PlaceRef>) {
+    ) -> FunctionPlaces {
         let active_block = self.get_active_block();
         let start_place = active_block.end_place.clone();
 

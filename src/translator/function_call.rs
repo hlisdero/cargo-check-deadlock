@@ -8,6 +8,10 @@ use crate::translator::sync::ArcManager;
 use crate::utils::extract_nth_argument;
 use netcrab::petri_net::PlaceRef;
 
+/// A convenient typedef to pass the start place, the end place
+/// and the (optional) cleanup place for a function call.
+pub type FunctionPlaces = (PlaceRef, PlaceRef, Option<PlaceRef>);
+
 /// Types of function calls that the translator supports.
 pub enum FunctionCall {
     /// Call to `std::sync::Arc::<T>::new`
@@ -97,50 +101,49 @@ impl<'tcx> Translator<'tcx> {
         function_def_id: rustc_hir::def_id::DefId,
         args: &[rustc_middle::mir::Operand<'tcx>],
         destination: rustc_middle::mir::Place<'tcx>,
-        place_refs_for_function_call: (PlaceRef, PlaceRef, Option<PlaceRef>),
+        function_call_places: FunctionPlaces,
     ) {
         let function_name = self.tcx.def_path_str(function_def_id);
-        let (start_place, end_place, cleanup_place) = place_refs_for_function_call;
 
         match function_call {
             FunctionCall::ArcNew => {
-                self.call_arc_new(args, destination, &start_place, &end_place, cleanup_place);
+                self.call_arc_new(args, destination, &function_call_places);
             }
             FunctionCall::Clone => {
-                self.call_clone(args, destination, &start_place, &end_place, cleanup_place);
+                self.call_clone(args, destination, &function_call_places);
             }
             FunctionCall::CondVarNew => {
-                self.call_condvar_new(destination, &start_place, &end_place, cleanup_place);
+                self.call_condvar_new(destination, &function_call_places);
             }
             FunctionCall::CondVarNotifyOne => {
-                self.call_condvar_notify_one(args, &start_place, &end_place, cleanup_place);
+                self.call_condvar_notify_one(args, &function_call_places);
             }
             FunctionCall::CondVarWait => {
-                self.call_condvar_wait(args, &start_place, &end_place, cleanup_place);
+                self.call_condvar_wait(args, &function_call_places);
             }
             FunctionCall::Deref => {
-                self.call_deref(args, destination, &start_place, &end_place, cleanup_place);
+                self.call_deref(args, destination, &function_call_places);
             }
             FunctionCall::MirFunction => {
-                self.call_mir_function(function_def_id, start_place, end_place);
+                self.call_mir_function(function_def_id, function_call_places);
             }
             FunctionCall::Foreign => {
-                self.call_foreign(&function_name, &start_place, &end_place, cleanup_place);
+                self.call_foreign(&function_name, &function_call_places);
             }
             FunctionCall::MutexLock => {
-                self.call_mutex_lock(args, destination, &start_place, &end_place, cleanup_place);
+                self.call_mutex_lock(args, destination, &function_call_places);
             }
             FunctionCall::MutexNew => {
-                self.call_mutex_new(destination, &start_place, &end_place, cleanup_place);
+                self.call_mutex_new(destination, &function_call_places);
             }
             FunctionCall::ThreadJoin => {
-                self.call_thread_join(args, &start_place, &end_place, cleanup_place);
+                self.call_thread_join(args, &function_call_places);
             }
             FunctionCall::ThreadSpawn => {
-                self.call_thread_spawn(args, destination, &start_place, &end_place, cleanup_place);
+                self.call_thread_spawn(args, destination, &function_call_places);
             }
             FunctionCall::Unwrap => {
-                self.call_unwrap(args, destination, &start_place, &end_place, cleanup_place);
+                self.call_unwrap(args, destination, &function_call_places);
             }
         }
     }
@@ -149,25 +152,17 @@ impl<'tcx> Translator<'tcx> {
     fn call_mir_function(
         &mut self,
         function_def_id: rustc_hir::def_id::DefId,
-        start_place: PlaceRef,
-        end_place: PlaceRef,
+        function_call_places: FunctionPlaces,
     ) {
+        let (start_place, end_place, _) = function_call_places;
         self.push_function_to_call_stack(function_def_id, start_place, end_place);
         self.translate_top_call_stack();
     }
 
     /// Handler for the case `FunctionCall::Foreign`
-    fn call_foreign(
-        &mut self,
-        function_name: &str,
-        start_place: &PlaceRef,
-        end_place: &PlaceRef,
-        cleanup_place: Option<PlaceRef>,
-    ) {
+    fn call_foreign(&mut self, function_name: &str, function_call_places: &FunctionPlaces) {
         call_foreign_function(
-            start_place,
-            end_place,
-            cleanup_place,
+            function_call_places,
             &foreign_call_transition_labels(function_name),
             &mut self.net,
         );
@@ -178,16 +173,11 @@ impl<'tcx> Translator<'tcx> {
         &mut self,
         args: &[rustc_middle::mir::Operand<'tcx>],
         destination: rustc_middle::mir::Place<'tcx>,
-        start_place: &PlaceRef,
-        end_place: &PlaceRef,
-        cleanup_place: Option<PlaceRef>,
+        function_call_places: &FunctionPlaces,
     ) {
-        let transition_function_call = self.mutex_manager.translate_call_lock(
-            start_place,
-            end_place,
-            cleanup_place,
-            &mut self.net,
-        );
+        let transition_function_call = self
+            .mutex_manager
+            .translate_call_lock(function_call_places, &mut self.net);
 
         let current_function = self.call_stack.peek_mut();
         self.mutex_manager.translate_side_effects_lock(
@@ -203,12 +193,10 @@ impl<'tcx> Translator<'tcx> {
     fn call_mutex_new(
         &mut self,
         destination: rustc_middle::mir::Place<'tcx>,
-        start_place: &PlaceRef,
-        end_place: &PlaceRef,
-        cleanup_place: Option<PlaceRef>,
+        function_call_places: &FunctionPlaces,
     ) {
         self.mutex_manager
-            .translate_call_new(start_place, end_place, cleanup_place, &mut self.net);
+            .translate_call_new(function_call_places, &mut self.net);
 
         let current_function = self.call_stack.peek_mut();
         self.mutex_manager.translate_side_effects_new(
@@ -222,16 +210,11 @@ impl<'tcx> Translator<'tcx> {
     fn call_thread_join(
         &mut self,
         args: &[rustc_middle::mir::Operand<'tcx>],
-        start_place: &PlaceRef,
-        end_place: &PlaceRef,
-        cleanup_place: Option<PlaceRef>,
+        function_call_places: &FunctionPlaces,
     ) {
-        let transition_function_call = self.thread_manager.translate_call_join(
-            start_place,
-            end_place,
-            cleanup_place,
-            &mut self.net,
-        );
+        let transition_function_call = self
+            .thread_manager
+            .translate_call_join(function_call_places, &mut self.net);
 
         let current_function = self.call_stack.peek();
         self.thread_manager.translate_side_effects_join(
@@ -246,16 +229,11 @@ impl<'tcx> Translator<'tcx> {
         &mut self,
         args: &[rustc_middle::mir::Operand<'tcx>],
         destination: rustc_middle::mir::Place<'tcx>,
-        start_place: &PlaceRef,
-        end_place: &PlaceRef,
-        cleanup_place: Option<PlaceRef>,
+        function_call_places: &FunctionPlaces,
     ) {
-        let transition_function_call = self.thread_manager.translate_call_spawn(
-            start_place,
-            end_place,
-            cleanup_place,
-            &mut self.net,
-        );
+        let transition_function_call = self
+            .thread_manager
+            .translate_call_spawn(function_call_places, &mut self.net);
 
         let current_function = self.call_stack.peek_mut();
         self.thread_manager.translate_side_effects_spawn(
@@ -273,12 +251,10 @@ impl<'tcx> Translator<'tcx> {
         &mut self,
         args: &[rustc_middle::mir::Operand<'tcx>],
         destination: rustc_middle::mir::Place<'tcx>,
-        start_place: &PlaceRef,
-        end_place: &PlaceRef,
-        cleanup_place: Option<PlaceRef>,
+        function_call_places: &FunctionPlaces,
     ) {
         self.arc_manager
-            .translate_call_new(start_place, end_place, cleanup_place, &mut self.net);
+            .translate_call_new(function_call_places, &mut self.net);
 
         let current_function = self.call_stack.peek_mut();
         ArcManager::translate_side_effects_new(
@@ -295,12 +271,10 @@ impl<'tcx> Translator<'tcx> {
         &mut self,
         args: &[rustc_middle::mir::Operand<'tcx>],
         destination: rustc_middle::mir::Place<'tcx>,
-        start_place: &PlaceRef,
-        end_place: &PlaceRef,
-        cleanup_place: Option<PlaceRef>,
+        function_call_places: &FunctionPlaces,
     ) {
         self.arc_manager
-            .translate_call_clone(start_place, end_place, cleanup_place, &mut self.net);
+            .translate_call_clone(function_call_places, &mut self.net);
 
         let current_function = self.call_stack.peek_mut();
         ArcManager::translate_side_effects_clone(
@@ -317,12 +291,10 @@ impl<'tcx> Translator<'tcx> {
         &mut self,
         args: &[rustc_middle::mir::Operand<'tcx>],
         destination: rustc_middle::mir::Place<'tcx>,
-        start_place: &PlaceRef,
-        end_place: &PlaceRef,
-        cleanup_place: Option<PlaceRef>,
+        function_call_places: &FunctionPlaces,
     ) {
         self.arc_manager
-            .translate_call_deref(start_place, end_place, cleanup_place, &mut self.net);
+            .translate_call_deref(function_call_places, &mut self.net);
 
         let current_function = self.call_stack.peek_mut();
         ArcManager::translate_side_effects_deref(
@@ -338,16 +310,10 @@ impl<'tcx> Translator<'tcx> {
     fn call_condvar_new(
         &mut self,
         destination: rustc_middle::mir::Place<'tcx>,
-        start_place: &PlaceRef,
-        end_place: &PlaceRef,
-        cleanup_place: Option<PlaceRef>,
+        function_call_places: &FunctionPlaces,
     ) {
-        self.condvar_manager.translate_call_new(
-            start_place,
-            end_place,
-            cleanup_place,
-            &mut self.net,
-        );
+        self.condvar_manager
+            .translate_call_new(function_call_places, &mut self.net);
 
         let current_function = self.call_stack.peek_mut();
         self.condvar_manager.translate_side_effects_new(
@@ -361,16 +327,11 @@ impl<'tcx> Translator<'tcx> {
     fn call_condvar_notify_one(
         &mut self,
         args: &[rustc_middle::mir::Operand<'tcx>],
-        start_place: &PlaceRef,
-        end_place: &PlaceRef,
-        cleanup_place: Option<PlaceRef>,
+        function_call_places: &FunctionPlaces,
     ) {
-        let notify_one_transition = self.condvar_manager.translate_call_notify_one(
-            start_place,
-            end_place,
-            cleanup_place,
-            &mut self.net,
-        );
+        let notify_one_transition = self
+            .condvar_manager
+            .translate_call_notify_one(function_call_places, &mut self.net);
 
         let current_function = self.call_stack.peek_mut();
         self.condvar_manager.translate_side_effects_notify_one(
@@ -385,16 +346,11 @@ impl<'tcx> Translator<'tcx> {
     fn call_condvar_wait(
         &mut self,
         args: &[rustc_middle::mir::Operand<'tcx>],
-        start_place: &PlaceRef,
-        end_place: &PlaceRef,
-        cleanup_place: Option<PlaceRef>,
+        function_call_places: &FunctionPlaces,
     ) {
-        let wait_transitions = self.condvar_manager.translate_call_wait(
-            start_place,
-            end_place,
-            cleanup_place,
-            &mut self.net,
-        );
+        let wait_transitions = self
+            .condvar_manager
+            .translate_call_wait(function_call_places, &mut self.net);
 
         let current_function = self.call_stack.peek_mut();
         self.condvar_manager.translate_side_effects_wait(
@@ -411,9 +367,7 @@ impl<'tcx> Translator<'tcx> {
         &mut self,
         args: &[rustc_middle::mir::Operand<'tcx>],
         destination: rustc_middle::mir::Place<'tcx>,
-        start_place: &PlaceRef,
-        end_place: &PlaceRef,
-        cleanup_place: Option<PlaceRef>,
+        function_call_places: &FunctionPlaces,
     ) {
         let current_function = self.call_stack.peek_mut();
         let self_ref = extract_nth_argument(args, 0);
@@ -423,11 +377,6 @@ impl<'tcx> Translator<'tcx> {
                 .link_place_to_same_lock_guard(destination, self_ref);
         }
         // Reuse the `FunctionCall::Foreign` case. Nothing special to do.
-        self.call_foreign(
-            "std::result::Result::<T, E>::unwrap",
-            start_place,
-            end_place,
-            cleanup_place,
-        );
+        self.call_foreign("std::result::Result::<T, E>::unwrap", function_call_places);
     }
 }

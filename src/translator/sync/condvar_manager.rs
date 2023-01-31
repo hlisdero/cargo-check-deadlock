@@ -9,10 +9,11 @@ use crate::error_handling::handle_err_add_arc;
 use crate::naming::condvar::{
     new_transition_labels, notify_one_transition_labels, wait_transition_labels,
 };
+use crate::translator::function_call::FunctionPlaces;
 use crate::translator::mir_function::Memory;
 use crate::translator::special_function::call_foreign_function;
 use crate::utils::extract_nth_argument;
-use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
+use netcrab::petri_net::{PetriNet, TransitionRef};
 
 #[derive(Default)]
 pub struct CondvarManager {
@@ -37,19 +38,11 @@ impl CondvarManager {
     /// Returns the transition that represents the function call.
     pub fn translate_call_new(
         &self,
-        start_place: &PlaceRef,
-        end_place: &PlaceRef,
-        cleanup_place: Option<PlaceRef>,
+        function_call_places: &FunctionPlaces,
         net: &mut PetriNet,
     ) -> TransitionRef {
         let index = self.condvars.len();
-        call_foreign_function(
-            start_place,
-            end_place,
-            cleanup_place,
-            &new_transition_labels(index),
-            net,
-        )
+        call_foreign_function(function_call_places, &new_transition_labels(index), net)
     }
 
     /// Translates a call to `std::sync::Condvar::wait` using
@@ -59,20 +52,12 @@ impl CondvarManager {
     /// Returns the pair of transitions that represent the function call.
     pub fn translate_call_wait(
         &mut self,
-        start_place: &PlaceRef,
-        end_place: &PlaceRef,
-        cleanup_place: Option<PlaceRef>,
+        function_call_places: &FunctionPlaces,
         net: &mut PetriNet,
     ) -> (TransitionRef, TransitionRef) {
         let index = self.wait_counter;
         self.wait_counter += 1;
-        Self::create_wait_function_call(
-            start_place,
-            end_place,
-            cleanup_place,
-            &wait_transition_labels(index),
-            net,
-        )
+        Self::create_wait_function_call(function_call_places, &wait_transition_labels(index), net)
     }
 
     /// Translates a call to `std::sync::Condvar::notify_new` using
@@ -82,17 +67,13 @@ impl CondvarManager {
     /// Returns the transition that represents the function call.
     pub fn translate_call_notify_one(
         &mut self,
-        start_place: &PlaceRef,
-        end_place: &PlaceRef,
-        cleanup_place: Option<PlaceRef>,
+        function_call_places: &FunctionPlaces,
         net: &mut PetriNet,
     ) -> TransitionRef {
         let index = self.notify_one_counter;
         self.notify_one_counter += 1;
         call_foreign_function(
-            start_place,
-            end_place,
-            cleanup_place,
+            function_call_places,
             &notify_one_transition_labels(index),
             net,
         )
@@ -167,12 +148,12 @@ impl CondvarManager {
     /// - End place connected to a new "wait end" transition.
     /// Returns the pair of two transitions.
     fn create_wait_function_call(
-        start_place: &PlaceRef,
-        end_place: &PlaceRef,
-        cleanup_place: Option<PlaceRef>,
+        function_call_places: &FunctionPlaces,
         transition_labels: &(String, String, String),
         net: &mut PetriNet,
     ) -> (TransitionRef, TransitionRef) {
+        let (start_place, end_place, cleanup_place) = function_call_places;
+
         let wait_start_transition = net.add_transition(&transition_labels.0);
         net.add_arc_place_transition(start_place, &wait_start_transition)
             .unwrap_or_else(|_| {
@@ -191,7 +172,7 @@ impl CondvarManager {
                 .unwrap_or_else(|_| {
                     handle_err_add_arc("wait call start place", "wait unwind transition");
                 });
-            net.add_arc_transition_place(&unwind_transition, &cleanup_place)
+            net.add_arc_transition_place(&unwind_transition, cleanup_place)
                 .unwrap_or_else(|_| {
                     handle_err_add_arc("wait unwind transition", "cleanup place");
                 });

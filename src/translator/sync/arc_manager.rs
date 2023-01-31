@@ -4,11 +4,12 @@
 //! when they are wrapped around a `std::sync::Arc`.
 
 use crate::naming::arc::{clone_transition_labels, deref_transition_labels, new_transition_labels};
+use crate::translator::function_call::FunctionPlaces;
 use crate::translator::mir_function::Memory;
 use crate::translator::special_function::call_foreign_function;
 use crate::utils::extract_nth_argument;
 use crate::utils::is_place_with_concrete_type;
-use netcrab::petri_net::{PetriNet, PlaceRef};
+use netcrab::petri_net::PetriNet;
 
 #[derive(Default)]
 pub struct ArcManager {
@@ -29,20 +30,12 @@ impl ArcManager {
     /// the function is called to generate a unique label.
     pub fn translate_call_new(
         &mut self,
-        start_place: &PlaceRef,
-        end_place: &PlaceRef,
-        cleanup_place: Option<PlaceRef>,
+        function_call_places: &FunctionPlaces,
         net: &mut PetriNet,
     ) {
         let index = self.arc_counter;
         self.arc_counter += 1;
-        call_foreign_function(
-            start_place,
-            end_place,
-            cleanup_place,
-            &new_transition_labels(index),
-            net,
-        );
+        call_foreign_function(function_call_places, &new_transition_labels(index), net);
     }
 
     /// Translates a call to `std::ops::Deref::deref` using
@@ -51,20 +44,12 @@ impl ArcManager {
     /// the function is called to generate a unique label.
     pub fn translate_call_deref(
         &mut self,
-        start_place: &PlaceRef,
-        end_place: &PlaceRef,
-        cleanup_place: Option<PlaceRef>,
+        function_call_places: &FunctionPlaces,
         net: &mut PetriNet,
     ) {
         let index = self.deref_counter;
         self.deref_counter += 1;
-        call_foreign_function(
-            start_place,
-            end_place,
-            cleanup_place,
-            &deref_transition_labels(index),
-            net,
-        );
+        call_foreign_function(function_call_places, &deref_transition_labels(index), net);
     }
 
     /// Translates a call to `std::clone::Clone::clone` using
@@ -73,20 +58,12 @@ impl ArcManager {
     /// the function is called to generate a unique label.
     pub fn translate_call_clone(
         &mut self,
-        start_place: &PlaceRef,
-        end_place: &PlaceRef,
-        cleanup_place: Option<PlaceRef>,
+        function_call_places: &FunctionPlaces,
         net: &mut PetriNet,
     ) {
         let index = self.clone_counter;
         self.clone_counter += 1;
-        call_foreign_function(
-            start_place,
-            end_place,
-            cleanup_place,
-            &clone_transition_labels(index),
-            net,
-        );
+        call_foreign_function(function_call_places, &clone_transition_labels(index), net);
     }
 
     /// Translates the side effects for `std::sync::Arc::<T>::new` i.e.,

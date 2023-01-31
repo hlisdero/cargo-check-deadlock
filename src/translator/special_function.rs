@@ -7,6 +7,7 @@
 
 use crate::error_handling::handle_err_add_arc;
 use crate::naming::function::{diverging_call_transition_label, panic_transition_label};
+use crate::translator::function_call::FunctionPlaces;
 use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
 
 const PANIC_FUNCTIONS: [&str; 5] = [
@@ -62,12 +63,12 @@ pub fn is_foreign_function(
 /// place and cleanup place through a second new transition.
 /// Returns the transition reference representing the function call.
 pub fn call_foreign_function(
-    start_place: &PlaceRef,
-    end_place: &PlaceRef,
-    cleanup_place: Option<PlaceRef>,
+    function_call_places: &FunctionPlaces,
     transition_labels: &(String, String),
     net: &mut PetriNet,
 ) -> TransitionRef {
+    let (start_place, end_place, cleanup_place) = function_call_places;
+
     let transition_foreign_call = net.add_transition(&transition_labels.0);
     net.add_arc_place_transition(start_place, &transition_foreign_call)
         .unwrap_or_else(|_| {
@@ -84,7 +85,7 @@ pub fn call_foreign_function(
             .unwrap_or_else(|_| {
                 handle_err_add_arc("foreign call start place", "foreign call transition unwind");
             });
-        net.add_arc_transition_place(&transition_unwind_call, &cleanup_place)
+        net.add_arc_transition_place(&transition_unwind_call, cleanup_place)
             .unwrap_or_else(|_| {
                 handle_err_add_arc("foreign call transition unwind", "cleanup place");
             });
