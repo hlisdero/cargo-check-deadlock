@@ -83,10 +83,10 @@ pub fn is_place_with_concrete_type<'tcx>(
 ) -> bool {
     let body = tcx.optimized_mir(caller_function_def_id);
     let place_ty = place.ty(body, tcx);
-    let expected_parts: Vec<&str> = expected_ty_str.split(&['<', '>']).collect();
+    let expected_parts: Vec<&str> = expected_ty_str.split(&['<', ',', ' ', '>']).collect();
 
     let ty_string = place_ty.ty.to_string();
-    let parts: Vec<&str> = ty_string.split(&['<', '>']).collect();
+    let parts: Vec<&str> = ty_string.split(&['<', ',', ' ', '>']).collect();
     // `expected_ty_str` should follow: "std::sync::Mutex<T>" --> ["std::sync::Mutex", "T", ""]
     // `ty_string` should follow: "std::sync::Mutex<i32>" --> ["std::sync::Mutex", "i32", ""]
     if parts.len() != expected_parts.len() {
@@ -94,9 +94,9 @@ pub fn is_place_with_concrete_type<'tcx>(
     }
 
     for (part, expected_part) in std::iter::zip(parts, expected_parts) {
-        if expected_part == "T" {
+        if expected_part == "T" || expected_part == "'a" {
             if part == expected_part {
-                // The type should be concrete. If we find "T", it is not.
+                // The type should be concrete. If we find "T" or "'a", it is not.
                 return false;
             }
         } else if part != expected_part {
