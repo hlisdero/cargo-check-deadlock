@@ -33,26 +33,26 @@ pub fn transition_labels(index: usize) -> (String, String) {
     (format!("CONDVAR_{index}_T1"), format!("CONDVAR_{index}_T2"))
 }
 
-/// Label of the transitions that represent a call to `std::sync::Condvar::<T>::new`.
+/// Label of the transitions that represent a call to `std::sync::Condvar::new`.
 #[inline]
 pub fn new_transition_labels(index: usize) -> (String, String) {
     (
-        format!("std_sync_Condvar_T_new_{index}"),
-        format!("std_sync_Condvar_T_new_{index}_UNWIND"),
+        format!("std_sync_Condvar_new_{index}"),
+        format!("std_sync_Condvar_new_{index}_UNWIND"),
     )
 }
 
-/// Label of the transitions that represent a call to `std::sync::Condvar::<T>::notify_one`.
+/// Label of the transitions that represent a call to `std::sync::Condvar::notify_one`.
 #[inline]
 pub fn notify_one_transition_label(index: usize) -> String {
-    format!("std_sync_Condvar_T_notify_one_{index}")
+    format!("std_sync_Condvar_notify_one_{index}")
 }
 
-/// Label of the transitions that represent a call to `std::sync::Condvar::<T>::wait`.
+/// Label of the transitions that represent a call to `std::sync::Condvar::wait`.
 #[inline]
 pub fn wait_transition_labels(index: usize) -> (String, String) {
     (
-        format!("std_sync_Condvar_T_wait_{index}_START"),
-        format!("std_sync_Condvar_T_wait_{index}_END"),
+        format!("std_sync_Condvar_wait_{index}_START"),
+        format!("std_sync_Condvar_wait_{index}_END"),
     )
 }

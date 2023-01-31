@@ -15,6 +15,9 @@ pub enum FunctionCall {
     /// Call to `std::clone::Clone::clone`
     /// Non-recursive call for the translation process.
     Clone,
+    /// Call to `std::sync::Condvar::new`
+    /// Non-recursive call for the translation process.
+    CondVarNew,
     /// Call to `std::ops::Deref::deref`
     /// Non-recursive call for the translation process.
     Deref,
@@ -59,9 +62,10 @@ impl FunctionCall {
     /// Returns the corresponding variant for the function or `None` otherwise.
     fn is_supported_function(function_name: &str) -> Option<Self> {
         match function_name {
-            "std::sync::Arc::<T>::new" => Some(Self::ArcNew),
             "std::clone::Clone::clone" => Some(Self::Clone),
             "std::ops::Deref::deref" => Some(Self::Deref),
+            "std::sync::Arc::<T>::new" => Some(Self::ArcNew),
+            "std::sync::Condvar::new" => Some(Self::CondVarNew),
             "std::sync::Mutex::<T>::new" => Some(Self::MutexNew),
             "std::sync::Mutex::<T>::lock" => Some(Self::MutexLock),
             "std::thread::spawn" => Some(Self::ThreadSpawn),
@@ -91,6 +95,9 @@ impl<'tcx> Translator<'tcx> {
             }
             FunctionCall::Clone => {
                 self.call_clone(args, destination, &start_place, &end_place, cleanup_place);
+            }
+            FunctionCall::CondVarNew => {
+                self.call_condvar_new(destination, &start_place, &end_place, cleanup_place);
             }
             FunctionCall::Deref => {
                 self.call_deref(args, destination, &start_place, &end_place, cleanup_place);
@@ -301,6 +308,29 @@ impl<'tcx> Translator<'tcx> {
             &mut current_function.memory,
             current_function.def_id,
             self.tcx,
+        );
+    }
+
+    /// Handler for the case `FunctionCall::CondvarNew`.
+    fn call_condvar_new(
+        &mut self,
+        destination: rustc_middle::mir::Place<'tcx>,
+        start_place: &PlaceRef,
+        end_place: &PlaceRef,
+        cleanup_place: Option<PlaceRef>,
+    ) {
+        self.condvar_manager.translate_call_new(
+            start_place,
+            end_place,
+            cleanup_place,
+            &mut self.net,
+        );
+
+        let current_function = self.call_stack.peek_mut();
+        self.condvar_manager.translate_side_effects_new(
+            destination,
+            &mut self.net,
+            &mut current_function.memory,
         );
     }
 }

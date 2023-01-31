@@ -5,12 +5,15 @@
 
 mod arc_manager;
 mod condvar;
+mod condvar_manager;
 mod mutex;
 mod mutex_manager;
 mod thread;
 mod thread_manager;
 
 pub use arc_manager::ArcManager;
+pub use condvar::Condvar;
+pub use condvar_manager::{CondvarManager, CondvarRef};
 pub use mutex_manager::{MutexManager, MutexRef};
 pub use thread::Thread;
 pub use thread_manager::{ThreadManager, ThreadRef};

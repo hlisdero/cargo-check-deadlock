@@ -37,7 +37,7 @@ use mir_function::MirFunction;
 use netcrab::petri_net::{PetriNet, PlaceRef};
 use rustc_middle::mir::visit::Visitor;
 use special_function::{call_diverging_function, call_panic_function, is_panic_function};
-use sync::{ArcManager, MutexManager, ThreadManager};
+use sync::{ArcManager, CondvarManager, MutexManager, ThreadManager};
 
 pub struct Translator<'tcx> {
     tcx: rustc_middle::ty::TyCtxt<'tcx>,
@@ -47,8 +47,9 @@ pub struct Translator<'tcx> {
     program_end: PlaceRef,
     program_panic: PlaceRef,
     call_stack: Stack<MirFunction<'tcx>>,
-    mutex_manager: MutexManager,
     arc_manager: ArcManager,
+    condvar_manager: CondvarManager,
+    mutex_manager: MutexManager,
     thread_manager: ThreadManager<'tcx>,
 }
 
@@ -74,8 +75,9 @@ impl<'tcx> Translator<'tcx> {
             program_end,
             program_panic,
             call_stack: Stack::new(),
-            mutex_manager: MutexManager::new(),
             arc_manager: ArcManager::new(),
+            condvar_manager: CondvarManager::new(),
+            mutex_manager: MutexManager::new(),
             thread_manager: ThreadManager::new(),
         }
     }

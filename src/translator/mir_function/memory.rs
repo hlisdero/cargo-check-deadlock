@@ -9,10 +9,13 @@
 //! The memory stores a mapping of local variables (`rustc_middle::mir::Place`)
 //! with thread references. This tracks which variables contain a join handle.
 //!
+//! The memory stores a mapping of local variables (`rustc_middle::mir::Place`)
+//! with condvar references. This tracks which variables contain a condition variable.
+//!
 //! More info:
 //! <https://rustc-dev-guide.rust-lang.org/mir/index.html#mir-data-types>
 
-use crate::translator::sync::{MutexRef, ThreadRef};
+use crate::translator::sync::{CondvarRef, MutexRef, ThreadRef};
 use std::collections::HashMap;
 
 #[derive(Default)]
@@ -20,6 +23,7 @@ pub struct Memory<'tcx> {
     places_linked_to_mutexes: HashMap<rustc_middle::mir::Place<'tcx>, MutexRef>,
     places_linked_to_lock_guards: HashMap<rustc_middle::mir::Place<'tcx>, MutexRef>,
     places_linked_to_join_handles: HashMap<rustc_middle::mir::Place<'tcx>, ThreadRef>,
+    places_linked_to_condvars: HashMap<rustc_middle::mir::Place<'tcx>, CondvarRef>,
 }
 
 /// An auxiliary type for passing memory entries from one function to the other.
@@ -88,6 +92,25 @@ impl<'tcx> Memory<'tcx> {
         }
     }
 
+    /// Marks a place as containing a condition variable.
+    ///
+    /// # Panics
+    ///
+    /// If the place is already linked to a condition variable, then the function panics.
+    pub fn link_place_to_condvar(
+        &mut self,
+        place: rustc_middle::mir::Place<'tcx>,
+        condvar_ref: CondvarRef,
+    ) {
+        if self
+            .places_linked_to_condvars
+            .insert(place, condvar_ref)
+            .is_some()
+        {
+            panic!("BUG: The place should not be already linked to a condition variable")
+        }
+    }
+
     /// Returns the mutex reference linked to the given place.
     ///
     /// # Panics
@@ -139,6 +162,17 @@ impl<'tcx> Memory<'tcx> {
             .expect("BUG: The place should be linked to a join handle")
     }
 
+    /// Returns the condvar reference for the condition variable linked to the given place.
+    ///
+    /// # Panics
+    ///
+    /// If the place is not linked to a condition variable, then the function panics.
+    pub fn get_linked_condvar(&self, place: &rustc_middle::mir::Place<'tcx>) -> &CondvarRef {
+        self.places_linked_to_condvars
+            .get(place)
+            .expect("BUG: The place should be linked to a condition variable")
+    }
+
     /// Checks whether the place is linked to a lock guard.
     pub fn is_linked_to_place_guard(&self, place: rustc_middle::mir::Place<'tcx>) -> bool {
         self.places_linked_to_lock_guards.contains_key(&place)
@@ -176,5 +210,22 @@ impl<'tcx> Memory<'tcx> {
     ) {
         let thread_ref = self.get_linked_join_handle(&place_linked_to_join_handle);
         self.link_place_to_join_handle(place_to_be_linked, thread_ref.clone());
+    }
+
+    /// Links a place to the condition variable linked to another place.
+    /// After this operation both places point to the same condition variable, i.e.,
+    /// the first place is an alias for the second place.
+    ///
+    /// # Panics
+    ///
+    /// If the place to be linked is already linked to a condition variable, then the function panics.
+    /// If the place linked to a condvar is not linked to a condition variable, then the function panics.
+    pub fn link_place_to_same_condvar(
+        &mut self,
+        place_to_be_linked: rustc_middle::mir::Place<'tcx>,
+        place_linked_to_condvar: rustc_middle::mir::Place<'tcx>,
+    ) {
+        let condvar_ref = self.get_linked_condvar(&place_linked_to_condvar);
+        self.link_place_to_condvar(place_to_be_linked, condvar_ref.clone());
     }
 }
