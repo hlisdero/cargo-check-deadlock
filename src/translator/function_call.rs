@@ -116,7 +116,7 @@ impl<'tcx> Translator<'tcx> {
                 self.call_condvar_notify_one(args, &start_place, &end_place, cleanup_place);
             }
             FunctionCall::CondVarWait => {
-                self.call_condvar_wait(args, &start_place, &end_place);
+                self.call_condvar_wait(args, &start_place, &end_place, cleanup_place);
             }
             FunctionCall::Deref => {
                 self.call_deref(args, destination, &start_place, &end_place, cleanup_place);
@@ -386,10 +386,14 @@ impl<'tcx> Translator<'tcx> {
         args: &[rustc_middle::mir::Operand<'tcx>],
         start_place: &PlaceRef,
         end_place: &PlaceRef,
+        cleanup_place: Option<PlaceRef>,
     ) {
-        let wait_transitions =
-            self.condvar_manager
-                .translate_call_wait(start_place, end_place, &mut self.net);
+        let wait_transitions = self.condvar_manager.translate_call_wait(
+            start_place,
+            end_place,
+            cleanup_place,
+            &mut self.net,
+        );
 
         let current_function = self.call_stack.peek_mut();
         self.condvar_manager.translate_side_effects_wait(

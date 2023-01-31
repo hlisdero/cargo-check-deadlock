@@ -61,11 +61,18 @@ impl CondvarManager {
         &mut self,
         start_place: &PlaceRef,
         end_place: &PlaceRef,
+        cleanup_place: Option<PlaceRef>,
         net: &mut PetriNet,
     ) -> (TransitionRef, TransitionRef) {
         let index = self.wait_counter;
         self.wait_counter += 1;
-        Self::create_wait_function_call(start_place, end_place, &wait_transition_labels(index), net)
+        Self::create_wait_function_call(
+            start_place,
+            end_place,
+            cleanup_place,
+            &wait_transition_labels(index),
+            net,
+        )
     }
 
     /// Translates a call to `std::sync::Condvar::notify_new` using
@@ -162,7 +169,8 @@ impl CondvarManager {
     fn create_wait_function_call(
         start_place: &PlaceRef,
         end_place: &PlaceRef,
-        transition_labels: &(String, String),
+        cleanup_place: Option<PlaceRef>,
+        transition_labels: &(String, String, String),
         net: &mut PetriNet,
     ) -> (TransitionRef, TransitionRef) {
         let wait_start_transition = net.add_transition(&transition_labels.0);
@@ -176,6 +184,18 @@ impl CondvarManager {
             .unwrap_or_else(|_| {
                 handle_err_add_arc("wait end transition", "wait call end place");
             });
+
+        if let Some(cleanup_place) = cleanup_place {
+            let unwind_transition = net.add_transition(&transition_labels.2);
+            net.add_arc_place_transition(start_place, &unwind_transition)
+                .unwrap_or_else(|_| {
+                    handle_err_add_arc("wait call start place", "wait unwind transition");
+                });
+            net.add_arc_transition_place(&unwind_transition, &cleanup_place)
+                .unwrap_or_else(|_| {
+                    handle_err_add_arc("wait unwind transition", "cleanup place");
+                });
+        }
 
         (wait_start_transition, wait_end_transition)
     }
