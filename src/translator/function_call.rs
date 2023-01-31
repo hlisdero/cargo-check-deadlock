@@ -104,7 +104,7 @@ impl<'tcx> Translator<'tcx> {
 
         match function_call {
             FunctionCall::ArcNew => {
-                self.call_arc_new(args, destination, &start_place, &end_place);
+                self.call_arc_new(args, destination, &start_place, &end_place, cleanup_place);
             }
             FunctionCall::Clone => {
                 self.call_clone(args, destination, &start_place, &end_place, cleanup_place);
@@ -275,9 +275,10 @@ impl<'tcx> Translator<'tcx> {
         destination: rustc_middle::mir::Place<'tcx>,
         start_place: &PlaceRef,
         end_place: &PlaceRef,
+        cleanup_place: Option<PlaceRef>,
     ) {
         self.arc_manager
-            .translate_call_new(start_place, end_place, &mut self.net);
+            .translate_call_new(start_place, end_place, cleanup_place, &mut self.net);
 
         let current_function = self.call_stack.peek_mut();
         ArcManager::translate_side_effects_new(

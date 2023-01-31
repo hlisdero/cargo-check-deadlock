@@ -31,6 +31,7 @@ impl ArcManager {
         &mut self,
         start_place: &PlaceRef,
         end_place: &PlaceRef,
+        cleanup_place: Option<PlaceRef>,
         net: &mut PetriNet,
     ) {
         let index = self.arc_counter;
@@ -38,7 +39,7 @@ impl ArcManager {
         call_foreign_function(
             start_place,
             end_place,
-            None,
+            cleanup_place,
             &new_transition_labels(index),
             net,
         );
