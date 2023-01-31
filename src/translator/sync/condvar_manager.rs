@@ -6,7 +6,9 @@
 use super::condvar::Condvar;
 use super::MutexManager;
 use crate::error_handling::handle_err_add_arc;
-use crate::naming::condvar::{new_transition_labels, wait_transition_labels};
+use crate::naming::condvar::{
+    new_transition_labels, notify_one_transition_labels, wait_transition_labels,
+};
 use crate::translator::mir_function::Memory;
 use crate::translator::special_function::call_foreign_function;
 use crate::utils::extract_nth_argument;
@@ -16,6 +18,7 @@ use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
 pub struct CondvarManager {
     condvars: Vec<Condvar>,
     wait_counter: usize,
+    notify_one_counter: usize,
 }
 
 /// A wrapper type around the indexes to the elements in `Vec<Condvar>`.
@@ -65,6 +68,29 @@ impl CondvarManager {
         Self::create_wait_function_call(start_place, end_place, &wait_transition_labels(index), net)
     }
 
+    /// Translates a call to `std::sync::Condvar::notify_new` using
+    /// the same representation as in `foreign_function_call`.
+    /// A separate counter is incremented every time that
+    /// the function is called to generate a unique label.
+    /// Returns the transition that represents the function call.
+    pub fn translate_call_notify_one(
+        &mut self,
+        start_place: &PlaceRef,
+        end_place: &PlaceRef,
+        cleanup_place: Option<PlaceRef>,
+        net: &mut PetriNet,
+    ) -> TransitionRef {
+        let index = self.notify_one_counter;
+        self.notify_one_counter += 1;
+        call_foreign_function(
+            start_place,
+            end_place,
+            cleanup_place,
+            &notify_one_transition_labels(index),
+            net,
+        )
+    }
+
     /// Translates the side effects for `std::sync::Condvar::new` i.e.,
     /// the specific logic of creating a new condition variable.
     /// Receives a reference to the memory of the caller function to
@@ -102,6 +128,23 @@ impl CondvarManager {
         let self_ref = extract_nth_argument(args, 0);
         let condvar_ref = memory.get_linked_condvar(&self_ref);
         self.link_to_wait_call(condvar_ref, wait_transitions, net);
+    }
+
+    /// Translates the side effects for `std::sync::Condvar::notify_one` i.e.,
+    /// the specific logic of notifying a thread waiting on a condition variable.
+    /// Receives a reference to the memory of the caller function to retrieve the condition variable
+    /// contained in the local variable for the call.
+    pub fn translate_side_effects_notify_one<'tcx>(
+        &self,
+        args: &[rustc_middle::mir::Operand<'tcx>],
+        notify_one_transition: &TransitionRef,
+        net: &mut PetriNet,
+        memory: &mut Memory<'tcx>,
+    ) {
+        // Retrieve the condvar from the local variable passed to the function as an argument.
+        let self_ref = extract_nth_argument(args, 0);
+        let condvar_ref = memory.get_linked_condvar(&self_ref);
+        self.link_to_notify_one_call(condvar_ref, notify_one_transition, net);
     }
 
     /// Adds a new condition variable and creates its corresponding representation in the Petri net.
@@ -147,6 +190,18 @@ impl CondvarManager {
     ) {
         let condvar = self.get_condvar_from_ref(condvar_ref);
         condvar.link_to_wait_call(&wait_transitions.0, &wait_transitions.1, net);
+    }
+
+    /// Links the condition variable to the representation of
+    /// a call to `std::sync::Condvar::notify_one`.
+    fn link_to_notify_one_call(
+        &self,
+        condvar_ref: &CondvarRef,
+        signal_transition: &TransitionRef,
+        net: &mut PetriNet,
+    ) {
+        let condvar = self.get_condvar_from_ref(condvar_ref);
+        condvar.link_to_notify_one_call(signal_transition, net);
     }
 
     /// Get the condition variable corresponding to the condvar reference.

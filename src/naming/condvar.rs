@@ -44,8 +44,11 @@ pub fn new_transition_labels(index: usize) -> (String, String) {
 
 /// Label of the transitions that represent a call to `std::sync::Condvar::notify_one`.
 #[inline]
-pub fn notify_one_transition_label(index: usize) -> String {
-    format!("std_sync_Condvar_notify_one_{index}")
+pub fn notify_one_transition_labels(index: usize) -> (String, String) {
+    (
+        format!("std_sync_Condvar_notify_one_{index}"),
+        format!("std_sync_Condvar_notify_one_{index}_UNWIND"),
+    )
 }
 
 /// Label of the transitions that represent a call to `std::sync::Condvar::wait`.

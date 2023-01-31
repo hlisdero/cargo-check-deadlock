@@ -19,6 +19,9 @@ pub enum FunctionCall {
     /// Call to `std::sync::Condvar::new`
     /// Non-recursive call for the translation process.
     CondVarNew,
+    /// Call to `std::sync::Condvar::notify_one`
+    /// Non-recursive call for the translation process.
+    CondVarNotifyOne,
     /// Call to `std::sync::Condvar::wait`
     /// Non-recursive call for the translation process.
     CondVarWait,
@@ -74,6 +77,7 @@ impl FunctionCall {
             "std::result::Result::<T, E>::unwrap" => Some(Self::Unwrap),
             "std::sync::Arc::<T>::new" => Some(Self::ArcNew),
             "std::sync::Condvar::new" => Some(Self::CondVarNew),
+            "std::sync::Condvar::notify_one" => Some(Self::CondVarNotifyOne),
             "std::sync::Condvar::wait" => Some(Self::CondVarWait),
             "std::sync::Mutex::<T>::new" => Some(Self::MutexNew),
             "std::sync::Mutex::<T>::lock" => Some(Self::MutexLock),
@@ -107,6 +111,9 @@ impl<'tcx> Translator<'tcx> {
             }
             FunctionCall::CondVarNew => {
                 self.call_condvar_new(destination, &start_place, &end_place, cleanup_place);
+            }
+            FunctionCall::CondVarNotifyOne => {
+                self.call_condvar_notify_one(args, &start_place, &end_place, cleanup_place);
             }
             FunctionCall::CondVarWait => {
                 self.call_condvar_wait(args, &start_place, &end_place);
@@ -344,6 +351,30 @@ impl<'tcx> Translator<'tcx> {
         let current_function = self.call_stack.peek_mut();
         self.condvar_manager.translate_side_effects_new(
             destination,
+            &mut self.net,
+            &mut current_function.memory,
+        );
+    }
+
+    /// Handler for the case `FunctionCall::CondVarNotifyOne`.
+    fn call_condvar_notify_one(
+        &mut self,
+        args: &[rustc_middle::mir::Operand<'tcx>],
+        start_place: &PlaceRef,
+        end_place: &PlaceRef,
+        cleanup_place: Option<PlaceRef>,
+    ) {
+        let notify_one_transition = self.condvar_manager.translate_call_notify_one(
+            start_place,
+            end_place,
+            cleanup_place,
+            &mut self.net,
+        );
+
+        let current_function = self.call_stack.peek_mut();
+        self.condvar_manager.translate_side_effects_notify_one(
+            args,
+            &notify_one_transition,
             &mut self.net,
             &mut current_function.memory,
         );
