@@ -158,7 +158,9 @@ impl<'tcx> Translator<'tcx> {
     /// - Functions that do not return (diverging functions).
     /// - Functions that represent a `panic` i.e., functions that starts an unwind of the stack.
     /// - Functions for mutexes: `std::sync::Mutex::new` and `std::sync::Mutex::lock`.
-    /// - Functions for threads: `std::thread::spawn` and `std::thread::JoinHandle::<T>::join`
+    /// - Functions for threads: `std::thread::spawn` and `std::thread::JoinHandle::<T>::join`.
+    /// - Functions for reference counters: `std::sync::Arc::new`, `std::sync::Arc::clone` and `std::sync::Arc::deref`.
+    /// - Functions for condition variables: `std::sync::Condvar::new`, `std::sync::Condvar::wait` and `std::sync::Condvar::notify_one`.
     /// - Functions that call the Rust standard library or the Rust core library.
     ///
     /// This is the handler for the enum variant `TerminatorKind::Call` in the MIR Visitor.
