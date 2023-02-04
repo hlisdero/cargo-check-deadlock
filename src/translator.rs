@@ -31,13 +31,16 @@ mod sync;
 use crate::error_handling::ERR_NO_MAIN_FUNCTION_FOUND;
 use crate::naming::program::{PROGRAM_END, PROGRAM_PANIC, PROGRAM_START};
 use crate::stack::Stack;
-use crate::utils::{extract_def_id_of_called_function_from_operand, is_place_with_concrete_type};
+use crate::utils::extract_def_id_of_called_function_from_operand;
 use function_call::FunctionCall;
 use mir_function::MirFunction;
 use netcrab::petri_net::{PetriNet, PlaceRef};
 use rustc_middle::mir::visit::Visitor;
 use special_function::{call_diverging_function, call_panic_function, is_panic_function};
-use sync::{ArcManager, CondvarManager, MutexManager, ThreadManager};
+use sync::{
+    handle_ref_assignment, handle_use_copy_assignment, handle_use_move_assignment, ArcManager,
+    CondvarManager, MutexManager, ThreadManager,
+};
 
 pub struct Translator<'tcx> {
     tcx: rustc_middle::ty::TyCtxt<'tcx>,
@@ -237,26 +240,7 @@ impl<'tcx> Translator<'tcx> {
         rhs: &rustc_middle::mir::Place<'tcx>,
     ) {
         let function = self.call_stack.peek_mut();
-        if is_place_with_concrete_type(rhs, "&std::sync::Mutex<T>", function.def_id, self.tcx) {
-            function.memory.link_place_to_same_mutex(*place, *rhs);
-        } else if is_place_with_concrete_type(
-            rhs,
-            "&std::sync::MutexGuard<'a, T>",
-            function.def_id,
-            self.tcx,
-        ) {
-            function.memory.link_place_to_same_lock_guard(*place, *rhs);
-        } else if is_place_with_concrete_type(
-            rhs,
-            "&std::thread::JoinHandle<T>",
-            function.def_id,
-            self.tcx,
-        ) {
-            function.memory.link_place_to_same_join_handle(*place, *rhs);
-        } else if is_place_with_concrete_type(rhs, "&std::sync::Condvar", function.def_id, self.tcx)
-        {
-            function.memory.link_place_to_same_condvar(*place, *rhs);
-        }
+        handle_use_copy_assignment(place, rhs, &mut function.memory, function.def_id, self.tcx);
     }
 
     /// Handles MIR assignments of the form: `_X = move _Y`
@@ -270,33 +254,7 @@ impl<'tcx> Translator<'tcx> {
         rhs: &rustc_middle::mir::Place<'tcx>,
     ) {
         let function = self.call_stack.peek_mut();
-        if is_place_with_concrete_type(rhs, "std::sync::Mutex<T>", function.def_id, self.tcx)
-            || is_place_with_concrete_type(
-                rhs,
-                "std::sync::Arc<std::sync::Mutex<T>>",
-                function.def_id,
-                self.tcx,
-            )
-        {
-            function.memory.link_place_to_same_mutex(*place, *rhs);
-        } else if is_place_with_concrete_type(
-            rhs,
-            "std::sync::MutexGuard<'a, T>",
-            function.def_id,
-            self.tcx,
-        ) {
-            function.memory.link_place_to_same_lock_guard(*place, *rhs);
-        } else if is_place_with_concrete_type(
-            rhs,
-            "std::thread::JoinHandle<T>",
-            function.def_id,
-            self.tcx,
-        ) {
-            function.memory.link_place_to_same_join_handle(*place, *rhs);
-        } else if is_place_with_concrete_type(rhs, "std::sync::Condvar", function.def_id, self.tcx)
-        {
-            function.memory.link_place_to_same_condvar(*place, *rhs);
-        }
+        handle_use_move_assignment(place, rhs, &mut function.memory, function.def_id, self.tcx);
     }
 
     /// Handles MIR assignments of the form: `_X = &_Y`
@@ -308,32 +266,6 @@ impl<'tcx> Translator<'tcx> {
         rhs: &rustc_middle::mir::Place<'tcx>,
     ) {
         let function = self.call_stack.peek_mut();
-        if is_place_with_concrete_type(rhs, "std::sync::Mutex<T>", function.def_id, self.tcx)
-            || is_place_with_concrete_type(
-                rhs,
-                "std::sync::Arc<std::sync::Mutex<T>>",
-                function.def_id,
-                self.tcx,
-            )
-        {
-            function.memory.link_place_to_same_mutex(*place, *rhs);
-        } else if is_place_with_concrete_type(
-            place,
-            "std::sync::MutexGuard<'a, T>",
-            function.def_id,
-            self.tcx,
-        ) {
-            function.memory.link_place_to_same_lock_guard(*place, *rhs);
-        } else if is_place_with_concrete_type(
-            place,
-            "std::thread::JoinHandle<T>",
-            function.def_id,
-            self.tcx,
-        ) {
-            function.memory.link_place_to_same_join_handle(*place, *rhs);
-        } else if is_place_with_concrete_type(rhs, "std::sync::Condvar", function.def_id, self.tcx)
-        {
-            function.memory.link_place_to_same_condvar(*place, *rhs);
-        }
+        handle_ref_assignment(place, rhs, &mut function.memory, function.def_id, self.tcx);
     }
 }
