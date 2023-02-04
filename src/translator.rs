@@ -239,6 +239,23 @@ impl<'tcx> Translator<'tcx> {
         let function = self.call_stack.peek_mut();
         if is_place_with_concrete_type(rhs, "&std::sync::Mutex<T>", function.def_id, self.tcx) {
             function.memory.link_place_to_same_mutex(*place, *rhs);
+        } else if is_place_with_concrete_type(
+            rhs,
+            "&std::sync::MutexGuard<'a, T>",
+            function.def_id,
+            self.tcx,
+        ) {
+            function.memory.link_place_to_same_lock_guard(*place, *rhs);
+        } else if is_place_with_concrete_type(
+            rhs,
+            "&std::thread::JoinHandle<T>",
+            function.def_id,
+            self.tcx,
+        ) {
+            function.memory.link_place_to_same_join_handle(*place, *rhs);
+        } else if is_place_with_concrete_type(rhs, "&std::sync::Condvar", function.def_id, self.tcx)
+        {
+            function.memory.link_place_to_same_condvar(*place, *rhs);
         }
     }
 
@@ -253,15 +270,14 @@ impl<'tcx> Translator<'tcx> {
         rhs: &rustc_middle::mir::Place<'tcx>,
     ) {
         let function = self.call_stack.peek_mut();
-        if is_place_with_concrete_type(rhs, "std::thread::JoinHandle<T>", function.def_id, self.tcx)
+        if is_place_with_concrete_type(rhs, "std::sync::Mutex<T>", function.def_id, self.tcx)
+            || is_place_with_concrete_type(
+                rhs,
+                "std::sync::Arc<std::sync::Mutex<T>>",
+                function.def_id,
+                self.tcx,
+            )
         {
-            function.memory.link_place_to_same_join_handle(*place, *rhs);
-        } else if is_place_with_concrete_type(
-            rhs,
-            "std::sync::Arc<std::sync::Mutex<T>>",
-            function.def_id,
-            self.tcx,
-        ) {
             function.memory.link_place_to_same_mutex(*place, *rhs);
         } else if is_place_with_concrete_type(
             rhs,
@@ -270,6 +286,16 @@ impl<'tcx> Translator<'tcx> {
             self.tcx,
         ) {
             function.memory.link_place_to_same_lock_guard(*place, *rhs);
+        } else if is_place_with_concrete_type(
+            rhs,
+            "std::thread::JoinHandle<T>",
+            function.def_id,
+            self.tcx,
+        ) {
+            function.memory.link_place_to_same_join_handle(*place, *rhs);
+        } else if is_place_with_concrete_type(rhs, "std::sync::Condvar", function.def_id, self.tcx)
+        {
+            function.memory.link_place_to_same_condvar(*place, *rhs);
         }
     }
 
@@ -291,6 +317,20 @@ impl<'tcx> Translator<'tcx> {
             )
         {
             function.memory.link_place_to_same_mutex(*place, *rhs);
+        } else if is_place_with_concrete_type(
+            place,
+            "std::sync::MutexGuard<'a, T>",
+            function.def_id,
+            self.tcx,
+        ) {
+            function.memory.link_place_to_same_lock_guard(*place, *rhs);
+        } else if is_place_with_concrete_type(
+            place,
+            "std::thread::JoinHandle<T>",
+            function.def_id,
+            self.tcx,
+        ) {
+            function.memory.link_place_to_same_join_handle(*place, *rhs);
         } else if is_place_with_concrete_type(rhs, "std::sync::Condvar", function.def_id, self.tcx)
         {
             function.memory.link_place_to_same_condvar(*place, *rhs);
