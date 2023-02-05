@@ -107,14 +107,14 @@ pub fn handle_ref_assignment<'tcx>(
     {
         memory.link_place_to_same_mutex(*place, *rhs);
     } else if is_place_with_concrete_type(
-        place,
+        rhs,
         "std::sync::MutexGuard<'a, T>",
         caller_function_def_id,
         tcx,
     ) {
         memory.link_place_to_same_lock_guard(*place, *rhs);
     } else if is_place_with_concrete_type(
-        place,
+        rhs,
         "std::thread::JoinHandle<T>",
         caller_function_def_id,
         tcx,
