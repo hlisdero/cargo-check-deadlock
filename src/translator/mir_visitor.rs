@@ -40,6 +40,9 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
             rustc_middle::mir::Rvalue::Ref(_, _, rhs) => {
                 self.handle_ref_assignment(place, rhs);
             }
+            rustc_middle::mir::Rvalue::Aggregate(_, operands) => {
+                self.handle_aggregate_assignment(place, operands);
+            }
             // No need to do anything for the other cases for now.
             _ => {}
         }

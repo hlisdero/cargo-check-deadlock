@@ -38,8 +38,8 @@ use netcrab::petri_net::{PetriNet, PlaceRef};
 use rustc_middle::mir::visit::Visitor;
 use special_function::{call_diverging_function, call_panic_function, is_panic_function};
 use sync::{
-    handle_ref_assignment, handle_use_copy_assignment, handle_use_move_assignment, ArcManager,
-    CondvarManager, MutexManager, ThreadManager,
+    handle_aggregate_assignment, handle_ref_assignment, handle_use_copy_assignment,
+    handle_use_move_assignment, ArcManager, CondvarManager, MutexManager, ThreadManager,
 };
 
 pub struct Translator<'tcx> {
@@ -269,5 +269,23 @@ impl<'tcx> Translator<'tcx> {
     ) {
         let function = self.call_stack.peek_mut();
         handle_ref_assignment(place, rhs, &mut function.memory, function.def_id, self.tcx);
+    }
+
+    /// Handles MIR assignments of the form: `_X = { copy_data: move _Y }`.
+    /// This is the handler for the enum variant `rustc_middle::mir::Rvalue::Aggregate` in the MIR Visitor.
+    /// <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/mir/enum.Rvalue.html#variant.Aggregate>
+    fn handle_aggregate_assignment(
+        &mut self,
+        place: &rustc_middle::mir::Place<'tcx>,
+        operands: &Vec<rustc_middle::mir::Operand<'tcx>>,
+    ) {
+        let function = self.call_stack.peek_mut();
+        handle_aggregate_assignment(
+            place,
+            operands,
+            &mut function.memory,
+            function.def_id,
+            self.tcx,
+        );
     }
 }
