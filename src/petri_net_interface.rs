@@ -9,6 +9,7 @@ pub use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
 /// # Panics
 ///
 /// If the arc could not be created, then the function panics.
+#[inline]
 pub fn add_arc_place_transition(
     net: &mut PetriNet,
     place_ref: &PlaceRef,
@@ -29,6 +30,7 @@ pub fn add_arc_place_transition(
 /// # Panics
 ///
 /// If the arc could not be created, then the function panics.
+#[inline]
 pub fn add_arc_transition_place(
     net: &mut PetriNet,
     transition_ref: &TransitionRef,
