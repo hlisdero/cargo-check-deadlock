@@ -9,9 +9,9 @@
 //! The transition points to the start place of the next statement or
 //! the end of the current basic block.
 
-use crate::error_handling::handle_err_add_arc;
 use crate::naming::statement::{end_place_label, transition_label};
-use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
+use crate::petri_net_interface::{add_arc_place_transition, add_arc_transition_place};
+use crate::petri_net_interface::{PetriNet, PlaceRef, TransitionRef};
 
 pub struct Statement {
     transition: TransitionRef,
@@ -32,8 +32,7 @@ impl Statement {
     ) -> Self {
         let label = transition_label(function_name, block_index, statement_index);
         let transition = net.add_transition(&label);
-        net.add_arc_place_transition(start_place, &transition)
-            .unwrap_or_else(|_| handle_err_add_arc("start place", "statement transition"));
+        add_arc_place_transition(net, start_place, &transition);
 
         Self {
             transition,
@@ -51,14 +50,12 @@ impl Statement {
             self.block_index,
             self.statement_index,
         ));
-        net.add_arc_transition_place(&self.transition, &place)
-            .unwrap_or_else(|_| handle_err_add_arc("statement transition", "end place"));
+        add_arc_transition_place(net, &self.transition, &place);
         place
     }
 
     /// Connects the statement transition to the given end place.
     pub fn connect_to_end_place(&self, end_place: &PlaceRef, net: &mut PetriNet) {
-        net.add_arc_transition_place(&self.transition, end_place)
-            .unwrap_or_else(|_| handle_err_add_arc("statement transition", "given end place"));
+        add_arc_transition_place(net, &self.transition, end_place);
     }
 }

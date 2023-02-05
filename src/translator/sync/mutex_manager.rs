@@ -5,11 +5,11 @@
 
 use super::mutex::Mutex;
 use crate::naming::mutex::{lock_transition_labels, new_transition_labels};
+use crate::petri_net_interface::{PetriNet, TransitionRef};
 use crate::translator::function_call::FunctionPlaces;
 use crate::translator::mir_function::Memory;
 use crate::translator::special_function::call_foreign_function;
 use crate::utils::extract_nth_argument;
-use netcrab::petri_net::{PetriNet, TransitionRef};
 
 #[derive(Default)]
 pub struct MutexManager {

@@ -6,10 +6,9 @@
 //! If the place has a token, the mutex is unlocked.
 //! If the place does not have a token, the mutex is locked.
 
-use crate::error_handling::handle_err_add_arc;
 use crate::naming::mutex::place_label;
-use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
-
+use crate::petri_net_interface::{add_arc_place_transition, add_arc_transition_place};
+use crate::petri_net_interface::{PetriNet, PlaceRef, TransitionRef};
 pub struct Mutex {
     place_ref: PlaceRef,
 }
@@ -29,15 +28,13 @@ impl Mutex {
     /// Connects the mutex's place to the transition, then the transition will only
     /// fire if the mutex is unlocked.
     pub fn add_lock_guard(&self, transition_lock: &TransitionRef, net: &mut PetriNet) {
-        net.add_arc_place_transition(&self.place_ref, transition_lock)
-            .unwrap_or_else(|_| handle_err_add_arc("mutex's place", "lock guard"));
+        add_arc_place_transition(net, &self.place_ref, transition_lock);
     }
 
     /// Adds an unlock guard for this mutex.
     /// Connects the transition to the mutex's place, then the transition will
     /// replenish the token in the mutex when it fires.
     pub fn add_unlock_guard(&self, transition_unlock: &TransitionRef, net: &mut PetriNet) {
-        net.add_arc_transition_place(transition_unlock, &self.place_ref)
-            .unwrap_or_else(|_| handle_err_add_arc("unlock guard", "mutex's place"));
+        add_arc_transition_place(net, transition_unlock, &self.place_ref);
     }
 }

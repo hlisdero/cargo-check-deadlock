@@ -5,15 +5,15 @@
 
 use super::condvar::Condvar;
 use super::MutexManager;
-use crate::error_handling::handle_err_add_arc;
 use crate::naming::condvar::{
     new_transition_labels, notify_one_transition_labels, wait_transition_labels,
 };
+use crate::petri_net_interface::{add_arc_place_transition, add_arc_transition_place};
+use crate::petri_net_interface::{PetriNet, TransitionRef};
 use crate::translator::function_call::FunctionPlaces;
 use crate::translator::mir_function::Memory;
 use crate::translator::special_function::call_foreign_function;
 use crate::utils::extract_nth_argument;
-use netcrab::petri_net::{PetriNet, TransitionRef};
 
 #[derive(Default)]
 pub struct CondvarManager {
@@ -155,27 +155,15 @@ impl CondvarManager {
         let (start_place, end_place, cleanup_place) = function_call_places;
 
         let wait_start_transition = net.add_transition(&transition_labels.0);
-        net.add_arc_place_transition(start_place, &wait_start_transition)
-            .unwrap_or_else(|_| {
-                handle_err_add_arc("wait call start place", "wait start transition");
-            });
+        add_arc_place_transition(net, start_place, &wait_start_transition);
 
         let wait_end_transition = net.add_transition(&transition_labels.1);
-        net.add_arc_transition_place(&wait_end_transition, end_place)
-            .unwrap_or_else(|_| {
-                handle_err_add_arc("wait end transition", "wait call end place");
-            });
+        add_arc_transition_place(net, &wait_end_transition, end_place);
 
         if let Some(cleanup_place) = cleanup_place {
             let unwind_transition = net.add_transition(&transition_labels.2);
-            net.add_arc_place_transition(start_place, &unwind_transition)
-                .unwrap_or_else(|_| {
-                    handle_err_add_arc("wait call start place", "wait unwind transition");
-                });
-            net.add_arc_transition_place(&unwind_transition, cleanup_place)
-                .unwrap_or_else(|_| {
-                    handle_err_add_arc("wait unwind transition", "cleanup place");
-                });
+            add_arc_place_transition(net, start_place, &unwind_transition);
+            add_arc_transition_place(net, &unwind_transition, cleanup_place);
         }
 
         (wait_start_transition, wait_end_transition)

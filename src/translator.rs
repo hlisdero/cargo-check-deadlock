@@ -28,19 +28,21 @@ mod mir_visitor;
 mod special_function;
 mod sync;
 
-use crate::error_handling::ERR_NO_MAIN_FUNCTION_FOUND;
 use crate::naming::program::{PROGRAM_END, PROGRAM_PANIC, PROGRAM_START};
+use crate::petri_net_interface::{PetriNet, PlaceRef};
 use crate::stack::Stack;
 use crate::utils::extract_def_id_of_called_function_from_operand;
 use function_call::FunctionCall;
 use mir_function::MirFunction;
-use netcrab::petri_net::{PetriNet, PlaceRef};
 use rustc_middle::mir::visit::Visitor;
 use special_function::{call_diverging_function, call_panic_function, is_panic_function};
 use sync::{
     handle_aggregate_assignment, handle_ref_assignment, handle_use_copy_assignment,
     handle_use_move_assignment, ArcManager, CondvarManager, MutexManager, ThreadManager,
 };
+
+/// Translator error message when no main function is found in the source code.
+pub const ERR_NO_MAIN_FUNCTION_FOUND: &str = "ERROR: No main function found in the source code";
 
 pub struct Translator<'tcx> {
     tcx: rustc_middle::ty::TyCtxt<'tcx>,

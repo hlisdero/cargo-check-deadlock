@@ -5,10 +5,10 @@
 //! or simply functions which we are not interested in translating.
 //! For example: Calls to standard library methods, iterators, etc.
 
-use crate::error_handling::handle_err_add_arc;
 use crate::naming::function::{diverging_call_transition_label, panic_transition_label};
+use crate::petri_net_interface::{add_arc_place_transition, add_arc_transition_place};
+use crate::petri_net_interface::{PetriNet, PlaceRef, TransitionRef};
 use crate::translator::function_call::FunctionPlaces;
-use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
 
 const PANIC_FUNCTIONS: [&str; 5] = [
     "core::panicking::assert_failed",
@@ -70,25 +70,13 @@ pub fn call_foreign_function(
     let (start_place, end_place, cleanup_place) = function_call_places;
 
     let transition_foreign_call = net.add_transition(&transition_labels.0);
-    net.add_arc_place_transition(start_place, &transition_foreign_call)
-        .unwrap_or_else(|_| {
-            handle_err_add_arc("foreign call start place", "foreign call transition");
-        });
-    net.add_arc_transition_place(&transition_foreign_call, end_place)
-        .unwrap_or_else(|_| {
-            handle_err_add_arc("foreign call transition", "foreign call end place");
-        });
+    add_arc_place_transition(net, start_place, &transition_foreign_call);
+    add_arc_transition_place(net, &transition_foreign_call, end_place);
 
     if let Some(cleanup_place) = cleanup_place {
         let transition_unwind_call = net.add_transition(&transition_labels.1);
-        net.add_arc_place_transition(start_place, &transition_unwind_call)
-            .unwrap_or_else(|_| {
-                handle_err_add_arc("foreign call start place", "foreign call transition unwind");
-            });
-        net.add_arc_transition_place(&transition_unwind_call, cleanup_place)
-            .unwrap_or_else(|_| {
-                handle_err_add_arc("foreign call transition unwind", "cleanup place");
-            });
+        add_arc_place_transition(net, start_place, &transition_unwind_call);
+        add_arc_transition_place(net, &transition_unwind_call, cleanup_place);
     }
 
     transition_foreign_call
@@ -99,10 +87,7 @@ pub fn call_foreign_function(
 pub fn call_diverging_function(start_place: &PlaceRef, function_name: &str, net: &mut PetriNet) {
     let label = &diverging_call_transition_label(function_name);
     let transition = net.add_transition(label);
-    net.add_arc_place_transition(start_place, &transition)
-        .unwrap_or_else(|_| {
-            handle_err_add_arc("diverging call start place", "diverging call transition");
-        });
+    add_arc_place_transition(net, start_place, &transition);
 }
 
 /// Creates an abridged Petri net representation of a function call
@@ -115,8 +100,6 @@ pub fn call_panic_function(
     net: &mut PetriNet,
 ) {
     let transition = net.add_transition(&panic_transition_label(function_name));
-    net.add_arc_place_transition(start_place, &transition)
-        .unwrap_or_else(|_| handle_err_add_arc("panic start place", "panic transition"));
-    net.add_arc_transition_place(&transition, unwind_place)
-        .unwrap_or_else(|_| handle_err_add_arc("panic transition", "panic place"));
+    add_arc_place_transition(net, start_place, &transition);
+    add_arc_transition_place(net, &transition, unwind_place);
 }

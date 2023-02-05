@@ -17,9 +17,9 @@ mod memory;
 mod statement;
 mod terminator;
 
+use crate::petri_net_interface::{PetriNet, PlaceRef};
 use crate::translator::function_call::FunctionPlaces;
 use basic_block::BasicBlock;
-use netcrab::petri_net::{PetriNet, PlaceRef};
 use std::collections::HashMap;
 
 pub use memory::{Memory, MutexEntries};

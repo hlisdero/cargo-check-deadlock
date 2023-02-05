@@ -4,12 +4,12 @@
 //! when they are wrapped around a `std::sync::Arc`.
 
 use crate::naming::arc::{clone_transition_labels, deref_transition_labels, new_transition_labels};
+use crate::petri_net_interface::PetriNet;
 use crate::translator::function_call::FunctionPlaces;
 use crate::translator::mir_function::Memory;
 use crate::translator::special_function::call_foreign_function;
 use crate::utils::extract_nth_argument;
 use crate::utils::is_place_with_concrete_type;
-use netcrab::petri_net::PetriNet;
 
 #[derive(Default)]
 pub struct ArcManager {

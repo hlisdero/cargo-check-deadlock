@@ -3,10 +3,10 @@
 
 use super::Translator;
 use crate::naming::function::foreign_call_transition_labels;
+use crate::petri_net_interface::PlaceRef;
 use crate::translator::special_function::{call_foreign_function, is_foreign_function};
 use crate::translator::sync::ArcManager;
 use crate::utils::extract_nth_argument;
-use netcrab::petri_net::PlaceRef;
 
 /// A convenient typedef to pass the start place, the end place
 /// and the (optional) cleanup place for a function call.

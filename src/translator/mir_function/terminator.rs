@@ -2,9 +2,9 @@
 //! <https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/enum.TerminatorKind.html>
 
 use super::MirFunction;
-use crate::error_handling::handle_err_add_arc;
 use crate::naming::function::return_transition_label;
-use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
+use crate::petri_net_interface::{add_arc_place_transition, add_arc_transition_place};
+use crate::petri_net_interface::{PetriNet, PlaceRef, TransitionRef};
 
 impl<'tcx> MirFunction<'tcx> {
     /// Connects the active basic block to the target basic block.
@@ -100,17 +100,8 @@ impl<'tcx> MirFunction<'tcx> {
         let label = return_transition_label(&self.name);
 
         let transition = net.add_transition(&label);
-        net.add_arc_place_transition(&start_place, &transition)
-            .unwrap_or_else(|_| {
-                handle_err_add_arc(
-                    "last place inside the function",
-                    "return statement transition",
-                );
-            });
-        net.add_arc_transition_place(&transition, &self.end_place)
-            .unwrap_or_else(|_| {
-                handle_err_add_arc("return statement transition", "end place of the function");
-            });
+        add_arc_place_transition(net, &start_place, &transition);
+        add_arc_transition_place(net, &transition, &self.end_place);
     }
 
     /// Connects the active basic block to a given end place.

@@ -20,10 +20,10 @@
 //! to translate the thread function and defer the translation.
 //! The function executed by the thread is translated to a Petri net just as any other.
 
-use crate::error_handling::handle_err_add_arc;
 use crate::naming::thread::{end_place_label, start_place_label};
+use crate::petri_net_interface::{add_arc_place_transition, add_arc_transition_place};
+use crate::petri_net_interface::{PetriNet, PlaceRef, TransitionRef};
 use crate::translator::mir_function::{Memory, MutexEntries};
-use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
 
 pub struct Thread<'tcx> {
     /// The transition from which the thread branches off at the start.
@@ -84,12 +84,11 @@ impl<'tcx> Thread<'tcx> {
         let thread_start_place = net.add_place(&start_place_label(self.index));
         let thread_end_place = net.add_place(&end_place_label(self.index));
 
-        net.add_arc_transition_place(&self.spawn_transition, &thread_start_place)
-            .unwrap_or_else(|_| handle_err_add_arc("spawn transition", "thread start place"));
+        add_arc_transition_place(net, &self.spawn_transition, &thread_start_place);
         if let Some(join_transition) = &self.join_transition {
-            net.add_arc_place_transition(&thread_end_place, join_transition)
-                .unwrap_or_else(|_| handle_err_add_arc("thread end place", "join transition"));
+            add_arc_place_transition(net, &thread_end_place, join_transition);
         }
+
         (
             self.thread_function_def_id,
             thread_start_place,

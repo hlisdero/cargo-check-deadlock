@@ -1,5 +1,5 @@
 use clap::{Parser, ValueEnum};
-use netcrab::petri_net::PetriNet;
+use granite2::PetriNet;
 
 const ERR_SOURCE_FILE_NOT_FOUND: i32 = 1;
 const ERR_TRANSLATION: i32 = 2;

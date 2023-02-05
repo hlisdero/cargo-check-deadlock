@@ -8,11 +8,11 @@
 
 use super::Thread;
 use crate::naming::thread::{join_transition_labels, spawn_transition_labels};
+use crate::petri_net_interface::{PetriNet, TransitionRef};
 use crate::translator::function_call::FunctionPlaces;
 use crate::translator::mir_function::{Memory, MutexEntries};
 use crate::translator::special_function::call_foreign_function;
 use crate::utils::{extract_def_id_of_called_function_from_operand, extract_nth_argument};
-use netcrab::petri_net::{PetriNet, TransitionRef};
 use std::collections::VecDeque;
 
 #[derive(Default)]

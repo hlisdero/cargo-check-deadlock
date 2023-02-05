@@ -6,13 +6,13 @@
 //! It also stores a vector of `Statement` which forms a chain of places and transitions.
 
 use super::statement::Statement;
-use crate::error_handling::handle_err_add_arc;
 use crate::naming::basic_block::{
     assert_cleanup_transition_label, assert_transition_label, drop_transition_label,
     drop_unwind_transition_label, end_place_label, goto_transition_label, start_place_label,
     switch_int_transition_label, unreachable_transition_label, unwind_transition_label,
 };
-use netcrab::petri_net::{PetriNet, PlaceRef, TransitionRef};
+use crate::petri_net_interface::{add_arc_place_transition, add_arc_transition_place};
+use crate::petri_net_interface::{PetriNet, PlaceRef, TransitionRef};
 
 pub struct BasicBlock {
     /// Name of the function to which this block belongs.
@@ -80,8 +80,6 @@ impl BasicBlock {
             &target.start_place,
             net,
             &goto_transition_label(&self.function_name, self.index),
-            "goto transition",
-            "to block start place",
         );
     }
 
@@ -91,8 +89,6 @@ impl BasicBlock {
             &target.start_place,
             net,
             &switch_int_transition_label(&self.function_name, index),
-            "switch int transition",
-            "target block start place",
         );
     }
 
@@ -102,8 +98,6 @@ impl BasicBlock {
             unwind_place,
             net,
             &unwind_transition_label(&self.function_name, self.index),
-            "unwind transition",
-            "unwind place",
         );
     }
 
@@ -112,10 +106,8 @@ impl BasicBlock {
     pub fn drop(&self, target: &Self, net: &mut PetriNet) -> TransitionRef {
         let transition =
             net.add_transition(&drop_transition_label(&self.function_name, self.index));
-        net.add_arc_place_transition(&self.end_place, &transition)
-            .unwrap_or_else(|_| handle_err_add_arc("end place of the block", "drop transition"));
-        net.add_arc_transition_place(&transition, &target.start_place)
-            .unwrap_or_else(|_| handle_err_add_arc("drop transition", "target block start place"));
+        add_arc_place_transition(net, &self.end_place, &transition);
+        add_arc_transition_place(net, &transition, &target.start_place);
         transition
     }
 
@@ -125,8 +117,6 @@ impl BasicBlock {
             &unwind.start_place,
             net,
             &drop_unwind_transition_label(&self.function_name, self.index),
-            "drop unwind transition",
-            "unwind block start place",
         );
     }
 
@@ -136,8 +126,6 @@ impl BasicBlock {
             &target.start_place,
             net,
             &assert_transition_label(&self.function_name, self.index),
-            "assert transition",
-            "target block start place",
         );
     }
 
@@ -147,8 +135,6 @@ impl BasicBlock {
             &cleanup.start_place,
             net,
             &assert_cleanup_transition_label(&self.function_name, self.index),
-            "assert cleanup transition",
-            "cleanup block start place",
         );
     }
 
@@ -158,8 +144,6 @@ impl BasicBlock {
             end_place,
             net,
             &unreachable_transition_label(&self.function_name, self.index),
-            "unreachable transition",
-            "end place",
         );
     }
 
@@ -170,14 +154,10 @@ impl BasicBlock {
         next_place: &PlaceRef,
         net: &mut PetriNet,
         transition_label: &str,
-        transition_name: &str,
-        next_place_name: &str,
     ) {
         let transition = net.add_transition(transition_label);
-        net.add_arc_place_transition(&self.end_place, &transition)
-            .unwrap_or_else(|_| handle_err_add_arc("end place of the block", transition_name));
-        net.add_arc_transition_place(&transition, next_place)
-            .unwrap_or_else(|_| handle_err_add_arc(transition_name, next_place_name));
+        add_arc_place_transition(net, &self.end_place, &transition);
+        add_arc_transition_place(net, &transition, next_place);
     }
 
     /// Prepares the start place for the next statement.

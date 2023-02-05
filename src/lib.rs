@@ -31,14 +31,14 @@ extern crate rustc_session;
 extern crate rustc_span;
 
 mod compiler_config;
-mod error_handling;
 mod naming;
+mod petri_net_interface;
 mod stack;
 mod sysroot;
 mod translator;
 mod utils;
 
-use netcrab::petri_net::PetriNet;
+pub use petri_net_interface::PetriNet;
 
 /// Entry point for the translation of the Rust code to a Petri net.
 ///
