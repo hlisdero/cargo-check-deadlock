@@ -1,4 +1,4 @@
-//! Module that define the naming of places and transitions in the Petri net.
+//! Module that defines the naming of places and transitions in the Petri net.
 //!
 //! The functions are grouped according to the structure they deal with, e.g., function,
 //! basic block, statement, mutex, etc.

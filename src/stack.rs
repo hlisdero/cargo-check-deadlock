@@ -1,4 +1,4 @@
-//! Submodule that implements a simple stack data structure.
+//! Module that implements a simple stack data structure.
 //!
 //! It is used to implement the call stack for the source code translation.
 
