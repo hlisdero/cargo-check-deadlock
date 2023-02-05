@@ -3,8 +3,6 @@ digraph petrinet {
     PROGRAM_PANIC [shape="circle" xlabel="PROGRAM_PANIC" label=""];
     PROGRAM_START [shape="circle" xlabel="PROGRAM_START" label="•"];
     main_BB0_END_PLACE [shape="circle" xlabel="main_BB0_END_PLACE" label=""];
-    main_BB0_STMT0_END [shape="circle" xlabel="main_BB0_STMT0_END" label=""];
-    main_BB0_STMT1_END [shape="circle" xlabel="main_BB0_STMT1_END" label=""];
     main_BB1 [shape="circle" xlabel="main_BB1" label=""];
     main_BB1_END_PLACE [shape="circle" xlabel="main_BB1_END_PLACE" label=""];
     main_BB2 [shape="circle" xlabel="main_BB2" label=""];
@@ -18,8 +16,6 @@ digraph petrinet {
     main_BB6 [shape="circle" xlabel="main_BB6" label=""];
     call_RETURN [shape="box" xlabel="" label="call_RETURN"];
     main_BB0_STMT0 [shape="box" xlabel="" label="main_BB0_STMT0"];
-    main_BB0_STMT1 [shape="box" xlabel="" label="main_BB0_STMT1"];
-    main_BB0_STMT2 [shape="box" xlabel="" label="main_BB0_STMT2"];
     main_BB1_STMT0 [shape="box" xlabel="" label="main_BB1_STMT0"];
     main_BB2_STMT0 [shape="box" xlabel="" label="main_BB2_STMT0"];
     main_BB2_STMT1 [shape="box" xlabel="" label="main_BB2_STMT1"];
@@ -35,8 +31,6 @@ digraph petrinet {
     std_iter_Iterator_next_CALL [shape="box" xlabel="" label="std_iter_Iterator_next_CALL"];
     PROGRAM_START -> main_BB0_STMT0;
     main_BB0_END_PLACE -> std_iter_IntoIterator_into_iter_CALL;
-    main_BB0_STMT0_END -> main_BB0_STMT1;
-    main_BB0_STMT1_END -> main_BB0_STMT2;
     main_BB1 -> main_BB1_STMT0;
     main_BB1_END_PLACE -> main_GOTO_1;
     main_BB2 -> main_BB2_STMT0;
@@ -51,9 +45,7 @@ digraph petrinet {
     main_BB5 -> main_UNREACHABLE_5;
     main_BB6 -> main_RETURN;
     call_RETURN -> main_BB2;
-    main_BB0_STMT0 -> main_BB0_STMT0_END;
-    main_BB0_STMT1 -> main_BB0_STMT1_END;
-    main_BB0_STMT2 -> main_BB0_END_PLACE;
+    main_BB0_STMT0 -> main_BB0_END_PLACE;
     main_BB1_STMT0 -> main_BB1_END_PLACE;
     main_BB2_STMT0 -> main_BB2_STMT0_END;
     main_BB2_STMT1 -> main_BB2_END_PLACE;
