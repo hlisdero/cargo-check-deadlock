@@ -59,40 +59,18 @@ pub fn extract_nth_argument<'tcx>(
     *argument
 }
 
-/// Checks whether the type of a place matches a given string of the form: `module::submodule::type<T>`.
-/// The function checks that `T` is a concrete type (e.g. "i32") and not a type parameter ("T") for the `place`.
-///
+/// Checks whether a given substring appears in the type of a place.
 /// Uses the method `Place::ty` to get the type of the `place`.
 /// It finds the type of the place through the local declarations of the caller function where it is declared.
 /// <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/mir/struct.Place.html#method.ty>
-pub fn is_place_with_concrete_type<'tcx>(
+pub fn check_substring_in_place_type<'tcx>(
     place: &rustc_middle::mir::Place<'tcx>,
-    expected_ty_str: &str,
+    expected_substring: &str,
     caller_function_def_id: rustc_hir::def_id::DefId,
     tcx: rustc_middle::ty::TyCtxt<'tcx>,
 ) -> bool {
     let body = tcx.optimized_mir(caller_function_def_id);
     let place_ty = place.ty(body, tcx);
-    let expected_parts: Vec<&str> = expected_ty_str.split(&['<', ',', ' ', '>']).collect();
-
     let ty_string = place_ty.ty.to_string();
-    let parts: Vec<&str> = ty_string.split(&['<', ',', ' ', '>']).collect();
-    // `expected_ty_str` should follow: "std::sync::Mutex<T>" --> ["std::sync::Mutex", "T", ""]
-    // `ty_string` should follow: "std::sync::Mutex<i32>" --> ["std::sync::Mutex", "i32", ""]
-    if parts.len() != expected_parts.len() {
-        return false;
-    }
-
-    for (part, expected_part) in std::iter::zip(parts, expected_parts) {
-        if expected_part == "T" || expected_part == "'a" {
-            if part == expected_part {
-                // The type should be concrete. If we find "T" or "'a", it is not.
-                return false;
-            }
-        } else if part != expected_part {
-            // The parts should match one by one (except for the concrete type part)
-            return false;
-        }
-    }
-    true
+    ty_string.contains(expected_substring)
 }

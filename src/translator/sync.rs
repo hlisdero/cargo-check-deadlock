@@ -12,7 +12,7 @@ mod thread;
 mod thread_manager;
 
 use crate::translator::mir_function::Memory;
-use crate::utils::is_place_with_concrete_type;
+use crate::utils::check_substring_in_place_type;
 
 pub use arc_manager::ArcManager;
 pub use condvar::Condvar;
@@ -30,23 +30,20 @@ pub fn handle_use_copy_assignment<'tcx>(
     caller_function_def_id: rustc_hir::def_id::DefId,
     tcx: rustc_middle::ty::TyCtxt<'tcx>,
 ) {
-    if is_place_with_concrete_type(rhs, "&std::sync::Mutex<T>", caller_function_def_id, tcx) {
-        memory.link_place_to_same_mutex(*place, *rhs);
-    } else if is_place_with_concrete_type(
-        rhs,
-        "&std::sync::MutexGuard<'a, T>",
-        caller_function_def_id,
-        tcx,
-    ) {
+    // ORDER MATTERS: MutexGuard should be tested first because `&std::sync::Mutex` is contained in `std::sync::MutexGuard`
+    if check_substring_in_place_type(rhs, "&std::sync::MutexGuard", caller_function_def_id, tcx) {
         memory.link_place_to_same_lock_guard(*place, *rhs);
-    } else if is_place_with_concrete_type(
+    } else if check_substring_in_place_type(rhs, "&std::sync::Mutex", caller_function_def_id, tcx) {
+        memory.link_place_to_same_mutex(*place, *rhs);
+    } else if check_substring_in_place_type(
         rhs,
-        "&std::thread::JoinHandle<T>",
+        "&std::thread::JoinHandle",
         caller_function_def_id,
         tcx,
     ) {
         memory.link_place_to_same_join_handle(*place, *rhs);
-    } else if is_place_with_concrete_type(rhs, "&std::sync::Condvar", caller_function_def_id, tcx) {
+    } else if check_substring_in_place_type(rhs, "&std::sync::Condvar", caller_function_def_id, tcx)
+    {
         memory.link_place_to_same_condvar(*place, *rhs);
     }
 }
@@ -106,30 +103,20 @@ fn handle_assignment_sync_variable<'tcx>(
     caller_function_def_id: rustc_hir::def_id::DefId,
     tcx: rustc_middle::ty::TyCtxt<'tcx>,
 ) {
-    if is_place_with_concrete_type(rhs, "std::sync::Mutex<T>", caller_function_def_id, tcx)
-        || is_place_with_concrete_type(
-            rhs,
-            "std::sync::Arc<std::sync::Mutex<T>>",
-            caller_function_def_id,
-            tcx,
-        )
-    {
-        memory.link_place_to_same_mutex(*place, *rhs);
-    } else if is_place_with_concrete_type(
-        rhs,
-        "std::sync::MutexGuard<'a, T>",
-        caller_function_def_id,
-        tcx,
-    ) {
+    // ORDER MATTERS: MutexGuard should be tested first because `&std::sync::Mutex` is contained in `std::sync::MutexGuard`
+    if check_substring_in_place_type(rhs, "std::sync::MutexGuard", caller_function_def_id, tcx) {
         memory.link_place_to_same_lock_guard(*place, *rhs);
-    } else if is_place_with_concrete_type(
+    } else if check_substring_in_place_type(rhs, "std::sync::Mutex", caller_function_def_id, tcx) {
+        memory.link_place_to_same_mutex(*place, *rhs);
+    } else if check_substring_in_place_type(
         rhs,
-        "std::thread::JoinHandle<T>",
+        "std::thread::JoinHandle",
         caller_function_def_id,
         tcx,
     ) {
         memory.link_place_to_same_join_handle(*place, *rhs);
-    } else if is_place_with_concrete_type(rhs, "std::sync::Condvar", caller_function_def_id, tcx) {
+    } else if check_substring_in_place_type(rhs, "std::sync::Condvar", caller_function_def_id, tcx)
+    {
         memory.link_place_to_same_condvar(*place, *rhs);
     }
 }

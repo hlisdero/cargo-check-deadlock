@@ -8,8 +8,7 @@ use crate::petri_net_interface::PetriNet;
 use crate::translator::function_call::FunctionPlaces;
 use crate::translator::mir_function::Memory;
 use crate::translator::special_function::call_foreign_function;
-use crate::utils::extract_nth_argument;
-use crate::utils::is_place_with_concrete_type;
+use crate::utils::{check_substring_in_place_type, extract_nth_argument};
 
 #[derive(Default)]
 pub struct ArcManager {
@@ -78,9 +77,9 @@ impl ArcManager {
         tcx: rustc_middle::ty::TyCtxt<'tcx>,
     ) {
         let first_argument = extract_nth_argument(args, 0);
-        if is_place_with_concrete_type(
+        if check_substring_in_place_type(
             &first_argument,
-            "std::sync::Mutex<T>",
+            "std::sync::Mutex",
             caller_function_def_id,
             tcx,
         ) {
@@ -100,12 +99,8 @@ impl ArcManager {
         tcx: rustc_middle::ty::TyCtxt<'tcx>,
     ) {
         let self_ref = extract_nth_argument(args, 0);
-        if is_place_with_concrete_type(
-            &self_ref,
-            "&std::sync::Arc<std::sync::Mutex<T>>",
-            caller_function_def_id,
-            tcx,
-        ) {
+        if check_substring_in_place_type(&self_ref, "std::sync::Mutex", caller_function_def_id, tcx)
+        {
             memory.link_place_to_same_mutex(return_value, self_ref);
         }
     }
@@ -122,12 +117,8 @@ impl ArcManager {
         tcx: rustc_middle::ty::TyCtxt<'tcx>,
     ) {
         let self_ref = extract_nth_argument(args, 0);
-        if is_place_with_concrete_type(
-            &self_ref,
-            "&std::sync::Arc<std::sync::Mutex<T>>",
-            caller_function_def_id,
-            tcx,
-        ) {
+        if check_substring_in_place_type(&self_ref, "std::sync::Mutex", caller_function_def_id, tcx)
+        {
             memory.link_place_to_same_mutex(return_value, self_ref);
         }
     }
