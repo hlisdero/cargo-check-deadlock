@@ -30,22 +30,7 @@ pub fn handle_use_copy_assignment<'tcx>(
     caller_function_def_id: rustc_hir::def_id::DefId,
     tcx: rustc_middle::ty::TyCtxt<'tcx>,
 ) {
-    // ORDER MATTERS: MutexGuard should be tested first because `&std::sync::Mutex` is contained in `std::sync::MutexGuard`
-    if check_substring_in_place_type(rhs, "&std::sync::MutexGuard", caller_function_def_id, tcx) {
-        memory.link_place_to_same_lock_guard(*place, *rhs);
-    } else if check_substring_in_place_type(rhs, "&std::sync::Mutex", caller_function_def_id, tcx) {
-        memory.link_place_to_same_mutex(*place, *rhs);
-    } else if check_substring_in_place_type(
-        rhs,
-        "&std::thread::JoinHandle",
-        caller_function_def_id,
-        tcx,
-    ) {
-        memory.link_place_to_same_join_handle(*place, *rhs);
-    } else if check_substring_in_place_type(rhs, "&std::sync::Condvar", caller_function_def_id, tcx)
-    {
-        memory.link_place_to_same_condvar(*place, *rhs);
-    }
+    handle_assignment_sync_variable(place, rhs, memory, caller_function_def_id, tcx);
 }
 
 /// Handles MIR assignments of sync primitives of the form: `_X = move _Y`.
