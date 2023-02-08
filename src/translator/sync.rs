@@ -31,7 +31,7 @@ pub fn handle_aggregate_assignment<'tcx>(
     tcx: rustc_middle::ty::TyCtxt<'tcx>,
 ) {
     for operand in operands {
-        // Extract the place to be assignment
+        // Extract the place to be assigned
         let rhs = match operand {
             rustc_middle::mir::Operand::Copy(place) | rustc_middle::mir::Operand::Move(place) => {
                 place
