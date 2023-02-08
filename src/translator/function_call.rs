@@ -2,7 +2,10 @@
 //! the specific handler methods for every one of them.
 
 use super::Translator;
-use crate::naming::function::foreign_call_transition_labels;
+use crate::naming::function::{
+    arc_new_transition_labels, clone_transition_labels, deref_transition_labels,
+    foreign_call_transition_labels,
+};
 use crate::petri_net_interface::PlaceRef;
 use crate::translator::special_function::{call_foreign_function, is_foreign_function};
 use crate::translator::sync::link_return_value_if_sync_variable;
@@ -253,8 +256,12 @@ impl<'tcx> Translator<'tcx> {
         destination: rustc_middle::mir::Place<'tcx>,
         function_call_places: &FunctionPlaces,
     ) {
-        self.arc_manager
-            .translate_call_new(function_call_places, &mut self.net);
+        self.function_counter.translate_call(
+            "std::sync::Arc::<T>::new",
+            function_call_places,
+            arc_new_transition_labels,
+            &mut self.net,
+        );
 
         let current_function = self.call_stack.peek_mut();
         link_return_value_if_sync_variable(
@@ -273,8 +280,12 @@ impl<'tcx> Translator<'tcx> {
         destination: rustc_middle::mir::Place<'tcx>,
         function_call_places: &FunctionPlaces,
     ) {
-        self.arc_manager
-            .translate_call_clone(function_call_places, &mut self.net);
+        self.function_counter.translate_call(
+            "std::clone::Clone::clone",
+            function_call_places,
+            clone_transition_labels,
+            &mut self.net,
+        );
 
         let current_function = self.call_stack.peek_mut();
         link_return_value_if_sync_variable(
@@ -293,8 +304,12 @@ impl<'tcx> Translator<'tcx> {
         destination: rustc_middle::mir::Place<'tcx>,
         function_call_places: &FunctionPlaces,
     ) {
-        self.arc_manager
-            .translate_call_deref(function_call_places, &mut self.net);
+        self.function_counter.translate_call(
+            "std::ops::Deref::deref",
+            function_call_places,
+            deref_transition_labels,
+            &mut self.net,
+        );
 
         let current_function = self.call_stack.peek_mut();
         link_return_value_if_sync_variable(

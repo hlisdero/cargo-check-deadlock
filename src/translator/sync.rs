@@ -3,7 +3,6 @@
 //!
 //! It exposes only the necessary definitions to the outside modules.
 
-mod arc_manager;
 mod condvar;
 mod condvar_manager;
 mod mutex;
@@ -14,7 +13,6 @@ mod thread_manager;
 use crate::translator::mir_function::Memory;
 use crate::utils::{check_substring_in_place_type, extract_nth_argument};
 
-pub use arc_manager::ArcManager;
 pub use condvar::Condvar;
 pub use condvar_manager::{CondvarManager, CondvarRef};
 pub use mutex_manager::{MutexManager, MutexRef};

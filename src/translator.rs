@@ -23,6 +23,7 @@
 //! It can be configured in the `naming` submodule.
 
 mod function_call;
+mod function_counter;
 mod mir_function;
 mod mir_visitor;
 mod special_function;
@@ -33,12 +34,12 @@ use crate::petri_net_interface::{PetriNet, PlaceRef};
 use crate::stack::Stack;
 use crate::utils::extract_def_id_of_called_function_from_operand;
 use function_call::FunctionCall;
+use function_counter::FunctionCounter;
 use mir_function::MirFunction;
 use rustc_middle::mir::visit::Visitor;
 use special_function::{call_diverging_function, call_panic_function, is_panic_function};
 use sync::{
-    handle_aggregate_assignment, link_if_sync_variable, ArcManager, CondvarManager, MutexManager,
-    ThreadManager,
+    handle_aggregate_assignment, link_if_sync_variable, CondvarManager, MutexManager, ThreadManager,
 };
 
 /// Translator error message when no main function is found in the source code.
@@ -52,7 +53,7 @@ pub struct Translator<'tcx> {
     program_end: PlaceRef,
     program_panic: PlaceRef,
     call_stack: Stack<MirFunction<'tcx>>,
-    arc_manager: ArcManager,
+    function_counter: FunctionCounter,
     condvar_manager: CondvarManager,
     mutex_manager: MutexManager,
     thread_manager: ThreadManager,
@@ -80,7 +81,7 @@ impl<'tcx> Translator<'tcx> {
             program_end,
             program_panic,
             call_stack: Stack::new(),
-            arc_manager: ArcManager::new(),
+            function_counter: FunctionCounter::new(),
             condvar_manager: CondvarManager::new(),
             mutex_manager: MutexManager::new(),
             thread_manager: ThreadManager::new(),

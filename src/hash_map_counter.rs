@@ -7,11 +7,11 @@
 use std::collections::HashMap;
 
 #[derive(Default)]
-pub struct Counter {
+pub struct HashMapCounter {
     counts: HashMap<String, usize>,
 }
 
-impl Counter {
+impl HashMapCounter {
     /// Creates a new empty counter.
     pub fn new() -> Self {
         Self::default()
@@ -45,21 +45,21 @@ mod counter_tests {
 
     #[test]
     fn counter_new_is_empty() {
-        let counter: Counter = Counter::new();
+        let counter: HashMapCounter = HashMapCounter::new();
 
         assert!(counter.counts.is_empty());
     }
 
     #[test]
     fn counter_get_count_of_new_key_returns_zero() {
-        let mut counter: Counter = Counter::new();
+        let mut counter: HashMapCounter = HashMapCounter::new();
 
         assert_eq!(counter.get_count("Example key"), 0);
     }
 
     #[test]
     fn counter_increment_updates_count() {
-        let mut counter: Counter = Counter::new();
+        let mut counter: HashMapCounter = HashMapCounter::new();
         counter.increment("Example key");
 
         assert_eq!(counter.get_count("Example key"), 1);
@@ -67,7 +67,7 @@ mod counter_tests {
 
     #[test]
     fn counter_increment_many_times() {
-        let mut counter: Counter = Counter::new();
+        let mut counter: HashMapCounter = HashMapCounter::new();
 
         for _i in 0..10 {
             counter.increment("Example key");

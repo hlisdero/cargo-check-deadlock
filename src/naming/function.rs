@@ -38,3 +38,30 @@ pub fn diverging_call_transition_label(function_name: &str) -> String {
 pub fn panic_transition_label(function_name: &str) -> String {
     format!("{}_PANIC", sanitize(function_name))
 }
+
+/// Label of the transitions that represent a call to `std::sync::Arc::<T>::new`.
+#[inline]
+pub fn arc_new_transition_labels(index: usize) -> (String, String) {
+    (
+        format!("std_sync_Arc_T_new_{index}"),
+        format!("std_sync_Arc_T_new_{index}_UNWIND"),
+    )
+}
+
+/// Label of the transitions that represent a call to `std::clone::Clone::clone`.
+#[inline]
+pub fn clone_transition_labels(index: usize) -> (String, String) {
+    (
+        format!("std_clone_Clone_clone_{index}"),
+        format!("std_clone_Clone_clone_{index}_UNWIND"),
+    )
+}
+
+/// Label of the transitions that represent a call to `std::ops::Deref::deref`.
+#[inline]
+pub fn deref_transition_labels(index: usize) -> (String, String) {
+    (
+        format!("std_ops_Deref_deref_{index}"),
+        format!("std_ops_Deref_deref_{index}_UNWIND"),
+    )
+}
