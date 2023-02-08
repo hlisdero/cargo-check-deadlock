@@ -20,9 +20,11 @@
 //! to translate the thread function and defer the translation.
 //! The function executed by the thread is translated to a Petri net just as any other.
 
+use crate::data_structures::petri_net_interface::{
+    add_arc_place_transition, add_arc_transition_place,
+};
+use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef, TransitionRef};
 use crate::naming::thread::{end_place_label, start_place_label};
-use crate::petri_net_interface::{add_arc_place_transition, add_arc_transition_place};
-use crate::petri_net_interface::{PetriNet, PlaceRef, TransitionRef};
 use crate::translator::mir_function::{Memory, MutexEntries};
 use crate::utils::check_substring_in_place_type;
 

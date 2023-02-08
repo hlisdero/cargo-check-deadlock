@@ -4,7 +4,7 @@
 //! It also performs the translation for each mutex function.
 
 use super::mutex::Mutex;
-use crate::petri_net_interface::{PetriNet, TransitionRef};
+use crate::data_structures::petri_net_interface::{PetriNet, TransitionRef};
 use crate::translator::mir_function::Memory;
 use crate::utils::extract_nth_argument;
 use log::debug;

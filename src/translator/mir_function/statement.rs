@@ -9,9 +9,11 @@
 //! The transition points to the start place of the next statement or
 //! the end of the current basic block.
 
+use crate::data_structures::petri_net_interface::{
+    add_arc_place_transition, add_arc_transition_place,
+};
+use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef, TransitionRef};
 use crate::naming::statement::{end_place_label, transition_label};
-use crate::petri_net_interface::{add_arc_place_transition, add_arc_transition_place};
-use crate::petri_net_interface::{PetriNet, PlaceRef, TransitionRef};
 
 pub struct Statement {
     transition: TransitionRef,

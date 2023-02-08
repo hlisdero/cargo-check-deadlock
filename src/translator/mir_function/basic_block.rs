@@ -6,13 +6,15 @@
 //! It also stores a vector of `Statement` which forms a chain of places and transitions.
 
 use super::statement::Statement;
+use crate::data_structures::petri_net_interface::{
+    add_arc_place_transition, add_arc_transition_place,
+};
+use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef, TransitionRef};
 use crate::naming::basic_block::{
     assert_cleanup_transition_label, assert_transition_label, drop_transition_label,
     drop_unwind_transition_label, end_place_label, goto_transition_label, start_place_label,
     switch_int_transition_label, unreachable_transition_label, unwind_transition_label,
 };
-use crate::petri_net_interface::{add_arc_place_transition, add_arc_transition_place};
-use crate::petri_net_interface::{PetriNet, PlaceRef, TransitionRef};
 
 pub struct BasicBlock {
     /// Name of the function to which this block belongs.

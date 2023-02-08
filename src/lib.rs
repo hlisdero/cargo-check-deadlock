@@ -31,15 +31,13 @@ extern crate rustc_session;
 extern crate rustc_span;
 
 mod compiler_config;
-mod hash_map_counter;
+mod data_structures;
 mod naming;
-mod petri_net_interface;
-mod stack;
 mod sysroot;
 mod translator;
 mod utils;
 
-pub use petri_net_interface::PetriNet;
+pub use data_structures::petri_net_interface::PetriNet;
 
 /// Entry point for the translation of the Rust code to a Petri net.
 ///

@@ -7,8 +7,8 @@
 //! It is mainly used for functions that create synchronization variables
 //! or functions whose Petri net representation should not be "reused" for clarity.
 
-use crate::hash_map_counter::HashMapCounter;
-use crate::petri_net_interface::{PetriNet, TransitionRef};
+use crate::data_structures::hash_map_counter::HashMapCounter;
+use crate::data_structures::petri_net_interface::{PetriNet, TransitionRef};
 use crate::translator::function_call::FunctionPlaces;
 use crate::translator::special_function::call_foreign_function;
 

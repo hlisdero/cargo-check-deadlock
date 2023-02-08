@@ -32,9 +32,11 @@
 //! "Modelling Multithreaded Applications Using Petri Nets" by Kavi, Moshtaghi and Chen.
 //! <https://www.researchgate.net/publication/220091454_Modeling_Multithreaded_Applications_Using_Petri_Nets>
 
+use crate::data_structures::petri_net_interface::{
+    add_arc_place_transition, add_arc_transition_place,
+};
+use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef, TransitionRef};
 use crate::naming::condvar::{place_labels, transition_labels};
-use crate::petri_net_interface::{add_arc_place_transition, add_arc_transition_place};
-use crate::petri_net_interface::{PetriNet, PlaceRef, TransitionRef};
 
 pub struct Condvar {
     lost_signal_possible: PlaceRef,

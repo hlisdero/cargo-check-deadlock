@@ -5,9 +5,11 @@
 
 use super::condvar::Condvar;
 use super::MutexManager;
+use crate::data_structures::petri_net_interface::{
+    add_arc_place_transition, add_arc_transition_place,
+};
+use crate::data_structures::petri_net_interface::{PetriNet, TransitionRef};
 use crate::naming::condvar::wait_transition_labels;
-use crate::petri_net_interface::{add_arc_place_transition, add_arc_transition_place};
-use crate::petri_net_interface::{PetriNet, TransitionRef};
 use crate::translator::function_call::FunctionPlaces;
 use crate::translator::mir_function::Memory;
 use crate::utils::extract_nth_argument;

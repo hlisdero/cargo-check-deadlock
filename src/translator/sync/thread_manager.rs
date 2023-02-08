@@ -7,7 +7,7 @@
 //! here will be translated in order.
 
 use super::Thread;
-use crate::petri_net_interface::TransitionRef;
+use crate::data_structures::petri_net_interface::TransitionRef;
 use crate::translator::mir_function::{Memory, MutexEntries};
 use crate::utils::{extract_def_id_of_called_function_from_operand, extract_nth_argument};
 use log::debug;

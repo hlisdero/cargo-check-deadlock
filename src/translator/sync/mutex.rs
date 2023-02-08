@@ -6,9 +6,11 @@
 //! If the place has a token, the mutex is unlocked.
 //! If the place does not have a token, the mutex is locked.
 
+use crate::data_structures::petri_net_interface::{
+    add_arc_place_transition, add_arc_transition_place,
+};
+use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef, TransitionRef};
 use crate::naming::mutex::place_label;
-use crate::petri_net_interface::{add_arc_place_transition, add_arc_transition_place};
-use crate::petri_net_interface::{PetriNet, PlaceRef, TransitionRef};
 pub struct Mutex {
     place_ref: PlaceRef,
 }

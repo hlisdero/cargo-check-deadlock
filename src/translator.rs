@@ -29,9 +29,9 @@ mod mir_visitor;
 mod special_function;
 mod sync;
 
+use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef};
+use crate::data_structures::stack::Stack;
 use crate::naming::program::{PROGRAM_END, PROGRAM_PANIC, PROGRAM_START};
-use crate::petri_net_interface::{PetriNet, PlaceRef};
-use crate::stack::Stack;
 use crate::utils::extract_def_id_of_called_function_from_operand;
 use function_call::FunctionCall;
 use function_counter::FunctionCounter;

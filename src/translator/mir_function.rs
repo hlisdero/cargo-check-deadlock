@@ -17,7 +17,7 @@ mod memory;
 mod statement;
 mod terminator;
 
-use crate::petri_net_interface::{PetriNet, PlaceRef};
+use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef};
 use crate::translator::function_call::FunctionPlaces;
 use basic_block::BasicBlock;
 use std::collections::HashMap;

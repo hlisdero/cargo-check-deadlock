@@ -2,6 +2,7 @@
 //! the specific handler methods for every one of them.
 
 use super::Translator;
+use crate::data_structures::petri_net_interface::PlaceRef;
 use crate::naming::condvar::{
     new_transition_labels as condvar_new_transition_labels, notify_one_transition_labels,
 };
@@ -13,7 +14,6 @@ use crate::naming::mutex::{
     lock_transition_labels, new_transition_labels as mutex_new_transition_labels,
 };
 use crate::naming::thread::{join_transition_labels, spawn_transition_labels};
-use crate::petri_net_interface::PlaceRef;
 use crate::translator::special_function::{call_foreign_function, is_foreign_function};
 use crate::translator::sync::link_return_value_if_sync_variable;
 use crate::utils::extract_nth_argument;
