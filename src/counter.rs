@@ -20,11 +20,11 @@ impl Counter {
     /// Increments the counter by one.
     /// Adds it to the counter if it does not exist yet and
     /// initializes the count to one.
-    pub fn increment(&mut self, key: String) {
-        if let Some(count) = self.counts.get(&key) {
-            self.counts.insert(key, count + 1);
+    pub fn increment(&mut self, key: &str) {
+        if let Some(count) = self.counts.get(key) {
+            self.counts.insert(key.to_string(), count + 1);
         } else {
-            self.counts.insert(key, 1);
+            self.counts.insert(key.to_string(), 1);
         }
     }
 
@@ -60,7 +60,7 @@ mod counter_tests {
     #[test]
     fn counter_increment_updates_count() {
         let mut counter: Counter = Counter::new();
-        counter.increment("Example key".to_string());
+        counter.increment("Example key");
 
         assert_eq!(counter.get_count("Example key"), 1);
     }
@@ -70,7 +70,7 @@ mod counter_tests {
         let mut counter: Counter = Counter::new();
 
         for i in 0..10 {
-            counter.increment("Example key".to_string());
+            counter.increment("Example key");
         }
 
         assert_eq!(counter.get_count("Example key"), 10);
