@@ -21,42 +21,6 @@ pub use mutex_manager::{MutexManager, MutexRef};
 pub use thread::Thread;
 pub use thread_manager::{ThreadManager, ThreadRef};
 
-/// Handles MIR assignments of sync primitives of the form: `_X = _Y`.
-/// If the right-hand side contains a synchronization variable, link it to the left-hand side.
-pub fn handle_use_copy_assignment<'tcx>(
-    place: &rustc_middle::mir::Place<'tcx>,
-    rhs: &rustc_middle::mir::Place<'tcx>,
-    memory: &mut Memory<'tcx>,
-    caller_function_def_id: rustc_hir::def_id::DefId,
-    tcx: rustc_middle::ty::TyCtxt<'tcx>,
-) {
-    handle_assignment_sync_variable(place, rhs, memory, caller_function_def_id, tcx);
-}
-
-/// Handles MIR assignments of sync primitives of the form: `_X = move _Y`.
-/// If the right-hand side contains a synchronization variable, link it to the left-hand side.
-pub fn handle_use_move_assignment<'tcx>(
-    place: &rustc_middle::mir::Place<'tcx>,
-    rhs: &rustc_middle::mir::Place<'tcx>,
-    memory: &mut Memory<'tcx>,
-    caller_function_def_id: rustc_hir::def_id::DefId,
-    tcx: rustc_middle::ty::TyCtxt<'tcx>,
-) {
-    handle_assignment_sync_variable(place, rhs, memory, caller_function_def_id, tcx);
-}
-
-/// Handles MIR assignments of the form: `_X = &_Y`.
-/// If the right-hand side contains a synchronization variable, link it to the left-hand side.
-pub fn handle_ref_assignment<'tcx>(
-    place: &rustc_middle::mir::Place<'tcx>,
-    rhs: &rustc_middle::mir::Place<'tcx>,
-    memory: &mut Memory<'tcx>,
-    caller_function_def_id: rustc_hir::def_id::DefId,
-    tcx: rustc_middle::ty::TyCtxt<'tcx>,
-) {
-    handle_assignment_sync_variable(place, rhs, memory, caller_function_def_id, tcx);
-}
-
 /// Handles MIR assignments of the form: `_X = { copy_data: move _Y }`.
 /// If the right-hand side contains a synchronization variable, link it to the left-hand side.
 pub fn handle_aggregate_assignment<'tcx>(
@@ -75,13 +39,18 @@ pub fn handle_aggregate_assignment<'tcx>(
             // Nothing to do if we found a constant as one of the operands.
             rustc_middle::mir::Operand::Constant(_) => continue,
         };
-        handle_assignment_sync_variable(place, rhs, memory, caller_function_def_id, tcx);
+        handle_assignment(place, rhs, memory, caller_function_def_id, tcx);
     }
 }
 
 /// Checks if the right-hand side contains a mutex, a lock guard, a join handle or a condition variable.
 /// If the right-hand side contains a synchronization variable, link it to the left-hand side.
-fn handle_assignment_sync_variable<'tcx>(
+///
+/// This handler works for MIR assignments of the form:
+/// - `_X = _Y`
+/// - `_X = &_Y`
+/// - `_X = move _Y`
+pub fn handle_assignment<'tcx>(
     place: &rustc_middle::mir::Place<'tcx>,
     rhs: &rustc_middle::mir::Place<'tcx>,
     memory: &mut Memory<'tcx>,
