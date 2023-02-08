@@ -43,8 +43,8 @@ pub fn handle_aggregate_assignment<'tcx>(
     }
 }
 
-/// Checks if the right-hand side contains a mutex, a lock guard, a join handle or a condition variable.
-/// If the right-hand side contains a synchronization variable, links it to the left-hand side.
+/// Checks if `place_linked` contains a mutex, a lock guard, a join handle or a condition variable.
+/// If `place_linked` contains a synchronization variable, links it to the left-hand side.
 ///
 /// This handler works for MIR assignments of the form:
 /// - `_X = _Y`
