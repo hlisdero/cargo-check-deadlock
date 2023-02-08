@@ -5,14 +5,11 @@
 
 use super::condvar::Condvar;
 use super::MutexManager;
-use crate::naming::condvar::{
-    new_transition_labels, notify_one_transition_labels, wait_transition_labels,
-};
+use crate::naming::condvar::wait_transition_labels;
 use crate::petri_net_interface::{add_arc_place_transition, add_arc_transition_place};
 use crate::petri_net_interface::{PetriNet, TransitionRef};
 use crate::translator::function_call::FunctionPlaces;
 use crate::translator::mir_function::Memory;
-use crate::translator::special_function::call_foreign_function;
 use crate::utils::extract_nth_argument;
 use log::debug;
 
@@ -20,7 +17,6 @@ use log::debug;
 pub struct CondvarManager {
     condvars: Vec<Condvar>,
     wait_counter: usize,
-    notify_one_counter: usize,
 }
 
 /// A wrapper type around the indexes to the elements in `Vec<Condvar>`.
@@ -31,19 +27,6 @@ impl CondvarManager {
     /// Returns a new empty `CondvarManager`.
     pub fn new() -> Self {
         Self::default()
-    }
-
-    /// Translates a call to `std::sync::Condvar::new` using
-    /// the same representation as in `foreign_function_call`.
-    /// The labelling follows the numbering of the labels of the condition variables.
-    /// Returns the transition that represents the function call.
-    pub fn translate_call_new(
-        &self,
-        function_call_places: &FunctionPlaces,
-        net: &mut PetriNet,
-    ) -> TransitionRef {
-        let index = self.condvars.len();
-        call_foreign_function(function_call_places, &new_transition_labels(index), net)
     }
 
     /// Translates a call to `std::sync::Condvar::wait` using
@@ -59,25 +42,6 @@ impl CondvarManager {
         let index = self.wait_counter;
         self.wait_counter += 1;
         Self::create_wait_function_call(function_call_places, &wait_transition_labels(index), net)
-    }
-
-    /// Translates a call to `std::sync::Condvar::notify_new` using
-    /// the same representation as in `foreign_function_call`.
-    /// A separate counter is incremented every time that
-    /// the function is called to generate a unique label.
-    /// Returns the transition that represents the function call.
-    pub fn translate_call_notify_one(
-        &mut self,
-        function_call_places: &FunctionPlaces,
-        net: &mut PetriNet,
-    ) -> TransitionRef {
-        let index = self.notify_one_counter;
-        self.notify_one_counter += 1;
-        call_foreign_function(
-            function_call_places,
-            &notify_one_transition_labels(index),
-            net,
-        )
     }
 
     /// Translates the side effects for `std::sync::Condvar::new` i.e.,

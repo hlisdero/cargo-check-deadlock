@@ -4,18 +4,14 @@
 //! It also performs the translation for each mutex function.
 
 use super::mutex::Mutex;
-use crate::naming::mutex::{lock_transition_labels, new_transition_labels};
 use crate::petri_net_interface::{PetriNet, TransitionRef};
-use crate::translator::function_call::FunctionPlaces;
 use crate::translator::mir_function::Memory;
-use crate::translator::special_function::call_foreign_function;
 use crate::utils::extract_nth_argument;
 use log::debug;
 
 #[derive(Default)]
 pub struct MutexManager {
     mutexes: Vec<Mutex>,
-    lock_counter: usize,
 }
 
 /// A wrapper type around the indexes to the elements in `Vec<Mutex>`.
@@ -26,34 +22,6 @@ impl MutexManager {
     /// Returns a new empty `MutexManager`.
     pub fn new() -> Self {
         Self::default()
-    }
-
-    /// Translates a call to `std::sync::Mutex::<T>::new` using
-    /// the same representation as in `foreign_function_call`.
-    /// The labelling follows the numbering of the labels of the mutexes.
-    /// Returns the transition that represents the function call.
-    pub fn translate_call_new(
-        &self,
-        function_call_places: &FunctionPlaces,
-        net: &mut PetriNet,
-    ) -> TransitionRef {
-        let index = self.mutexes.len();
-        call_foreign_function(function_call_places, &new_transition_labels(index), net)
-    }
-
-    /// Translates a call to `std::sync::Mutex::<T>::lock` using
-    /// the same representation as in `foreign_function_call`.
-    /// A separate counter is incremented every time that
-    /// the function is called to generate a unique label.
-    /// Returns the transition that represents the function call.
-    pub fn translate_call_lock(
-        &mut self,
-        function_call_places: &FunctionPlaces,
-        net: &mut PetriNet,
-    ) -> TransitionRef {
-        let index = self.lock_counter;
-        self.lock_counter += 1;
-        call_foreign_function(function_call_places, &lock_transition_labels(index), net)
     }
 
     /// Translates the side effects for `std::sync::Mutex::<T>::new` i.e.,

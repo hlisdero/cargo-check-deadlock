@@ -7,11 +7,8 @@
 //! here will be translated in order.
 
 use super::Thread;
-use crate::naming::thread::{join_transition_labels, spawn_transition_labels};
-use crate::petri_net_interface::{PetriNet, TransitionRef};
-use crate::translator::function_call::FunctionPlaces;
+use crate::petri_net_interface::TransitionRef;
 use crate::translator::mir_function::{Memory, MutexEntries};
-use crate::translator::special_function::call_foreign_function;
 use crate::utils::{extract_def_id_of_called_function_from_operand, extract_nth_argument};
 use log::debug;
 use std::collections::VecDeque;
@@ -19,7 +16,6 @@ use std::collections::VecDeque;
 #[derive(Default)]
 pub struct ThreadManager {
     threads: VecDeque<Thread>,
-    thread_join_counter: usize,
 }
 
 /// A wrapper type around the indexes to the elements in `VecDeque<ThreadSpan>`.
@@ -30,34 +26,6 @@ impl ThreadManager {
     /// Returns a new empty `ThreadManager`.
     pub fn new() -> Self {
         Self::default()
-    }
-
-    /// Translates a call to `std::thread::spawn` using
-    /// the same representation as in `foreign_function_call`.
-    /// The labelling follows the numbering of the labels of the threads.
-    /// Returns the transition that represents the function call.
-    pub fn translate_call_spawn(
-        &self,
-        function_call_places: &FunctionPlaces,
-        net: &mut PetriNet,
-    ) -> TransitionRef {
-        let index = self.threads.len();
-        call_foreign_function(function_call_places, &spawn_transition_labels(index), net)
-    }
-
-    /// Translates a call to `std::thread::JoinHandle::<T>::join` using
-    /// the same representation as in `foreign_function_call`.
-    /// A separate counter is incremented every time that
-    /// the function is called to generate a unique label.
-    /// Returns the transition that represents the function call.
-    pub fn translate_call_join(
-        &mut self,
-        function_call_places: &FunctionPlaces,
-        net: &mut PetriNet,
-    ) -> TransitionRef {
-        let index = self.thread_join_counter;
-        self.thread_join_counter += 1;
-        call_foreign_function(function_call_places, &join_transition_labels(index), net)
     }
 
     /// Translates the side effects for `std::thread::spawn` i.e.,

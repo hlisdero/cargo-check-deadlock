@@ -2,10 +2,17 @@
 //! the specific handler methods for every one of them.
 
 use super::Translator;
+use crate::naming::condvar::{
+    new_transition_labels as condvar_new_transition_labels, notify_one_transition_labels,
+};
 use crate::naming::function::{
     arc_new_transition_labels, clone_transition_labels, deref_transition_labels,
     foreign_call_transition_labels,
 };
+use crate::naming::mutex::{
+    lock_transition_labels, new_transition_labels as mutex_new_transition_labels,
+};
+use crate::naming::thread::{join_transition_labels, spawn_transition_labels};
 use crate::petri_net_interface::PlaceRef;
 use crate::translator::special_function::{call_foreign_function, is_foreign_function};
 use crate::translator::sync::link_return_value_if_sync_variable;
@@ -178,9 +185,12 @@ impl<'tcx> Translator<'tcx> {
         destination: rustc_middle::mir::Place<'tcx>,
         function_call_places: &FunctionPlaces,
     ) {
-        let transition_function_call = self
-            .mutex_manager
-            .translate_call_lock(function_call_places, &mut self.net);
+        let transition_function_call = self.function_counter.translate_call(
+            "std::sync::Mutex::<T>::lock",
+            function_call_places,
+            lock_transition_labels,
+            &mut self.net,
+        );
 
         let current_function = self.call_stack.peek_mut();
         self.mutex_manager.translate_side_effects_lock(
@@ -198,8 +208,12 @@ impl<'tcx> Translator<'tcx> {
         destination: rustc_middle::mir::Place<'tcx>,
         function_call_places: &FunctionPlaces,
     ) {
-        self.mutex_manager
-            .translate_call_new(function_call_places, &mut self.net);
+        self.function_counter.translate_call(
+            "std::sync::Mutex::<T>::new",
+            function_call_places,
+            mutex_new_transition_labels,
+            &mut self.net,
+        );
 
         let current_function = self.call_stack.peek_mut();
         self.mutex_manager.translate_side_effects_new(
@@ -215,9 +229,12 @@ impl<'tcx> Translator<'tcx> {
         args: &[rustc_middle::mir::Operand<'tcx>],
         function_call_places: &FunctionPlaces,
     ) {
-        let transition_function_call = self
-            .thread_manager
-            .translate_call_join(function_call_places, &mut self.net);
+        let transition_function_call = self.function_counter.translate_call(
+            "std::thread::JoinHandle::<T>::join",
+            function_call_places,
+            join_transition_labels,
+            &mut self.net,
+        );
 
         let current_function = self.call_stack.peek();
         self.thread_manager.translate_side_effects_join(
@@ -234,9 +251,12 @@ impl<'tcx> Translator<'tcx> {
         destination: rustc_middle::mir::Place<'tcx>,
         function_call_places: &FunctionPlaces,
     ) {
-        let transition_function_call = self
-            .thread_manager
-            .translate_call_spawn(function_call_places, &mut self.net);
+        let transition_function_call = self.function_counter.translate_call(
+            "std::thread::spawn",
+            function_call_places,
+            spawn_transition_labels,
+            &mut self.net,
+        );
 
         let current_function = self.call_stack.peek_mut();
         self.thread_manager.translate_side_effects_spawn(
@@ -327,8 +347,12 @@ impl<'tcx> Translator<'tcx> {
         destination: rustc_middle::mir::Place<'tcx>,
         function_call_places: &FunctionPlaces,
     ) {
-        self.condvar_manager
-            .translate_call_new(function_call_places, &mut self.net);
+        self.function_counter.translate_call(
+            "std::sync::Condvar::new",
+            function_call_places,
+            condvar_new_transition_labels,
+            &mut self.net,
+        );
 
         let current_function = self.call_stack.peek_mut();
         self.condvar_manager.translate_side_effects_new(
@@ -344,9 +368,12 @@ impl<'tcx> Translator<'tcx> {
         args: &[rustc_middle::mir::Operand<'tcx>],
         function_call_places: &FunctionPlaces,
     ) {
-        let notify_one_transition = self
-            .condvar_manager
-            .translate_call_notify_one(function_call_places, &mut self.net);
+        let notify_one_transition = self.function_counter.translate_call(
+            "std::sync::Condvar::notify_new",
+            function_call_places,
+            notify_one_transition_labels,
+            &mut self.net,
+        );
 
         let current_function = self.call_stack.peek_mut();
         self.condvar_manager.translate_side_effects_notify_one(
