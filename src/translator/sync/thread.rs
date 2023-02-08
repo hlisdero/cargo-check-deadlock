@@ -34,12 +34,12 @@ pub struct Thread<'tcx> {
     mutexes: MutexEntries<'tcx>,
     /// The transition to which the thread joins in at the end.
     join_transition: Option<TransitionRef>,
-    /// An index to identify the thread span.
+    /// An index to identify the thread.
     index: usize,
 }
 
 impl<'tcx> Thread<'tcx> {
-    /// Creates a new thread span without a join transition.
+    /// Creates a new thread without a join transition.
     /// The join transition must be set later.
     pub const fn new(
         spawn_transition: TransitionRef,
@@ -73,7 +73,7 @@ impl<'tcx> Thread<'tcx> {
         }
     }
 
-    /// Prepares the thread span for translation.
+    /// Prepares the thread for translation.
     /// Adds a start and end place for the thread to the Petri net.
     /// Connects the spawn transition to the start place and the end place to the join transition (if available).
     /// Returns a 3-tuple containing the definition ID, the start place and the end place.

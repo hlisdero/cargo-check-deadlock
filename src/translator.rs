@@ -218,9 +218,9 @@ impl<'tcx> Translator<'tcx> {
     /// Gets a thread from the thread manager and translates it.
     /// If mutexes were passed to the thread, move them to the memory of the thread function.
     fn translate_threads(&mut self) {
-        while let Some(mut thread_span) = self.thread_manager.pop_thread() {
+        while let Some(mut thread) = self.thread_manager.pop_thread() {
             let (thread_function_def_id, thread_start_place, thread_end_place) =
-                thread_span.prepare_for_translation(&mut self.net);
+                thread.prepare_for_translation(&mut self.net);
 
             self.push_function_to_call_stack(
                 thread_function_def_id,
@@ -228,7 +228,7 @@ impl<'tcx> Translator<'tcx> {
                 thread_end_place,
             );
             let new_function = self.call_stack.peek_mut();
-            thread_span.move_mutexes(&mut new_function.memory);
+            thread.move_mutexes(&mut new_function.memory);
             self.translate_top_call_stack();
         }
     }

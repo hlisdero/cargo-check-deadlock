@@ -84,8 +84,7 @@ impl<'tcx> ThreadManager<'tcx> {
         let closure_for_spawn = extract_nth_argument(args, 0);
         let mutexes = memory.find_mutexes_linked_to_place(closure_for_spawn);
 
-        let thread_ref =
-            self.add_thread_span(transition_function_call, thread_function_def_id, mutexes);
+        let thread_ref = self.add_thread(transition_function_call, thread_function_def_id, mutexes);
         // The return value contains a new join handle. Link the local variable to it.
         memory.link_place_to_join_handle(return_value, thread_ref);
     }
@@ -106,8 +105,8 @@ impl<'tcx> ThreadManager<'tcx> {
         self.set_join_transition(thread_ref, transition_function_call);
     }
 
-    /// Adds a new thread span and returns a reference to it.
-    fn add_thread_span(
+    /// Adds a new thread and returns a reference to it.
+    fn add_thread(
         &mut self,
         spawn_transition: TransitionRef,
         thread_function_def_id: rustc_hir::def_id::DefId,
@@ -123,16 +122,17 @@ impl<'tcx> ThreadManager<'tcx> {
         ThreadRef(index)
     }
 
-    /// Sets the join transition for a thread span.
+    /// Sets the join transition for a thread.
     ///
     /// # Panics
     ///
     /// If the thread reference is invalid, then the function panics.
     pub fn set_join_transition(&mut self, thread_ref: &ThreadRef, join_transition: TransitionRef) {
-        let thread_span = self.threads.get_mut(thread_ref.0).expect(
-            "BUG: The thread reference should be a valid index for the vector of thread spans",
-        );
-        thread_span.set_join_transition(join_transition);
+        let thread = self
+            .threads
+            .get_mut(thread_ref.0)
+            .expect("BUG: The thread reference should be a valid index for the vector of threads");
+        thread.set_join_transition(join_transition);
     }
 
     /// Removes the last element from the threads vector and returns it, or `None` if it is empty.
