@@ -14,6 +14,7 @@ use crate::translator::function_call::FunctionPlaces;
 use crate::translator::mir_function::Memory;
 use crate::translator::special_function::call_foreign_function;
 use crate::utils::extract_nth_argument;
+use log::debug;
 
 #[derive(Default)]
 pub struct CondvarManager {
@@ -92,6 +93,7 @@ impl CondvarManager {
         let condvar_ref = self.add_condvar(net);
         // The return value contains a new condition variable. Link the local variable to it.
         memory.link_place_to_condvar(return_value, condvar_ref);
+        debug!("NEW CONDVAR: {return_value:?}");
     }
 
     /// Translates the side effects for `std::sync::Condvar::wait` i.e.,

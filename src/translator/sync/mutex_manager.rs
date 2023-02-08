@@ -10,6 +10,7 @@ use crate::translator::function_call::FunctionPlaces;
 use crate::translator::mir_function::Memory;
 use crate::translator::special_function::call_foreign_function;
 use crate::utils::extract_nth_argument;
+use log::debug;
 
 #[derive(Default)]
 pub struct MutexManager {
@@ -68,6 +69,7 @@ impl MutexManager {
         let mutex_ref = self.add_mutex(net);
         // The return value contains a new mutex. Link the local variable to it.
         memory.link_place_to_mutex(return_value, mutex_ref);
+        debug!("NEW MUTEX: {return_value:?}");
     }
 
     /// Translates the side effects for `std::sync::Mutex::<T>::lock` i.e.,
@@ -88,6 +90,7 @@ impl MutexManager {
         self.add_lock_guard(mutex_ref, transition_function_call, net);
         // The return value contains a new lock guard. Link the local variable to it.
         memory.link_place_to_lock_guard(return_value, mutex_ref.clone());
+        debug!("NEW LOCK GUARD: {return_value:?}");
     }
 
     /// Checks whether the variable to be dropped is a lock guard and
@@ -103,6 +106,7 @@ impl MutexManager {
         if memory.is_linked_to_lock_guard(place) {
             let mutex_ref = memory.get_linked_lock_guard(&place);
             self.add_unlock_guard(mutex_ref, transition_drop, net);
+            debug!("DROP LOCK GUARD: {place:?}");
         }
     }
 

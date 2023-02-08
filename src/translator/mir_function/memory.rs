@@ -52,7 +52,6 @@ impl<'tcx> Memory<'tcx> {
         {
             panic!("BUG: The place should not be already linked to a mutex")
         }
-        debug!("MUTEX: {place:?}");
     }
 
     /// Marks a place as containing a lock guard for a mutex.
@@ -72,7 +71,6 @@ impl<'tcx> Memory<'tcx> {
         {
             panic!("BUG: The place should not be already linked to a lock guard")
         }
-        debug!("LOCK GUARD: {place:?}");
     }
 
     /// Marks a place as containing a join handle for a thread.
@@ -92,7 +90,6 @@ impl<'tcx> Memory<'tcx> {
         {
             panic!("BUG: The place should not be already linked to a join handle")
         }
-        debug!("JOIN HANDLE: {place:?}");
     }
 
     /// Marks a place as containing a condition variable.
@@ -112,7 +109,6 @@ impl<'tcx> Memory<'tcx> {
         {
             panic!("BUG: The place should not be already linked to a condition variable")
         }
-        debug!("CONDVAR: {place:?}");
     }
 
     /// Returns the mutex reference linked to the given place.

@@ -13,6 +13,7 @@ use crate::translator::function_call::FunctionPlaces;
 use crate::translator::mir_function::{Memory, MutexEntries};
 use crate::translator::special_function::call_foreign_function;
 use crate::utils::{extract_def_id_of_called_function_from_operand, extract_nth_argument};
+use log::debug;
 use std::collections::VecDeque;
 
 #[derive(Default)]
@@ -87,6 +88,7 @@ impl ThreadManager {
         let thread_ref = self.add_thread(transition_function_call, thread_function_def_id, mutexes);
         // The return value contains a new join handle. Link the local variable to it.
         memory.link_place_to_join_handle(return_value, thread_ref);
+        debug!("NEW JOIN HANDLE: {return_value:?}");
     }
 
     /// Translates the side effects for `std::thread::JoinHandle::<T>::join` i.e.,
