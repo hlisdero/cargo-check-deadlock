@@ -38,10 +38,18 @@ struct CliArgs {
     /// The format for the output
     #[arg(short, long, value_enum)]
     output_format: Vec<OutputFormat>,
+
+    /// Verbosity flag
+    #[clap(flatten)]
+    verbose: clap_verbosity_flag::Verbosity,
 }
 
 fn main() {
     let args = CliArgs::parse();
+    // Initialize an `env_logger` with the clap verbosity flag entered by the user.
+    env_logger::Builder::new()
+        .filter_level(args.verbose.log_level_filter())
+        .init();
 
     // Double check that the file exists before starting the compiler
     // to generate an error message independent of the rustc output.

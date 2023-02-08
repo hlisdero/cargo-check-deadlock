@@ -16,8 +16,8 @@
 //! <https://rustc-dev-guide.rust-lang.org/mir/index.html#mir-data-types>
 
 use crate::translator::sync::{CondvarRef, MutexRef, ThreadRef};
+use log::debug;
 use std::collections::HashMap;
-
 #[derive(Default)]
 pub struct Memory<'tcx> {
     places_linked_to_mutexes: HashMap<rustc_middle::mir::Place<'tcx>, MutexRef>,
@@ -52,6 +52,7 @@ impl<'tcx> Memory<'tcx> {
         {
             panic!("BUG: The place should not be already linked to a mutex")
         }
+        debug!("MUTEX: {place:?}");
     }
 
     /// Marks a place as containing a lock guard for a mutex.
@@ -71,6 +72,7 @@ impl<'tcx> Memory<'tcx> {
         {
             panic!("BUG: The place should not be already linked to a lock guard")
         }
+        debug!("LOCK GUARD: {place:?}");
     }
 
     /// Marks a place as containing a join handle for a thread.
@@ -90,6 +92,7 @@ impl<'tcx> Memory<'tcx> {
         {
             panic!("BUG: The place should not be already linked to a join handle")
         }
+        debug!("JOIN HANDLE: {place:?}");
     }
 
     /// Marks a place as containing a condition variable.
@@ -109,6 +112,7 @@ impl<'tcx> Memory<'tcx> {
         {
             panic!("BUG: The place should not be already linked to a condition variable")
         }
+        debug!("CONDVAR: {place:?}");
     }
 
     /// Returns the mutex reference linked to the given place.
@@ -193,6 +197,7 @@ impl<'tcx> Memory<'tcx> {
     ) {
         let mutex_ref = self.get_linked_mutex(&place_linked_to_mutex);
         self.link_place_to_mutex(place_to_be_linked, mutex_ref.clone());
+        debug!("SAME MUTEX: {place_to_be_linked:?} = {place_linked_to_mutex:?}");
     }
 
     /// Links a place to the lock guard linked to another place.
@@ -210,6 +215,7 @@ impl<'tcx> Memory<'tcx> {
     ) {
         let mutex_ref = self.get_linked_lock_guard(&place_linked_to_lock_guard);
         self.link_place_to_lock_guard(place_to_be_linked, mutex_ref.clone());
+        debug!("SAME LOCK GUARD: {place_to_be_linked:?} = {place_linked_to_lock_guard:?}");
     }
 
     /// Links a place to the join handle linked to another place.
@@ -227,6 +233,7 @@ impl<'tcx> Memory<'tcx> {
     ) {
         let thread_ref = self.get_linked_join_handle(&place_linked_to_join_handle);
         self.link_place_to_join_handle(place_to_be_linked, thread_ref.clone());
+        debug!("SAME JOIN HANDLE: {place_to_be_linked:?} = {place_linked_to_join_handle:?}");
     }
 
     /// Links a place to the condition variable linked to another place.
@@ -244,5 +251,6 @@ impl<'tcx> Memory<'tcx> {
     ) {
         let condvar_ref = self.get_linked_condvar(&place_linked_to_condvar);
         self.link_place_to_condvar(place_to_be_linked, condvar_ref.clone());
+        debug!("SAME CONDVAR: {place_to_be_linked:?} = {place_linked_to_condvar:?}");
     }
 }
