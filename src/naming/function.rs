@@ -39,6 +39,15 @@ pub fn panic_transition_label(function_name: &str) -> String {
     format!("{}_PANIC", sanitize(function_name))
 }
 
+/// Label of the transitions that represent a call to `std::result::Result::<T, E>::unwrap`.
+#[inline]
+pub fn unwrap_transition_labels(index: usize) -> (String, String) {
+    (
+        format!("std_result_Result_unwrap_{index}"),
+        format!("std_result_Result_unwrap_{index}_UNWIND"),
+    )
+}
+
 /// Label of the transitions that represent a call to `std::sync::Arc::<T>::new`.
 #[inline]
 pub fn arc_new_transition_labels(index: usize) -> (String, String) {

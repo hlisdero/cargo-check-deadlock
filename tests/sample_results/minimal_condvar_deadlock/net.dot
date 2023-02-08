@@ -23,7 +23,7 @@ digraph petrinet {
     main_BB4_STMT1 [shape="box" xlabel="" label="main_BB4_STMT1"];
     main_DROP_5 [shape="box" xlabel="" label="main_DROP_5"];
     main_RETURN [shape="box" xlabel="" label="main_RETURN"];
-    std_result_Result_unwrap_CALL [shape="box" xlabel="" label="std_result_Result_unwrap_CALL"];
+    std_result_Result_unwrap_0 [shape="box" xlabel="" label="std_result_Result_unwrap_0"];
     std_sync_Condvar_new_0 [shape="box" xlabel="" label="std_sync_Condvar_new_0"];
     std_sync_Condvar_wait_0_END [shape="box" xlabel="" label="std_sync_Condvar_wait_0_END"];
     std_sync_Condvar_wait_0_START [shape="box" xlabel="" label="std_sync_Condvar_wait_0_START"];
@@ -41,7 +41,7 @@ digraph petrinet {
     main_BB1 -> std_sync_Condvar_new_0;
     main_BB2 -> main_BB2_STMT0;
     main_BB2_END_PLACE -> std_sync_Mutex_T_lock_0;
-    main_BB3 -> std_result_Result_unwrap_CALL;
+    main_BB3 -> std_result_Result_unwrap_0;
     main_BB4 -> main_BB4_STMT0;
     main_BB4_END_PLACE -> std_sync_Condvar_wait_0_START;
     main_BB4_STMT0_END -> main_BB4_STMT1;
@@ -55,7 +55,7 @@ digraph petrinet {
     main_BB4_STMT1 -> main_BB4_END_PLACE;
     main_DROP_5 -> main_BB6;
     main_RETURN -> PROGRAM_END;
-    std_result_Result_unwrap_CALL -> main_BB4;
+    std_result_Result_unwrap_0 -> main_BB4;
     std_sync_Condvar_new_0 -> main_BB2;
     std_sync_Condvar_wait_0_END -> main_BB5;
     std_sync_Condvar_wait_0_START -> CONDVAR_0_P3;

@@ -119,7 +119,7 @@ TRANSITION main_UNWIND_8
     main_BB8 : 1;
   PRODUCE
     PROGRAM_PANIC : 1;
-TRANSITION std_result_Result_unwrap_CALL
+TRANSITION std_result_Result_unwrap_0
   CONSUME
     main_BB3 : 1;
   PRODUCE

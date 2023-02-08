@@ -59,7 +59,7 @@ TRANSITION main_RETURN
     main_BB6 : 1;
   PRODUCE
     PROGRAM_END : 1;
-TRANSITION std_result_Result_unwrap_CALL
+TRANSITION std_result_Result_unwrap_0
   CONSUME
     main_BB3 : 1;
   PRODUCE

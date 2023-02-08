@@ -8,7 +8,7 @@ use crate::naming::condvar::{
 };
 use crate::naming::function::{
     arc_new_transition_labels, clone_transition_labels, deref_transition_labels,
-    foreign_call_transition_labels,
+    foreign_call_transition_labels, unwrap_transition_labels,
 };
 use crate::naming::mutex::{
     lock_transition_labels, new_transition_labels as mutex_new_transition_labels,
@@ -421,6 +421,13 @@ impl<'tcx> Translator<'tcx> {
         destination: rustc_middle::mir::Place<'tcx>,
         function_call_places: &FunctionPlaces,
     ) {
+        self.function_counter.translate_call(
+            function_name,
+            function_call_places,
+            unwrap_transition_labels,
+            &mut self.net,
+        );
+
         let current_function = self.call_stack.peek_mut();
         let self_ref = extract_nth_argument(args, 0);
         if current_function.memory.is_linked_to_lock_guard(self_ref) {
@@ -428,7 +435,5 @@ impl<'tcx> Translator<'tcx> {
                 .memory
                 .link_place_to_same_lock_guard(destination, self_ref);
         }
-        // Reuse the `FunctionCall::Foreign` case. Nothing special to do.
-        self.call_foreign(function_name, function_call_places);
     }
 }
