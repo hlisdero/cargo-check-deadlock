@@ -23,6 +23,7 @@
 //! It can be configured in the `naming` submodule.
 
 mod function_call;
+mod function_call_handler;
 mod function_counter;
 mod mir_function;
 mod mir_visitor;
