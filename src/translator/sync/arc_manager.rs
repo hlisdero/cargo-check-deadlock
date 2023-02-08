@@ -3,7 +3,7 @@
 //! It is mainly used in conjunction with the `MutexManager` and the `CondvarManager`
 //! to keep track of the mutexes and condvars when they are wrapped around a `std::sync::Arc`.
 
-use super::handle_assignment;
+use super::link_if_sync_variable;
 use crate::naming::arc::{clone_transition_labels, deref_transition_labels, new_transition_labels};
 use crate::petri_net_interface::PetriNet;
 use crate::translator::function_call::FunctionPlaces;
@@ -78,7 +78,7 @@ impl ArcManager {
         tcx: rustc_middle::ty::TyCtxt<'tcx>,
     ) {
         let first_argument = extract_nth_argument(args, 0);
-        handle_assignment(
+        link_if_sync_variable(
             &return_value,
             &first_argument,
             memory,
@@ -99,7 +99,7 @@ impl ArcManager {
         tcx: rustc_middle::ty::TyCtxt<'tcx>,
     ) {
         let self_ref = extract_nth_argument(args, 0);
-        handle_assignment(
+        link_if_sync_variable(
             &return_value,
             &self_ref,
             memory,
@@ -120,7 +120,7 @@ impl ArcManager {
         tcx: rustc_middle::ty::TyCtxt<'tcx>,
     ) {
         let self_ref = extract_nth_argument(args, 0);
-        handle_assignment(
+        link_if_sync_variable(
             &return_value,
             &self_ref,
             memory,

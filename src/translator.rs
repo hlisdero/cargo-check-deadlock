@@ -37,7 +37,7 @@ use mir_function::MirFunction;
 use rustc_middle::mir::visit::Visitor;
 use special_function::{call_diverging_function, call_panic_function, is_panic_function};
 use sync::{
-    handle_aggregate_assignment, handle_assignment, ArcManager, CondvarManager, MutexManager,
+    handle_aggregate_assignment, link_if_sync_variable, ArcManager, CondvarManager, MutexManager,
     ThreadManager,
 };
 
@@ -244,7 +244,7 @@ impl<'tcx> Translator<'tcx> {
         rhs: &rustc_middle::mir::Place<'tcx>,
     ) {
         let function = self.call_stack.peek_mut();
-        handle_assignment(place, rhs, &mut function.memory, function.def_id, self.tcx);
+        link_if_sync_variable(place, rhs, &mut function.memory, function.def_id, self.tcx);
     }
 
     /// Handles MIR assignments of the form: `_X = move _Y`
@@ -258,7 +258,7 @@ impl<'tcx> Translator<'tcx> {
         rhs: &rustc_middle::mir::Place<'tcx>,
     ) {
         let function = self.call_stack.peek_mut();
-        handle_assignment(place, rhs, &mut function.memory, function.def_id, self.tcx);
+        link_if_sync_variable(place, rhs, &mut function.memory, function.def_id, self.tcx);
     }
 
     /// Handles MIR assignments of the form: `_X = &_Y`
@@ -270,7 +270,7 @@ impl<'tcx> Translator<'tcx> {
         rhs: &rustc_middle::mir::Place<'tcx>,
     ) {
         let function = self.call_stack.peek_mut();
-        handle_assignment(place, rhs, &mut function.memory, function.def_id, self.tcx);
+        link_if_sync_variable(place, rhs, &mut function.memory, function.def_id, self.tcx);
     }
 
     /// Handles MIR assignments of the form: `_X = { copy_data: move _Y }`.

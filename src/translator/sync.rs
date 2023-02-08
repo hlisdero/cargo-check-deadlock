@@ -39,35 +39,57 @@ pub fn handle_aggregate_assignment<'tcx>(
             // Nothing to do if we found a constant as one of the operands.
             rustc_middle::mir::Operand::Constant(_) => continue,
         };
-        handle_assignment(place, rhs, memory, caller_function_def_id, tcx);
+        link_if_sync_variable(place, rhs, memory, caller_function_def_id, tcx);
     }
 }
 
 /// Checks if the right-hand side contains a mutex, a lock guard, a join handle or a condition variable.
-/// If the right-hand side contains a synchronization variable, link it to the left-hand side.
+/// If the right-hand side contains a synchronization variable, links it to the left-hand side.
 ///
 /// This handler works for MIR assignments of the form:
 /// - `_X = _Y`
 /// - `_X = &_Y`
 /// - `_X = move _Y`
-pub fn handle_assignment<'tcx>(
-    place: &rustc_middle::mir::Place<'tcx>,
-    rhs: &rustc_middle::mir::Place<'tcx>,
+///
+/// It also works for checking if a function argument is a sync variable
+/// and then linking the return value to the argument.
+pub fn link_if_sync_variable<'tcx>(
+    place_to_be_linked: &rustc_middle::mir::Place<'tcx>,
+    place_linked: &rustc_middle::mir::Place<'tcx>,
     memory: &mut Memory<'tcx>,
     caller_function_def_id: rustc_hir::def_id::DefId,
     tcx: rustc_middle::ty::TyCtxt<'tcx>,
 ) {
-    // ORDER MATTERS: MutexGuard should be tested first because `&std::sync::Mutex` is contained in `std::sync::MutexGuard`
-    if check_substring_in_place_type(rhs, "std::sync::MutexGuard<", caller_function_def_id, tcx) {
-        memory.link_place_to_same_lock_guard(*place, *rhs);
+    if check_substring_in_place_type(
+        place_linked,
+        "std::sync::MutexGuard<",
+        caller_function_def_id,
+        tcx,
+    ) {
+        memory.link_place_to_same_lock_guard(*place_to_be_linked, *place_linked);
     }
-    if check_substring_in_place_type(rhs, "std::sync::Mutex<", caller_function_def_id, tcx) {
-        memory.link_place_to_same_mutex(*place, *rhs);
+    if check_substring_in_place_type(
+        place_linked,
+        "std::sync::Mutex<",
+        caller_function_def_id,
+        tcx,
+    ) {
+        memory.link_place_to_same_mutex(*place_to_be_linked, *place_linked);
     }
-    if check_substring_in_place_type(rhs, "std::thread::JoinHandle", caller_function_def_id, tcx) {
-        memory.link_place_to_same_join_handle(*place, *rhs);
+    if check_substring_in_place_type(
+        place_linked,
+        "std::thread::JoinHandle",
+        caller_function_def_id,
+        tcx,
+    ) {
+        memory.link_place_to_same_join_handle(*place_to_be_linked, *place_linked);
     }
-    if check_substring_in_place_type(rhs, "std::sync::Condvar", caller_function_def_id, tcx) {
-        memory.link_place_to_same_condvar(*place, *rhs);
+    if check_substring_in_place_type(
+        place_linked,
+        "std::sync::Condvar",
+        caller_function_def_id,
+        tcx,
+    ) {
+        memory.link_place_to_same_condvar(*place_to_be_linked, *place_linked);
     }
 }
