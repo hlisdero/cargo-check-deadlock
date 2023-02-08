@@ -89,6 +89,15 @@ Three files called `net.lola`, `net.pnml` and `net.dot` should appear in the CWD
 
 _Note: For more examples, please refer to the integration tests._
 
+### Debugging
+
+The program supports the verbosity flags defined in the crate [clap_verbosity_flag](https://docs.rs/clap-verbosity-flag/latest/clap_verbosity_flag/).
+For example, running the program with the flag `-vvv` prints debug messages that can be useful for pinpointing which line of the MIR representation is not being translated correctly.
+
+```sh
+granite2 <path_to_program>/rust_program.rs -vvv
+```
+
 ## Visualizing the results
 
 ### Locally
