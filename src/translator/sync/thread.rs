@@ -24,27 +24,28 @@ use crate::naming::thread::{end_place_label, start_place_label};
 use crate::petri_net_interface::{add_arc_place_transition, add_arc_transition_place};
 use crate::petri_net_interface::{PetriNet, PlaceRef, TransitionRef};
 use crate::translator::mir_function::{Memory, MutexEntries};
+use crate::utils::check_substring_in_place_type;
 
-pub struct Thread<'tcx> {
+pub struct Thread {
     /// The transition from which the thread branches off at the start.
     spawn_transition: TransitionRef,
     /// The definition ID that uniquely identifies the function run by the thread.
     thread_function_def_id: rustc_hir::def_id::DefId,
     /// The mutexes passed to the thread.
-    mutexes: MutexEntries<'tcx>,
+    mutexes: MutexEntries,
     /// The transition to which the thread joins in at the end.
     join_transition: Option<TransitionRef>,
     /// An index to identify the thread.
     index: usize,
 }
 
-impl<'tcx> Thread<'tcx> {
+impl Thread {
     /// Creates a new thread without a join transition.
     /// The join transition must be set later.
     pub const fn new(
         spawn_transition: TransitionRef,
         thread_function_def_id: rustc_hir::def_id::DefId,
-        mutexes: MutexEntries<'tcx>,
+        mutexes: MutexEntries,
         index: usize,
     ) -> Self {
         Self {
@@ -62,14 +63,36 @@ impl<'tcx> Thread<'tcx> {
     }
 
     /// Moves the memory entries corresponding to the mutexes to the new function's memory.
-    /// Modifies each place so that the local points to `_1` since `std::thread::spawn`
-    /// only receives one argument.
-    pub fn move_mutexes(&mut self, memory: &mut Memory<'tcx>) {
-        while let Some((mut mutex_place, mutex_ref)) = self.mutexes.pop() {
-            // Local is a simple index: We can create our own and overwrite the previous value.
-            // <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/mir/struct.Local.html>
-            mutex_place.local = rustc_middle::mir::Local::from(1u32);
-            memory.link_place_to_mutex(mutex_place, mutex_ref);
+    /// Checks the debug info to detect variables containing a mutex passed to the new thread.
+    /// We are only interested in places of the form `_1.X` since `std::thread::spawn` only receives one argument.
+    /// <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/mir/struct.VarDebugInfo.html>
+    ///
+    /// # Examples
+    ///
+    /// The following line in the MIR output indicates that `_1.0` contains a mutex.
+    /// `debug copy_data => (_1.0: std::sync::Arc<std::sync::Mutex<i32>>)`
+    pub fn move_mutexes<'tcx>(
+        &mut self,
+        memory: &mut Memory<'tcx>,
+        tcx: rustc_middle::ty::TyCtxt<'tcx>,
+    ) {
+        let body = tcx.optimized_mir(self.thread_function_def_id);
+        for debug_info in &body.var_debug_info {
+            if let rustc_middle::mir::VarDebugInfoContents::Place(place) = debug_info.value {
+                if place.local == rustc_middle::mir::Local::from(1u32)
+                    && check_substring_in_place_type(
+                        &place,
+                        "std::sync::Mutex",
+                        self.thread_function_def_id,
+                        tcx,
+                    )
+                {
+                    let mutex_ref = self.mutexes.pop().expect(
+                        "BUG: The thread function receives more mutexes than the ones detected",
+                    );
+                    memory.link_place_to_mutex(place, mutex_ref);
+                }
+            }
         }
     }
 

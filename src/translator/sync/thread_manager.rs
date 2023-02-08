@@ -16,8 +16,8 @@ use crate::utils::{extract_def_id_of_called_function_from_operand, extract_nth_a
 use std::collections::VecDeque;
 
 #[derive(Default)]
-pub struct ThreadManager<'tcx> {
-    threads: VecDeque<Thread<'tcx>>,
+pub struct ThreadManager {
+    threads: VecDeque<Thread>,
     thread_join_counter: usize,
 }
 
@@ -25,7 +25,7 @@ pub struct ThreadManager<'tcx> {
 #[derive(Clone)]
 pub struct ThreadRef(usize);
 
-impl<'tcx> ThreadManager<'tcx> {
+impl ThreadManager {
     /// Returns a new empty `ThreadManager`.
     pub fn new() -> Self {
         Self::default()
@@ -63,7 +63,7 @@ impl<'tcx> ThreadManager<'tcx> {
     /// the specific logic of spawning a new thread.
     /// Receives a reference to the memory of the caller function to
     /// link the return local variable to the new join handle.
-    pub fn translate_side_effects_spawn(
+    pub fn translate_side_effects_spawn<'tcx>(
         &mut self,
         args: &[rustc_middle::mir::Operand<'tcx>],
         return_value: rustc_middle::mir::Place<'tcx>,
@@ -93,7 +93,7 @@ impl<'tcx> ThreadManager<'tcx> {
     /// the specific logic of joining an existing thread.
     /// Receives a reference to the memory of the caller function to retrieve
     /// the join handle linked to the local variable.
-    pub fn translate_side_effects_join(
+    pub fn translate_side_effects_join<'tcx>(
         &mut self,
         args: &[rustc_middle::mir::Operand<'tcx>],
         transition_function_call: TransitionRef,
@@ -110,7 +110,7 @@ impl<'tcx> ThreadManager<'tcx> {
         &mut self,
         spawn_transition: TransitionRef,
         thread_function_def_id: rustc_hir::def_id::DefId,
-        mutexes: MutexEntries<'tcx>,
+        mutexes: MutexEntries,
     ) -> ThreadRef {
         let index = self.threads.len();
         self.threads.push_front(Thread::new(
@@ -136,7 +136,7 @@ impl<'tcx> ThreadManager<'tcx> {
     }
 
     /// Removes the last element from the threads vector and returns it, or `None` if it is empty.
-    pub fn pop_thread(&mut self) -> Option<Thread<'tcx>> {
+    pub fn pop_thread(&mut self) -> Option<Thread> {
         self.threads.pop_front()
     }
 }

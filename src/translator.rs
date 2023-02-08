@@ -55,7 +55,7 @@ pub struct Translator<'tcx> {
     arc_manager: ArcManager,
     condvar_manager: CondvarManager,
     mutex_manager: MutexManager,
-    thread_manager: ThreadManager<'tcx>,
+    thread_manager: ThreadManager,
 }
 
 impl<'tcx> Translator<'tcx> {
@@ -228,7 +228,7 @@ impl<'tcx> Translator<'tcx> {
                 thread_end_place,
             );
             let new_function = self.call_stack.peek_mut();
-            thread.move_mutexes(&mut new_function.memory);
+            thread.move_mutexes(&mut new_function.memory, self.tcx);
             self.translate_top_call_stack();
         }
     }

@@ -27,7 +27,7 @@ pub struct Memory<'tcx> {
 }
 
 /// An auxiliary type for passing memory entries from one function to the other.
-pub type MutexEntries<'tcx> = Vec<(rustc_middle::mir::Place<'tcx>, MutexRef)>;
+pub type MutexEntries = Vec<MutexRef>;
 
 impl<'tcx> Memory<'tcx> {
     /// Creates a new memory with empty mappings.
@@ -129,12 +129,12 @@ impl<'tcx> Memory<'tcx> {
     pub fn find_mutexes_linked_to_place(
         &self,
         place: rustc_middle::mir::Place<'tcx>,
-    ) -> MutexEntries<'tcx> {
-        let mut result: MutexEntries<'tcx> = Vec::new();
+    ) -> MutexEntries {
+        let mut result: MutexEntries = Vec::new();
         for mutex_place in self.places_linked_to_mutexes.keys() {
             if mutex_place.local == place.local {
                 let mutex_ref = self.get_linked_mutex(mutex_place);
-                result.push((*mutex_place, mutex_ref.clone()));
+                result.push(mutex_ref.clone());
             }
         }
         result
