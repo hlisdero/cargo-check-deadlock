@@ -117,22 +117,22 @@ impl<'tcx> Translator<'tcx> {
 
         match function_call {
             FunctionCall::ArcNew => {
-                self.call_arc_new(args, destination, &function_call_places);
+                self.call_arc_new(&function_name, args, destination, &function_call_places);
             }
             FunctionCall::Clone => {
-                self.call_clone(args, destination, &function_call_places);
+                self.call_clone(&function_name, args, destination, &function_call_places);
             }
             FunctionCall::CondVarNew => {
-                self.call_condvar_new(destination, &function_call_places);
+                self.call_condvar_new(&function_name, destination, &function_call_places);
             }
             FunctionCall::CondVarNotifyOne => {
-                self.call_condvar_notify_one(args, &function_call_places);
+                self.call_condvar_notify_one(&function_name, args, &function_call_places);
             }
             FunctionCall::CondVarWait => {
                 self.call_condvar_wait(args, &function_call_places);
             }
             FunctionCall::Deref => {
-                self.call_deref(args, destination, &function_call_places);
+                self.call_deref(&function_name, args, destination, &function_call_places);
             }
             FunctionCall::MirFunction => {
                 self.call_mir_function(function_def_id, function_call_places);
@@ -141,19 +141,19 @@ impl<'tcx> Translator<'tcx> {
                 self.call_foreign(&function_name, &function_call_places);
             }
             FunctionCall::MutexLock => {
-                self.call_mutex_lock(args, destination, &function_call_places);
+                self.call_mutex_lock(&function_name, args, destination, &function_call_places);
             }
             FunctionCall::MutexNew => {
-                self.call_mutex_new(destination, &function_call_places);
+                self.call_mutex_new(&function_name, destination, &function_call_places);
             }
             FunctionCall::ThreadJoin => {
-                self.call_thread_join(args, &function_call_places);
+                self.call_thread_join(&function_name, args, &function_call_places);
             }
             FunctionCall::ThreadSpawn => {
-                self.call_thread_spawn(args, destination, &function_call_places);
+                self.call_thread_spawn(&function_name, args, destination, &function_call_places);
             }
             FunctionCall::Unwrap => {
-                self.call_unwrap(args, destination, &function_call_places);
+                self.call_unwrap(&function_name, args, destination, &function_call_places);
             }
         }
     }
@@ -181,12 +181,13 @@ impl<'tcx> Translator<'tcx> {
     /// Handler for the case `FunctionCall::MutexLock`.
     fn call_mutex_lock(
         &mut self,
+        function_name: &str,
         args: &[rustc_middle::mir::Operand<'tcx>],
         destination: rustc_middle::mir::Place<'tcx>,
         function_call_places: &FunctionPlaces,
     ) {
         let transition_function_call = self.function_counter.translate_call(
-            "std::sync::Mutex::<T>::lock",
+            function_name,
             function_call_places,
             lock_transition_labels,
             &mut self.net,
@@ -205,11 +206,12 @@ impl<'tcx> Translator<'tcx> {
     /// Handler for the case `FunctionCall::MutexNew`.
     fn call_mutex_new(
         &mut self,
+        function_name: &str,
         destination: rustc_middle::mir::Place<'tcx>,
         function_call_places: &FunctionPlaces,
     ) {
         self.function_counter.translate_call(
-            "std::sync::Mutex::<T>::new",
+            function_name,
             function_call_places,
             mutex_new_transition_labels,
             &mut self.net,
@@ -226,11 +228,12 @@ impl<'tcx> Translator<'tcx> {
     /// Handler for the case `FunctionCall::ThreadJoin`.
     fn call_thread_join(
         &mut self,
+        function_name: &str,
         args: &[rustc_middle::mir::Operand<'tcx>],
         function_call_places: &FunctionPlaces,
     ) {
         let transition_function_call = self.function_counter.translate_call(
-            "std::thread::JoinHandle::<T>::join",
+            function_name,
             function_call_places,
             join_transition_labels,
             &mut self.net,
@@ -247,12 +250,13 @@ impl<'tcx> Translator<'tcx> {
     /// Handler for the case `FunctionCall::ThreadSpawn`.
     fn call_thread_spawn(
         &mut self,
+        function_name: &str,
         args: &[rustc_middle::mir::Operand<'tcx>],
         destination: rustc_middle::mir::Place<'tcx>,
         function_call_places: &FunctionPlaces,
     ) {
         let transition_function_call = self.function_counter.translate_call(
-            "std::thread::spawn",
+            function_name,
             function_call_places,
             spawn_transition_labels,
             &mut self.net,
@@ -272,12 +276,13 @@ impl<'tcx> Translator<'tcx> {
     /// Handler for the the case `FunctionCall::ArcNew`.
     fn call_arc_new(
         &mut self,
+        function_name: &str,
         args: &[rustc_middle::mir::Operand<'tcx>],
         destination: rustc_middle::mir::Place<'tcx>,
         function_call_places: &FunctionPlaces,
     ) {
         self.function_counter.translate_call(
-            "std::sync::Arc::<T>::new",
+            function_name,
             function_call_places,
             arc_new_transition_labels,
             &mut self.net,
@@ -296,12 +301,13 @@ impl<'tcx> Translator<'tcx> {
     /// Handler for the the case `FunctionCall::Clone`.
     fn call_clone(
         &mut self,
+        function_name: &str,
         args: &[rustc_middle::mir::Operand<'tcx>],
         destination: rustc_middle::mir::Place<'tcx>,
         function_call_places: &FunctionPlaces,
     ) {
         self.function_counter.translate_call(
-            "std::clone::Clone::clone",
+            function_name,
             function_call_places,
             clone_transition_labels,
             &mut self.net,
@@ -320,12 +326,13 @@ impl<'tcx> Translator<'tcx> {
     /// Handler for the the case `FunctionCall::Deref`.
     fn call_deref(
         &mut self,
+        function_name: &str,
         args: &[rustc_middle::mir::Operand<'tcx>],
         destination: rustc_middle::mir::Place<'tcx>,
         function_call_places: &FunctionPlaces,
     ) {
         self.function_counter.translate_call(
-            "std::ops::Deref::deref",
+            function_name,
             function_call_places,
             deref_transition_labels,
             &mut self.net,
@@ -344,11 +351,12 @@ impl<'tcx> Translator<'tcx> {
     /// Handler for the case `FunctionCall::CondvarNew`.
     fn call_condvar_new(
         &mut self,
+        function_name: &str,
         destination: rustc_middle::mir::Place<'tcx>,
         function_call_places: &FunctionPlaces,
     ) {
         self.function_counter.translate_call(
-            "std::sync::Condvar::new",
+            function_name,
             function_call_places,
             condvar_new_transition_labels,
             &mut self.net,
@@ -365,11 +373,12 @@ impl<'tcx> Translator<'tcx> {
     /// Handler for the case `FunctionCall::CondVarNotifyOne`.
     fn call_condvar_notify_one(
         &mut self,
+        function_name: &str,
         args: &[rustc_middle::mir::Operand<'tcx>],
         function_call_places: &FunctionPlaces,
     ) {
         let notify_one_transition = self.function_counter.translate_call(
-            "std::sync::Condvar::notify_new",
+            function_name,
             function_call_places,
             notify_one_transition_labels,
             &mut self.net,
@@ -407,6 +416,7 @@ impl<'tcx> Translator<'tcx> {
     /// Handler for the the case `FunctionCall::Unwrap`.
     fn call_unwrap(
         &mut self,
+        function_name: &str,
         args: &[rustc_middle::mir::Operand<'tcx>],
         destination: rustc_middle::mir::Place<'tcx>,
         function_call_places: &FunctionPlaces,
@@ -419,6 +429,6 @@ impl<'tcx> Translator<'tcx> {
                 .link_place_to_same_lock_guard(destination, self_ref);
         }
         // Reuse the `FunctionCall::Foreign` case. Nothing special to do.
-        self.call_foreign("std::result::Result::<T, E>::unwrap", function_call_places);
+        self.call_foreign(function_name, function_call_places);
     }
 }
