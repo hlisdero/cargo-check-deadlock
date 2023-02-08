@@ -31,6 +31,7 @@ extern crate rustc_session;
 extern crate rustc_span;
 
 mod compiler_config;
+mod counter;
 mod naming;
 mod petri_net_interface;
 mod stack;
