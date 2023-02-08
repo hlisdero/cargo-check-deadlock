@@ -98,11 +98,6 @@
           <text>main_BB3_END_PLACE</text>
         </name>
       </place>
-      <place id="main_BB3_STMT0_END">
-        <name>
-          <text>main_BB3_STMT0_END</text>
-        </name>
-      </place>
       <place id="main_BB4">
         <name>
           <text>main_BB4</text>
@@ -216,11 +211,6 @@
       <transition id="main_BB3_STMT0">
         <name>
           <text>main_BB3_STMT0</text>
-        </name>
-      </transition>
-      <transition id="main_BB3_STMT1">
-        <name>
-          <text>main_BB3_STMT1</text>
         </name>
       </transition>
       <transition id="main_BB4_STMT0">
@@ -593,14 +583,6 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB3_STMT0_END" target="main_BB3_STMT1" id="(main_BB3_STMT0_END, main_BB3_STMT1)">
-        <name>
-          <text>(main_BB3_STMT0_END, main_BB3_STMT1)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
       <arc source="main_BB4" target="main_BB4_STMT0" id="(main_BB4, main_BB4_STMT0)">
         <name>
           <text>(main_BB4, main_BB4_STMT0)</text>
@@ -841,17 +823,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB3_STMT0" target="main_BB3_STMT0_END" id="(main_BB3_STMT0, main_BB3_STMT0_END)">
+      <arc source="main_BB3_STMT0" target="main_BB3_END_PLACE" id="(main_BB3_STMT0, main_BB3_END_PLACE)">
         <name>
-          <text>(main_BB3_STMT0, main_BB3_STMT0_END)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BB3_STMT1" target="main_BB3_END_PLACE" id="(main_BB3_STMT1, main_BB3_END_PLACE)">
-        <name>
-          <text>(main_BB3_STMT1, main_BB3_END_PLACE)</text>
+          <text>(main_BB3_STMT0, main_BB3_END_PLACE)</text>
         </name>
         <inscription>
           <text>1</text>

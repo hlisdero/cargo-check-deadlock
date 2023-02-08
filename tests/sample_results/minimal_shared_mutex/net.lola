@@ -17,7 +17,6 @@ PLACE
     main_BB2_END_PLACE,
     main_BB3,
     main_BB3_END_PLACE,
-    main_BB3_STMT0_END,
     main_BB4,
     main_BB4_END_PLACE,
     main_BB4_STMT0_END,
@@ -55,11 +54,6 @@ TRANSITION main_BB2_STMT0
 TRANSITION main_BB3_STMT0
   CONSUME
     main_BB3 : 1;
-  PRODUCE
-    main_BB3_STMT0_END : 1;
-TRANSITION main_BB3_STMT1
-  CONSUME
-    main_BB3_STMT0_END : 1;
   PRODUCE
     main_BB3_END_PLACE : 1;
 TRANSITION main_BB4_STMT0
