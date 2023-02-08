@@ -12,7 +12,7 @@ mod thread;
 mod thread_manager;
 
 use crate::translator::mir_function::Memory;
-use crate::utils::check_substring_in_place_type;
+use crate::utils::{check_substring_in_place_type, extract_nth_argument};
 
 pub use arc_manager::ArcManager;
 pub use condvar::Condvar;
@@ -44,7 +44,9 @@ pub fn handle_aggregate_assignment<'tcx>(
 }
 
 /// Checks if `place_linked` contains a mutex, a lock guard, a join handle or a condition variable.
-/// If `place_linked` contains a synchronization variable, links it to the left-hand side.
+/// If `place_linked` contains a synchronization variable, links it to `place_to_be_linked`.
+/// Receives a reference to the memory of the caller function to
+/// link the return local variable to the synchronization variable.
 ///
 /// This handler works for MIR assignments of the form:
 /// - `_X = _Y`
@@ -92,4 +94,26 @@ pub fn link_if_sync_variable<'tcx>(
     ) {
         memory.link_place_to_same_condvar(*place_to_be_linked, *place_linked);
     }
+}
+
+/// Checks if the first argument for a function call contains a mutex, a lock guard,
+/// a join handle or a condition variable, i.e. a synchronization variable.
+/// If the first argument contains a synchronization variable, links it to the return value.
+/// Receives a reference to the memory of the caller function to
+/// link the return local variable to the synchronization variable.
+pub fn link_return_value_if_sync_variable<'tcx>(
+    args: &[rustc_middle::mir::Operand<'tcx>],
+    return_value: rustc_middle::mir::Place<'tcx>,
+    memory: &mut Memory<'tcx>,
+    caller_function_def_id: rustc_hir::def_id::DefId,
+    tcx: rustc_middle::ty::TyCtxt<'tcx>,
+) {
+    let first_argument = extract_nth_argument(args, 0);
+    link_if_sync_variable(
+        &return_value,
+        &first_argument,
+        memory,
+        caller_function_def_id,
+        tcx,
+    );
 }

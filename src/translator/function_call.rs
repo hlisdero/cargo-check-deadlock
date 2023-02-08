@@ -5,7 +5,7 @@ use super::Translator;
 use crate::naming::function::foreign_call_transition_labels;
 use crate::petri_net_interface::PlaceRef;
 use crate::translator::special_function::{call_foreign_function, is_foreign_function};
-use crate::translator::sync::ArcManager;
+use crate::translator::sync::link_return_value_if_sync_variable;
 use crate::utils::extract_nth_argument;
 
 /// A convenient typedef to pass the start place, the end place
@@ -257,7 +257,7 @@ impl<'tcx> Translator<'tcx> {
             .translate_call_new(function_call_places, &mut self.net);
 
         let current_function = self.call_stack.peek_mut();
-        ArcManager::translate_side_effects_new(
+        link_return_value_if_sync_variable(
             args,
             destination,
             &mut current_function.memory,
@@ -277,7 +277,7 @@ impl<'tcx> Translator<'tcx> {
             .translate_call_clone(function_call_places, &mut self.net);
 
         let current_function = self.call_stack.peek_mut();
-        ArcManager::translate_side_effects_clone(
+        link_return_value_if_sync_variable(
             args,
             destination,
             &mut current_function.memory,
@@ -297,7 +297,7 @@ impl<'tcx> Translator<'tcx> {
             .translate_call_deref(function_call_places, &mut self.net);
 
         let current_function = self.call_stack.peek_mut();
-        ArcManager::translate_side_effects_deref(
+        link_return_value_if_sync_variable(
             args,
             destination,
             &mut current_function.memory,
