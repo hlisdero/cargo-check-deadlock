@@ -69,7 +69,7 @@ mod counter_tests {
     fn counter_increment_many_times() {
         let mut counter: Counter = Counter::new();
 
-        for i in 0..10 {
+        for _i in 0..10 {
             counter.increment("Example key");
         }
 
