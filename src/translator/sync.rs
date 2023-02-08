@@ -78,7 +78,7 @@ pub fn link_if_sync_variable<'tcx>(
     }
     if check_substring_in_place_type(
         place_linked,
-        "std::thread::JoinHandle",
+        "std::thread::JoinHandle<",
         caller_function_def_id,
         tcx,
     ) {

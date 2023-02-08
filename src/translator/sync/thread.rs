@@ -82,7 +82,7 @@ impl Thread {
                 if place.local == rustc_middle::mir::Local::from(1u32)
                     && check_substring_in_place_type(
                         &place,
-                        "std::sync::Mutex",
+                        "std::sync::Mutex<",
                         self.thread_function_def_id,
                         tcx,
                     )
