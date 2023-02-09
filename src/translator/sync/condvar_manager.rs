@@ -69,6 +69,7 @@ impl CondvarManager {
     pub fn translate_side_effects_wait<'tcx>(
         &self,
         args: &[rustc_middle::mir::Operand<'tcx>],
+        return_value: rustc_middle::mir::Place<'tcx>,
         wait_transitions: &(TransitionRef, TransitionRef),
         net: &mut PetriNet,
         mutex_manager: &mut MutexManager,
@@ -84,6 +85,8 @@ impl CondvarManager {
         let self_ref = extract_nth_argument(args, 0);
         let condvar_ref = memory.get_linked_condvar(&self_ref);
         self.link_to_wait_call(condvar_ref, wait_transitions, net);
+        // The return value contains the lock guard passed to the function. Link the local variable to it.
+        memory.link_place_to_lock_guard(return_value, mutex_ref.clone());
     }
 
     /// Translates the side effects for `std::sync::Condvar::notify_one` i.e.,

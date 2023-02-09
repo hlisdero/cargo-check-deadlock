@@ -44,7 +44,7 @@ impl<'tcx> Translator<'tcx> {
                 self.call_condvar_notify_one(&function_name, args, &function_call_places);
             }
             FunctionCall::CondVarWait => {
-                self.call_condvar_wait(args, &function_call_places);
+                self.call_condvar_wait(args, destination, &function_call_places);
             }
             FunctionCall::Deref => {
                 self.call_deref(&function_name, args, destination, &function_call_places);
@@ -172,6 +172,7 @@ impl<'tcx> Translator<'tcx> {
     fn call_condvar_wait(
         &mut self,
         args: &[rustc_middle::mir::Operand<'tcx>],
+        destination: rustc_middle::mir::Place<'tcx>,
         function_call_places: &FunctionPlaces,
     ) {
         let wait_transitions = self
@@ -181,6 +182,7 @@ impl<'tcx> Translator<'tcx> {
         let current_function = self.call_stack.peek_mut();
         self.condvar_manager.translate_side_effects_wait(
             args,
+            destination,
             &wait_transitions,
             &mut self.net,
             &mut self.mutex_manager,
