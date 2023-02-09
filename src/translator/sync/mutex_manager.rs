@@ -55,9 +55,9 @@ impl MutexManager {
         // Retrieve the mutex from the local variable passed to the function as an argument.
         let self_ref = extract_nth_argument(args, 0);
         let mutex_ref = memory.get_linked_mutex(&self_ref);
-        self.add_lock_guard(mutex_ref, transition_function_call, net);
+        self.add_lock_guard(*mutex_ref, transition_function_call, net);
         // The return value contains a new lock guard. Link the local variable to it.
-        memory.link_place_to_lock_guard(return_value, mutex_ref.clone());
+        memory.link_place_to_lock_guard(return_value, *mutex_ref);
         debug!("NEW LOCK GUARD: {return_value:?}");
     }
 
@@ -73,7 +73,7 @@ impl MutexManager {
     ) {
         if memory.is_linked_to_lock_guard(place) {
             let mutex_ref = memory.get_linked_lock_guard(&place);
-            self.add_unlock_guard(mutex_ref, transition_drop, net);
+            self.add_unlock_guard(*mutex_ref, transition_drop, net);
             debug!("DROP LOCK GUARD: {place:?}");
         }
     }
@@ -95,7 +95,7 @@ impl MutexManager {
     /// If the mutex reference is invalid, then the function panics.
     pub fn add_lock_guard(
         &self,
-        mutex_ref: &MutexRef,
+        mutex_ref: MutexRef,
         transition_lock: &TransitionRef,
         net: &mut PetriNet,
     ) {
@@ -112,7 +112,7 @@ impl MutexManager {
     /// If the mutex reference is invalid, then the function panics.
     pub fn add_unlock_guard(
         &self,
-        mutex_ref: &MutexRef,
+        mutex_ref: MutexRef,
         transition_lock: &TransitionRef,
         net: &mut PetriNet,
     ) {
@@ -125,7 +125,7 @@ impl MutexManager {
     /// # Panics
     ///
     /// If the mutex reference is invalid, then the function panics.
-    fn get_mutex_from_ref(&self, mutex_ref: &MutexRef) -> &Mutex {
+    fn get_mutex_from_ref(&self, mutex_ref: MutexRef) -> &Mutex {
         self.mutexes
             .get(mutex_ref.0)
             .expect("BUG: The mutex reference should be a valid index for the vector of mutexes")

@@ -72,7 +72,7 @@ impl ThreadManager {
         // Retrieve the join handle from the local variable passed to the function as an argument.
         let self_ref = extract_nth_argument(args, 0);
         let thread_ref = memory.get_linked_join_handle(&self_ref);
-        self.set_join_transition(thread_ref, transition_function_call);
+        self.set_join_transition(*thread_ref, transition_function_call);
     }
 
     /// Adds a new thread and returns a reference to it.
@@ -97,7 +97,7 @@ impl ThreadManager {
     /// # Panics
     ///
     /// If the thread reference is invalid, then the function panics.
-    pub fn set_join_transition(&mut self, thread_ref: &ThreadRef, join_transition: TransitionRef) {
+    pub fn set_join_transition(&mut self, thread_ref: ThreadRef, join_transition: TransitionRef) {
         let thread = self
             .threads
             .get_mut(thread_ref.0)

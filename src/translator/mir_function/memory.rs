@@ -52,7 +52,7 @@ impl<'tcx> Memory<'tcx> {
         if mutex_ref == old_mutex_ref {
             debug!("PLACE {place:?} LINKED AGAIN TO SAME MUTEX");
         } else {
-            debug!("PLACE {place:?} LINKED TO A DIFFERENT MUTEX")
+            debug!("PLACE {place:?} LINKED TO A DIFFERENT MUTEX");
         }
     }
 
@@ -72,7 +72,7 @@ impl<'tcx> Memory<'tcx> {
         if mutex_ref == old_mutex_ref {
             debug!("PLACE {place:?} LINKED AGAIN TO SAME LOCK GUARD");
         } else {
-            debug!("PLACE {place:?} LINKED TO A DIFFERENT LOCK GUARD")
+            debug!("PLACE {place:?} LINKED TO A DIFFERENT LOCK GUARD");
         }
     }
 
@@ -92,7 +92,7 @@ impl<'tcx> Memory<'tcx> {
         if thread_ref == old_thread_ref {
             debug!("PLACE {place:?} LINKED AGAIN TO SAME JOIN HANDLE");
         } else {
-            debug!("PLACE {place:?} LINKED TO A DIFFERENT JOIN HANDLE")
+            debug!("PLACE {place:?} LINKED TO A DIFFERENT JOIN HANDLE");
         }
     }
 
@@ -112,7 +112,7 @@ impl<'tcx> Memory<'tcx> {
         if condvar_ref == old_condvar_ref {
             debug!("PLACE {place:?} LINKED AGAIN TO SAME CONDITION VARIABLE");
         } else {
-            debug!("PLACE {place:?} LINKED TO A DIFFERENT CONDITION VARIABLE")
+            debug!("PLACE {place:?} LINKED TO A DIFFERENT CONDITION VARIABLE");
         }
     }
 
@@ -183,7 +183,7 @@ impl<'tcx> Memory<'tcx> {
         place_linked_to_mutex: rustc_middle::mir::Place<'tcx>,
     ) {
         let mutex_ref = self.get_linked_mutex(&place_linked_to_mutex);
-        self.link_place_to_mutex(place_to_be_linked, mutex_ref.clone());
+        self.link_place_to_mutex(place_to_be_linked, *mutex_ref);
         debug!("SAME MUTEX: {place_to_be_linked:?} = {place_linked_to_mutex:?}");
     }
 
@@ -201,7 +201,7 @@ impl<'tcx> Memory<'tcx> {
         place_linked_to_lock_guard: rustc_middle::mir::Place<'tcx>,
     ) {
         let mutex_ref = self.get_linked_lock_guard(&place_linked_to_lock_guard);
-        self.link_place_to_lock_guard(place_to_be_linked, mutex_ref.clone());
+        self.link_place_to_lock_guard(place_to_be_linked, *mutex_ref);
         debug!("SAME LOCK GUARD: {place_to_be_linked:?} = {place_linked_to_lock_guard:?}");
     }
 
@@ -219,7 +219,7 @@ impl<'tcx> Memory<'tcx> {
         place_linked_to_join_handle: rustc_middle::mir::Place<'tcx>,
     ) {
         let thread_ref = self.get_linked_join_handle(&place_linked_to_join_handle);
-        self.link_place_to_join_handle(place_to_be_linked, thread_ref.clone());
+        self.link_place_to_join_handle(place_to_be_linked, *thread_ref);
         debug!("SAME JOIN HANDLE: {place_to_be_linked:?} = {place_linked_to_join_handle:?}");
     }
 
@@ -237,7 +237,7 @@ impl<'tcx> Memory<'tcx> {
         place_linked_to_condvar: rustc_middle::mir::Place<'tcx>,
     ) {
         let condvar_ref = self.get_linked_condvar(&place_linked_to_condvar);
-        self.link_place_to_condvar(place_to_be_linked, condvar_ref.clone());
+        self.link_place_to_condvar(place_to_be_linked, *condvar_ref);
         debug!("SAME CONDVAR: {place_to_be_linked:?} = {place_linked_to_condvar:?}");
     }
 
@@ -253,7 +253,7 @@ impl<'tcx> Memory<'tcx> {
         for mutex_place in self.places_linked_to_mutexes.keys() {
             if mutex_place.local == place.local {
                 let mutex_ref = self.get_linked_mutex(mutex_place);
-                result.push(mutex_ref.clone());
+                result.push(*mutex_ref);
                 debug!("FOUND MUTEX IN PLACE {place:?}");
             }
         }

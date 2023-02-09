@@ -79,14 +79,14 @@ impl CondvarManager {
         let lock_guard = extract_nth_argument(args, 1);
         let mutex_ref = memory.get_linked_lock_guard(&lock_guard);
         // Unlock the mutex when waiting, lock it when the waiting ends.
-        mutex_manager.add_unlock_guard(mutex_ref, &wait_transitions.0, net);
-        mutex_manager.add_lock_guard(mutex_ref, &wait_transitions.1, net);
+        mutex_manager.add_unlock_guard(*mutex_ref, &wait_transitions.0, net);
+        mutex_manager.add_lock_guard(*mutex_ref, &wait_transitions.1, net);
         // Retrieve the condvar from the local variable passed to the function as an argument.
         let self_ref = extract_nth_argument(args, 0);
         let condvar_ref = memory.get_linked_condvar(&self_ref);
-        self.link_to_wait_call(condvar_ref, wait_transitions, net);
+        self.link_to_wait_call(*condvar_ref, wait_transitions, net);
         // The return value contains the lock guard passed to the function. Link the local variable to it.
-        memory.link_place_to_lock_guard(return_value, mutex_ref.clone());
+        memory.link_place_to_lock_guard(return_value, *mutex_ref);
     }
 
     /// Translates the side effects for `std::sync::Condvar::notify_one` i.e.,
@@ -103,7 +103,7 @@ impl CondvarManager {
         // Retrieve the condvar from the local variable passed to the function as an argument.
         let self_ref = extract_nth_argument(args, 0);
         let condvar_ref = memory.get_linked_condvar(&self_ref);
-        self.link_to_notify_one_call(condvar_ref, notify_one_transition, net);
+        self.link_to_notify_one_call(*condvar_ref, notify_one_transition, net);
     }
 
     /// Adds a new condition variable and creates its corresponding representation in the Petri net.
@@ -144,7 +144,7 @@ impl CondvarManager {
     /// a call to `std::sync::Condvar::wait`.
     fn link_to_wait_call(
         &self,
-        condvar_ref: &CondvarRef,
+        condvar_ref: CondvarRef,
         wait_transitions: &(TransitionRef, TransitionRef),
         net: &mut PetriNet,
     ) {
@@ -156,7 +156,7 @@ impl CondvarManager {
     /// a call to `std::sync::Condvar::notify_one`.
     fn link_to_notify_one_call(
         &self,
-        condvar_ref: &CondvarRef,
+        condvar_ref: CondvarRef,
         signal_transition: &TransitionRef,
         net: &mut PetriNet,
     ) {
@@ -169,7 +169,7 @@ impl CondvarManager {
     /// # Panics
     ///
     /// If the condvar reference is invalid, then the function panics.
-    fn get_condvar_from_ref(&self, condvar_ref: &CondvarRef) -> &Condvar {
+    fn get_condvar_from_ref(&self, condvar_ref: CondvarRef) -> &Condvar {
         self.condvars
             .get(condvar_ref.0)
             .expect("BUG: The condvar reference should be a valid index for the vector of condition variables")
