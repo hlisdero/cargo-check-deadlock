@@ -51,7 +51,7 @@ impl<'tcx> Memory<'tcx> {
             .insert(place, mutex_ref)
             .is_some()
         {
-            panic!("BUG: The place should not be already linked to a mutex")
+            panic!("BUG: The place {place:?} should not be already linked to a mutex")
         }
     }
 
@@ -70,7 +70,7 @@ impl<'tcx> Memory<'tcx> {
             .insert(place, mutex_ref)
             .is_some()
         {
-            panic!("BUG: The place should not be already linked to a lock guard")
+            panic!("BUG: The place {place:?} should not be already linked to a lock guard")
         }
     }
 
@@ -89,7 +89,7 @@ impl<'tcx> Memory<'tcx> {
             .insert(place, thread_ref)
             .is_some()
         {
-            panic!("BUG: The place should not be already linked to a join handle")
+            panic!("BUG: The place {place:?} should not be already linked to a join handle")
         }
     }
 
@@ -108,7 +108,7 @@ impl<'tcx> Memory<'tcx> {
             .insert(place, condvar_ref)
             .is_some()
         {
-            panic!("BUG: The place should not be already linked to a condition variable")
+            panic!("BUG: The place {place:?} should not be already linked to a condition variable")
         }
     }
 
@@ -118,9 +118,10 @@ impl<'tcx> Memory<'tcx> {
     ///
     /// If the place is not linked to a mutex, then the function panics.
     pub fn get_linked_mutex(&self, place: &rustc_middle::mir::Place<'tcx>) -> &MutexRef {
-        self.places_linked_to_mutexes
-            .get(place)
-            .expect("BUG: The place should be linked to a mutex")
+        let Some(mutex) = self.places_linked_to_mutexes.get(place) else {
+            panic!("BUG: The place {place:?} should be linked to a mutex");
+        };
+        mutex
     }
 
     /// Returns the mutex for the lock guard linked to the given place.
@@ -129,9 +130,10 @@ impl<'tcx> Memory<'tcx> {
     ///
     /// If the place is not linked to a lock guard, then the function panics.
     pub fn get_linked_lock_guard(&self, place: &rustc_middle::mir::Place<'tcx>) -> &MutexRef {
-        self.places_linked_to_lock_guards
-            .get(place)
-            .expect("BUG: The place should be linked to a lock guard")
+        let Some(lock_guard) = self.places_linked_to_lock_guards.get(place) else {
+            panic!("BUG: The place {place:?} should be linked to a lock guard")
+        };
+        lock_guard
     }
 
     /// Returns the thread reference for the join handle linked to the given place.
@@ -140,9 +142,10 @@ impl<'tcx> Memory<'tcx> {
     ///
     /// If the place is not linked to a join handle, then the function panics.
     pub fn get_linked_join_handle(&self, place: &rustc_middle::mir::Place<'tcx>) -> &ThreadRef {
-        self.places_linked_to_join_handles
-            .get(place)
-            .expect("BUG: The place should be linked to a join handle")
+        let Some(join_handle) = self.places_linked_to_join_handles.get(place) else {
+            panic!("BUG: The place {place:?} should be linked to a join handle")
+        };
+        join_handle
     }
 
     /// Returns the condvar reference for the condition variable linked to the given place.
@@ -151,9 +154,10 @@ impl<'tcx> Memory<'tcx> {
     ///
     /// If the place is not linked to a condition variable, then the function panics.
     pub fn get_linked_condvar(&self, place: &rustc_middle::mir::Place<'tcx>) -> &CondvarRef {
-        self.places_linked_to_condvars
-            .get(place)
-            .expect("BUG: The place should be linked to a condition variable")
+        let Some(condvar) = self.places_linked_to_condvars.get(place) else {
+            panic!("BUG: The place {place:?} should be linked to a condition variable")
+        };
+        condvar
     }
 
     /// Checks whether the place is linked to a lock guard.
@@ -246,6 +250,7 @@ impl<'tcx> Memory<'tcx> {
             if mutex_place.local == place.local {
                 let mutex_ref = self.get_linked_mutex(mutex_place);
                 result.push(mutex_ref.clone());
+                debug!("FOUND MUTEX IN PLACE {place:?}");
             }
         }
         result
