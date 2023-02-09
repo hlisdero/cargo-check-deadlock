@@ -15,7 +15,7 @@ pub struct MutexManager {
 }
 
 /// A wrapper type around the indexes to the elements in `Vec<Mutex>`.
-#[derive(Clone)]
+#[derive(Clone, Copy, PartialEq, Eq)]
 pub struct MutexRef(usize);
 
 impl MutexManager {

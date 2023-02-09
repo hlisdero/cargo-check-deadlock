@@ -46,12 +46,13 @@ impl<'tcx> Memory<'tcx> {
         place: rustc_middle::mir::Place<'tcx>,
         mutex_ref: MutexRef,
     ) {
-        if self
-            .places_linked_to_mutexes
-            .insert(place, mutex_ref)
-            .is_some()
-        {
-            panic!("BUG: The place {place:?} should not be already linked to a mutex")
+        let Some(old_mutex_ref) = self.places_linked_to_mutexes.insert(place, mutex_ref) else {
+            return;
+        };
+        if mutex_ref == old_mutex_ref {
+            debug!("PLACE {place:?} LINKED AGAIN TO SAME MUTEX");
+        } else {
+            debug!("PLACE {place:?} LINKED TO A DIFFERENT MUTEX")
         }
     }
 
@@ -65,12 +66,13 @@ impl<'tcx> Memory<'tcx> {
         place: rustc_middle::mir::Place<'tcx>,
         mutex_ref: MutexRef,
     ) {
-        if self
-            .places_linked_to_lock_guards
-            .insert(place, mutex_ref)
-            .is_some()
-        {
-            panic!("BUG: The place {place:?} should not be already linked to a lock guard")
+        let Some(old_mutex_ref) = self.places_linked_to_lock_guards.insert(place, mutex_ref) else {
+            return;
+        };
+        if mutex_ref == old_mutex_ref {
+            debug!("PLACE {place:?} LINKED AGAIN TO SAME LOCK GUARD");
+        } else {
+            debug!("PLACE {place:?} LINKED TO A DIFFERENT LOCK GUARD")
         }
     }
 
@@ -84,12 +86,13 @@ impl<'tcx> Memory<'tcx> {
         place: rustc_middle::mir::Place<'tcx>,
         thread_ref: ThreadRef,
     ) {
-        if self
-            .places_linked_to_join_handles
-            .insert(place, thread_ref)
-            .is_some()
-        {
-            panic!("BUG: The place {place:?} should not be already linked to a join handle")
+        let Some(old_thread_ref) = self.places_linked_to_join_handles.insert(place, thread_ref) else {
+            return;
+        };
+        if thread_ref == old_thread_ref {
+            debug!("PLACE {place:?} LINKED AGAIN TO SAME JOIN HANDLE");
+        } else {
+            debug!("PLACE {place:?} LINKED TO A DIFFERENT JOIN HANDLE")
         }
     }
 
@@ -103,12 +106,13 @@ impl<'tcx> Memory<'tcx> {
         place: rustc_middle::mir::Place<'tcx>,
         condvar_ref: CondvarRef,
     ) {
-        if self
-            .places_linked_to_condvars
-            .insert(place, condvar_ref)
-            .is_some()
-        {
-            panic!("BUG: The place {place:?} should not be already linked to a condition variable")
+        let Some(old_condvar_ref) = self.places_linked_to_condvars.insert(place, condvar_ref) else {
+            return;
+        };
+        if condvar_ref == old_condvar_ref {
+            debug!("PLACE {place:?} LINKED AGAIN TO SAME CONDITION VARIABLE");
+        } else {
+            debug!("PLACE {place:?} LINKED TO A DIFFERENT CONDITION VARIABLE")
         }
     }
 

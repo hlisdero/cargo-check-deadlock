@@ -22,7 +22,7 @@ pub struct CondvarManager {
 }
 
 /// A wrapper type around the indexes to the elements in `Vec<Condvar>`.
-#[derive(Clone)]
+#[derive(Clone, Copy, PartialEq, Eq)]
 pub struct CondvarRef(usize);
 
 impl CondvarManager {

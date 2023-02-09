@@ -19,7 +19,7 @@ pub struct ThreadManager {
 }
 
 /// A wrapper type around the indexes to the elements in `VecDeque<ThreadSpan>`.
-#[derive(Clone)]
+#[derive(Clone, Copy, PartialEq, Eq)]
 pub struct ThreadRef(usize);
 
 impl ThreadManager {
