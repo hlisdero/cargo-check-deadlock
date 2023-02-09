@@ -18,6 +18,7 @@
 use crate::translator::sync::{CondvarRef, MutexRef, ThreadRef};
 use log::debug;
 use std::collections::HashMap;
+
 #[derive(Default)]
 pub struct Memory<'tcx> {
     places_linked_to_mutexes: HashMap<rustc_middle::mir::Place<'tcx>, MutexRef>,
@@ -120,24 +121,6 @@ impl<'tcx> Memory<'tcx> {
         self.places_linked_to_mutexes
             .get(place)
             .expect("BUG: The place should be linked to a mutex")
-    }
-
-    /// Finds all the mutexes linked to the given place.
-    /// It takes into consideration that the place may have several fields (a subtype of projections).
-    /// <https://rustc-dev-guide.rust-lang.org/mir/index.html?highlight=Projections#mir-data-types>
-    /// Returns a vector of places which share the same local.
-    pub fn find_mutexes_linked_to_place(
-        &self,
-        place: rustc_middle::mir::Place<'tcx>,
-    ) -> MutexEntries {
-        let mut result: MutexEntries = Vec::new();
-        for mutex_place in self.places_linked_to_mutexes.keys() {
-            if mutex_place.local == place.local {
-                let mutex_ref = self.get_linked_mutex(mutex_place);
-                result.push(mutex_ref.clone());
-            }
-        }
-        result
     }
 
     /// Returns the mutex for the lock guard linked to the given place.
@@ -248,5 +231,23 @@ impl<'tcx> Memory<'tcx> {
         let condvar_ref = self.get_linked_condvar(&place_linked_to_condvar);
         self.link_place_to_condvar(place_to_be_linked, condvar_ref.clone());
         debug!("SAME CONDVAR: {place_to_be_linked:?} = {place_linked_to_condvar:?}");
+    }
+
+    /// Finds all the mutexes linked to the given place.
+    /// It takes into consideration that the place may have several fields (a subtype of projections).
+    /// <https://rustc-dev-guide.rust-lang.org/mir/index.html?highlight=Projections#mir-data-types>
+    /// Returns a vector of places which share the same local.
+    pub fn find_mutexes_linked_to_place(
+        &self,
+        place: rustc_middle::mir::Place<'tcx>,
+    ) -> MutexEntries {
+        let mut result: MutexEntries = Vec::new();
+        for mutex_place in self.places_linked_to_mutexes.keys() {
+            if mutex_place.local == place.local {
+                let mutex_ref = self.get_linked_mutex(mutex_place);
+                result.push(mutex_ref.clone());
+            }
+        }
+        result
     }
 }
