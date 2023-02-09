@@ -53,6 +53,7 @@ TRANSITION main_DROP_5
   CONSUME
     main_BB5 : 1;
   PRODUCE
+    MUTEX_0 : 1,
     main_BB6 : 1;
 TRANSITION main_RETURN
   CONSUME

@@ -53,6 +53,7 @@ digraph petrinet {
     main_BB2_STMT0 -> main_BB2_END_PLACE;
     main_BB4_STMT0 -> main_BB4_STMT0_END;
     main_BB4_STMT1 -> main_BB4_END_PLACE;
+    main_DROP_5 -> MUTEX_0;
     main_DROP_5 -> main_BB6;
     main_RETURN -> PROGRAM_END;
     std_result_Result_unwrap_0 -> main_BB4;

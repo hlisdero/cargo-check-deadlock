@@ -353,6 +353,14 @@
           <text>1</text>
         </inscription>
       </arc>
+      <arc source="main_DROP_5" target="MUTEX_0" id="(main_DROP_5, MUTEX_0)">
+        <name>
+          <text>(main_DROP_5, MUTEX_0)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
       <arc source="main_DROP_5" target="main_BB6" id="(main_DROP_5, main_BB6)">
         <name>
           <text>(main_DROP_5, main_BB6)</text>
