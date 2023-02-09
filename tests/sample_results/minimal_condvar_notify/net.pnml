@@ -607,6 +607,14 @@
           <text>1</text>
         </inscription>
       </arc>
+      <arc source="main_DROP_6" target="MUTEX_0" id="(main_DROP_6, MUTEX_0)">
+        <name>
+          <text>(main_DROP_6, MUTEX_0)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
       <arc source="main_DROP_6" target="main_BB7" id="(main_DROP_6, main_BB7)">
         <name>
           <text>(main_DROP_6, main_BB7)</text>

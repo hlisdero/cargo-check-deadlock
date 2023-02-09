@@ -87,6 +87,7 @@ TRANSITION main_DROP_6
   CONSUME
     main_BB6 : 1;
   PRODUCE
+    MUTEX_0 : 1,
     main_BB7 : 1;
 TRANSITION main_DROP_9
   CONSUME

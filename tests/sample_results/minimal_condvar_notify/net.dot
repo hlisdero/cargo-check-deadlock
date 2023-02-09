@@ -93,6 +93,7 @@ digraph petrinet {
     main_BB5_STMT1 -> main_BB5_STMT1_END;
     main_BB5_STMT2 -> main_BB5_END_PLACE;
     main_BB7_STMT0 -> main_BB7_END_PLACE;
+    main_DROP_6 -> MUTEX_0;
     main_DROP_6 -> main_BB7;
     main_DROP_9 -> MUTEX_0;
     main_DROP_9 -> main_BB8;
