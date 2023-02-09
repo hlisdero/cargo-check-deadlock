@@ -52,6 +52,9 @@ pub fn handle_aggregate_assignment<'tcx>(
 /// - `_X = _Y`
 /// - `_X = &_Y`
 /// - `_X = move _Y`
+/// - `_X = (*_Y).Z:`
+/// - `_X = &((*_Y).Z)`
+/// - `_X = move (*_Y).Z`
 ///
 /// It also works for checking if a function argument is a sync variable
 /// and then linking the return value to the argument.
@@ -62,48 +65,80 @@ pub fn link_if_sync_variable<'tcx>(
     caller_function_def_id: rustc_hir::def_id::DefId,
     tcx: rustc_middle::ty::TyCtxt<'tcx>,
 ) {
-    // If the place has a `Deref` projection type, ignore the projections
-    // and work with a new place that is just a local.
-    let place_linked = if place_linked.is_indirect() {
-        let mut place_without_projections = *place_linked;
-        place_without_projections.projection = rustc_middle::ty::List::empty();
-        debug!("IGNORE PROJECTIONS IN PLACE: {place_without_projections:?} <- {place_linked:?}");
-        place_without_projections
-    } else {
-        *place_linked
-    };
+    if place_linked.is_indirect() {
+        // Create a new place without the projections
+        let mut base_place = *place_linked;
+        base_place.projection = rustc_middle::ty::List::empty();
+        debug!("SEARCH FOR SYNC VARIABLE IN BASE PLACE: {base_place:?} <- {place_linked:?}");
 
+        // In the indirect case the place linked to the sync variable
+        // is actually the base place of `place_linked`.
+        generalized_link_place_if_sync_variable(
+            place_to_be_linked,
+            &base_place,
+            place_linked,
+            memory,
+            caller_function_def_id,
+            tcx,
+        );
+    } else {
+        // In the normal case the place linked to the sync variable
+        // is simply `place_linked`.
+        generalized_link_place_if_sync_variable(
+            place_to_be_linked,
+            place_linked,
+            place_linked,
+            memory,
+            caller_function_def_id,
+            tcx,
+        );
+    }
+}
+
+/// Checks if `place_to_check_type` contains a mutex, a lock guard, a join handle or a condition variable.
+/// If `place_to_check_type` is of type of a synchronization variable, links `place_linked` to `place_to_be_linked`.
+///
+/// This function decouples the place with the type of the sync variable from the place that is linked to the sync
+/// variable. In this sense, it is "generalized" from the naive idea that these two concepts always match.
+fn generalized_link_place_if_sync_variable<'tcx>(
+    place_to_be_linked: &rustc_middle::mir::Place<'tcx>,
+    place_linked: &rustc_middle::mir::Place<'tcx>,
+    place_to_check_type: &rustc_middle::mir::Place<'tcx>,
+    memory: &mut Memory<'tcx>,
+    caller_function_def_id: rustc_hir::def_id::DefId,
+    tcx: rustc_middle::ty::TyCtxt<'tcx>,
+) {
     if check_substring_in_place_type(
-        &place_linked,
+        place_to_check_type,
         "std::sync::MutexGuard<",
         caller_function_def_id,
         tcx,
     ) {
-        memory.link_place_to_same_lock_guard(*place_to_be_linked, place_linked);
+        memory.link_place_to_same_lock_guard(*place_to_be_linked, *place_linked);
     }
     if check_substring_in_place_type(
-        &place_linked,
+        place_to_check_type,
         "std::sync::Mutex<",
         caller_function_def_id,
         tcx,
     ) {
-        memory.link_place_to_same_mutex(*place_to_be_linked, place_linked);
+        memory.link_place_to_same_mutex(*place_to_be_linked, *place_linked);
     }
     if check_substring_in_place_type(
-        &place_linked,
+        place_to_check_type,
         "std::thread::JoinHandle<",
         caller_function_def_id,
         tcx,
     ) {
-        memory.link_place_to_same_join_handle(*place_to_be_linked, place_linked);
+        memory.link_place_to_same_join_handle(*place_to_be_linked, *place_linked);
     }
     if check_substring_in_place_type(
-        &place_linked,
+        place_to_check_type,
         "std::sync::Condvar",
         caller_function_def_id,
         tcx,
     ) {
-        memory.link_place_to_same_condvar(*place_to_be_linked, place_linked);
+        memory.link_place_to_same_condvar(*place_to_be_linked, *place_linked);
     }
 }
 
