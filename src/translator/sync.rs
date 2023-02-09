@@ -15,6 +15,7 @@ use crate::utils::{check_substring_in_place_type, extract_nth_argument};
 
 pub use condvar::Condvar;
 pub use condvar_manager::{CondvarManager, CondvarRef};
+use log::debug;
 pub use mutex_manager::{MutexManager, MutexRef};
 pub use thread::Thread;
 pub use thread_manager::{ThreadManager, ThreadRef};
@@ -43,6 +44,7 @@ pub fn handle_aggregate_assignment<'tcx>(
 
 /// Checks if `place_linked` contains a mutex, a lock guard, a join handle or a condition variable.
 /// If `place_linked` contains a synchronization variable, links it to `place_to_be_linked`.
+///
 /// Receives a reference to the memory of the caller function to
 /// link the return local variable to the synchronization variable.
 ///
@@ -60,43 +62,55 @@ pub fn link_if_sync_variable<'tcx>(
     caller_function_def_id: rustc_hir::def_id::DefId,
     tcx: rustc_middle::ty::TyCtxt<'tcx>,
 ) {
+    // If the place has a `Deref` projection type, ignore the projections
+    // and work with a new place that is just a local.
+    let place_linked = if place_linked.is_indirect() {
+        let mut place_without_projections = *place_linked;
+        place_without_projections.projection = rustc_middle::ty::List::empty();
+        debug!("IGNORE PROJECTIONS IN PLACE: {place_without_projections:?} <- {place_linked:?}");
+        place_without_projections
+    } else {
+        *place_linked
+    };
+
     if check_substring_in_place_type(
-        place_linked,
+        &place_linked,
         "std::sync::MutexGuard<",
         caller_function_def_id,
         tcx,
     ) {
-        memory.link_place_to_same_lock_guard(*place_to_be_linked, *place_linked);
+        memory.link_place_to_same_lock_guard(*place_to_be_linked, place_linked);
     }
     if check_substring_in_place_type(
-        place_linked,
+        &place_linked,
         "std::sync::Mutex<",
         caller_function_def_id,
         tcx,
     ) {
-        memory.link_place_to_same_mutex(*place_to_be_linked, *place_linked);
+        memory.link_place_to_same_mutex(*place_to_be_linked, place_linked);
     }
     if check_substring_in_place_type(
-        place_linked,
+        &place_linked,
         "std::thread::JoinHandle<",
         caller_function_def_id,
         tcx,
     ) {
-        memory.link_place_to_same_join_handle(*place_to_be_linked, *place_linked);
+        memory.link_place_to_same_join_handle(*place_to_be_linked, place_linked);
     }
     if check_substring_in_place_type(
-        place_linked,
+        &place_linked,
         "std::sync::Condvar",
         caller_function_def_id,
         tcx,
     ) {
-        memory.link_place_to_same_condvar(*place_to_be_linked, *place_linked);
+        memory.link_place_to_same_condvar(*place_to_be_linked, place_linked);
     }
 }
 
 /// Checks if the first argument for a function call contains a mutex, a lock guard,
 /// a join handle or a condition variable, i.e. a synchronization variable.
 /// If the first argument contains a synchronization variable, links it to the return value.
+///
 /// Receives a reference to the memory of the caller function to
 /// link the return local variable to the synchronization variable.
 pub fn link_return_value_if_sync_variable<'tcx>(
