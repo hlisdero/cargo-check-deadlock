@@ -27,8 +27,10 @@ pub struct Memory<'tcx> {
     places_linked_to_condvars: HashMap<rustc_middle::mir::Place<'tcx>, CondvarRef>,
 }
 
-/// An auxiliary type for passing memory entries from one function to the other.
+/// An auxiliary type for passing mutex memory entries from one function to the other.
 pub type MutexEntries = Vec<MutexRef>;
+/// An auxiliary type for passing condvar memory entries from one function to the other.
+pub type CondvarEntries = Vec<CondvarRef>;
 
 impl<'tcx> Memory<'tcx> {
     /// Creates a new memory with empty mappings.
@@ -254,7 +256,26 @@ impl<'tcx> Memory<'tcx> {
             if mutex_place.local == place.local {
                 let mutex_ref = self.get_linked_mutex(mutex_place);
                 result.push(*mutex_ref);
-                debug!("FOUND MUTEX IN PLACE {place:?}");
+                debug!("FOUND MUTEX IN PLACE {mutex_place:?}");
+            }
+        }
+        result
+    }
+
+    /// Finds all the condvars linked to the given place.
+    /// It takes into consideration that the place may have several fields (a subtype of projections).
+    /// <https://rustc-dev-guide.rust-lang.org/mir/index.html?highlight=Projections#mir-data-types>
+    /// Returns a vector of places which share the same local.
+    pub fn find_condvars_linked_to_place(
+        &self,
+        place: rustc_middle::mir::Place<'tcx>,
+    ) -> CondvarEntries {
+        let mut result: CondvarEntries = Vec::new();
+        for condvar_place in self.places_linked_to_condvars.keys() {
+            if condvar_place.local == place.local {
+                let condvar_ref = self.get_linked_condvar(condvar_place);
+                result.push(*condvar_ref);
+                debug!("FOUND CONDVAR IN PLACE {condvar_place:?}");
             }
         }
         result

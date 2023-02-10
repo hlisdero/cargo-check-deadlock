@@ -231,6 +231,7 @@ impl<'tcx> Translator<'tcx> {
             );
             let new_function = self.call_stack.peek_mut();
             thread.move_mutexes(&mut new_function.memory, self.tcx);
+            thread.move_condvars(&mut new_function.memory, self.tcx);
             self.translate_top_call_stack();
         }
     }
