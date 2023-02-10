@@ -350,12 +350,12 @@ TRANSITION std_clone_Clone_clone_0_UNWIND
     main_BB3_END_PLACE : 1;
   PRODUCE
     main_BB18 : 1;
-TRANSITION std_ops_DerefMut_deref_mut_CALL
+TRANSITION std_ops_DerefMut_deref_mut_0
   CONSUME
     main__closure_0__BB3_END_PLACE : 1;
   PRODUCE
     main__closure_0__BB4 : 1;
-TRANSITION std_ops_DerefMut_deref_mut_CALL_UNWIND
+TRANSITION std_ops_DerefMut_deref_mut_0_UNWIND
   CONSUME
     main__closure_0__BB3_END_PLACE : 1;
   PRODUCE

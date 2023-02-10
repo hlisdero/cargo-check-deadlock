@@ -5,8 +5,8 @@ use crate::naming::condvar::{
     new_transition_labels as condvar_new_transition_labels, notify_one_transition_labels,
 };
 use crate::naming::function::{
-    arc_new_transition_labels, clone_transition_labels, deref_transition_labels,
-    foreign_call_transition_labels, unwrap_transition_labels,
+    arc_new_transition_labels, clone_transition_labels, deref_mut_transition_labels,
+    deref_transition_labels, foreign_call_transition_labels, unwrap_transition_labels,
 };
 use crate::naming::mutex::{
     lock_transition_labels, new_transition_labels as mutex_new_transition_labels,
@@ -48,6 +48,9 @@ impl<'tcx> Translator<'tcx> {
             }
             FunctionCall::Deref => {
                 self.call_deref(&function_name, args, destination, &function_call_places);
+            }
+            FunctionCall::DerefMut => {
+                self.call_deref_mut(&function_name, args, destination, &function_call_places);
             }
             FunctionCall::Foreign => {
                 self.call_foreign(&function_name, &function_call_places);
@@ -202,6 +205,31 @@ impl<'tcx> Translator<'tcx> {
             function_name,
             function_call_places,
             deref_transition_labels,
+            &mut self.net,
+        );
+
+        let current_function = self.call_stack.peek_mut();
+        link_return_value_if_sync_variable(
+            args,
+            destination,
+            &mut current_function.memory,
+            current_function.def_id,
+            self.tcx,
+        );
+    }
+
+    /// Handler for the the case `FunctionCall::DerefMut`.
+    fn call_deref_mut(
+        &mut self,
+        function_name: &str,
+        args: &[rustc_middle::mir::Operand<'tcx>],
+        destination: rustc_middle::mir::Place<'tcx>,
+        function_call_places: &FunctionPlaces,
+    ) {
+        self.function_counter.translate_call(
+            function_name,
+            function_call_places,
+            deref_mut_transition_labels,
             &mut self.net,
         );
 

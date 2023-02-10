@@ -74,3 +74,12 @@ pub fn deref_transition_labels(index: usize) -> (String, String) {
         format!("std_ops_Deref_deref_{index}_UNWIND"),
     )
 }
+
+/// Label of the transitions that represent a call to `std::ops::DerefMut::deref_mut`.
+#[inline]
+pub fn deref_mut_transition_labels(index: usize) -> (String, String) {
+    (
+        format!("std_ops_DerefMut_deref_mut_{index}"),
+        format!("std_ops_DerefMut_deref_mut_{index}_UNWIND"),
+    )
+}

@@ -27,6 +27,9 @@ pub enum FunctionCall {
     /// Call to `std::ops::Deref::deref`
     /// Non-recursive call for the translation process.
     Deref,
+    /// Call to `std::ops::DerefMut::deref_mut`
+    /// Non-recursive call for the translation process.
+    DerefMut,
     /// Abridged function call.
     /// Non-recursive call for the translation process.
     Foreign,
@@ -73,6 +76,7 @@ impl FunctionCall {
         match function_name {
             "std::clone::Clone::clone" => Some(Self::Clone),
             "std::ops::Deref::deref" => Some(Self::Deref),
+            "std::ops::DerefMut::deref_mut" => Some(Self::DerefMut),
             "std::result::Result::<T, E>::unwrap" => Some(Self::Unwrap),
             "std::sync::Arc::<T>::new" => Some(Self::ArcNew),
             "std::sync::Condvar::new" => Some(Self::CondVarNew),

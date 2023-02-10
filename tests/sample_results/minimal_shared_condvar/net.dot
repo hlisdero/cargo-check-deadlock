@@ -122,8 +122,8 @@ digraph petrinet {
     main__closure_0__UNWIND_10 [shape="box" xlabel="" label="main__closure_0__UNWIND_10"];
     std_clone_Clone_clone_0 [shape="box" xlabel="" label="std_clone_Clone_clone_0"];
     std_clone_Clone_clone_0_UNWIND [shape="box" xlabel="" label="std_clone_Clone_clone_0_UNWIND"];
-    std_ops_DerefMut_deref_mut_CALL [shape="box" xlabel="" label="std_ops_DerefMut_deref_mut_CALL"];
-    std_ops_DerefMut_deref_mut_CALL_UNWIND [shape="box" xlabel="" label="std_ops_DerefMut_deref_mut_CALL_UNWIND"];
+    std_ops_DerefMut_deref_mut_0 [shape="box" xlabel="" label="std_ops_DerefMut_deref_mut_0"];
+    std_ops_DerefMut_deref_mut_0_UNWIND [shape="box" xlabel="" label="std_ops_DerefMut_deref_mut_0_UNWIND"];
     std_ops_Deref_deref_0 [shape="box" xlabel="" label="std_ops_Deref_deref_0"];
     std_ops_Deref_deref_0_UNWIND [shape="box" xlabel="" label="std_ops_Deref_deref_0_UNWIND"];
     std_ops_Deref_deref_1 [shape="box" xlabel="" label="std_ops_Deref_deref_1"];
@@ -226,8 +226,8 @@ digraph petrinet {
     main__closure_0__BB2 -> std_result_Result_unwrap_2;
     main__closure_0__BB2 -> std_result_Result_unwrap_2_UNWIND;
     main__closure_0__BB3 -> main__closure_0__BB3_STMT0;
-    main__closure_0__BB3_END_PLACE -> std_ops_DerefMut_deref_mut_CALL;
-    main__closure_0__BB3_END_PLACE -> std_ops_DerefMut_deref_mut_CALL_UNWIND;
+    main__closure_0__BB3_END_PLACE -> std_ops_DerefMut_deref_mut_0;
+    main__closure_0__BB3_END_PLACE -> std_ops_DerefMut_deref_mut_0_UNWIND;
     main__closure_0__BB4 -> main__closure_0__BB4_STMT0;
     main__closure_0__BB4_END_PLACE -> std_sync_Condvar_notify_one_0;
     main__closure_0__BB4_END_PLACE -> std_sync_Condvar_notify_one_0_UNWIND;
@@ -297,8 +297,8 @@ digraph petrinet {
     main__closure_0__UNWIND_10 -> PROGRAM_PANIC;
     std_clone_Clone_clone_0 -> main_BB4;
     std_clone_Clone_clone_0_UNWIND -> main_BB18;
-    std_ops_DerefMut_deref_mut_CALL -> main__closure_0__BB4;
-    std_ops_DerefMut_deref_mut_CALL_UNWIND -> main__closure_0__BB8;
+    std_ops_DerefMut_deref_mut_0 -> main__closure_0__BB4;
+    std_ops_DerefMut_deref_mut_0_UNWIND -> main__closure_0__BB8;
     std_ops_Deref_deref_0 -> main_BB7;
     std_ops_Deref_deref_0_UNWIND -> main_BB18;
     std_ops_Deref_deref_1 -> main_BB11;

@@ -626,14 +626,14 @@
           <text>std_clone_Clone_clone_0_UNWIND</text>
         </name>
       </transition>
-      <transition id="std_ops_DerefMut_deref_mut_CALL">
+      <transition id="std_ops_DerefMut_deref_mut_0">
         <name>
-          <text>std_ops_DerefMut_deref_mut_CALL</text>
+          <text>std_ops_DerefMut_deref_mut_0</text>
         </name>
       </transition>
-      <transition id="std_ops_DerefMut_deref_mut_CALL_UNWIND">
+      <transition id="std_ops_DerefMut_deref_mut_0_UNWIND">
         <name>
-          <text>std_ops_DerefMut_deref_mut_CALL_UNWIND</text>
+          <text>std_ops_DerefMut_deref_mut_0_UNWIND</text>
         </name>
       </transition>
       <transition id="std_ops_Deref_deref_0">
@@ -1374,17 +1374,17 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main__closure_0__BB3_END_PLACE" target="std_ops_DerefMut_deref_mut_CALL" id="(main__closure_0__BB3_END_PLACE, std_ops_DerefMut_deref_mut_CALL)">
+      <arc source="main__closure_0__BB3_END_PLACE" target="std_ops_DerefMut_deref_mut_0" id="(main__closure_0__BB3_END_PLACE, std_ops_DerefMut_deref_mut_0)">
         <name>
-          <text>(main__closure_0__BB3_END_PLACE, std_ops_DerefMut_deref_mut_CALL)</text>
+          <text>(main__closure_0__BB3_END_PLACE, std_ops_DerefMut_deref_mut_0)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main__closure_0__BB3_END_PLACE" target="std_ops_DerefMut_deref_mut_CALL_UNWIND" id="(main__closure_0__BB3_END_PLACE, std_ops_DerefMut_deref_mut_CALL_UNWIND)">
+      <arc source="main__closure_0__BB3_END_PLACE" target="std_ops_DerefMut_deref_mut_0_UNWIND" id="(main__closure_0__BB3_END_PLACE, std_ops_DerefMut_deref_mut_0_UNWIND)">
         <name>
-          <text>(main__closure_0__BB3_END_PLACE, std_ops_DerefMut_deref_mut_CALL_UNWIND)</text>
+          <text>(main__closure_0__BB3_END_PLACE, std_ops_DerefMut_deref_mut_0_UNWIND)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -1942,17 +1942,17 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_ops_DerefMut_deref_mut_CALL" target="main__closure_0__BB4" id="(std_ops_DerefMut_deref_mut_CALL, main__closure_0__BB4)">
+      <arc source="std_ops_DerefMut_deref_mut_0" target="main__closure_0__BB4" id="(std_ops_DerefMut_deref_mut_0, main__closure_0__BB4)">
         <name>
-          <text>(std_ops_DerefMut_deref_mut_CALL, main__closure_0__BB4)</text>
+          <text>(std_ops_DerefMut_deref_mut_0, main__closure_0__BB4)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_ops_DerefMut_deref_mut_CALL_UNWIND" target="main__closure_0__BB8" id="(std_ops_DerefMut_deref_mut_CALL_UNWIND, main__closure_0__BB8)">
+      <arc source="std_ops_DerefMut_deref_mut_0_UNWIND" target="main__closure_0__BB8" id="(std_ops_DerefMut_deref_mut_0_UNWIND, main__closure_0__BB8)">
         <name>
-          <text>(std_ops_DerefMut_deref_mut_CALL_UNWIND, main__closure_0__BB8)</text>
+          <text>(std_ops_DerefMut_deref_mut_0_UNWIND, main__closure_0__BB8)</text>
         </name>
         <inscription>
           <text>1</text>
