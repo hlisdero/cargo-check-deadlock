@@ -32,10 +32,22 @@ impl<'tcx> Translator<'tcx> {
 
         match function_call {
             FunctionCall::ArcNew => {
-                self.call_arc_new(&function_name, args, destination, &function_call_places);
+                self.call_counted_function(
+                    &function_name,
+                    args,
+                    destination,
+                    &function_call_places,
+                    arc_new_transition_labels,
+                );
             }
             FunctionCall::Clone => {
-                self.call_clone(&function_name, args, destination, &function_call_places);
+                self.call_counted_function(
+                    &function_name,
+                    args,
+                    destination,
+                    &function_call_places,
+                    clone_transition_labels,
+                );
             }
             FunctionCall::CondVarNew => {
                 self.call_condvar_new(&function_name, destination, &function_call_places);
@@ -47,16 +59,34 @@ impl<'tcx> Translator<'tcx> {
                 self.call_condvar_wait(args, destination, &function_call_places);
             }
             FunctionCall::Deref => {
-                self.call_deref(&function_name, args, destination, &function_call_places);
+                self.call_counted_function(
+                    &function_name,
+                    args,
+                    destination,
+                    &function_call_places,
+                    deref_transition_labels,
+                );
             }
             FunctionCall::DerefMut => {
-                self.call_deref_mut(&function_name, args, destination, &function_call_places);
+                self.call_counted_function(
+                    &function_name,
+                    args,
+                    destination,
+                    &function_call_places,
+                    deref_mut_transition_labels,
+                );
             }
             FunctionCall::Foreign => {
-                self.call_foreign(&function_name, &function_call_places);
+                call_foreign_function(
+                    &function_call_places,
+                    &foreign_call_transition_labels(&function_name),
+                    &mut self.net,
+                );
             }
             FunctionCall::MirFunction => {
-                self.call_mir_function(function_def_id, function_call_places);
+                let (start_place, end_place, _) = function_call_places;
+                self.push_function_to_call_stack(function_def_id, start_place, end_place);
+                self.translate_top_call_stack();
             }
             FunctionCall::MutexLock => {
                 self.call_mutex_lock(&function_name, args, destination, &function_call_places);
@@ -77,42 +107,21 @@ impl<'tcx> Translator<'tcx> {
     }
 
     /// Handler for the the case `FunctionCall::ArcNew`.
-    fn call_arc_new(
-        &mut self,
-        function_name: &str,
-        args: &[rustc_middle::mir::Operand<'tcx>],
-        destination: rustc_middle::mir::Place<'tcx>,
-        function_call_places: &FunctionPlaces,
-    ) {
-        self.function_counter.translate_call(
-            function_name,
-            function_call_places,
-            arc_new_transition_labels,
-            &mut self.net,
-        );
-
-        let current_function = self.call_stack.peek_mut();
-        link_return_value_if_sync_variable(
-            args,
-            destination,
-            &mut current_function.memory,
-            current_function.def_id,
-            self.tcx,
-        );
-    }
-
     /// Handler for the the case `FunctionCall::Clone`.
-    fn call_clone(
+    /// Handler for the the case `FunctionCall::Deref`.
+    /// Handler for the the case `FunctionCall::DerefMut`.
+    fn call_counted_function(
         &mut self,
         function_name: &str,
         args: &[rustc_middle::mir::Operand<'tcx>],
         destination: rustc_middle::mir::Place<'tcx>,
         function_call_places: &FunctionPlaces,
+        labelling_function: fn(usize) -> (String, String),
     ) {
         self.function_counter.translate_call(
             function_name,
             function_call_places,
-            clone_transition_labels,
+            labelling_function,
             &mut self.net,
         );
 
@@ -191,76 +200,6 @@ impl<'tcx> Translator<'tcx> {
             &mut self.mutex_manager,
             &mut current_function.memory,
         );
-    }
-
-    /// Handler for the the case `FunctionCall::Deref`.
-    fn call_deref(
-        &mut self,
-        function_name: &str,
-        args: &[rustc_middle::mir::Operand<'tcx>],
-        destination: rustc_middle::mir::Place<'tcx>,
-        function_call_places: &FunctionPlaces,
-    ) {
-        self.function_counter.translate_call(
-            function_name,
-            function_call_places,
-            deref_transition_labels,
-            &mut self.net,
-        );
-
-        let current_function = self.call_stack.peek_mut();
-        link_return_value_if_sync_variable(
-            args,
-            destination,
-            &mut current_function.memory,
-            current_function.def_id,
-            self.tcx,
-        );
-    }
-
-    /// Handler for the the case `FunctionCall::DerefMut`.
-    fn call_deref_mut(
-        &mut self,
-        function_name: &str,
-        args: &[rustc_middle::mir::Operand<'tcx>],
-        destination: rustc_middle::mir::Place<'tcx>,
-        function_call_places: &FunctionPlaces,
-    ) {
-        self.function_counter.translate_call(
-            function_name,
-            function_call_places,
-            deref_mut_transition_labels,
-            &mut self.net,
-        );
-
-        let current_function = self.call_stack.peek_mut();
-        link_return_value_if_sync_variable(
-            args,
-            destination,
-            &mut current_function.memory,
-            current_function.def_id,
-            self.tcx,
-        );
-    }
-
-    /// Handler for the case `FunctionCall::Foreign`
-    fn call_foreign(&mut self, function_name: &str, function_call_places: &FunctionPlaces) {
-        call_foreign_function(
-            function_call_places,
-            &foreign_call_transition_labels(function_name),
-            &mut self.net,
-        );
-    }
-
-    /// Handler for the case `FunctionCall::MirFunction`
-    fn call_mir_function(
-        &mut self,
-        function_def_id: rustc_hir::def_id::DefId,
-        function_call_places: FunctionPlaces,
-    ) {
-        let (start_place, end_place, _) = function_call_places;
-        self.push_function_to_call_stack(function_def_id, start_place, end_place);
-        self.translate_top_call_stack();
     }
 
     /// Handler for the case `FunctionCall::MutexLock`.
