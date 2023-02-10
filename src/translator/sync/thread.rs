@@ -91,8 +91,9 @@ impl Thread {
         )
     }
 
-    /// Moves the memory entries corresponding to the mutexes to the new function's memory.
-    /// Checks the debug info to detect variables containing a mutex passed to the new thread.
+    /// Moves the memory entries corresponding to the synchronization variables to the new function's memory.
+    /// Supports moving mutexes and condition variables.
+    /// Checks the debug info to detect places containing a synchronization variable passed to the new thread.
     /// We are only interested in places of the form `_1.X` since `std::thread::spawn` only receives one argument.
     /// <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/mir/struct.VarDebugInfo.html>
     ///
@@ -100,61 +101,42 @@ impl Thread {
     ///
     /// The following line in the MIR output indicates that `_1.0` contains a mutex.
     /// `debug copy_data => (_1.0: std::sync::Arc<std::sync::Mutex<i32>>)`
-    pub fn move_mutexes<'tcx>(
+    pub fn move_sync_variables<'tcx>(
         &mut self,
         memory: &mut Memory<'tcx>,
         tcx: rustc_middle::ty::TyCtxt<'tcx>,
     ) {
         let body = tcx.optimized_mir(self.thread_function_def_id);
         for debug_info in &body.var_debug_info {
-            if let rustc_middle::mir::VarDebugInfoContents::Place(place) = debug_info.value {
-                if place.local == rustc_middle::mir::Local::from(1u32)
-                    && check_substring_in_place_type(
-                        &place,
-                        "std::sync::Mutex<",
-                        self.thread_function_def_id,
-                        tcx,
-                    )
-                {
-                    let mutex_ref = self.mutexes.pop().expect(
-                        "BUG: The thread function receives more mutexes than the ones detected",
-                    );
-                    memory.link_place_to_mutex(place, mutex_ref);
-                }
+            let rustc_middle::mir::VarDebugInfoContents::Place(place) = debug_info.value else {
+                // Not interested in the other variants of `VarDebugInfoContents`
+                continue;
+            };
+            if place.local != rustc_middle::mir::Local::from(1u32) {
+                // Not interested in locals other that `_1.X`
+                continue;
             }
-        }
-    }
-
-    /// Moves the memory entries corresponding to the condition variables to the new function's memory.
-    /// Checks the debug info to detect variables containing a condition variable passed to the new thread.
-    /// We are only interested in places of the form `_1.X` since `std::thread::spawn` only receives one argument.
-    /// <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/mir/struct.VarDebugInfo.html>
-    ///
-    /// # Examples
-    ///
-    /// The following line in the MIR output indicates that `_1.0` contains a Condvar.
-    /// `debug copy_data => (_1.0: std::sync::Arc<std::sync::Condvar>)`
-    pub fn move_condvars<'tcx>(
-        &mut self,
-        memory: &mut Memory<'tcx>,
-        tcx: rustc_middle::ty::TyCtxt<'tcx>,
-    ) {
-        let body = tcx.optimized_mir(self.thread_function_def_id);
-        for debug_info in &body.var_debug_info {
-            if let rustc_middle::mir::VarDebugInfoContents::Place(place) = debug_info.value {
-                if place.local == rustc_middle::mir::Local::from(1u32)
-                    && check_substring_in_place_type(
-                        &place,
-                        "std::sync::Condvar",
-                        self.thread_function_def_id,
-                        tcx,
-                    )
-                {
-                    let condvar_ref = self.condvars.pop().expect(
-                        "BUG: The thread function receives more condition variables than the ones detected",
-                    );
-                    memory.link_place_to_condvar(place, condvar_ref);
-                }
+            if check_substring_in_place_type(
+                &place,
+                "std::sync::Mutex<",
+                self.thread_function_def_id,
+                tcx,
+            ) {
+                let mutex_ref = self.mutexes.pop().expect(
+                    "BUG: The thread function receives more mutexes than the ones detected",
+                );
+                memory.link_place_to_mutex(place, mutex_ref);
+            }
+            if check_substring_in_place_type(
+                &place,
+                "std::sync::Condvar",
+                self.thread_function_def_id,
+                tcx,
+            ) {
+                let condvar_ref = self.condvars.pop().expect(
+                "BUG: The thread function receives more condition variables than the ones detected",
+            );
+                memory.link_place_to_condvar(place, condvar_ref);
             }
         }
     }
