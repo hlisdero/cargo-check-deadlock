@@ -22,7 +22,7 @@ use crate::translator::function_call::FunctionPlaces;
 use basic_block::BasicBlock;
 use std::collections::HashMap;
 
-pub use memory::{CondvarEntries, Memory, MutexEntries};
+pub use memory::{CondvarEntries, JoinHandleEntries, LockGuardEntries, Memory, MutexEntries};
 
 pub struct MirFunction<'tcx> {
     /// The ID that uniquely identifies the function in this crate in the HIR representation.

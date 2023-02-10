@@ -25,7 +25,9 @@ use crate::data_structures::petri_net_interface::{
 };
 use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef, TransitionRef};
 use crate::naming::thread::{end_place_label, start_place_label};
-use crate::translator::mir_function::{CondvarEntries, Memory, MutexEntries};
+use crate::translator::mir_function::{
+    CondvarEntries, JoinHandleEntries, LockGuardEntries, Memory, MutexEntries,
+};
 use crate::utils::check_substring_in_place_type;
 
 pub struct Thread {
@@ -35,6 +37,10 @@ pub struct Thread {
     thread_function_def_id: rustc_hir::def_id::DefId,
     /// The mutexes passed to the thread.
     mutexes: MutexEntries,
+    /// The lock guards passed to the thread.
+    lock_guards: LockGuardEntries,
+    /// The join handles passed to the thread.
+    join_handles: JoinHandleEntries,
     /// The condition variables passed to the thread.
     condvars: CondvarEntries,
     /// The transition to which the thread joins in at the end.
@@ -50,6 +56,8 @@ impl Thread {
         spawn_transition: TransitionRef,
         thread_function_def_id: rustc_hir::def_id::DefId,
         mutexes: MutexEntries,
+        lock_guards: LockGuardEntries,
+        join_handles: JoinHandleEntries,
         condvars: CondvarEntries,
         index: usize,
     ) -> Self {
@@ -57,6 +65,8 @@ impl Thread {
             spawn_transition,
             thread_function_def_id,
             mutexes,
+            lock_guards,
+            join_handles,
             condvars,
             join_transition: None,
             index,
@@ -126,6 +136,28 @@ impl Thread {
                     "BUG: The thread function receives more mutexes than the ones detected",
                 );
                 memory.link_place_to_mutex(place, mutex_ref);
+            }
+            if check_substring_in_place_type(
+                &place,
+                "std::sync::MutexGuard<",
+                self.thread_function_def_id,
+                tcx,
+            ) {
+                let mutex_ref = self.lock_guards.pop().expect(
+                    "BUG: The thread function receives more lock guards than the ones detected",
+                );
+                memory.link_place_to_lock_guard(place, mutex_ref);
+            }
+            if check_substring_in_place_type(
+                &place,
+                "std::thread::JoinHandle<",
+                self.thread_function_def_id,
+                tcx,
+            ) {
+                let thread_ref = self.join_handles.pop().expect(
+                    "BUG: The thread function receives more join handles than the ones detected",
+                );
+                memory.link_place_to_join_handle(place, thread_ref);
             }
             if check_substring_in_place_type(
                 &place,

@@ -8,7 +8,9 @@
 
 use super::Thread;
 use crate::data_structures::petri_net_interface::TransitionRef;
-use crate::translator::mir_function::{CondvarEntries, Memory, MutexEntries};
+use crate::translator::mir_function::{
+    CondvarEntries, JoinHandleEntries, LockGuardEntries, Memory, MutexEntries,
+};
 use crate::utils::{extract_def_id_of_called_function_from_operand, extract_nth_argument};
 use log::debug;
 use std::collections::VecDeque;
@@ -52,13 +54,14 @@ impl ThreadManager {
 
         let closure_for_spawn = extract_nth_argument(args, 0);
         let mutexes = memory.find_mutexes_linked_to_place(closure_for_spawn);
+        let lock_guards = memory.find_lock_guards_linked_to_place(closure_for_spawn);
+        let join_handles = memory.find_join_handles_linked_to_place(closure_for_spawn);
         let condvars = memory.find_condvars_linked_to_place(closure_for_spawn);
 
         let thread_ref = self.add_thread(
             transition_function_call,
             thread_function_def_id,
-            mutexes,
-            condvars,
+            (mutexes, lock_guards, join_handles, condvars),
         );
         // The return value contains a new join handle. Link the local variable to it.
         memory.link_place_to_join_handle(return_value, thread_ref);
@@ -86,15 +89,21 @@ impl ThreadManager {
         &mut self,
         spawn_transition: TransitionRef,
         thread_function_def_id: rustc_hir::def_id::DefId,
-        mutexes: MutexEntries,
-        condvars: CondvarEntries,
+        memory_entries: (
+            MutexEntries,
+            LockGuardEntries,
+            JoinHandleEntries,
+            CondvarEntries,
+        ),
     ) -> ThreadRef {
         let index = self.threads.len();
         self.threads.push_front(Thread::new(
             spawn_transition,
             thread_function_def_id,
-            mutexes,
-            condvars,
+            memory_entries.0,
+            memory_entries.1,
+            memory_entries.2,
+            memory_entries.3,
             index,
         ));
         ThreadRef(index)

@@ -29,6 +29,10 @@ pub struct Memory<'tcx> {
 
 /// An auxiliary type for passing mutex memory entries from one function to the other.
 pub type MutexEntries = Vec<MutexRef>;
+/// An auxiliary type for passing lock guard memory entries from one function to the other.
+pub type LockGuardEntries = Vec<MutexRef>;
+/// An auxiliary type for passing join handle memory entries from one function to the other.
+pub type JoinHandleEntries = Vec<ThreadRef>;
 /// An auxiliary type for passing condvar memory entries from one function to the other.
 pub type CondvarEntries = Vec<CondvarRef>;
 
@@ -257,6 +261,44 @@ impl<'tcx> Memory<'tcx> {
                 let mutex_ref = self.get_linked_mutex(mutex_place);
                 result.push(*mutex_ref);
                 debug!("FOUND MUTEX IN PLACE {mutex_place:?}");
+            }
+        }
+        result
+    }
+
+    /// Finds all the lock guards linked to the given place.
+    /// It takes into consideration that the place may have several fields (a subtype of projections).
+    /// <https://rustc-dev-guide.rust-lang.org/mir/index.html?highlight=Projections#mir-data-types>
+    /// Returns a vector of places which share the same local.
+    pub fn find_lock_guards_linked_to_place(
+        &self,
+        place: rustc_middle::mir::Place<'tcx>,
+    ) -> LockGuardEntries {
+        let mut result: LockGuardEntries = Vec::new();
+        for lock_guard_place in self.places_linked_to_lock_guards.keys() {
+            if lock_guard_place.local == place.local {
+                let mutex_ref = self.get_linked_lock_guard(lock_guard_place);
+                result.push(*mutex_ref);
+                debug!("FOUND LOCK GUARD IN PLACE {lock_guard_place:?}");
+            }
+        }
+        result
+    }
+
+    /// Finds all the join handles linked to the given place.
+    /// It takes into consideration that the place may have several fields (a subtype of projections).
+    /// <https://rustc-dev-guide.rust-lang.org/mir/index.html?highlight=Projections#mir-data-types>
+    /// Returns a vector of places which share the same local.
+    pub fn find_join_handles_linked_to_place(
+        &self,
+        place: rustc_middle::mir::Place<'tcx>,
+    ) -> JoinHandleEntries {
+        let mut result: JoinHandleEntries = Vec::new();
+        for join_handle_place in self.places_linked_to_join_handles.keys() {
+            if join_handle_place.local == place.local {
+                let mutex_ref = self.get_linked_join_handle(join_handle_place);
+                result.push(*mutex_ref);
+                debug!("FOUND JOIN HANDLE IN PLACE {join_handle_place:?}");
             }
         }
         result
