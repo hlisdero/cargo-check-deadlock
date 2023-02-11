@@ -33,6 +33,6 @@ pub fn get_from_rustc() -> Result<PathBuf, &'static str> {
     let Ok(sysroot) = str::from_utf8(&out.stdout) else {
         return Err("Could not parse stdout to get the sysroot: Make sure you can run `rustc --print=sysroot` in a terminal");
     };
-    info!("Found sysroot: {sysroot}");
+    info!("Found sysroot: {}", sysroot.trim());
     Ok(PathBuf::from(sysroot.trim()))
 }
