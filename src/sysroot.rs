@@ -14,6 +14,7 @@
 //! as it is compiled with clippy, rustfmt and other tools bundled with rustc.
 //! This makes the logic more complex than necessary for our tool.
 
+use log::info;
 use std::path::PathBuf;
 use std::process::Command;
 use std::str;
@@ -32,5 +33,6 @@ pub fn get_from_rustc() -> Result<PathBuf, &'static str> {
     let Ok(sysroot) = str::from_utf8(&out.stdout) else {
         return Err("Could not parse stdout to get the sysroot: Make sure you can run `rustc --print=sysroot` in a terminal");
     };
+    info!("Found sysroot: {sysroot}");
     Ok(PathBuf::from(sysroot.trim()))
 }
