@@ -12,7 +12,7 @@ use crate::translator::mir_function::{
     CondvarEntries, JoinHandleEntries, LockGuardEntries, Memory, MutexEntries,
 };
 use crate::utils::{extract_def_id_of_called_function_from_operand, extract_nth_argument};
-use log::debug;
+use log::{debug, info};
 use std::collections::VecDeque;
 
 #[derive(Default)]
@@ -106,6 +106,7 @@ impl ThreadManager {
             memory_entries.3,
             index,
         ));
+        info!("Found thread {index} and pushed it to the thread translation queue");
         ThreadRef(index)
     }
 
@@ -120,6 +121,7 @@ impl ThreadManager {
             .get_mut(thread_ref.0)
             .expect("BUG: The thread reference should be a valid index for the vector of threads");
         thread.set_join_transition(join_transition);
+        info!("Found join call for thread {}", thread.index);
     }
 
     /// Removes the last element from the threads vector and returns it, or `None` if it is empty.
