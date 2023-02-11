@@ -16,6 +16,7 @@ use crate::translator::function_call::{FunctionCall, FunctionPlaces};
 use crate::translator::special_function::call_foreign_function;
 use crate::translator::sync::link_return_value_if_sync_variable;
 use crate::utils::extract_nth_argument;
+use log::info;
 
 impl<'tcx> Translator<'tcx> {
     /// Processes the `FunctionCall` enum and
@@ -86,6 +87,7 @@ impl<'tcx> Translator<'tcx> {
             FunctionCall::MirFunction => {
                 let (start_place, end_place, _) = function_call_places;
                 self.push_function_to_call_stack(function_def_id, start_place, end_place);
+                info!("Pushed function {function_name} to the translation callstack");
                 self.translate_top_call_stack();
             }
             FunctionCall::MutexLock => {

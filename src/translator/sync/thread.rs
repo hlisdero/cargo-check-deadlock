@@ -46,7 +46,7 @@ pub struct Thread {
     /// The transition to which the thread joins in at the end.
     join_transition: Option<TransitionRef>,
     /// An index to identify the thread.
-    index: usize,
+    pub index: usize,
 }
 
 impl Thread {

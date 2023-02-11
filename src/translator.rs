@@ -36,6 +36,7 @@ use crate::naming::program::{PROGRAM_END, PROGRAM_PANIC, PROGRAM_START};
 use crate::utils::extract_def_id_of_called_function_from_operand;
 use function_call::FunctionCall;
 use function_counter::FunctionCounter;
+use log::info;
 use mir_function::MirFunction;
 use rustc_middle::mir::visit::Visitor;
 use special_function::{call_diverging_function, call_panic_function, is_panic_function};
@@ -121,7 +122,9 @@ impl<'tcx> Translator<'tcx> {
             self.program_start.clone(),
             self.program_end.clone(),
         );
+        info!("Pushed main function to the translation callstack");
         self.translate_top_call_stack();
+        info!("Finished translating the main thread");
         self.translate_threads();
     }
 
@@ -181,6 +184,7 @@ impl<'tcx> Translator<'tcx> {
         let function_def_id =
             extract_def_id_of_called_function_from_operand(func, current_function.def_id, self.tcx);
         let function_name = self.tcx.def_path_str(function_def_id);
+        info!("Encountered function call: {function_name}");
 
         if is_panic_function(&function_name) {
             // Function call which starts an abnormal termination of the program.
@@ -221,6 +225,7 @@ impl<'tcx> Translator<'tcx> {
     /// If mutexes were passed to the thread, move them to the memory of the thread function.
     fn translate_threads(&mut self) {
         while let Some(mut thread) = self.thread_manager.pop_thread() {
+            info!("Starting translating thread {}", thread.index);
             let (thread_function_def_id, thread_start_place, thread_end_place) =
                 thread.prepare_for_translation(&mut self.net);
 
@@ -229,7 +234,9 @@ impl<'tcx> Translator<'tcx> {
                 thread_start_place,
                 thread_end_place,
             );
+            info!("Pushed thread function to the translation callstack");
             let new_function = self.call_stack.peek_mut();
+            info!("Moving sync variables to the thread function...");
             thread.move_sync_variables(&mut new_function.memory, self.tcx);
             self.translate_top_call_stack();
         }
