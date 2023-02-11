@@ -1,5 +1,6 @@
 use clap::{Parser, ValueEnum};
 use granite2::PetriNet;
+use log::info;
 
 const ERR_SOURCE_FILE_NOT_FOUND: i32 = 1;
 const ERR_TRANSLATION: i32 = 2;
@@ -53,6 +54,10 @@ fn main() {
 
     // Double check that the file exists before starting the compiler
     // to generate an error message independent of the rustc output.
+    info!(
+        "Checking that the source code file at {} exists...",
+        args.path.to_string_lossy()
+    );
     if !args.path.exists() {
         eprintln!(
             "Source code file at {} does not exist",
@@ -61,6 +66,7 @@ fn main() {
         std::process::exit(ERR_SOURCE_FILE_NOT_FOUND);
     };
 
+    info!("Starting the translation...");
     let petri_net = match granite2::run(args.path) {
         Ok(petri_net) => petri_net,
         Err(err_str) => {
@@ -81,6 +87,7 @@ fn create_output_files(
 ) -> Result<(), std::io::Error> {
     for format in output_format {
         let filename = format!("net.{format}");
+        info!("Creating output file {filename}...");
         let mut file = std::fs::File::create(filename)?;
         match format {
             OutputFormat::Dot => petri_net.to_dot(&mut file)?,
