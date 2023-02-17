@@ -44,6 +44,7 @@ pub fn extract_def_id_of_called_function_from_operand<'tcx>(
 }
 
 /// Extracts the n-th argument from the arguments for the function call.
+/// Returns the place corresponding to that argument.
 ///
 /// This is also useful for obtaining the self reference for method calls.
 /// For example: The call `mutex.lock()` desugars to `std::sync::Mutex::lock(&mutex)`
@@ -52,11 +53,18 @@ pub fn extract_nth_argument<'tcx>(
     args: &[rustc_middle::mir::Operand<'tcx>],
     index: usize,
 ) -> rustc_middle::mir::Place<'tcx> {
-    let rustc_middle::mir::Operand::Move(argument) = args.get(index)
-            .expect("BUG: Function should receive at least `index` arguments") else { 
-                panic!("BUG: The function argument should be passed by moving");
-        };
-    *argument
+    let operand = args
+        .get(index)
+        .expect("BUG: Function should receive at least `index` arguments");
+
+    match operand {
+        rustc_middle::mir::Operand::Move(place) | rustc_middle::mir::Operand::Copy(place) => *place,
+        rustc_middle::mir::Operand::Constant(_) => {
+            unimplemented!(
+                "Passing an operand of type Operand::Constant to a function is not implemented yet"
+            );
+        }
+    }
 }
 
 /// Checks whether a given substring appears in the type of a place.
