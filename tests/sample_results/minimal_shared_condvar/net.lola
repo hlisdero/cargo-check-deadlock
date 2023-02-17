@@ -19,7 +19,6 @@ PLACE
     main_BB12,
     main_BB12_END_PLACE,
     main_BB12_STMT0_END,
-    main_BB12_STMT1_END,
     main_BB13,
     main_BB14,
     main_BB14_END_PLACE,
@@ -36,7 +35,6 @@ PLACE
     main_BB2_END_PLACE,
     main_BB3,
     main_BB3_END_PLACE,
-    main_BB3_STMT0_END,
     main_BB4,
     main_BB4_END_PLACE,
     main_BB5,
@@ -46,7 +44,6 @@ PLACE
     main_BB7_END_PLACE,
     main_BB7_STMT0_END,
     main_BB7_STMT1_END,
-    main_BB7_STMT2_END,
     main_BB8,
     main_BB9,
     main_BB9_END_PLACE,
@@ -56,13 +53,11 @@ PLACE
     main__closure_0__BB1_END_PLACE,
     main__closure_0__BB1_STMT0_END,
     main__closure_0__BB1_STMT1_END,
-    main__closure_0__BB1_STMT2_END,
     main__closure_0__BB2,
     main__closure_0__BB3,
     main__closure_0__BB3_END_PLACE,
     main__closure_0__BB4,
     main__closure_0__BB4_END_PLACE,
-    main__closure_0__BB4_STMT0_END,
     main__closure_0__BB5,
     main__closure_0__BB6,
     main__closure_0__BB7,
@@ -115,11 +110,6 @@ TRANSITION main_BB12_STMT1
   CONSUME
     main_BB12_STMT0_END : 1;
   PRODUCE
-    main_BB12_STMT1_END : 1;
-TRANSITION main_BB12_STMT2
-  CONSUME
-    main_BB12_STMT1_END : 1;
-  PRODUCE
     main_BB12_END_PLACE : 1;
 TRANSITION main_BB14_STMT0
   CONSUME
@@ -145,11 +135,6 @@ TRANSITION main_BB3_STMT0
   CONSUME
     main_BB3 : 1;
   PRODUCE
-    main_BB3_STMT0_END : 1;
-TRANSITION main_BB3_STMT1
-  CONSUME
-    main_BB3_STMT0_END : 1;
-  PRODUCE
     main_BB3_END_PLACE : 1;
 TRANSITION main_BB4_STMT0
   CONSUME
@@ -174,11 +159,6 @@ TRANSITION main_BB7_STMT1
 TRANSITION main_BB7_STMT2
   CONSUME
     main_BB7_STMT1_END : 1;
-  PRODUCE
-    main_BB7_STMT2_END : 1;
-TRANSITION main_BB7_STMT3
-  CONSUME
-    main_BB7_STMT2_END : 1;
   PRODUCE
     main_BB7_END_PLACE : 1;
 TRANSITION main_BB9_STMT0
@@ -282,11 +262,6 @@ TRANSITION main__closure_0__BB1_STMT2
   CONSUME
     main__closure_0__BB1_STMT1_END : 1;
   PRODUCE
-    main__closure_0__BB1_STMT2_END : 1;
-TRANSITION main__closure_0__BB1_STMT3
-  CONSUME
-    main__closure_0__BB1_STMT2_END : 1;
-  PRODUCE
     main__closure_0__BB1_END_PLACE : 1;
 TRANSITION main__closure_0__BB3_STMT0
   CONSUME
@@ -296,11 +271,6 @@ TRANSITION main__closure_0__BB3_STMT0
 TRANSITION main__closure_0__BB4_STMT0
   CONSUME
     main__closure_0__BB4 : 1;
-  PRODUCE
-    main__closure_0__BB4_STMT0_END : 1;
-TRANSITION main__closure_0__BB4_STMT1
-  CONSUME
-    main__closure_0__BB4_STMT0_END : 1;
   PRODUCE
     main__closure_0__BB4_END_PLACE : 1;
 TRANSITION main__closure_0__DROP_5
