@@ -1788,9 +1788,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main__closure_0__UNWIND_10" target="PROGRAM_PANIC" id="(main__closure_0__UNWIND_10, PROGRAM_PANIC)">
+      <arc source="main__closure_0__UNWIND_10" target="THREAD_0_END" id="(main__closure_0__UNWIND_10, THREAD_0_END)">
         <name>
-          <text>(main__closure_0__UNWIND_10, PROGRAM_PANIC)</text>
+          <text>(main__closure_0__UNWIND_10, THREAD_0_END)</text>
         </name>
         <inscription>
           <text>1</text>

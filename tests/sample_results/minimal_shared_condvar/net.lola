@@ -309,7 +309,7 @@ TRANSITION main__closure_0__UNWIND_10
   CONSUME
     main__closure_0__BB10 : 1;
   PRODUCE
-    PROGRAM_PANIC : 1;
+    THREAD_0_END : 1;
 TRANSITION std_clone_Clone_clone_0
   CONSUME
     main_BB3_END_PLACE : 1;

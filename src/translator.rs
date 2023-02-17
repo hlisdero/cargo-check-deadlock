@@ -223,11 +223,15 @@ impl<'tcx> Translator<'tcx> {
     /// Main translation loop for the threads.
     /// Gets a thread from the thread manager and translates it.
     /// If mutexes were passed to the thread, move them to the memory of the thread function.
+    /// Replaces the program panic place with the thread's end place, since abnormal thread
+    /// termination does not affect the main thread.
     fn translate_threads(&mut self) {
         while let Some(mut thread) = self.thread_manager.pop_thread() {
             info!("Starting translating thread {}", thread.index);
             let (thread_function_def_id, thread_start_place, thread_end_place) =
                 thread.prepare_for_translation(&mut self.net);
+            // Replace the panic place so that unwind transitions and similar point to the thread's end place.
+            self.program_panic = thread_end_place.clone();
 
             self.push_function_to_call_stack(
                 thread_function_def_id,

@@ -35,6 +35,7 @@ pub fn start_place_label(index: usize) -> String {
 }
 
 /// Label of the place that models the thread end state.
+/// This also models the thread end state after a `panic!`.
 #[inline]
 pub fn end_place_label(index: usize) -> String {
     format!("THREAD_{index}_END")

@@ -274,7 +274,7 @@ digraph petrinet {
     main__closure_0__DROP_9 -> main__closure_0__BB10;
     main__closure_0__DROP_UNWIND_5 -> main__closure_0__BB9;
     main__closure_0__RETURN -> THREAD_0_END;
-    main__closure_0__UNWIND_10 -> PROGRAM_PANIC;
+    main__closure_0__UNWIND_10 -> THREAD_0_END;
     std_clone_Clone_clone_0 -> main_BB4;
     std_clone_Clone_clone_0_UNWIND -> main_BB18;
     std_ops_DerefMut_deref_mut_0 -> main__closure_0__BB4;
