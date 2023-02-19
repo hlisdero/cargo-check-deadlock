@@ -7,7 +7,6 @@ digraph petrinet {
     main_BB1_END_PLACE [shape="circle" xlabel="main_BB1_END_PLACE" label=""];
     main_BB2 [shape="circle" xlabel="main_BB2" label=""];
     main_BB2_END_PLACE [shape="circle" xlabel="main_BB2_END_PLACE" label=""];
-    main_BB2_STMT0_END [shape="circle" xlabel="main_BB2_STMT0_END" label=""];
     main_BB3 [shape="circle" xlabel="main_BB3" label=""];
     main_BB3_END_PLACE [shape="circle" xlabel="main_BB3_END_PLACE" label=""];
     main_BB4 [shape="circle" xlabel="main_BB4" label=""];
@@ -18,7 +17,6 @@ digraph petrinet {
     main_BB0_STMT0 [shape="box" xlabel="" label="main_BB0_STMT0"];
     main_BB1_STMT0 [shape="box" xlabel="" label="main_BB1_STMT0"];
     main_BB2_STMT0 [shape="box" xlabel="" label="main_BB2_STMT0"];
-    main_BB2_STMT1 [shape="box" xlabel="" label="main_BB2_STMT1"];
     main_BB3_STMT0 [shape="box" xlabel="" label="main_BB3_STMT0"];
     main_BB4_STMT0 [shape="box" xlabel="" label="main_BB4_STMT0"];
     main_GOTO_1 [shape="box" xlabel="" label="main_GOTO_1"];
@@ -35,7 +33,6 @@ digraph petrinet {
     main_BB1_END_PLACE -> main_GOTO_1;
     main_BB2 -> main_BB2_STMT0;
     main_BB2_END_PLACE -> std_iter_Iterator_next_CALL;
-    main_BB2_STMT0_END -> main_BB2_STMT1;
     main_BB3 -> main_BB3_STMT0;
     main_BB3_END_PLACE -> main_SWITCH_INT_4;
     main_BB3_END_PLACE -> main_SWITCH_INT_5;
@@ -47,8 +44,7 @@ digraph petrinet {
     call_RETURN -> main_BB2;
     main_BB0_STMT0 -> main_BB0_END_PLACE;
     main_BB1_STMT0 -> main_BB1_END_PLACE;
-    main_BB2_STMT0 -> main_BB2_STMT0_END;
-    main_BB2_STMT1 -> main_BB2_END_PLACE;
+    main_BB2_STMT0 -> main_BB2_END_PLACE;
     main_BB3_STMT0 -> main_BB3_END_PLACE;
     main_BB4_STMT0 -> main_BB4_END_PLACE;
     main_GOTO_1 -> main_BB2;
