@@ -103,9 +103,6 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
                     &mut self.net,
                 );
             }
-            TerminatorKind::DropAndReplace { .. } => {
-                unimplemented!("TerminatorKind::DropAndReplace not implemented yet")
-            }
             TerminatorKind::Call {
                 ref func,
                 ref args,
