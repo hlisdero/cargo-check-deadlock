@@ -1,0 +1,22 @@
+on:
+  schedule:
+    # At 08:00 on Sunday and Thursday.
+    - cron: "0 8 * * 0,4"
+
+name: "Schedule: Compile and test with the latest nightly twice per week"
+
+jobs:
+  test:
+    name: Test Suite
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: nightly
+          override: true
+          components: rust-src, rustc-dev, llvm-tools-preview
+      - uses: actions-rs/cargo@v1
+        with:
+          command: test
