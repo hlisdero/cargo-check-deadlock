@@ -20,6 +20,7 @@
 // These crates are only available when using the nightly toolchain.
 // It suffices to declare them once to use their types and methods in the whole crate.
 extern crate rustc_ast_pretty;
+extern crate rustc_const_eval;
 extern crate rustc_driver;
 extern crate rustc_error_codes;
 extern crate rustc_errors;

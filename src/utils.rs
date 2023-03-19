@@ -49,6 +49,10 @@ pub fn extract_def_id_of_called_function_from_operand<'tcx>(
 /// This is also useful for obtaining the self reference for method calls.
 /// For example: The call `mutex.lock()` desugars to `std::sync::Mutex::lock(&mutex)`
 /// where `&self` is the first argument.
+///
+/// # Panics
+///
+/// If the argument passed to the function is a constant, then the function panics.
 pub fn extract_nth_argument<'tcx>(
     args: &[rustc_middle::mir::Operand<'tcx>],
     index: usize,
@@ -60,9 +64,50 @@ pub fn extract_nth_argument<'tcx>(
     match operand {
         rustc_middle::mir::Operand::Move(place) | rustc_middle::mir::Operand::Copy(place) => *place,
         rustc_middle::mir::Operand::Constant(_) => {
-            unimplemented!(
-                "Passing an operand of type Operand::Constant to a function is not implemented yet"
-            );
+            panic!("BUG: Function should not receive arguments passed as constants");
+        }
+    }
+}
+
+/// Extracts the closure passed as the 0-th argument to `std::thread::spawn`.
+/// Returns the place corresponding to that argument.
+///
+/// If a valid place cannot be found, then the operand was passed as a constant.
+/// If it is a `rustc_middle::mir::interpret::value::ConstValue::ZeroSized` return `None`.
+///
+/// # Panics
+///
+/// If the operand was passed a constant with user-defined type,
+/// a type constant (i.e. `T`) or an unevaluated constant, then the functions panics.
+pub fn extract_closure<'tcx>(
+    args: &[rustc_middle::mir::Operand<'tcx>],
+) -> Option<rustc_middle::mir::Place<'tcx>> {
+    let operand = args
+        .get(0)
+        .expect("BUG: `std::thread::spawn` should receive at least one argument");
+
+    match operand {
+        rustc_middle::mir::Operand::Move(place) | rustc_middle::mir::Operand::Copy(place) => {
+            Some(*place)
+        }
+        rustc_middle::mir::Operand::Constant(boxed_const) => {
+            let unboxed_const = **boxed_const;
+            assert!(unboxed_const.user_ty.is_none(), "BUG: The closure passed to `std::thread::spawn` should not be of type `Operand::Constant` with user-defined type");
+            let constant_kind = unboxed_const.literal;
+            match constant_kind {
+                rustc_middle::mir::ConstantKind::Ty(_) => {
+                    panic!("BUG: The closure passed to `std::thread::spawn` should not be a constant containing a type");
+                }
+                rustc_middle::mir::ConstantKind::Unevaluated(_, _) => {
+                    panic!("BUG: The closure passed to `std::thread::spawn` should not be a unevaluated constant");
+                }
+                rustc_middle::mir::ConstantKind::Val(value, _ty) => {
+                    if value == rustc_const_eval::interpret::ConstValue::ZeroSized {
+                        return None;
+                    }
+                    panic!("BUG: The closure passed to `std::thread::spawn` should not be a constant whose value is not a zero-sized type");
+                }
+            }
         }
     }
 }

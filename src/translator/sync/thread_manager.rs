@@ -11,7 +11,9 @@ use crate::data_structures::petri_net_interface::TransitionRef;
 use crate::translator::mir_function::{
     CondvarEntries, JoinHandleEntries, LockGuardEntries, Memory, MutexEntries,
 };
-use crate::utils::{extract_def_id_of_called_function_from_operand, extract_nth_argument};
+use crate::utils::{
+    extract_closure, extract_def_id_of_called_function_from_operand, extract_nth_argument,
+};
 use log::{debug, info};
 use std::collections::VecDeque;
 
@@ -52,16 +54,13 @@ impl ThreadManager {
             tcx,
         );
 
-        let closure_for_spawn = extract_nth_argument(args, 0);
-        let mutexes = memory.find_mutexes_linked_to_place(closure_for_spawn);
-        let lock_guards = memory.find_lock_guards_linked_to_place(closure_for_spawn);
-        let join_handles = memory.find_join_handles_linked_to_place(closure_for_spawn);
-        let condvars = memory.find_condvars_linked_to_place(closure_for_spawn);
+        let closure_for_spawn = extract_closure(args);
+        let memory_entries = Self::find_sync_variables(closure_for_spawn, memory);
 
         let thread_ref = self.add_thread(
             transition_function_call,
             thread_function_def_id,
-            (mutexes, lock_guards, join_handles, condvars),
+            memory_entries,
         );
         // The return value contains a new join handle. Link the local variable to it.
         memory.link_place_to_join_handle(return_value, thread_ref);
@@ -127,5 +126,37 @@ impl ThreadManager {
     /// Removes the last element from the threads vector and returns it, or `None` if it is empty.
     pub fn pop_thread(&mut self) -> Option<Thread> {
         self.threads.pop_front()
+    }
+
+    /// Finds sync variables captured by the closure for a new thread.
+    /// Returns the memory entries for each sync variable type that should be re-mapped in the new thread's memory.
+    ///
+    /// If the closure is `None` (no variables were captured, it is a `ZeroSizedType`),
+    /// then return empty vectors for the memory entries.
+    fn find_sync_variables<'tcx>(
+        closure: Option<rustc_middle::mir::Place<'tcx>>,
+        memory: &mut Memory<'tcx>,
+    ) -> (
+        MutexEntries,
+        LockGuardEntries,
+        JoinHandleEntries,
+        CondvarEntries,
+    ) {
+        closure.map_or_else(
+            || {
+                let mutexes = vec![];
+                let lock_guards = vec![];
+                let join_handles = vec![];
+                let condvars = vec![];
+                (mutexes, lock_guards, join_handles, condvars)
+            },
+            |place| {
+                let mutexes = memory.find_mutexes_linked_to_place(place);
+                let lock_guards = memory.find_lock_guards_linked_to_place(place);
+                let join_handles = memory.find_join_handles_linked_to_place(place);
+                let condvars = memory.find_condvars_linked_to_place(place);
+                (mutexes, lock_guards, join_handles, condvars)
+            },
+        )
     }
 }
