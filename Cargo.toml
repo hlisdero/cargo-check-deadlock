@@ -21,7 +21,7 @@ netcrab = { git = "https://github.com/hlisdero/netcrab/" }
 [dev-dependencies]
 assert_cmd = "2.0.8"
 assert_fs = "1.0.10"
-predicates = "2.1.5"
+predicates = "3.0.2"
 
 [package.metadata.rust-analyzer]
 # This package uses #[feature(rustc_private)]
