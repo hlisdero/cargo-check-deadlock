@@ -41,7 +41,7 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
                 self.handle_ref_assignment(place, rhs);
             }
             rustc_middle::mir::Rvalue::Aggregate(_, operands) => {
-                self.handle_aggregate_assignment(place, operands);
+                self.handle_aggregate_assignment(place, &operands.raw);
             }
             // No need to do anything for the other cases for now.
             _ => {}
