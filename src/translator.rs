@@ -178,7 +178,7 @@ impl<'tcx> Translator<'tcx> {
         args: &[rustc_middle::mir::Operand<'tcx>],
         destination: rustc_middle::mir::Place<'tcx>,
         target: Option<rustc_middle::mir::BasicBlock>,
-        cleanup: Option<rustc_middle::mir::BasicBlock>,
+        unwind: rustc_middle::mir::UnwindAction,
     ) {
         let current_function = self.call_stack.peek_mut();
         let function_def_id =
@@ -208,7 +208,7 @@ impl<'tcx> Translator<'tcx> {
         };
 
         let place_refs_for_function_call =
-            current_function.get_place_refs_for_function_call(return_block, cleanup, &mut self.net);
+            current_function.get_place_refs_for_function_call(return_block, unwind, &mut self.net);
 
         let function_call = FunctionCall::new(function_def_id, self.tcx);
         self.start_function_call(

@@ -50,7 +50,7 @@ pub fn drop_transition_label(function_name: &str, index: usize) -> String {
 
 /// Label of the transition that represents the (optional) unwind path of a drop terminator.
 #[inline]
-pub fn drop_unwind_transition_label(function_name: &str, index: usize) -> String {
+pub fn drop_cleanup_transition_label(function_name: &str, index: usize) -> String {
     format!("{}_DROP_UNWIND_{index}", sanitize(function_name))
 }
 

@@ -11,8 +11,8 @@ use crate::data_structures::petri_net_interface::{
 };
 use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef, TransitionRef};
 use crate::naming::basic_block::{
-    assert_cleanup_transition_label, assert_transition_label, drop_transition_label,
-    drop_unwind_transition_label, end_place_label, goto_transition_label, start_place_label,
+    assert_cleanup_transition_label, assert_transition_label, drop_cleanup_transition_label,
+    drop_transition_label, end_place_label, goto_transition_label, start_place_label,
     switch_int_transition_label, unreachable_transition_label, unwind_transition_label,
 };
 
@@ -113,12 +113,12 @@ impl BasicBlock {
         transition
     }
 
-    /// Connects the end place of this block to the start place of the `unwind` basic block.
-    pub fn drop_unwind(&self, unwind: &Self, net: &mut PetriNet) {
+    /// Connects the end place of this block to the start place of the `cleanup` basic block.
+    pub fn drop_cleanup(&self, cleanup: &Self, net: &mut PetriNet) {
         self.connect_end_to_next_place(
-            &unwind.start_place,
+            &cleanup.start_place,
             net,
-            &drop_unwind_transition_label(&self.function_name, self.index),
+            &drop_cleanup_transition_label(&self.function_name, self.index),
         );
     }
 

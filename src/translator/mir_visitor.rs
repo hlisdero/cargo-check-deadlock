@@ -81,7 +81,7 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
                 // <rustc_middle::mir::terminator::SwitchTargets>
                 function.switch_int(targets.all_targets().to_vec(), &mut self.net);
             }
-            TerminatorKind::Resume | TerminatorKind::Abort => {
+            TerminatorKind::Resume | TerminatorKind::Terminate => {
                 function.unwind(&self.program_panic, &mut self.net);
             }
             TerminatorKind::Return => {
@@ -108,20 +108,20 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
                 ref args,
                 destination,
                 target,
-                cleanup,
+                unwind,
                 from_hir_call: _,
                 fn_span: _,
             } => {
-                self.call_function(func, args, destination, target, cleanup);
+                self.call_function(func, args, destination, target, unwind);
             }
             TerminatorKind::Assert {
                 cond: _,
                 expected: _,
                 msg: _,
                 target,
-                cleanup,
+                unwind,
             } => {
-                function.assert(target, cleanup, &mut self.net);
+                function.assert(target, unwind, &mut self.net);
             }
             TerminatorKind::Yield { .. } => {
                 unimplemented!("TerminatorKind::Yield not implemented yet")

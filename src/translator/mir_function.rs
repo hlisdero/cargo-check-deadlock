@@ -209,7 +209,7 @@ impl<'tcx> MirFunction<'tcx> {
     pub fn get_place_refs_for_function_call(
         &mut self,
         block_number: rustc_middle::mir::BasicBlock,
-        cleanup_block_number: Option<rustc_middle::mir::BasicBlock>,
+        unwind: rustc_middle::mir::UnwindAction,
         net: &mut PetriNet,
     ) -> FunctionPlaces {
         let active_block = self.get_active_block();
@@ -219,7 +219,7 @@ impl<'tcx> MirFunction<'tcx> {
         let end_place = return_block.start_place.clone();
 
         let mut cleanup_place = None;
-        if let Some(cleanup_block_number) = cleanup_block_number {
+        if let rustc_middle::mir::UnwindAction::Cleanup(cleanup_block_number) = unwind {
             let cleanup_block = self.get_or_add_basic_block(cleanup_block_number, net);
             cleanup_place = Some(cleanup_block.start_place.clone());
         }
