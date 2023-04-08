@@ -68,7 +68,7 @@ impl<'tcx> MirFunction<'tcx> {
             let (active_block, cleanup_block) =
                 self.get_pair_active_block_target_block(cleanup, net);
             active_block.drop_cleanup(cleanup_block, net);
-        };
+        }
         transition_drop
     }
 
@@ -93,7 +93,7 @@ impl<'tcx> MirFunction<'tcx> {
             let (active_block, cleanup_block) =
                 self.get_pair_active_block_target_block(cleanup, net);
             active_block.assert_cleanup(cleanup_block, net);
-        };
+        }
     }
 
     /// Connects the active basic block to the end place of the function.
