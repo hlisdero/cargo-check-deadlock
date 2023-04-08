@@ -218,11 +218,13 @@ impl<'tcx> MirFunction<'tcx> {
         let return_block = self.get_or_add_basic_block(block_number, net);
         let end_place = return_block.start_place.clone();
 
-        let mut cleanup_place = None;
-        if let rustc_middle::mir::UnwindAction::Cleanup(cleanup_block_number) = unwind {
-            let cleanup_block = self.get_or_add_basic_block(cleanup_block_number, net);
-            cleanup_place = Some(cleanup_block.start_place.clone());
-        }
+        let cleanup_place =
+            if let rustc_middle::mir::UnwindAction::Cleanup(cleanup_block_number) = unwind {
+                let cleanup_block = self.get_or_add_basic_block(cleanup_block_number, net);
+                Some(cleanup_block.start_place.clone())
+            } else {
+                None
+            };
 
         (start_place, end_place, cleanup_place)
     }
