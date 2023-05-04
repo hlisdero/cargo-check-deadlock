@@ -33,14 +33,23 @@ impl std::fmt::Display for OutputFormat {
 #[command(about = "Convert a Rust source code file into a Petri net \
     and export the resulting net in one of the supported formats.")]
 struct CliArgs {
-    /// The path to the Rust source code file to read
+    /// The path to the Rust source code file to read.
     path: std::path::PathBuf,
 
-    /// The format for the output
-    #[arg(short, long, value_enum)]
-    output_format: Vec<OutputFormat>,
+    /// Filename for the resulting net.
+    /// The output files contain this filename followed by an extension depending on the format.
+    #[arg(long, default_value = "net")]
+    filename: String,
 
-    /// Verbosity flag
+    /// The path to a valid folder where the output files should be created.
+    #[arg(short, long, default_value = ".")]
+    output_folder: std::path::PathBuf,
+
+    /// The format for the output. Multiple formats can be specified.
+    #[arg(short, long, value_enum)]
+    format: Vec<OutputFormat>,
+
+    /// Verbosity flag.
     #[clap(flatten)]
     verbose: clap_verbosity_flag::Verbosity,
 }
@@ -75,7 +84,12 @@ fn main() {
         }
     };
 
-    if let Err(err_str) = create_output_files(&petri_net, &args.output_format) {
+    if let Err(err_str) = create_output_files(
+        &petri_net,
+        &args.filename,
+        &args.output_folder,
+        &args.format,
+    ) {
         eprintln!("{err_str}");
         std::process::exit(ERR_OUTPUT_FILE_GENERATION);
     }
@@ -83,12 +97,19 @@ fn main() {
 
 fn create_output_files(
     petri_net: &PetriNet,
-    output_format: &Vec<OutputFormat>,
+    filename: &str,
+    output_folder: &std::path::PathBuf,
+    format: &Vec<OutputFormat>,
 ) -> Result<(), std::io::Error> {
-    for format in output_format {
-        let filename = format!("net.{format}");
-        info!("Creating output file {filename}...");
-        let mut file = std::fs::File::create(filename)?;
+    for format in format {
+        let mut filepath = output_folder.clone();
+        filepath.push(filename);
+        filepath.set_extension(format.to_string());
+
+        let filepath_str = filepath.to_string_lossy();
+        info!("Creating output file {filepath_str}...");
+
+        let mut file = std::fs::File::create(filepath)?;
         match format {
             OutputFormat::Dot => petri_net.to_dot(&mut file)?,
             OutputFormat::Lola => petri_net.to_lola(&mut file)?,

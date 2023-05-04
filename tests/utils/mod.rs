@@ -11,7 +11,8 @@ use std::process::Command; // Run programs
 /// If the output file contents cannot be read, then the function panics.
 pub fn assert_output_file(
     source_code_file: &str,
-    output_format: &str,
+    output_folder: &str,
+    format: &str,
     output_filename: &str,
     expected_contents_filename: &str,
 ) {
@@ -19,7 +20,9 @@ pub fn assert_output_file(
 
     // Current workdir is always the project root folder
     cmd.arg(source_code_file)
-        .arg(format!("--output-format={output_format}"));
+        .arg(format!("--output-folder={output_folder}"))
+        .arg(format!("--format={format}"))
+        .arg("--filename=test");
     cmd.assert().success();
 
     let file_contents =
@@ -48,8 +51,9 @@ macro_rules! generate_tests_for_example_program {
         fn generates_correct_dot_output_file() {
             utils::assert_output_file(
                 $program_path,
+                $result_folder_path,
                 "dot",
-                "./net.dot",
+                concat!($result_folder_path, "/test.dot"),
                 concat!($result_folder_path, "/net.dot"),
             );
         }
@@ -58,8 +62,9 @@ macro_rules! generate_tests_for_example_program {
         fn generates_correct_lola_output_file() {
             utils::assert_output_file(
                 $program_path,
+                $result_folder_path,
                 "lola",
-                "./net.lola",
+                concat!($result_folder_path, "/test.lola"),
                 concat!($result_folder_path, "/net.lola"),
             );
         }
@@ -68,8 +73,9 @@ macro_rules! generate_tests_for_example_program {
         fn generates_correct_pnml_output_file() {
             utils::assert_output_file(
                 $program_path,
+                $result_folder_path,
                 "pnml",
-                "./net.pnml",
+                concat!($result_folder_path, "/test.pnml"),
                 concat!($result_folder_path, "/net.pnml"),
             );
         }
