@@ -1,32 +1,7 @@
 mod common;
-use common::assert_output_file;
+use common::generate_tests_for_example_program;
 
-#[test]
-fn minimal_shared_condvar_generates_correct_dot_output_file() {
-    assert_output_file(
-        "./examples/programs/minimal_shared_condvar.rs",
-        "dot",
-        "./net.dot",
-        "./examples/results/minimal_shared_condvar/net.dot",
-    );
-}
-
-#[test]
-fn minimal_shared_condvar_generates_correct_lola_output_file() {
-    assert_output_file(
-        "./examples/programs/minimal_shared_condvar.rs",
-        "lola",
-        "./net.lola",
-        "./examples/results/minimal_shared_condvar/net.lola",
-    );
-}
-
-#[test]
-fn minimal_shared_condvar_generates_correct_pnml_output_file() {
-    assert_output_file(
-        "./examples/programs/minimal_shared_condvar.rs",
-        "pnml",
-        "./net.pnml",
-        "./examples/results/minimal_shared_condvar/net.pnml",
-    );
-}
+generate_tests_for_example_program!(
+    "./examples/programs/minimal_shared_condvar.rs",
+    "./examples/results/minimal_shared_condvar/"
+);

@@ -31,3 +31,55 @@ pub fn assert_output_file(
     assert_eq!(file_contents, expected_file_contents);
     std::fs::remove_file(output_filename).expect("Could not delete output file");
 }
+
+/// This macro generates the test code for the three supported file formats.
+/// It saves a considerable ammount of boilerplate.
+///
+/// Receives the relative path from the root folder of the repository
+/// to the source code of the program to be tested.
+/// Receives also the relative path from the root folder of the repository
+/// to the folder where the expected results are to be found.
+///
+/// The main idea for the implementation was taken from:
+/// <https://doc.rust-lang.org/rust-by-example/macros/dry.html>
+macro_rules! generate_tests_for_example_program {
+    ($program_path:literal, $result_folder_path:literal) => {
+        #[test]
+        fn generates_correct_dot_output_file() {
+            common::assert_output_file(
+                $program_path,
+                "dot",
+                "./net.dot",
+                concat!($result_folder_path, "/net.dot"),
+            );
+        }
+
+        #[test]
+        fn generates_correct_lola_output_file() {
+            common::assert_output_file(
+                $program_path,
+                "lola",
+                "./net.lola",
+                concat!($result_folder_path, "/net.lola"),
+            );
+        }
+
+        #[test]
+        fn generates_correct_pnml_output_file() {
+            common::assert_output_file(
+                $program_path,
+                "pnml",
+                "./net.pnml",
+                concat!($result_folder_path, "/net.pnml"),
+            );
+        }
+    };
+}
+
+/// Exports the previously defined macro.
+/// For the idea for the re-export, see:
+/// <https://stackoverflow.com/questions/26731243/how-do-i-use-a-macro-across-module-files#31749071>
+/// A warning is generated if some test file does NOT use this function.
+/// That is because each test is compiled as an independent crate.
+/// See more details here: <https://stackoverflow.com/a/67902444>
+pub(crate) use generate_tests_for_example_program;
