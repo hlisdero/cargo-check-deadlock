@@ -46,7 +46,7 @@ macro_rules! generate_tests_for_example_program {
     ($program_path:literal, $result_folder_path:literal) => {
         #[test]
         fn generates_correct_dot_output_file() {
-            common::assert_output_file(
+            utils::assert_output_file(
                 $program_path,
                 "dot",
                 "./net.dot",
@@ -56,7 +56,7 @@ macro_rules! generate_tests_for_example_program {
 
         #[test]
         fn generates_correct_lola_output_file() {
-            common::assert_output_file(
+            utils::assert_output_file(
                 $program_path,
                 "lola",
                 "./net.lola",
@@ -66,7 +66,7 @@ macro_rules! generate_tests_for_example_program {
 
         #[test]
         fn generates_correct_pnml_output_file() {
-            common::assert_output_file(
+            utils::assert_output_file(
                 $program_path,
                 "pnml",
                 "./net.pnml",
