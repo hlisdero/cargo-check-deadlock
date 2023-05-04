@@ -98,11 +98,11 @@ fn main() {
 fn create_output_files(
     petri_net: &PetriNet,
     filename: &str,
-    output_folder: &std::path::PathBuf,
+    output_folder: &std::path::Path,
     format: &Vec<OutputFormat>,
 ) -> Result<(), std::io::Error> {
     for format in format {
-        let mut filepath = output_folder.clone();
+        let mut filepath = output_folder.to_path_buf();
         filepath.push(filename);
         filepath.set_extension(format.to_string());
 
