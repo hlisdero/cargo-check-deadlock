@@ -25,6 +25,7 @@ pub mod thread;
 fn sanitize(function_name: &str) -> String {
     function_name
         .replace("<T>", "T")
+        .replace("<T, A>", "T_A")
         .replace("<'a>", "a")
         .replace("::", "_")
         .replace(['{', '}', '#'], "_")
