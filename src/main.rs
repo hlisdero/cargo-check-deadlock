@@ -3,8 +3,9 @@ use granite2::PetriNet;
 use log::info;
 
 const ERR_SOURCE_FILE_NOT_FOUND: i32 = 1;
-const ERR_TRANSLATION: i32 = 2;
-const ERR_OUTPUT_FILE_GENERATION: i32 = 3;
+const ERR_OUTPUT_FOLDER_NOT_FOUND: i32 = 2;
+const ERR_TRANSLATION: i32 = 3;
+const ERR_OUTPUT_FILE_GENERATION: i32 = 4;
 
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, ValueEnum)]
 enum OutputFormat {
@@ -87,7 +88,7 @@ fn main() {
             "Output folder at {} does not exist",
             &args.output_folder.to_string_lossy()
         );
-        std::process::exit(ERR_OUTPUT_FILE_GENERATION);
+        std::process::exit(ERR_OUTPUT_FOLDER_NOT_FOUND);
     };
 
     info!("Starting the translation...");
