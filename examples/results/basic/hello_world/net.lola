@@ -1,0 +1,36 @@
+PLACE
+    PROGRAM_END,
+    PROGRAM_PANIC,
+    PROGRAM_START,
+    main_BB0_END_PLACE,
+    main_BB0_STMT0_END,
+    main_BB1,
+    main_BB2;
+
+MARKING
+    PROGRAM_START : 1,
+TRANSITION main_BB0_STMT0
+  CONSUME
+    PROGRAM_START : 1;
+  PRODUCE
+    main_BB0_STMT0_END : 1;
+TRANSITION main_BB0_STMT1
+  CONSUME
+    main_BB0_STMT0_END : 1;
+  PRODUCE
+    main_BB0_END_PLACE : 1;
+TRANSITION main_RETURN
+  CONSUME
+    main_BB2 : 1;
+  PRODUCE
+    PROGRAM_END : 1;
+TRANSITION std_fmt_Arguments_a_new_const_CALL
+  CONSUME
+    main_BB0_END_PLACE : 1;
+  PRODUCE
+    main_BB1 : 1;
+TRANSITION std_io__print_CALL
+  CONSUME
+    main_BB1 : 1;
+  PRODUCE
+    main_BB2 : 1;

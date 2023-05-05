@@ -1,0 +1,24 @@
+digraph petrinet {
+    PROGRAM_END [shape="circle" xlabel="PROGRAM_END" label=""];
+    PROGRAM_PANIC [shape="circle" xlabel="PROGRAM_PANIC" label=""];
+    PROGRAM_START [shape="circle" xlabel="PROGRAM_START" label="•"];
+    main_BB0_END_PLACE [shape="circle" xlabel="main_BB0_END_PLACE" label=""];
+    main_BB0_STMT0_END [shape="circle" xlabel="main_BB0_STMT0_END" label=""];
+    main_BB1 [shape="circle" xlabel="main_BB1" label=""];
+    main_BB2 [shape="circle" xlabel="main_BB2" label=""];
+    main_BB0_STMT0 [shape="box" xlabel="" label="main_BB0_STMT0"];
+    main_BB0_STMT1 [shape="box" xlabel="" label="main_BB0_STMT1"];
+    main_RETURN [shape="box" xlabel="" label="main_RETURN"];
+    std_fmt_Arguments_a_new_const_CALL [shape="box" xlabel="" label="std_fmt_Arguments_a_new_const_CALL"];
+    std_io__print_CALL [shape="box" xlabel="" label="std_io__print_CALL"];
+    PROGRAM_START -> main_BB0_STMT0;
+    main_BB0_END_PLACE -> std_fmt_Arguments_a_new_const_CALL;
+    main_BB0_STMT0_END -> main_BB0_STMT1;
+    main_BB1 -> std_io__print_CALL;
+    main_BB2 -> main_RETURN;
+    main_BB0_STMT0 -> main_BB0_STMT0_END;
+    main_BB0_STMT1 -> main_BB0_END_PLACE;
+    main_RETURN -> PROGRAM_END;
+    std_fmt_Arguments_a_new_const_CALL -> main_BB1;
+    std_io__print_CALL -> main_BB2;
+}
