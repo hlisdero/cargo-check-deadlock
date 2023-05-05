@@ -42,11 +42,12 @@ struct CliArgs {
     filename: String,
 
     /// The path to a valid folder where the output files should be created.
-    #[arg(short, long, default_value = ".")]
+    /// If not specified, the current working directory is used.
+    #[arg(long, default_value = ".")]
     output_folder: std::path::PathBuf,
 
     /// The format for the output. Multiple formats can be specified.
-    #[arg(short, long, value_enum)]
+    #[arg(long, value_enum)]
     format: Vec<OutputFormat>,
 
     /// Verbosity flag.
