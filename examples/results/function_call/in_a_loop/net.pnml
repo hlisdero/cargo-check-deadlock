@@ -135,14 +135,14 @@
           <text>main_UNREACHABLE_5</text>
         </name>
       </transition>
-      <transition id="std_iter_IntoIterator_into_iter_CALL">
+      <transition id="std_iter_IntoIterator_into_iter_0_CALL">
         <name>
-          <text>std_iter_IntoIterator_into_iter_CALL</text>
+          <text>std_iter_IntoIterator_into_iter_0_CALL</text>
         </name>
       </transition>
-      <transition id="std_iter_Iterator_next_CALL">
+      <transition id="std_iter_Iterator_next_0_CALL">
         <name>
-          <text>std_iter_Iterator_next_CALL</text>
+          <text>std_iter_Iterator_next_0_CALL</text>
         </name>
       </transition>
       <arc source="PROGRAM_START" target="main_BB0_STMT0" id="(PROGRAM_START, main_BB0_STMT0)">
@@ -153,9 +153,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB0_END_PLACE" target="std_iter_IntoIterator_into_iter_CALL" id="(main_BB0_END_PLACE, std_iter_IntoIterator_into_iter_CALL)">
+      <arc source="main_BB0_END_PLACE" target="std_iter_IntoIterator_into_iter_0_CALL" id="(main_BB0_END_PLACE, std_iter_IntoIterator_into_iter_0_CALL)">
         <name>
-          <text>(main_BB0_END_PLACE, std_iter_IntoIterator_into_iter_CALL)</text>
+          <text>(main_BB0_END_PLACE, std_iter_IntoIterator_into_iter_0_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -185,9 +185,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB2_END_PLACE" target="std_iter_Iterator_next_CALL" id="(main_BB2_END_PLACE, std_iter_Iterator_next_CALL)">
+      <arc source="main_BB2_END_PLACE" target="std_iter_Iterator_next_0_CALL" id="(main_BB2_END_PLACE, std_iter_Iterator_next_0_CALL)">
         <name>
-          <text>(main_BB2_END_PLACE, std_iter_Iterator_next_CALL)</text>
+          <text>(main_BB2_END_PLACE, std_iter_Iterator_next_0_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -353,17 +353,17 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_iter_IntoIterator_into_iter_CALL" target="main_BB1" id="(std_iter_IntoIterator_into_iter_CALL, main_BB1)">
+      <arc source="std_iter_IntoIterator_into_iter_0_CALL" target="main_BB1" id="(std_iter_IntoIterator_into_iter_0_CALL, main_BB1)">
         <name>
-          <text>(std_iter_IntoIterator_into_iter_CALL, main_BB1)</text>
+          <text>(std_iter_IntoIterator_into_iter_0_CALL, main_BB1)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_iter_Iterator_next_CALL" target="main_BB3" id="(std_iter_Iterator_next_CALL, main_BB3)">
+      <arc source="std_iter_Iterator_next_0_CALL" target="main_BB3" id="(std_iter_Iterator_next_0_CALL, main_BB3)">
         <name>
-          <text>(std_iter_Iterator_next_CALL, main_BB3)</text>
+          <text>(std_iter_Iterator_next_0_CALL, main_BB3)</text>
         </name>
         <inscription>
           <text>1</text>

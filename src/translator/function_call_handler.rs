@@ -13,7 +13,6 @@ use crate::naming::mutex::{
 };
 use crate::naming::thread::{join_transition_labels, spawn_transition_labels};
 use crate::translator::function_call::{FunctionCall, FunctionPlaces};
-use crate::translator::special_function::call_foreign_function;
 use crate::translator::sync::link_return_value_if_sync_variable;
 use crate::utils::extract_nth_argument;
 use log::info;
@@ -78,9 +77,10 @@ impl<'tcx> Translator<'tcx> {
                 );
             }
             FunctionCall::Foreign => {
-                call_foreign_function(
+                self.function_counter.translate_indexed_call(
+                    &function_name,
                     &function_call_places,
-                    &foreign_call_transition_labels(&function_name),
+                    foreign_call_transition_labels,
                     &mut self.net,
                 );
             }

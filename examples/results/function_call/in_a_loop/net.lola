@@ -76,12 +76,12 @@ TRANSITION main_UNREACHABLE_5
     main_BB5 : 1;
   PRODUCE
     PROGRAM_END : 1;
-TRANSITION std_iter_IntoIterator_into_iter_CALL
+TRANSITION std_iter_IntoIterator_into_iter_0_CALL
   CONSUME
     main_BB0_END_PLACE : 1;
   PRODUCE
     main_BB1 : 1;
-TRANSITION std_iter_Iterator_next_CALL
+TRANSITION std_iter_Iterator_next_0_CALL
   CONSUME
     main_BB2_END_PLACE : 1;
   PRODUCE

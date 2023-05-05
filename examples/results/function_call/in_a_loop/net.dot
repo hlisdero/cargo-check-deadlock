@@ -25,14 +25,14 @@ digraph petrinet {
     main_SWITCH_INT_5 [shape="box" xlabel="" label="main_SWITCH_INT_5"];
     main_SWITCH_INT_6 [shape="box" xlabel="" label="main_SWITCH_INT_6"];
     main_UNREACHABLE_5 [shape="box" xlabel="" label="main_UNREACHABLE_5"];
-    std_iter_IntoIterator_into_iter_CALL [shape="box" xlabel="" label="std_iter_IntoIterator_into_iter_CALL"];
-    std_iter_Iterator_next_CALL [shape="box" xlabel="" label="std_iter_Iterator_next_CALL"];
+    std_iter_IntoIterator_into_iter_0_CALL [shape="box" xlabel="" label="std_iter_IntoIterator_into_iter_0_CALL"];
+    std_iter_Iterator_next_0_CALL [shape="box" xlabel="" label="std_iter_Iterator_next_0_CALL"];
     PROGRAM_START -> main_BB0_STMT0;
-    main_BB0_END_PLACE -> std_iter_IntoIterator_into_iter_CALL;
+    main_BB0_END_PLACE -> std_iter_IntoIterator_into_iter_0_CALL;
     main_BB1 -> main_BB1_STMT0;
     main_BB1_END_PLACE -> main_GOTO_1;
     main_BB2 -> main_BB2_STMT0;
-    main_BB2_END_PLACE -> std_iter_Iterator_next_CALL;
+    main_BB2_END_PLACE -> std_iter_Iterator_next_0_CALL;
     main_BB3 -> main_BB3_STMT0;
     main_BB3_END_PLACE -> main_SWITCH_INT_4;
     main_BB3_END_PLACE -> main_SWITCH_INT_5;
@@ -53,6 +53,6 @@ digraph petrinet {
     main_SWITCH_INT_5 -> main_BB5;
     main_SWITCH_INT_6 -> main_BB6;
     main_UNREACHABLE_5 -> PROGRAM_END;
-    std_iter_IntoIterator_into_iter_CALL -> main_BB1;
-    std_iter_Iterator_next_CALL -> main_BB3;
+    std_iter_IntoIterator_into_iter_0_CALL -> main_BB1;
+    std_iter_Iterator_next_0_CALL -> main_BB3;
 }

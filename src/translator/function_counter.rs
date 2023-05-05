@@ -28,6 +28,32 @@ impl FunctionCounter {
     /// Translates a call to a function with given function name using
     /// the same representation as in `foreign_function_call`.
     ///
+    /// Receives a labelling function that takes a function name and an index
+    /// and returns two transition labels as expected by `foreign_function_call`.
+    ///
+    /// A separate counter is incremented every time that
+    /// the function is called to generate a unique label.
+    ///
+    /// Returns the transition that represents the function call.
+    pub fn translate_indexed_call(
+        &mut self,
+        function_name: &str,
+        function_call_places: &FunctionPlaces,
+        labelling_function: fn(&str, usize) -> (String, String),
+        net: &mut PetriNet,
+    ) -> TransitionRef {
+        let index = self.counter.get_count(function_name);
+        self.counter.increment(function_name);
+        call_foreign_function(
+            function_call_places,
+            &labelling_function(function_name, index),
+            net,
+        )
+    }
+
+    /// Translates a call to a function with given function name using
+    /// the same representation as in `foreign_function_call`.
+    ///
     /// Receives a labelling function that takes an index and returns two
     /// transition labels as expected by `foreign_function_call`.
     ///

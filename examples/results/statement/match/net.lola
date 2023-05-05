@@ -36,17 +36,17 @@ TRANSITION main_UNWIND_5
     main_BB5 : 1;
   PRODUCE
     PROGRAM_PANIC : 1;
-TRANSITION std_env_args_CALL
+TRANSITION std_env_args_0_CALL
   CONSUME
     PROGRAM_START : 1;
   PRODUCE
     main_BB1 : 1;
-TRANSITION std_iter_ExactSizeIterator_len_CALL
+TRANSITION std_iter_ExactSizeIterator_len_0_CALL
   CONSUME
     main_BB1_END_PLACE : 1;
   PRODUCE
     main_BB2 : 1;
-TRANSITION std_iter_ExactSizeIterator_len_CALL_UNWIND
+TRANSITION std_iter_ExactSizeIterator_len_0_CALL_UNWIND
   CONSUME
     main_BB1_END_PLACE : 1;
   PRODUCE

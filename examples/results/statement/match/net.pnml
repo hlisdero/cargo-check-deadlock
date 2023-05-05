@@ -75,24 +75,24 @@
           <text>main_UNWIND_5</text>
         </name>
       </transition>
-      <transition id="std_env_args_CALL">
+      <transition id="std_env_args_0_CALL">
         <name>
-          <text>std_env_args_CALL</text>
+          <text>std_env_args_0_CALL</text>
         </name>
       </transition>
-      <transition id="std_iter_ExactSizeIterator_len_CALL">
+      <transition id="std_iter_ExactSizeIterator_len_0_CALL">
         <name>
-          <text>std_iter_ExactSizeIterator_len_CALL</text>
+          <text>std_iter_ExactSizeIterator_len_0_CALL</text>
         </name>
       </transition>
-      <transition id="std_iter_ExactSizeIterator_len_CALL_UNWIND">
+      <transition id="std_iter_ExactSizeIterator_len_0_CALL_UNWIND">
         <name>
-          <text>std_iter_ExactSizeIterator_len_CALL_UNWIND</text>
+          <text>std_iter_ExactSizeIterator_len_0_CALL_UNWIND</text>
         </name>
       </transition>
-      <arc source="PROGRAM_START" target="std_env_args_CALL" id="(PROGRAM_START, std_env_args_CALL)">
+      <arc source="PROGRAM_START" target="std_env_args_0_CALL" id="(PROGRAM_START, std_env_args_0_CALL)">
         <name>
-          <text>(PROGRAM_START, std_env_args_CALL)</text>
+          <text>(PROGRAM_START, std_env_args_0_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -106,17 +106,17 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB1_END_PLACE" target="std_iter_ExactSizeIterator_len_CALL" id="(main_BB1_END_PLACE, std_iter_ExactSizeIterator_len_CALL)">
+      <arc source="main_BB1_END_PLACE" target="std_iter_ExactSizeIterator_len_0_CALL" id="(main_BB1_END_PLACE, std_iter_ExactSizeIterator_len_0_CALL)">
         <name>
-          <text>(main_BB1_END_PLACE, std_iter_ExactSizeIterator_len_CALL)</text>
+          <text>(main_BB1_END_PLACE, std_iter_ExactSizeIterator_len_0_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB1_END_PLACE" target="std_iter_ExactSizeIterator_len_CALL_UNWIND" id="(main_BB1_END_PLACE, std_iter_ExactSizeIterator_len_CALL_UNWIND)">
+      <arc source="main_BB1_END_PLACE" target="std_iter_ExactSizeIterator_len_0_CALL_UNWIND" id="(main_BB1_END_PLACE, std_iter_ExactSizeIterator_len_0_CALL_UNWIND)">
         <name>
-          <text>(main_BB1_END_PLACE, std_iter_ExactSizeIterator_len_CALL_UNWIND)</text>
+          <text>(main_BB1_END_PLACE, std_iter_ExactSizeIterator_len_0_CALL_UNWIND)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -194,25 +194,25 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_env_args_CALL" target="main_BB1" id="(std_env_args_CALL, main_BB1)">
+      <arc source="std_env_args_0_CALL" target="main_BB1" id="(std_env_args_0_CALL, main_BB1)">
         <name>
-          <text>(std_env_args_CALL, main_BB1)</text>
+          <text>(std_env_args_0_CALL, main_BB1)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_iter_ExactSizeIterator_len_CALL" target="main_BB2" id="(std_iter_ExactSizeIterator_len_CALL, main_BB2)">
+      <arc source="std_iter_ExactSizeIterator_len_0_CALL" target="main_BB2" id="(std_iter_ExactSizeIterator_len_0_CALL, main_BB2)">
         <name>
-          <text>(std_iter_ExactSizeIterator_len_CALL, main_BB2)</text>
+          <text>(std_iter_ExactSizeIterator_len_0_CALL, main_BB2)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_iter_ExactSizeIterator_len_CALL_UNWIND" target="main_BB4" id="(std_iter_ExactSizeIterator_len_CALL_UNWIND, main_BB4)">
+      <arc source="std_iter_ExactSizeIterator_len_0_CALL_UNWIND" target="main_BB4" id="(std_iter_ExactSizeIterator_len_0_CALL_UNWIND, main_BB4)">
         <name>
-          <text>(std_iter_ExactSizeIterator_len_CALL_UNWIND, main_BB4)</text>
+          <text>(std_iter_ExactSizeIterator_len_0_CALL_UNWIND, main_BB4)</text>
         </name>
         <inscription>
           <text>1</text>

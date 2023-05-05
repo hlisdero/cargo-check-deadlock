@@ -20,10 +20,10 @@ pub fn return_transition_label(function_name: &str) -> String {
 
 /// Label of the transitions for a call to a foreign function.
 #[inline]
-pub fn foreign_call_transition_labels(function_name: &str) -> (String, String) {
+pub fn foreign_call_transition_labels(function_name: &str, index: usize) -> (String, String) {
     (
-        format!("{}_CALL", sanitize(function_name)),
-        format!("{}_CALL_UNWIND", sanitize(function_name)),
+        format!("{}_{index}_CALL", sanitize(function_name)),
+        format!("{}_{index}_CALL_UNWIND", sanitize(function_name)),
     )
 }
 

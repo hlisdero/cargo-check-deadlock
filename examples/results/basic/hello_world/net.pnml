@@ -55,14 +55,14 @@
           <text>main_RETURN</text>
         </name>
       </transition>
-      <transition id="std_fmt_Arguments_a_new_const_CALL">
+      <transition id="std_fmt_Arguments_a_new_const_0_CALL">
         <name>
-          <text>std_fmt_Arguments_a_new_const_CALL</text>
+          <text>std_fmt_Arguments_a_new_const_0_CALL</text>
         </name>
       </transition>
-      <transition id="std_io__print_CALL">
+      <transition id="std_io__print_0_CALL">
         <name>
-          <text>std_io__print_CALL</text>
+          <text>std_io__print_0_CALL</text>
         </name>
       </transition>
       <arc source="PROGRAM_START" target="main_BB0_STMT0" id="(PROGRAM_START, main_BB0_STMT0)">
@@ -73,9 +73,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB0_END_PLACE" target="std_fmt_Arguments_a_new_const_CALL" id="(main_BB0_END_PLACE, std_fmt_Arguments_a_new_const_CALL)">
+      <arc source="main_BB0_END_PLACE" target="std_fmt_Arguments_a_new_const_0_CALL" id="(main_BB0_END_PLACE, std_fmt_Arguments_a_new_const_0_CALL)">
         <name>
-          <text>(main_BB0_END_PLACE, std_fmt_Arguments_a_new_const_CALL)</text>
+          <text>(main_BB0_END_PLACE, std_fmt_Arguments_a_new_const_0_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -89,9 +89,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB1" target="std_io__print_CALL" id="(main_BB1, std_io__print_CALL)">
+      <arc source="main_BB1" target="std_io__print_0_CALL" id="(main_BB1, std_io__print_0_CALL)">
         <name>
-          <text>(main_BB1, std_io__print_CALL)</text>
+          <text>(main_BB1, std_io__print_0_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -129,17 +129,17 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_fmt_Arguments_a_new_const_CALL" target="main_BB1" id="(std_fmt_Arguments_a_new_const_CALL, main_BB1)">
+      <arc source="std_fmt_Arguments_a_new_const_0_CALL" target="main_BB1" id="(std_fmt_Arguments_a_new_const_0_CALL, main_BB1)">
         <name>
-          <text>(std_fmt_Arguments_a_new_const_CALL, main_BB1)</text>
+          <text>(std_fmt_Arguments_a_new_const_0_CALL, main_BB1)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_io__print_CALL" target="main_BB2" id="(std_io__print_CALL, main_BB2)">
+      <arc source="std_io__print_0_CALL" target="main_BB2" id="(std_io__print_0_CALL, main_BB2)">
         <name>
-          <text>(std_io__print_CALL, main_BB2)</text>
+          <text>(std_io__print_0_CALL, main_BB2)</text>
         </name>
         <inscription>
           <text>1</text>
