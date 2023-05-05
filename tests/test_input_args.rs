@@ -14,6 +14,22 @@ fn file_does_not_exist() {
 }
 
 #[test]
+fn output_folder_does_not_exist() {
+    let file = assert_fs::NamedTempFile::new("valid_file.rs")
+        .expect("Could not create temporary file for test");
+    file.write_str("fn main {}")
+        .expect("Could not write test file contents");
+
+    let mut cmd = Command::cargo_bin("granite2").expect("Command not found");
+
+    cmd.arg(file.path())
+        .arg("--output-folder=test/folder/doesnt/exist");
+    cmd.assert().failure().stderr(predicate::str::contains(
+        "Output folder at test/folder/doesnt/exist does not exist",
+    ));
+}
+
+#[test]
 fn format_is_not_valid() {
     let file = assert_fs::NamedTempFile::new("valid_file.rs")
         .expect("Could not create temporary file for test");
@@ -22,7 +38,7 @@ fn format_is_not_valid() {
 
     let mut cmd = Command::cargo_bin("granite2").expect("Command not found");
 
-    cmd.arg("valid_file.rs").arg("--format=INVALID_FORMAT");
+    cmd.arg(file.path()).arg("--format=INVALID_FORMAT");
     cmd.assert().failure().stderr(predicate::str::contains(
         "[possible values: pnml, lola, dot]",
     ));

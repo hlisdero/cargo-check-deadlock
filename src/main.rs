@@ -76,6 +76,20 @@ fn main() {
         std::process::exit(ERR_SOURCE_FILE_NOT_FOUND);
     };
 
+    // Double check that the output folder exists before starting the compiler
+    // to generate an error message as soon as possible.
+    info!(
+        "Checking that the output folder at {} exists...",
+        args.output_folder.to_string_lossy()
+    );
+    if !args.output_folder.exists() {
+        eprintln!(
+            "Output folder at {} does not exist",
+            &args.output_folder.to_string_lossy()
+        );
+        std::process::exit(ERR_OUTPUT_FILE_GENERATION);
+    };
+
     info!("Starting the translation...");
     let petri_net = match granite2::run(args.path) {
         Ok(petri_net) => petri_net,
@@ -107,9 +121,7 @@ fn create_output_files(
         filepath.push(filename);
         filepath.set_extension(format.to_string());
 
-        let filepath_str = filepath.to_string_lossy();
-        info!("Creating output file {filepath_str}...");
-
+        info!("Creating output file {}...", filepath.to_string_lossy());
         let mut file = std::fs::File::create(filepath)?;
         match format {
             OutputFormat::Dot => petri_net.to_dot(&mut file)?,
