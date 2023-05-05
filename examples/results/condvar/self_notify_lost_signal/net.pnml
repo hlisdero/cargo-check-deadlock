@@ -226,24 +226,24 @@
           <text>main_UNWIND_8</text>
         </name>
       </transition>
-      <transition id="std_result_Result_unwrap_0">
+      <transition id="std_result_Result_unwrap_0_CALL">
         <name>
-          <text>std_result_Result_unwrap_0</text>
+          <text>std_result_Result_unwrap_0_CALL</text>
         </name>
       </transition>
-      <transition id="std_sync_Condvar_new_0">
+      <transition id="std_sync_Condvar_new_0_CALL">
         <name>
-          <text>std_sync_Condvar_new_0</text>
+          <text>std_sync_Condvar_new_0_CALL</text>
         </name>
       </transition>
-      <transition id="std_sync_Condvar_notify_one_0">
+      <transition id="std_sync_Condvar_notify_one_0_CALL">
         <name>
-          <text>std_sync_Condvar_notify_one_0</text>
+          <text>std_sync_Condvar_notify_one_0_CALL</text>
         </name>
       </transition>
-      <transition id="std_sync_Condvar_notify_one_0_UNWIND">
+      <transition id="std_sync_Condvar_notify_one_0_CALL_UNWIND">
         <name>
-          <text>std_sync_Condvar_notify_one_0_UNWIND</text>
+          <text>std_sync_Condvar_notify_one_0_CALL_UNWIND</text>
         </name>
       </transition>
       <transition id="std_sync_Condvar_wait_0_END">
@@ -261,14 +261,14 @@
           <text>std_sync_Condvar_wait_0_UNWIND</text>
         </name>
       </transition>
-      <transition id="std_sync_Mutex_T_lock_0">
+      <transition id="std_sync_Mutex_T_lock_0_CALL">
         <name>
-          <text>std_sync_Mutex_T_lock_0</text>
+          <text>std_sync_Mutex_T_lock_0_CALL</text>
         </name>
       </transition>
-      <transition id="std_sync_Mutex_T_new_0">
+      <transition id="std_sync_Mutex_T_new_0_CALL">
         <name>
-          <text>std_sync_Mutex_T_new_0</text>
+          <text>std_sync_Mutex_T_new_0_CALL</text>
         </name>
       </transition>
       <arc source="CONDVAR_0_P1" target="CONDVAR_0_T1" id="(CONDVAR_0_P1, CONDVAR_0_T1)">
@@ -327,9 +327,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="MUTEX_0" target="std_sync_Mutex_T_lock_0" id="(MUTEX_0, std_sync_Mutex_T_lock_0)">
+      <arc source="MUTEX_0" target="std_sync_Mutex_T_lock_0_CALL" id="(MUTEX_0, std_sync_Mutex_T_lock_0_CALL)">
         <name>
-          <text>(MUTEX_0, std_sync_Mutex_T_lock_0)</text>
+          <text>(MUTEX_0, std_sync_Mutex_T_lock_0_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -343,17 +343,17 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB0_END_PLACE" target="std_sync_Mutex_T_new_0" id="(main_BB0_END_PLACE, std_sync_Mutex_T_new_0)">
+      <arc source="main_BB0_END_PLACE" target="std_sync_Mutex_T_new_0_CALL" id="(main_BB0_END_PLACE, std_sync_Mutex_T_new_0_CALL)">
         <name>
-          <text>(main_BB0_END_PLACE, std_sync_Mutex_T_new_0)</text>
+          <text>(main_BB0_END_PLACE, std_sync_Mutex_T_new_0_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB1" target="std_sync_Condvar_new_0" id="(main_BB1, std_sync_Condvar_new_0)">
+      <arc source="main_BB1" target="std_sync_Condvar_new_0_CALL" id="(main_BB1, std_sync_Condvar_new_0_CALL)">
         <name>
-          <text>(main_BB1, std_sync_Condvar_new_0)</text>
+          <text>(main_BB1, std_sync_Condvar_new_0_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -383,17 +383,17 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB2_END_PLACE" target="std_sync_Mutex_T_lock_0" id="(main_BB2_END_PLACE, std_sync_Mutex_T_lock_0)">
+      <arc source="main_BB2_END_PLACE" target="std_sync_Mutex_T_lock_0_CALL" id="(main_BB2_END_PLACE, std_sync_Mutex_T_lock_0_CALL)">
         <name>
-          <text>(main_BB2_END_PLACE, std_sync_Mutex_T_lock_0)</text>
+          <text>(main_BB2_END_PLACE, std_sync_Mutex_T_lock_0_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB3" target="std_result_Result_unwrap_0" id="(main_BB3, std_result_Result_unwrap_0)">
+      <arc source="main_BB3" target="std_result_Result_unwrap_0_CALL" id="(main_BB3, std_result_Result_unwrap_0_CALL)">
         <name>
-          <text>(main_BB3, std_result_Result_unwrap_0)</text>
+          <text>(main_BB3, std_result_Result_unwrap_0_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -407,17 +407,17 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB4_END_PLACE" target="std_sync_Condvar_notify_one_0" id="(main_BB4_END_PLACE, std_sync_Condvar_notify_one_0)">
+      <arc source="main_BB4_END_PLACE" target="std_sync_Condvar_notify_one_0_CALL" id="(main_BB4_END_PLACE, std_sync_Condvar_notify_one_0_CALL)">
         <name>
-          <text>(main_BB4_END_PLACE, std_sync_Condvar_notify_one_0)</text>
+          <text>(main_BB4_END_PLACE, std_sync_Condvar_notify_one_0_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB4_END_PLACE" target="std_sync_Condvar_notify_one_0_UNWIND" id="(main_BB4_END_PLACE, std_sync_Condvar_notify_one_0_UNWIND)">
+      <arc source="main_BB4_END_PLACE" target="std_sync_Condvar_notify_one_0_CALL_UNWIND" id="(main_BB4_END_PLACE, std_sync_Condvar_notify_one_0_CALL_UNWIND)">
         <name>
-          <text>(main_BB4_END_PLACE, std_sync_Condvar_notify_one_0_UNWIND)</text>
+          <text>(main_BB4_END_PLACE, std_sync_Condvar_notify_one_0_CALL_UNWIND)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -679,41 +679,41 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_result_Result_unwrap_0" target="main_BB4" id="(std_result_Result_unwrap_0, main_BB4)">
+      <arc source="std_result_Result_unwrap_0_CALL" target="main_BB4" id="(std_result_Result_unwrap_0_CALL, main_BB4)">
         <name>
-          <text>(std_result_Result_unwrap_0, main_BB4)</text>
+          <text>(std_result_Result_unwrap_0_CALL, main_BB4)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_sync_Condvar_new_0" target="main_BB2" id="(std_sync_Condvar_new_0, main_BB2)">
+      <arc source="std_sync_Condvar_new_0_CALL" target="main_BB2" id="(std_sync_Condvar_new_0_CALL, main_BB2)">
         <name>
-          <text>(std_sync_Condvar_new_0, main_BB2)</text>
+          <text>(std_sync_Condvar_new_0_CALL, main_BB2)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_sync_Condvar_notify_one_0" target="CONDVAR_0_P2" id="(std_sync_Condvar_notify_one_0, CONDVAR_0_P2)">
+      <arc source="std_sync_Condvar_notify_one_0_CALL" target="CONDVAR_0_P2" id="(std_sync_Condvar_notify_one_0_CALL, CONDVAR_0_P2)">
         <name>
-          <text>(std_sync_Condvar_notify_one_0, CONDVAR_0_P2)</text>
+          <text>(std_sync_Condvar_notify_one_0_CALL, CONDVAR_0_P2)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_sync_Condvar_notify_one_0" target="main_BB5" id="(std_sync_Condvar_notify_one_0, main_BB5)">
+      <arc source="std_sync_Condvar_notify_one_0_CALL" target="main_BB5" id="(std_sync_Condvar_notify_one_0_CALL, main_BB5)">
         <name>
-          <text>(std_sync_Condvar_notify_one_0, main_BB5)</text>
+          <text>(std_sync_Condvar_notify_one_0_CALL, main_BB5)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_sync_Condvar_notify_one_0_UNWIND" target="main_BB10" id="(std_sync_Condvar_notify_one_0_UNWIND, main_BB10)">
+      <arc source="std_sync_Condvar_notify_one_0_CALL_UNWIND" target="main_BB10" id="(std_sync_Condvar_notify_one_0_CALL_UNWIND, main_BB10)">
         <name>
-          <text>(std_sync_Condvar_notify_one_0_UNWIND, main_BB10)</text>
+          <text>(std_sync_Condvar_notify_one_0_CALL_UNWIND, main_BB10)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -751,17 +751,17 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_sync_Mutex_T_lock_0" target="main_BB3" id="(std_sync_Mutex_T_lock_0, main_BB3)">
+      <arc source="std_sync_Mutex_T_lock_0_CALL" target="main_BB3" id="(std_sync_Mutex_T_lock_0_CALL, main_BB3)">
         <name>
-          <text>(std_sync_Mutex_T_lock_0, main_BB3)</text>
+          <text>(std_sync_Mutex_T_lock_0_CALL, main_BB3)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_sync_Mutex_T_new_0" target="main_BB1" id="(std_sync_Mutex_T_new_0, main_BB1)">
+      <arc source="std_sync_Mutex_T_new_0_CALL" target="main_BB1" id="(std_sync_Mutex_T_new_0_CALL, main_BB1)">
         <name>
-          <text>(std_sync_Mutex_T_new_0, main_BB1)</text>
+          <text>(std_sync_Mutex_T_new_0_CALL, main_BB1)</text>
         </name>
         <inscription>
           <text>1</text>

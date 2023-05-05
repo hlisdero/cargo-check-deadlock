@@ -60,12 +60,12 @@ TRANSITION main_RETURN
     main_BB6 : 1;
   PRODUCE
     PROGRAM_END : 1;
-TRANSITION std_result_Result_unwrap_0
+TRANSITION std_result_Result_unwrap_0_CALL
   CONSUME
     main_BB3 : 1;
   PRODUCE
     main_BB4 : 1;
-TRANSITION std_sync_Condvar_new_0
+TRANSITION std_sync_Condvar_new_0_CALL
   CONSUME
     main_BB1 : 1;
   PRODUCE
@@ -83,13 +83,13 @@ TRANSITION std_sync_Condvar_wait_0_START
   PRODUCE
     CONDVAR_0_P3 : 1,
     MUTEX_0 : 1;
-TRANSITION std_sync_Mutex_T_lock_0
+TRANSITION std_sync_Mutex_T_lock_0_CALL
   CONSUME
     MUTEX_0 : 1,
     main_BB2_END_PLACE : 1;
   PRODUCE
     main_BB3 : 1;
-TRANSITION std_sync_Mutex_T_new_0
+TRANSITION std_sync_Mutex_T_new_0_CALL
   CONSUME
     PROGRAM_START : 1;
   PRODUCE

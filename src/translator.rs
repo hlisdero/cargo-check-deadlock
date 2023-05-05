@@ -21,21 +21,23 @@
 //! The naming of the places and transitions in the net is globally unique,
 //! i.e. each function, block and statement receive a different label.
 //! It can be configured in the `naming` submodule.
+//!
+//! A `HashMapCounter` keeps track of how many time each function name has been seen so far.
+//! After every call the counter for the corresponding function is incremented.
 
 mod function_call;
 mod function_call_handler;
-mod function_counter;
 mod mir_function;
 mod mir_visitor;
 mod special_function;
 mod sync;
 
+use crate::data_structures::hash_map_counter::HashMapCounter;
 use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef};
 use crate::data_structures::stack::Stack;
 use crate::naming::program::{PROGRAM_END, PROGRAM_PANIC, PROGRAM_START};
 use crate::utils::extract_def_id_of_called_function_from_operand;
 use function_call::FunctionCall;
-use function_counter::FunctionCounter;
 use log::info;
 use mir_function::MirFunction;
 use rustc_middle::mir::visit::Visitor;
@@ -55,7 +57,7 @@ pub struct Translator<'tcx> {
     program_end: PlaceRef,
     program_panic: PlaceRef,
     call_stack: Stack<MirFunction<'tcx>>,
-    function_counter: FunctionCounter,
+    function_counter: HashMapCounter,
     condvar_manager: CondvarManager,
     mutex_manager: MutexManager,
     thread_manager: ThreadManager,
@@ -83,7 +85,7 @@ impl<'tcx> Translator<'tcx> {
             program_end,
             program_panic,
             call_stack: Stack::new(),
-            function_counter: FunctionCounter::new(),
+            function_counter: HashMapCounter::new(),
             condvar_manager: CondvarManager::new(),
             mutex_manager: MutexManager::new(),
             thread_manager: ThreadManager::new(),

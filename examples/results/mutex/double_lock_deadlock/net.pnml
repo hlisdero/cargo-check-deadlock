@@ -113,45 +113,45 @@
           <text>main_UNWIND_7</text>
         </name>
       </transition>
-      <transition id="std_sync_Mutex_T_lock_0">
+      <transition id="std_sync_Mutex_T_lock_0_CALL">
         <name>
-          <text>std_sync_Mutex_T_lock_0</text>
+          <text>std_sync_Mutex_T_lock_0_CALL</text>
         </name>
       </transition>
-      <transition id="std_sync_Mutex_T_lock_1">
+      <transition id="std_sync_Mutex_T_lock_1_CALL">
         <name>
-          <text>std_sync_Mutex_T_lock_1</text>
+          <text>std_sync_Mutex_T_lock_1_CALL</text>
         </name>
       </transition>
-      <transition id="std_sync_Mutex_T_lock_1_UNWIND">
+      <transition id="std_sync_Mutex_T_lock_1_CALL_UNWIND">
         <name>
-          <text>std_sync_Mutex_T_lock_1_UNWIND</text>
+          <text>std_sync_Mutex_T_lock_1_CALL_UNWIND</text>
         </name>
       </transition>
-      <transition id="std_sync_Mutex_T_new_0">
+      <transition id="std_sync_Mutex_T_new_0_CALL">
         <name>
-          <text>std_sync_Mutex_T_new_0</text>
+          <text>std_sync_Mutex_T_new_0_CALL</text>
         </name>
       </transition>
-      <arc source="MUTEX_0" target="std_sync_Mutex_T_lock_0" id="(MUTEX_0, std_sync_Mutex_T_lock_0)">
+      <arc source="MUTEX_0" target="std_sync_Mutex_T_lock_0_CALL" id="(MUTEX_0, std_sync_Mutex_T_lock_0_CALL)">
         <name>
-          <text>(MUTEX_0, std_sync_Mutex_T_lock_0)</text>
+          <text>(MUTEX_0, std_sync_Mutex_T_lock_0_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="MUTEX_0" target="std_sync_Mutex_T_lock_1" id="(MUTEX_0, std_sync_Mutex_T_lock_1)">
+      <arc source="MUTEX_0" target="std_sync_Mutex_T_lock_1_CALL" id="(MUTEX_0, std_sync_Mutex_T_lock_1_CALL)">
         <name>
-          <text>(MUTEX_0, std_sync_Mutex_T_lock_1)</text>
+          <text>(MUTEX_0, std_sync_Mutex_T_lock_1_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="PROGRAM_START" target="std_sync_Mutex_T_new_0" id="(PROGRAM_START, std_sync_Mutex_T_new_0)">
+      <arc source="PROGRAM_START" target="std_sync_Mutex_T_new_0_CALL" id="(PROGRAM_START, std_sync_Mutex_T_new_0_CALL)">
         <name>
-          <text>(PROGRAM_START, std_sync_Mutex_T_new_0)</text>
+          <text>(PROGRAM_START, std_sync_Mutex_T_new_0_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -165,9 +165,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB1_END_PLACE" target="std_sync_Mutex_T_lock_0" id="(main_BB1_END_PLACE, std_sync_Mutex_T_lock_0)">
+      <arc source="main_BB1_END_PLACE" target="std_sync_Mutex_T_lock_0_CALL" id="(main_BB1_END_PLACE, std_sync_Mutex_T_lock_0_CALL)">
         <name>
-          <text>(main_BB1_END_PLACE, std_sync_Mutex_T_lock_0)</text>
+          <text>(main_BB1_END_PLACE, std_sync_Mutex_T_lock_0_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -181,17 +181,17 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB2_END_PLACE" target="std_sync_Mutex_T_lock_1" id="(main_BB2_END_PLACE, std_sync_Mutex_T_lock_1)">
+      <arc source="main_BB2_END_PLACE" target="std_sync_Mutex_T_lock_1_CALL" id="(main_BB2_END_PLACE, std_sync_Mutex_T_lock_1_CALL)">
         <name>
-          <text>(main_BB2_END_PLACE, std_sync_Mutex_T_lock_1)</text>
+          <text>(main_BB2_END_PLACE, std_sync_Mutex_T_lock_1_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB2_END_PLACE" target="std_sync_Mutex_T_lock_1_UNWIND" id="(main_BB2_END_PLACE, std_sync_Mutex_T_lock_1_UNWIND)">
+      <arc source="main_BB2_END_PLACE" target="std_sync_Mutex_T_lock_1_CALL_UNWIND" id="(main_BB2_END_PLACE, std_sync_Mutex_T_lock_1_CALL_UNWIND)">
         <name>
-          <text>(main_BB2_END_PLACE, std_sync_Mutex_T_lock_1_UNWIND)</text>
+          <text>(main_BB2_END_PLACE, std_sync_Mutex_T_lock_1_CALL_UNWIND)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -333,33 +333,33 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_sync_Mutex_T_lock_0" target="main_BB2" id="(std_sync_Mutex_T_lock_0, main_BB2)">
+      <arc source="std_sync_Mutex_T_lock_0_CALL" target="main_BB2" id="(std_sync_Mutex_T_lock_0_CALL, main_BB2)">
         <name>
-          <text>(std_sync_Mutex_T_lock_0, main_BB2)</text>
+          <text>(std_sync_Mutex_T_lock_0_CALL, main_BB2)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_sync_Mutex_T_lock_1" target="main_BB3" id="(std_sync_Mutex_T_lock_1, main_BB3)">
+      <arc source="std_sync_Mutex_T_lock_1_CALL" target="main_BB3" id="(std_sync_Mutex_T_lock_1_CALL, main_BB3)">
         <name>
-          <text>(std_sync_Mutex_T_lock_1, main_BB3)</text>
+          <text>(std_sync_Mutex_T_lock_1_CALL, main_BB3)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_sync_Mutex_T_lock_1_UNWIND" target="main_BB6" id="(std_sync_Mutex_T_lock_1_UNWIND, main_BB6)">
+      <arc source="std_sync_Mutex_T_lock_1_CALL_UNWIND" target="main_BB6" id="(std_sync_Mutex_T_lock_1_CALL_UNWIND, main_BB6)">
         <name>
-          <text>(std_sync_Mutex_T_lock_1_UNWIND, main_BB6)</text>
+          <text>(std_sync_Mutex_T_lock_1_CALL_UNWIND, main_BB6)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_sync_Mutex_T_new_0" target="main_BB1" id="(std_sync_Mutex_T_new_0, main_BB1)">
+      <arc source="std_sync_Mutex_T_new_0_CALL" target="main_BB1" id="(std_sync_Mutex_T_new_0_CALL, main_BB1)">
         <name>
-          <text>(std_sync_Mutex_T_new_0, main_BB1)</text>
+          <text>(std_sync_Mutex_T_new_0_CALL, main_BB1)</text>
         </name>
         <inscription>
           <text>1</text>

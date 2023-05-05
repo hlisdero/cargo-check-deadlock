@@ -12,20 +12,20 @@ digraph petrinet {
     main_DROP_2 [shape="box" xlabel="" label="main_DROP_2"];
     main_RETURN [shape="box" xlabel="" label="main_RETURN"];
     main__closure_0__RETURN [shape="box" xlabel="" label="main__closure_0__RETURN"];
-    std_thread_JoinHandle_T_join_0 [shape="box" xlabel="" label="std_thread_JoinHandle_T_join_0"];
-    std_thread_spawn_0 [shape="box" xlabel="" label="std_thread_spawn_0"];
-    PROGRAM_START -> std_thread_spawn_0;
-    THREAD_0_END -> std_thread_JoinHandle_T_join_0;
+    std_thread_JoinHandle_T_join_0_CALL [shape="box" xlabel="" label="std_thread_JoinHandle_T_join_0_CALL"];
+    std_thread_spawn_0_CALL [shape="box" xlabel="" label="std_thread_spawn_0_CALL"];
+    PROGRAM_START -> std_thread_spawn_0_CALL;
+    THREAD_0_END -> std_thread_JoinHandle_T_join_0_CALL;
     THREAD_0_START -> main__closure_0__RETURN;
     main_BB1 -> main_BB1_STMT0;
-    main_BB1_END_PLACE -> std_thread_JoinHandle_T_join_0;
+    main_BB1_END_PLACE -> std_thread_JoinHandle_T_join_0_CALL;
     main_BB2 -> main_DROP_2;
     main_BB3 -> main_RETURN;
     main_BB1_STMT0 -> main_BB1_END_PLACE;
     main_DROP_2 -> main_BB3;
     main_RETURN -> PROGRAM_END;
     main__closure_0__RETURN -> THREAD_0_END;
-    std_thread_JoinHandle_T_join_0 -> main_BB2;
-    std_thread_spawn_0 -> THREAD_0_START;
-    std_thread_spawn_0 -> main_BB1;
+    std_thread_JoinHandle_T_join_0_CALL -> main_BB2;
+    std_thread_spawn_0_CALL -> THREAD_0_START;
+    std_thread_spawn_0_CALL -> main_BB1;
 }

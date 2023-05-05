@@ -31,13 +31,13 @@ TRANSITION main__closure_0__RETURN
     THREAD_0_START : 1;
   PRODUCE
     THREAD_0_END : 1;
-TRANSITION std_thread_JoinHandle_T_join_0
+TRANSITION std_thread_JoinHandle_T_join_0_CALL
   CONSUME
     THREAD_0_END : 1,
     main_BB1_END_PLACE : 1;
   PRODUCE
     main_BB2 : 1;
-TRANSITION std_thread_spawn_0
+TRANSITION std_thread_spawn_0_CALL
   CONSUME
     PROGRAM_START : 1;
   PRODUCE

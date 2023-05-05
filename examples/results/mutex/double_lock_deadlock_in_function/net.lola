@@ -120,46 +120,46 @@ TRANSITION second_deadlock_UNWIND_7
     second_deadlock_BB7 : 1;
   PRODUCE
     PROGRAM_PANIC : 1;
-TRANSITION std_sync_Mutex_T_lock_0
+TRANSITION std_sync_Mutex_T_lock_0_CALL
   CONSUME
     MUTEX_0 : 1,
     first_deadlock_BB1_END_PLACE : 1;
   PRODUCE
     first_deadlock_BB2 : 1;
-TRANSITION std_sync_Mutex_T_lock_1
+TRANSITION std_sync_Mutex_T_lock_1_CALL
   CONSUME
     MUTEX_0 : 1,
     first_deadlock_BB2_END_PLACE : 1;
   PRODUCE
     first_deadlock_BB3 : 1;
-TRANSITION std_sync_Mutex_T_lock_1_UNWIND
+TRANSITION std_sync_Mutex_T_lock_1_CALL_UNWIND
   CONSUME
     first_deadlock_BB2_END_PLACE : 1;
   PRODUCE
     first_deadlock_BB6 : 1;
-TRANSITION std_sync_Mutex_T_lock_2
+TRANSITION std_sync_Mutex_T_lock_2_CALL
   CONSUME
     MUTEX_1 : 1,
     second_deadlock_BB1_END_PLACE : 1;
   PRODUCE
     second_deadlock_BB2 : 1;
-TRANSITION std_sync_Mutex_T_lock_3
+TRANSITION std_sync_Mutex_T_lock_3_CALL
   CONSUME
     MUTEX_1 : 1,
     second_deadlock_BB2_END_PLACE : 1;
   PRODUCE
     second_deadlock_BB3 : 1;
-TRANSITION std_sync_Mutex_T_lock_3_UNWIND
+TRANSITION std_sync_Mutex_T_lock_3_CALL_UNWIND
   CONSUME
     second_deadlock_BB2_END_PLACE : 1;
   PRODUCE
     second_deadlock_BB6 : 1;
-TRANSITION std_sync_Mutex_T_new_0
+TRANSITION std_sync_Mutex_T_new_0_CALL
   CONSUME
     PROGRAM_START : 1;
   PRODUCE
     first_deadlock_BB1 : 1;
-TRANSITION std_sync_Mutex_T_new_1
+TRANSITION std_sync_Mutex_T_new_1_CALL
   CONSUME
     main_BB1 : 1;
   PRODUCE

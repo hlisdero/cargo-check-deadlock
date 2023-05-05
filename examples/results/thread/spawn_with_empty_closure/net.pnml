@@ -70,27 +70,27 @@
           <text>main__closure_0__RETURN</text>
         </name>
       </transition>
-      <transition id="std_thread_JoinHandle_T_join_0">
+      <transition id="std_thread_JoinHandle_T_join_0_CALL">
         <name>
-          <text>std_thread_JoinHandle_T_join_0</text>
+          <text>std_thread_JoinHandle_T_join_0_CALL</text>
         </name>
       </transition>
-      <transition id="std_thread_spawn_0">
+      <transition id="std_thread_spawn_0_CALL">
         <name>
-          <text>std_thread_spawn_0</text>
+          <text>std_thread_spawn_0_CALL</text>
         </name>
       </transition>
-      <arc source="PROGRAM_START" target="std_thread_spawn_0" id="(PROGRAM_START, std_thread_spawn_0)">
+      <arc source="PROGRAM_START" target="std_thread_spawn_0_CALL" id="(PROGRAM_START, std_thread_spawn_0_CALL)">
         <name>
-          <text>(PROGRAM_START, std_thread_spawn_0)</text>
+          <text>(PROGRAM_START, std_thread_spawn_0_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="THREAD_0_END" target="std_thread_JoinHandle_T_join_0" id="(THREAD_0_END, std_thread_JoinHandle_T_join_0)">
+      <arc source="THREAD_0_END" target="std_thread_JoinHandle_T_join_0_CALL" id="(THREAD_0_END, std_thread_JoinHandle_T_join_0_CALL)">
         <name>
-          <text>(THREAD_0_END, std_thread_JoinHandle_T_join_0)</text>
+          <text>(THREAD_0_END, std_thread_JoinHandle_T_join_0_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -112,9 +112,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB1_END_PLACE" target="std_thread_JoinHandle_T_join_0" id="(main_BB1_END_PLACE, std_thread_JoinHandle_T_join_0)">
+      <arc source="main_BB1_END_PLACE" target="std_thread_JoinHandle_T_join_0_CALL" id="(main_BB1_END_PLACE, std_thread_JoinHandle_T_join_0_CALL)">
         <name>
-          <text>(main_BB1_END_PLACE, std_thread_JoinHandle_T_join_0)</text>
+          <text>(main_BB1_END_PLACE, std_thread_JoinHandle_T_join_0_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -168,25 +168,25 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_thread_JoinHandle_T_join_0" target="main_BB2" id="(std_thread_JoinHandle_T_join_0, main_BB2)">
+      <arc source="std_thread_JoinHandle_T_join_0_CALL" target="main_BB2" id="(std_thread_JoinHandle_T_join_0_CALL, main_BB2)">
         <name>
-          <text>(std_thread_JoinHandle_T_join_0, main_BB2)</text>
+          <text>(std_thread_JoinHandle_T_join_0_CALL, main_BB2)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_thread_spawn_0" target="THREAD_0_START" id="(std_thread_spawn_0, THREAD_0_START)">
+      <arc source="std_thread_spawn_0_CALL" target="THREAD_0_START" id="(std_thread_spawn_0_CALL, THREAD_0_START)">
         <name>
-          <text>(std_thread_spawn_0, THREAD_0_START)</text>
+          <text>(std_thread_spawn_0_CALL, THREAD_0_START)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_thread_spawn_0" target="main_BB1" id="(std_thread_spawn_0, main_BB1)">
+      <arc source="std_thread_spawn_0_CALL" target="main_BB1" id="(std_thread_spawn_0_CALL, main_BB1)">
         <name>
-          <text>(std_thread_spawn_0, main_BB1)</text>
+          <text>(std_thread_spawn_0_CALL, main_BB1)</text>
         </name>
         <inscription>
           <text>1</text>

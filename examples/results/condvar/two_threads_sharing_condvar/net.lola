@@ -310,103 +310,103 @@ TRANSITION main__closure_0__UNWIND_10
     main__closure_0__BB10 : 1;
   PRODUCE
     THREAD_0_END : 1;
-TRANSITION std_clone_Clone_clone_0
+TRANSITION std_clone_Clone_clone_0_CALL
   CONSUME
     main_BB3_END_PLACE : 1;
   PRODUCE
     main_BB4 : 1;
-TRANSITION std_clone_Clone_clone_0_UNWIND
+TRANSITION std_clone_Clone_clone_0_CALL_UNWIND
   CONSUME
     main_BB3_END_PLACE : 1;
   PRODUCE
     main_BB18 : 1;
-TRANSITION std_ops_DerefMut_deref_mut_0
+TRANSITION std_ops_DerefMut_deref_mut_0_CALL
   CONSUME
     main__closure_0__BB3_END_PLACE : 1;
   PRODUCE
     main__closure_0__BB4 : 1;
-TRANSITION std_ops_DerefMut_deref_mut_0_UNWIND
+TRANSITION std_ops_DerefMut_deref_mut_0_CALL_UNWIND
   CONSUME
     main__closure_0__BB3_END_PLACE : 1;
   PRODUCE
     main__closure_0__BB8 : 1;
-TRANSITION std_ops_Deref_deref_0
+TRANSITION std_ops_Deref_deref_0_CALL
   CONSUME
     main_BB6_END_PLACE : 1;
   PRODUCE
     main_BB7 : 1;
-TRANSITION std_ops_Deref_deref_0_UNWIND
+TRANSITION std_ops_Deref_deref_0_CALL_UNWIND
   CONSUME
     main_BB6_END_PLACE : 1;
   PRODUCE
     main_BB18 : 1;
-TRANSITION std_ops_Deref_deref_1
+TRANSITION std_ops_Deref_deref_1_CALL
   CONSUME
     main_BB10_END_PLACE : 1;
   PRODUCE
     main_BB11 : 1;
-TRANSITION std_ops_Deref_deref_1_UNWIND
+TRANSITION std_ops_Deref_deref_1_CALL_UNWIND
   CONSUME
     main_BB10_END_PLACE : 1;
   PRODUCE
     main_BB21 : 1;
-TRANSITION std_ops_Deref_deref_2
+TRANSITION std_ops_Deref_deref_2_CALL
   CONSUME
     main__closure_0__BB0_END_PLACE : 1;
   PRODUCE
     main__closure_0__BB1 : 1;
-TRANSITION std_ops_Deref_deref_2_UNWIND
+TRANSITION std_ops_Deref_deref_2_CALL_UNWIND
   CONSUME
     main__closure_0__BB0_END_PLACE : 1;
   PRODUCE
     main__closure_0__BB9 : 1;
-TRANSITION std_result_Result_unwrap_0
+TRANSITION std_result_Result_unwrap_0_CALL
   CONSUME
     main_BB8 : 1;
   PRODUCE
     main_BB9 : 1;
-TRANSITION std_result_Result_unwrap_0_UNWIND
+TRANSITION std_result_Result_unwrap_0_CALL_UNWIND
   CONSUME
     main_BB8 : 1;
   PRODUCE
     main_BB18 : 1;
-TRANSITION std_result_Result_unwrap_1
+TRANSITION std_result_Result_unwrap_1_CALL
   CONSUME
     main_BB13 : 1;
   PRODUCE
     main_BB14 : 1;
-TRANSITION std_result_Result_unwrap_1_UNWIND
+TRANSITION std_result_Result_unwrap_1_CALL_UNWIND
   CONSUME
     main_BB13 : 1;
   PRODUCE
     main_BB21 : 1;
-TRANSITION std_result_Result_unwrap_2
+TRANSITION std_result_Result_unwrap_2_CALL
   CONSUME
     main__closure_0__BB2 : 1;
   PRODUCE
     main__closure_0__BB3 : 1;
-TRANSITION std_result_Result_unwrap_2_UNWIND
+TRANSITION std_result_Result_unwrap_2_CALL_UNWIND
   CONSUME
     main__closure_0__BB2 : 1;
   PRODUCE
     main__closure_0__BB9 : 1;
-TRANSITION std_sync_Arc_T_new_0
+TRANSITION std_sync_Arc_T_new_0_CALL
   CONSUME
     main_BB2_END_PLACE : 1;
   PRODUCE
     main_BB3 : 1;
-TRANSITION std_sync_Condvar_new_0
+TRANSITION std_sync_Condvar_new_0_CALL
   CONSUME
     main_BB1 : 1;
   PRODUCE
     main_BB2 : 1;
-TRANSITION std_sync_Condvar_notify_one_0
+TRANSITION std_sync_Condvar_notify_one_0_CALL
   CONSUME
     main__closure_0__BB4_END_PLACE : 1;
   PRODUCE
     CONDVAR_0_P2 : 1,
     main__closure_0__BB5 : 1;
-TRANSITION std_sync_Condvar_notify_one_0_UNWIND
+TRANSITION std_sync_Condvar_notify_one_0_CALL_UNWIND
   CONSUME
     main__closure_0__BB4_END_PLACE : 1;
   PRODUCE
@@ -429,40 +429,40 @@ TRANSITION std_sync_Condvar_wait_0_UNWIND
     main_BB12_END_PLACE : 1;
   PRODUCE
     main_BB21 : 1;
-TRANSITION std_sync_Mutex_T_lock_0
+TRANSITION std_sync_Mutex_T_lock_0_CALL
   CONSUME
     MUTEX_0 : 1,
     main_BB7_END_PLACE : 1;
   PRODUCE
     main_BB8 : 1;
-TRANSITION std_sync_Mutex_T_lock_0_UNWIND
+TRANSITION std_sync_Mutex_T_lock_0_CALL_UNWIND
   CONSUME
     main_BB7_END_PLACE : 1;
   PRODUCE
     main_BB18 : 1;
-TRANSITION std_sync_Mutex_T_lock_1
+TRANSITION std_sync_Mutex_T_lock_1_CALL
   CONSUME
     MUTEX_0 : 1,
     main__closure_0__BB1_END_PLACE : 1;
   PRODUCE
     main__closure_0__BB2 : 1;
-TRANSITION std_sync_Mutex_T_lock_1_UNWIND
+TRANSITION std_sync_Mutex_T_lock_1_CALL_UNWIND
   CONSUME
     main__closure_0__BB1_END_PLACE : 1;
   PRODUCE
     main__closure_0__BB9 : 1;
-TRANSITION std_sync_Mutex_T_new_0
+TRANSITION std_sync_Mutex_T_new_0_CALL
   CONSUME
     main_BB0_END_PLACE : 1;
   PRODUCE
     main_BB1 : 1;
-TRANSITION std_thread_spawn_0
+TRANSITION std_thread_spawn_0_CALL
   CONSUME
     main_BB4_END_PLACE : 1;
   PRODUCE
     THREAD_0_START : 1,
     main_BB5 : 1;
-TRANSITION std_thread_spawn_0_UNWIND
+TRANSITION std_thread_spawn_0_CALL_UNWIND
   CONSUME
     main_BB4_END_PLACE : 1;
   PRODUCE

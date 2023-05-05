@@ -221,81 +221,81 @@
           <text>second_deadlock_UNWIND_7</text>
         </name>
       </transition>
-      <transition id="std_sync_Mutex_T_lock_0">
+      <transition id="std_sync_Mutex_T_lock_0_CALL">
         <name>
-          <text>std_sync_Mutex_T_lock_0</text>
+          <text>std_sync_Mutex_T_lock_0_CALL</text>
         </name>
       </transition>
-      <transition id="std_sync_Mutex_T_lock_1">
+      <transition id="std_sync_Mutex_T_lock_1_CALL">
         <name>
-          <text>std_sync_Mutex_T_lock_1</text>
+          <text>std_sync_Mutex_T_lock_1_CALL</text>
         </name>
       </transition>
-      <transition id="std_sync_Mutex_T_lock_1_UNWIND">
+      <transition id="std_sync_Mutex_T_lock_1_CALL_UNWIND">
         <name>
-          <text>std_sync_Mutex_T_lock_1_UNWIND</text>
+          <text>std_sync_Mutex_T_lock_1_CALL_UNWIND</text>
         </name>
       </transition>
-      <transition id="std_sync_Mutex_T_lock_2">
+      <transition id="std_sync_Mutex_T_lock_2_CALL">
         <name>
-          <text>std_sync_Mutex_T_lock_2</text>
+          <text>std_sync_Mutex_T_lock_2_CALL</text>
         </name>
       </transition>
-      <transition id="std_sync_Mutex_T_lock_3">
+      <transition id="std_sync_Mutex_T_lock_3_CALL">
         <name>
-          <text>std_sync_Mutex_T_lock_3</text>
+          <text>std_sync_Mutex_T_lock_3_CALL</text>
         </name>
       </transition>
-      <transition id="std_sync_Mutex_T_lock_3_UNWIND">
+      <transition id="std_sync_Mutex_T_lock_3_CALL_UNWIND">
         <name>
-          <text>std_sync_Mutex_T_lock_3_UNWIND</text>
+          <text>std_sync_Mutex_T_lock_3_CALL_UNWIND</text>
         </name>
       </transition>
-      <transition id="std_sync_Mutex_T_new_0">
+      <transition id="std_sync_Mutex_T_new_0_CALL">
         <name>
-          <text>std_sync_Mutex_T_new_0</text>
+          <text>std_sync_Mutex_T_new_0_CALL</text>
         </name>
       </transition>
-      <transition id="std_sync_Mutex_T_new_1">
+      <transition id="std_sync_Mutex_T_new_1_CALL">
         <name>
-          <text>std_sync_Mutex_T_new_1</text>
+          <text>std_sync_Mutex_T_new_1_CALL</text>
         </name>
       </transition>
-      <arc source="MUTEX_0" target="std_sync_Mutex_T_lock_0" id="(MUTEX_0, std_sync_Mutex_T_lock_0)">
+      <arc source="MUTEX_0" target="std_sync_Mutex_T_lock_0_CALL" id="(MUTEX_0, std_sync_Mutex_T_lock_0_CALL)">
         <name>
-          <text>(MUTEX_0, std_sync_Mutex_T_lock_0)</text>
+          <text>(MUTEX_0, std_sync_Mutex_T_lock_0_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="MUTEX_0" target="std_sync_Mutex_T_lock_1" id="(MUTEX_0, std_sync_Mutex_T_lock_1)">
+      <arc source="MUTEX_0" target="std_sync_Mutex_T_lock_1_CALL" id="(MUTEX_0, std_sync_Mutex_T_lock_1_CALL)">
         <name>
-          <text>(MUTEX_0, std_sync_Mutex_T_lock_1)</text>
+          <text>(MUTEX_0, std_sync_Mutex_T_lock_1_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="MUTEX_1" target="std_sync_Mutex_T_lock_2" id="(MUTEX_1, std_sync_Mutex_T_lock_2)">
+      <arc source="MUTEX_1" target="std_sync_Mutex_T_lock_2_CALL" id="(MUTEX_1, std_sync_Mutex_T_lock_2_CALL)">
         <name>
-          <text>(MUTEX_1, std_sync_Mutex_T_lock_2)</text>
+          <text>(MUTEX_1, std_sync_Mutex_T_lock_2_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="MUTEX_1" target="std_sync_Mutex_T_lock_3" id="(MUTEX_1, std_sync_Mutex_T_lock_3)">
+      <arc source="MUTEX_1" target="std_sync_Mutex_T_lock_3_CALL" id="(MUTEX_1, std_sync_Mutex_T_lock_3_CALL)">
         <name>
-          <text>(MUTEX_1, std_sync_Mutex_T_lock_3)</text>
+          <text>(MUTEX_1, std_sync_Mutex_T_lock_3_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="PROGRAM_START" target="std_sync_Mutex_T_new_0" id="(PROGRAM_START, std_sync_Mutex_T_new_0)">
+      <arc source="PROGRAM_START" target="std_sync_Mutex_T_new_0_CALL" id="(PROGRAM_START, std_sync_Mutex_T_new_0_CALL)">
         <name>
-          <text>(PROGRAM_START, std_sync_Mutex_T_new_0)</text>
+          <text>(PROGRAM_START, std_sync_Mutex_T_new_0_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -309,9 +309,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="first_deadlock_BB1_END_PLACE" target="std_sync_Mutex_T_lock_0" id="(first_deadlock_BB1_END_PLACE, std_sync_Mutex_T_lock_0)">
+      <arc source="first_deadlock_BB1_END_PLACE" target="std_sync_Mutex_T_lock_0_CALL" id="(first_deadlock_BB1_END_PLACE, std_sync_Mutex_T_lock_0_CALL)">
         <name>
-          <text>(first_deadlock_BB1_END_PLACE, std_sync_Mutex_T_lock_0)</text>
+          <text>(first_deadlock_BB1_END_PLACE, std_sync_Mutex_T_lock_0_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -325,17 +325,17 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="first_deadlock_BB2_END_PLACE" target="std_sync_Mutex_T_lock_1" id="(first_deadlock_BB2_END_PLACE, std_sync_Mutex_T_lock_1)">
+      <arc source="first_deadlock_BB2_END_PLACE" target="std_sync_Mutex_T_lock_1_CALL" id="(first_deadlock_BB2_END_PLACE, std_sync_Mutex_T_lock_1_CALL)">
         <name>
-          <text>(first_deadlock_BB2_END_PLACE, std_sync_Mutex_T_lock_1)</text>
+          <text>(first_deadlock_BB2_END_PLACE, std_sync_Mutex_T_lock_1_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="first_deadlock_BB2_END_PLACE" target="std_sync_Mutex_T_lock_1_UNWIND" id="(first_deadlock_BB2_END_PLACE, std_sync_Mutex_T_lock_1_UNWIND)">
+      <arc source="first_deadlock_BB2_END_PLACE" target="std_sync_Mutex_T_lock_1_CALL_UNWIND" id="(first_deadlock_BB2_END_PLACE, std_sync_Mutex_T_lock_1_CALL_UNWIND)">
         <name>
-          <text>(first_deadlock_BB2_END_PLACE, std_sync_Mutex_T_lock_1_UNWIND)</text>
+          <text>(first_deadlock_BB2_END_PLACE, std_sync_Mutex_T_lock_1_CALL_UNWIND)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -389,9 +389,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB1" target="std_sync_Mutex_T_new_1" id="(main_BB1, std_sync_Mutex_T_new_1)">
+      <arc source="main_BB1" target="std_sync_Mutex_T_new_1_CALL" id="(main_BB1, std_sync_Mutex_T_new_1_CALL)">
         <name>
-          <text>(main_BB1, std_sync_Mutex_T_new_1)</text>
+          <text>(main_BB1, std_sync_Mutex_T_new_1_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -413,9 +413,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="second_deadlock_BB1_END_PLACE" target="std_sync_Mutex_T_lock_2" id="(second_deadlock_BB1_END_PLACE, std_sync_Mutex_T_lock_2)">
+      <arc source="second_deadlock_BB1_END_PLACE" target="std_sync_Mutex_T_lock_2_CALL" id="(second_deadlock_BB1_END_PLACE, std_sync_Mutex_T_lock_2_CALL)">
         <name>
-          <text>(second_deadlock_BB1_END_PLACE, std_sync_Mutex_T_lock_2)</text>
+          <text>(second_deadlock_BB1_END_PLACE, std_sync_Mutex_T_lock_2_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -429,17 +429,17 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="second_deadlock_BB2_END_PLACE" target="std_sync_Mutex_T_lock_3" id="(second_deadlock_BB2_END_PLACE, std_sync_Mutex_T_lock_3)">
+      <arc source="second_deadlock_BB2_END_PLACE" target="std_sync_Mutex_T_lock_3_CALL" id="(second_deadlock_BB2_END_PLACE, std_sync_Mutex_T_lock_3_CALL)">
         <name>
-          <text>(second_deadlock_BB2_END_PLACE, std_sync_Mutex_T_lock_3)</text>
+          <text>(second_deadlock_BB2_END_PLACE, std_sync_Mutex_T_lock_3_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="second_deadlock_BB2_END_PLACE" target="std_sync_Mutex_T_lock_3_UNWIND" id="(second_deadlock_BB2_END_PLACE, std_sync_Mutex_T_lock_3_UNWIND)">
+      <arc source="second_deadlock_BB2_END_PLACE" target="std_sync_Mutex_T_lock_3_CALL_UNWIND" id="(second_deadlock_BB2_END_PLACE, std_sync_Mutex_T_lock_3_CALL_UNWIND)">
         <name>
-          <text>(second_deadlock_BB2_END_PLACE, std_sync_Mutex_T_lock_3_UNWIND)</text>
+          <text>(second_deadlock_BB2_END_PLACE, std_sync_Mutex_T_lock_3_CALL_UNWIND)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -677,65 +677,65 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_sync_Mutex_T_lock_0" target="first_deadlock_BB2" id="(std_sync_Mutex_T_lock_0, first_deadlock_BB2)">
+      <arc source="std_sync_Mutex_T_lock_0_CALL" target="first_deadlock_BB2" id="(std_sync_Mutex_T_lock_0_CALL, first_deadlock_BB2)">
         <name>
-          <text>(std_sync_Mutex_T_lock_0, first_deadlock_BB2)</text>
+          <text>(std_sync_Mutex_T_lock_0_CALL, first_deadlock_BB2)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_sync_Mutex_T_lock_1" target="first_deadlock_BB3" id="(std_sync_Mutex_T_lock_1, first_deadlock_BB3)">
+      <arc source="std_sync_Mutex_T_lock_1_CALL" target="first_deadlock_BB3" id="(std_sync_Mutex_T_lock_1_CALL, first_deadlock_BB3)">
         <name>
-          <text>(std_sync_Mutex_T_lock_1, first_deadlock_BB3)</text>
+          <text>(std_sync_Mutex_T_lock_1_CALL, first_deadlock_BB3)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_sync_Mutex_T_lock_1_UNWIND" target="first_deadlock_BB6" id="(std_sync_Mutex_T_lock_1_UNWIND, first_deadlock_BB6)">
+      <arc source="std_sync_Mutex_T_lock_1_CALL_UNWIND" target="first_deadlock_BB6" id="(std_sync_Mutex_T_lock_1_CALL_UNWIND, first_deadlock_BB6)">
         <name>
-          <text>(std_sync_Mutex_T_lock_1_UNWIND, first_deadlock_BB6)</text>
+          <text>(std_sync_Mutex_T_lock_1_CALL_UNWIND, first_deadlock_BB6)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_sync_Mutex_T_lock_2" target="second_deadlock_BB2" id="(std_sync_Mutex_T_lock_2, second_deadlock_BB2)">
+      <arc source="std_sync_Mutex_T_lock_2_CALL" target="second_deadlock_BB2" id="(std_sync_Mutex_T_lock_2_CALL, second_deadlock_BB2)">
         <name>
-          <text>(std_sync_Mutex_T_lock_2, second_deadlock_BB2)</text>
+          <text>(std_sync_Mutex_T_lock_2_CALL, second_deadlock_BB2)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_sync_Mutex_T_lock_3" target="second_deadlock_BB3" id="(std_sync_Mutex_T_lock_3, second_deadlock_BB3)">
+      <arc source="std_sync_Mutex_T_lock_3_CALL" target="second_deadlock_BB3" id="(std_sync_Mutex_T_lock_3_CALL, second_deadlock_BB3)">
         <name>
-          <text>(std_sync_Mutex_T_lock_3, second_deadlock_BB3)</text>
+          <text>(std_sync_Mutex_T_lock_3_CALL, second_deadlock_BB3)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_sync_Mutex_T_lock_3_UNWIND" target="second_deadlock_BB6" id="(std_sync_Mutex_T_lock_3_UNWIND, second_deadlock_BB6)">
+      <arc source="std_sync_Mutex_T_lock_3_CALL_UNWIND" target="second_deadlock_BB6" id="(std_sync_Mutex_T_lock_3_CALL_UNWIND, second_deadlock_BB6)">
         <name>
-          <text>(std_sync_Mutex_T_lock_3_UNWIND, second_deadlock_BB6)</text>
+          <text>(std_sync_Mutex_T_lock_3_CALL_UNWIND, second_deadlock_BB6)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_sync_Mutex_T_new_0" target="first_deadlock_BB1" id="(std_sync_Mutex_T_new_0, first_deadlock_BB1)">
+      <arc source="std_sync_Mutex_T_new_0_CALL" target="first_deadlock_BB1" id="(std_sync_Mutex_T_new_0_CALL, first_deadlock_BB1)">
         <name>
-          <text>(std_sync_Mutex_T_new_0, first_deadlock_BB1)</text>
+          <text>(std_sync_Mutex_T_new_0_CALL, first_deadlock_BB1)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_sync_Mutex_T_new_1" target="second_deadlock_BB1" id="(std_sync_Mutex_T_new_1, second_deadlock_BB1)">
+      <arc source="std_sync_Mutex_T_new_1_CALL" target="second_deadlock_BB1" id="(std_sync_Mutex_T_new_1_CALL, second_deadlock_BB1)">
         <name>
-          <text>(std_sync_Mutex_T_new_1, second_deadlock_BB1)</text>
+          <text>(std_sync_Mutex_T_new_1_CALL, second_deadlock_BB1)</text>
         </name>
         <inscription>
           <text>1</text>
