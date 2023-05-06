@@ -12,7 +12,7 @@ use crate::data_structures::petri_net_interface::{PetriNet, TransitionRef};
 use crate::naming::condvar::wait_transition_labels;
 use crate::translator::function_call::FunctionPlaces;
 use crate::translator::mir_function::Memory;
-use crate::utils::extract_nth_argument;
+use crate::utils::extract_nth_argument_as_place;
 use log::debug;
 
 #[derive(Default)]
@@ -76,13 +76,15 @@ impl CondvarManager {
         memory: &mut Memory<'tcx>,
     ) {
         // Retrieve the lock guard from the local variable passed to the function as an argument.
-        let lock_guard = extract_nth_argument(args, 1);
+        let lock_guard = extract_nth_argument_as_place(args, 1)
+            .expect("BUG: `std::sync::Condvar::wait` should receive the first argument as a place");
         let mutex_ref = memory.get_linked_lock_guard(&lock_guard);
         // Unlock the mutex when waiting, lock it when the waiting ends.
         mutex_manager.add_unlock_guard(*mutex_ref, &wait_transitions.0, net);
         mutex_manager.add_lock_guard(*mutex_ref, &wait_transitions.1, net);
         // Retrieve the condvar from the local variable passed to the function as an argument.
-        let self_ref = extract_nth_argument(args, 0);
+        let self_ref = extract_nth_argument_as_place(args, 0)
+            .expect("BUG: `std::sync::Condvar::wait` should receive the self reference as a place");
         let condvar_ref = memory.get_linked_condvar(&self_ref);
         self.link_to_wait_call(*condvar_ref, wait_transitions, net);
         // The return value contains the lock guard passed to the function. Link the local variable to it.
@@ -101,7 +103,9 @@ impl CondvarManager {
         memory: &mut Memory<'tcx>,
     ) {
         // Retrieve the condvar from the local variable passed to the function as an argument.
-        let self_ref = extract_nth_argument(args, 0);
+        let self_ref = extract_nth_argument_as_place(args, 0).expect(
+            "BUG: `std::sync::Condvar::notify_one` should receive the self reference as a place",
+        );
         let condvar_ref = memory.get_linked_condvar(&self_ref);
         self.link_to_notify_one_call(*condvar_ref, notify_one_transition, net);
     }

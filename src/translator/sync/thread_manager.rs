@@ -12,7 +12,7 @@ use crate::translator::mir_function::{
     CondvarEntries, JoinHandleEntries, LockGuardEntries, Memory, MutexEntries,
 };
 use crate::utils::{
-    extract_closure, extract_def_id_of_called_function_from_operand, extract_nth_argument,
+    extract_closure, extract_def_id_of_called_function_from_operand, extract_nth_argument_as_place,
 };
 use log::{debug, info};
 use std::collections::VecDeque;
@@ -78,7 +78,9 @@ impl ThreadManager {
         memory: &Memory<'tcx>,
     ) {
         // Retrieve the join handle from the local variable passed to the function as an argument.
-        let self_ref = extract_nth_argument(args, 0);
+        let self_ref = extract_nth_argument_as_place(args, 0).expect(
+            "BUG: `std::thread::JoinHandle::<T>::join` should receive the self reference as a place",
+        );
         let thread_ref = memory.get_linked_join_handle(&self_ref);
         self.set_join_transition(*thread_ref, transition_function_call);
     }

@@ -6,7 +6,7 @@
 use super::mutex::Mutex;
 use crate::data_structures::petri_net_interface::{PetriNet, TransitionRef};
 use crate::translator::mir_function::Memory;
-use crate::utils::extract_nth_argument;
+use crate::utils::extract_nth_argument_as_place;
 use log::debug;
 
 #[derive(Default)]
@@ -53,7 +53,9 @@ impl MutexManager {
         memory: &mut Memory<'tcx>,
     ) {
         // Retrieve the mutex from the local variable passed to the function as an argument.
-        let self_ref = extract_nth_argument(args, 0);
+        let self_ref = extract_nth_argument_as_place(args, 0).expect(
+            "BUG: `std::sync::Mutex::<T>::lock` should receive the self reference as a place",
+        );
         let mutex_ref = memory.get_linked_mutex(&self_ref);
         self.add_lock_guard(*mutex_ref, transition_function_call, net);
         // The return value contains a new lock guard. Link the local variable to it.

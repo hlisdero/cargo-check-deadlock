@@ -50,32 +50,6 @@ pub fn extract_def_id_of_called_function_from_operand<'tcx>(
 /// For example: The call `mutex.lock()` desugars to `std::sync::Mutex::lock(&mutex)`
 /// where `&self` is the first argument.
 ///
-/// # Panics
-///
-/// If the argument passed to the function is a constant, then the function panics.
-pub fn extract_nth_argument<'tcx>(
-    args: &[rustc_middle::mir::Operand<'tcx>],
-    index: usize,
-) -> rustc_middle::mir::Place<'tcx> {
-    let operand = args
-        .get(index)
-        .expect("BUG: Function should receive at least `index` arguments");
-
-    match operand {
-        rustc_middle::mir::Operand::Move(place) | rustc_middle::mir::Operand::Copy(place) => *place,
-        rustc_middle::mir::Operand::Constant(_) => {
-            panic!("BUG: Function should not receive arguments passed as constants");
-        }
-    }
-}
-
-/// Extracts the n-th argument from the arguments for the function call.
-/// Returns the place corresponding to that argument.
-///
-/// This is also useful for obtaining the self reference for method calls.
-/// For example: The call `mutex.lock()` desugars to `std::sync::Mutex::lock(&mutex)`
-/// where `&self` is the first argument.
-///
 /// If the argument can not be found (the array is shorter than the `index` argument)
 /// or the argument is a constant (which does not have a `Place` representation),
 /// then the function returns `None`.
