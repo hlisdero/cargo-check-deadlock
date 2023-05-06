@@ -18,7 +18,6 @@ mod statement;
 mod terminator;
 
 use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef};
-use crate::translator::function_call::FunctionPlaces;
 use basic_block::BasicBlock;
 use std::collections::HashMap;
 
@@ -192,41 +191,22 @@ impl<'tcx> MirFunction<'tcx> {
     }
 
     /// Returns the start place for a function call, i.e., the end place of the current active block.
+    /// Clones the place reference to simplify using it.
     pub fn get_start_place_for_function_call(&self) -> PlaceRef {
         let active_block = self.get_active_block();
         active_block.end_place.clone()
     }
 
-    /// Returns a 3-tuple of the form `(start_place, end_place, cleanup_place)`
-    /// where:
-    ///  - `start_place` is the end place of the currently active basic block.
-    ///  - `end_place` is the start place of the block with the given block number,
-    ///     which is added to the function if it is not present already.
-    ///  - `cleanup_place` (optional) is the place for cleanups in case the function call unwinds.
-    ///     Usually foreign function calls have this.
-    ///
-    /// Clones the references to simplify using them.
-    pub fn get_place_refs_for_function_call(
+    /// Returns the end place for a function call, i.e., the start place of the given block number.
+    /// Adds the basic block it if it is not present already.
+    /// Clones the place reference to simplify using it.
+    pub fn get_end_place_for_function_call(
         &mut self,
         block_number: rustc_middle::mir::BasicBlock,
-        unwind: rustc_middle::mir::UnwindAction,
         net: &mut PetriNet,
-    ) -> FunctionPlaces {
-        let active_block = self.get_active_block();
-        let start_place = active_block.end_place.clone();
-
+    ) -> PlaceRef {
         let return_block = self.get_or_add_basic_block(block_number, net);
-        let end_place = return_block.start_place.clone();
-
-        let cleanup_place =
-            if let rustc_middle::mir::UnwindAction::Cleanup(cleanup_block_number) = unwind {
-                let cleanup_block = self.get_or_add_basic_block(cleanup_block_number, net);
-                Some(cleanup_block.start_place.clone())
-            } else {
-                None
-            };
-
-        (start_place, end_place, cleanup_place)
+        return_block.start_place.clone()
     }
 
     /// Adds a statement to the active basic block.

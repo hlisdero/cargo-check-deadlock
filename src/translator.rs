@@ -209,8 +209,15 @@ impl<'tcx> Translator<'tcx> {
             return;
         };
 
-        let place_refs_for_function_call =
-            current_function.get_place_refs_for_function_call(return_block, unwind, &mut self.net);
+        let start_place = current_function.get_start_place_for_function_call();
+        let end_place =
+            current_function.get_end_place_for_function_call(return_block, &mut self.net);
+        let cleanup_place = if let rustc_middle::mir::UnwindAction::Cleanup(cleanup_block) = unwind
+        {
+            Some(current_function.get_end_place_for_function_call(cleanup_block, &mut self.net))
+        } else {
+            None
+        };
 
         let function_call = FunctionCall::new(function_def_id, self.tcx);
         self.start_function_call(
@@ -218,7 +225,7 @@ impl<'tcx> Translator<'tcx> {
             function_def_id,
             args,
             destination,
-            place_refs_for_function_call,
+            (start_place, end_place, cleanup_place),
         );
     }
 
