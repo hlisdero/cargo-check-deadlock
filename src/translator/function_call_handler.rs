@@ -6,7 +6,6 @@ use crate::naming::function::foreign_call_transition_labels;
 use crate::translator::function_call::{FunctionCall, FunctionPlaces};
 use crate::translator::special_function::call_foreign_function;
 use crate::translator::sync::link_return_value_if_sync_variable;
-use crate::utils::extract_nth_argument;
 use log::info;
 
 impl<'tcx> Translator<'tcx> {
@@ -258,11 +257,12 @@ impl<'tcx> Translator<'tcx> {
         self.call_foreign_function(function_name, function_call_places);
 
         let current_function = self.call_stack.peek_mut();
-        let self_ref = extract_nth_argument(args, 0);
-        if current_function.memory.is_linked_to_lock_guard(self_ref) {
-            current_function
-                .memory
-                .link_place_to_same_lock_guard(destination, self_ref);
-        }
+        link_return_value_if_sync_variable(
+            args,
+            destination,
+            &mut current_function.memory,
+            current_function.def_id,
+            self.tcx,
+        );
     }
 }
