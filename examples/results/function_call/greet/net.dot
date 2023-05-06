@@ -74,7 +74,7 @@ digraph petrinet {
     std_ops_Index_index_0_CALL_UNWIND [shape="box" xlabel="" label="std_ops_Index_index_0_CALL_UNWIND"];
     std_ops_Index_index_1_CALL [shape="box" xlabel="" label="std_ops_Index_index_1_CALL"];
     std_ops_Index_index_1_CALL_UNWIND [shape="box" xlabel="" label="std_ops_Index_index_1_CALL_UNWIND"];
-    std_process_exit_DIVERGING_CALL [shape="box" xlabel="" label="std_process_exit_DIVERGING_CALL"];
+    std_process_exit_0_CALL [shape="box" xlabel="" label="std_process_exit_0_CALL"];
     std_vec_Vec_T_A_len_0_CALL [shape="box" xlabel="" label="std_vec_Vec_T_A_len_0_CALL"];
     std_vec_Vec_T_A_len_0_CALL_UNWIND [shape="box" xlabel="" label="std_vec_Vec_T_A_len_0_CALL_UNWIND"];
     PROGRAM_START -> std_env_args_0_CALL;
@@ -116,7 +116,7 @@ digraph petrinet {
     main_BB6_STMT1_END -> main_BB6_STMT2;
     main_BB7 -> std_io__eprint_0_CALL;
     main_BB7 -> std_io__eprint_0_CALL_UNWIND;
-    main_BB8 -> std_process_exit_DIVERGING_CALL;
+    main_BB8 -> std_process_exit_0_CALL;
     main_BB9 -> main_BB9_STMT0;
     main_BB9_END_PLACE -> std_ops_Index_index_1_CALL;
     main_BB9_END_PLACE -> std_ops_Index_index_1_CALL_UNWIND;
@@ -160,6 +160,7 @@ digraph petrinet {
     std_ops_Index_index_0_CALL_UNWIND -> main_BB15;
     std_ops_Index_index_1_CALL -> main_BB10;
     std_ops_Index_index_1_CALL_UNWIND -> main_BB15;
+    std_process_exit_0_CALL -> main_BB15;
     std_vec_Vec_T_A_len_0_CALL -> main_BB3;
     std_vec_Vec_T_A_len_0_CALL_UNWIND -> main_BB15;
 }

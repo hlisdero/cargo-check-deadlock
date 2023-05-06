@@ -186,12 +186,12 @@ impl<'tcx> Translator<'tcx> {
         let function_def_id =
             extract_def_id_of_called_function_from_operand(func, current_function.def_id, self.tcx);
         let function_name = self.tcx.def_path_str(function_def_id);
+        let start_place = current_function.get_start_place_for_function_call();
         info!("Encountered function call: {function_name}");
 
         if is_panic_function(&function_name) {
             // Function call which starts an abnormal termination of the program.
             // Non-recursive call for the translation process.
-            let start_place = current_function.get_start_place_for_function_call();
             call_panic_function(
                 &start_place,
                 &self.program_panic,
@@ -201,22 +201,63 @@ impl<'tcx> Translator<'tcx> {
             return;
         }
 
-        let Some(return_block) = target else {
-            // Call to a function which does not return (Return type: -> !).
-            // Non-recursive call for the translation process.
-            let start_place = current_function.get_start_place_for_function_call();
-            call_diverging_function(&start_place, &function_name, &mut self.net);
-            return;
-        };
-
-        let start_place = current_function.get_start_place_for_function_call();
-        let end_place =
-            current_function.get_end_place_for_function_call(return_block, &mut self.net);
-        let cleanup_place = if let rustc_middle::mir::UnwindAction::Cleanup(cleanup_block) = unwind
-        {
-            Some(current_function.get_end_place_for_function_call(cleanup_block, &mut self.net))
-        } else {
-            None
+        // Depending on whether a return or a unwind for the function are present,
+        // we have different possibilities for the function call end place and the (optional) cleanup place.
+        let (end_place, cleanup_place) = match (target, unwind) {
+            (Some(return_block), rustc_middle::mir::UnwindAction::Continue) => {
+                // MIR function or foreign function calls without a cleanup block.
+                let end_place =
+                    current_function.get_end_place_for_function_call(return_block, &mut self.net);
+                (end_place, None)
+            }
+            (Some(return_block), rustc_middle::mir::UnwindAction::Cleanup(cleanup_block)) => {
+                // The usual foreign function call case.
+                let end_place =
+                    current_function.get_end_place_for_function_call(return_block, &mut self.net);
+                let cleanup_place =
+                    current_function.get_end_place_for_function_call(cleanup_block, &mut self.net);
+                (end_place, Some(cleanup_place))
+            }
+            (Some(return_block), rustc_middle::mir::UnwindAction::Terminate) => {
+                // Specific foreign function calls that terminate the program (abort).
+                let end_place =
+                    current_function.get_end_place_for_function_call(return_block, &mut self.net);
+                // Connect cleanup to panic place
+                (end_place, Some(self.program_panic.clone()))
+            }
+            (None, rustc_middle::mir::UnwindAction::Terminate) => {
+                // Foreign function calls that simply terminate the program.
+                (self.program_panic.clone(), None)
+            }
+            (None, rustc_middle::mir::UnwindAction::Cleanup(cleanup_block)) => {
+                // A very special case seen in functions like `std::process::exit`
+                // where the return block is actually expressed as a cleanup.
+                // This needs to be modelled differently than a diverging function.
+                let end_place =
+                    current_function.get_end_place_for_function_call(cleanup_block, &mut self.net);
+                (end_place, None)
+            }
+            (None, rustc_middle::mir::UnwindAction::Continue) => {
+                // Call to a function which does not return (Return type: -> !).
+                // Non-recursive call for the translation process.
+                call_diverging_function(&start_place, &function_name, &mut self.net);
+                return;
+            }
+            (Some(return_block), rustc_middle::mir::UnwindAction::Unreachable) => {
+                // Support the unreachable case simply by matching the cleanup place to the program end place.
+                // This is a compromise solution to avoid polluting the panic state with these extraneous states
+                // that are actually not reachable during execution.
+                let end_place =
+                    current_function.get_end_place_for_function_call(return_block, &mut self.net);
+                // Connect cleanup to program end place.
+                (end_place, Some(self.program_end.clone()))
+            }
+            (None, rustc_middle::mir::UnwindAction::Unreachable) => {
+                // Support the unreachable case simply by matching the cleanup place to the program end place.
+                // This is a compromise solution to avoid polluting the panic state with these extraneous states
+                // that are actually not reachable during execution.
+                (self.program_end.clone(), None)
+            }
         };
 
         let function_call = FunctionCall::new(function_def_id, self.tcx);

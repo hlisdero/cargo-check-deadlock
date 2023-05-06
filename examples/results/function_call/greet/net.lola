@@ -237,9 +237,11 @@ TRANSITION std_ops_Index_index_1_CALL_UNWIND
     main_BB9_END_PLACE : 1;
   PRODUCE
     main_BB15 : 1;
-TRANSITION std_process_exit_DIVERGING_CALL
+TRANSITION std_process_exit_0_CALL
   CONSUME
     main_BB8 : 1;
+  PRODUCE
+    main_BB15 : 1;
 TRANSITION std_vec_Vec_T_A_len_0_CALL
   CONSUME
     main_BB2_END_PLACE : 1;
