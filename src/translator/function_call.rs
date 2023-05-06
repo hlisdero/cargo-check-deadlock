@@ -9,12 +9,6 @@ pub type FunctionPlaces = (PlaceRef, PlaceRef, Option<PlaceRef>);
 
 /// Types of function calls that the translator supports.
 pub enum FunctionCall {
-    /// Call to `std::sync::Arc::<T>::new`
-    /// Non-recursive call for the translation process.
-    ArcNew,
-    /// Call to `std::clone::Clone::clone`
-    /// Non-recursive call for the translation process.
-    Clone,
     /// Call to `std::sync::Condvar::new`
     /// Non-recursive call for the translation process.
     CondVarNew,
@@ -24,15 +18,12 @@ pub enum FunctionCall {
     /// Call to `std::sync::Condvar::wait`
     /// Non-recursive call for the translation process.
     CondVarWait,
-    /// Call to `std::ops::Deref::deref`
-    /// Non-recursive call for the translation process.
-    Deref,
-    /// Call to `std::ops::DerefMut::deref_mut`
-    /// Non-recursive call for the translation process.
-    DerefMut,
     /// Abridged function call.
     /// Non-recursive call for the translation process.
     Foreign,
+    /// Abridged function call that involves a synchronization primitive.
+    /// Non-recursive call for the translation process.
+    ForeignWithSyncPrimitive,
     /// MIR function call (the "default" case).
     /// Recursive call for the translation process.
     MirFunction,
@@ -48,9 +39,6 @@ pub enum FunctionCall {
     /// Call to `std::thread::spawn`.
     /// Non-recursive call for the translation process.
     ThreadSpawn,
-    /// Call to `std::result::Result::<T, E>::unwrap`.
-    /// Non-recursive call for the translation process.
-    Unwrap,
 }
 
 impl FunctionCall {
@@ -74,11 +62,11 @@ impl FunctionCall {
     /// Returns the corresponding variant for the function or `None` otherwise.
     fn is_supported_function(function_name: &str) -> Option<Self> {
         match function_name {
-            "std::clone::Clone::clone" => Some(Self::Clone),
-            "std::ops::Deref::deref" => Some(Self::Deref),
-            "std::ops::DerefMut::deref_mut" => Some(Self::DerefMut),
-            "std::result::Result::<T, E>::unwrap" => Some(Self::Unwrap),
-            "std::sync::Arc::<T>::new" => Some(Self::ArcNew),
+            "std::clone::Clone::clone"
+            | "std::ops::Deref::deref"
+            | "std::ops::DerefMut::deref_mut"
+            | "std::result::Result::<T, E>::unwrap"
+            | "std::sync::Arc::<T>::new" => Some(Self::ForeignWithSyncPrimitive),
             "std::sync::Condvar::new" => Some(Self::CondVarNew),
             "std::sync::Condvar::notify_one" => Some(Self::CondVarNotifyOne),
             "std::sync::Condvar::wait" => Some(Self::CondVarWait),

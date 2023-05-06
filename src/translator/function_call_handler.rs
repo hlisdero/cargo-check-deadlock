@@ -22,12 +22,13 @@ impl<'tcx> Translator<'tcx> {
         let function_name = self.tcx.def_path_str(function_def_id);
 
         match function_call {
-            FunctionCall::ArcNew
-            | FunctionCall::Clone
-            | FunctionCall::Deref
-            | FunctionCall::DerefMut
-            | FunctionCall::Unwrap => {
-                self.call_sync_primitive(&function_name, args, destination, &function_call_places);
+            FunctionCall::ForeignWithSyncPrimitive => {
+                self.call_foreign_function_with_sync_primitive(
+                    &function_name,
+                    args,
+                    destination,
+                    &function_call_places,
+                );
             }
             FunctionCall::CondVarNew => {
                 self.call_condvar_new(&function_name, destination, &function_call_places);
@@ -86,12 +87,12 @@ impl<'tcx> Translator<'tcx> {
         )
     }
 
-    /// Handler for the case `FunctionCall::ArcNew`.
-    /// Handler for the case `FunctionCall::Clone`.
-    /// Handler for the case `FunctionCall::Deref`.
-    /// Handler for the case `FunctionCall::DerefMut`.
-    /// Handler for the case `FunctionCall::Unwrap`.
-    fn call_sync_primitive(
+    /// Handler for the case `FunctionCall::ForeignWithSyncPrimitive`.
+    /// It is an extension of `call_foreign_function` that performs a check
+    /// to keep track of synchronization primitives.
+    /// The goal is to link the first argument of the function to its return value
+    /// in case the first argument is a mutex, lock guard, join handle or condition variable.
+    fn call_foreign_function_with_sync_primitive(
         &mut self,
         function_name: &str,
         args: &[rustc_middle::mir::Operand<'tcx>],
