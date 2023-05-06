@@ -25,7 +25,8 @@ impl<'tcx> Translator<'tcx> {
             FunctionCall::ArcNew
             | FunctionCall::Clone
             | FunctionCall::Deref
-            | FunctionCall::DerefMut => {
+            | FunctionCall::DerefMut
+            | FunctionCall::Unwrap => {
                 self.call_sync_primitive(&function_name, args, destination, &function_call_places);
             }
             FunctionCall::CondVarNew => {
@@ -58,9 +59,6 @@ impl<'tcx> Translator<'tcx> {
             FunctionCall::ThreadSpawn => {
                 self.call_thread_spawn(&function_name, args, destination, &function_call_places);
             }
-            FunctionCall::Unwrap => {
-                self.call_unwrap(&function_name, args, destination, &function_call_places);
-            }
         }
     }
 
@@ -92,6 +90,7 @@ impl<'tcx> Translator<'tcx> {
     /// Handler for the case `FunctionCall::Clone`.
     /// Handler for the case `FunctionCall::Deref`.
     /// Handler for the case `FunctionCall::DerefMut`.
+    /// Handler for the case `FunctionCall::Unwrap`.
     fn call_sync_primitive(
         &mut self,
         function_name: &str,
@@ -240,26 +239,6 @@ impl<'tcx> Translator<'tcx> {
             args,
             destination,
             transition_function_call,
-            &mut current_function.memory,
-            current_function.def_id,
-            self.tcx,
-        );
-    }
-
-    /// Handler for the the case `FunctionCall::Unwrap`.
-    fn call_unwrap(
-        &mut self,
-        function_name: &str,
-        args: &[rustc_middle::mir::Operand<'tcx>],
-        destination: rustc_middle::mir::Place<'tcx>,
-        function_call_places: &FunctionPlaces,
-    ) {
-        self.call_foreign_function(function_name, function_call_places);
-
-        let current_function = self.call_stack.peek_mut();
-        link_return_value_if_sync_variable(
-            args,
-            destination,
             &mut current_function.memory,
             current_function.def_id,
             self.tcx,
