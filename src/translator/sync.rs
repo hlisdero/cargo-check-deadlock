@@ -11,7 +11,7 @@ mod thread;
 mod thread_manager;
 
 use crate::translator::mir_function::Memory;
-use crate::utils::{check_substring_in_place_type, extract_nth_argument};
+use crate::utils::{check_substring_in_place_type, extract_nth_argument_as_place};
 
 pub use condvar::Condvar;
 pub use condvar_manager::{CondvarManager, CondvarRef};
@@ -145,6 +145,17 @@ fn generalized_link_place_if_sync_variable<'tcx>(
 /// Checks if the first argument for a function call contains a mutex, a lock guard,
 /// a join handle or a condition variable, i.e. a synchronization variable.
 /// If the first argument contains a synchronization variable, links it to the return value.
+/// If there is no first argument or it is a constant,
+/// then there is nothing to check, therefore the function simply returns.
+///
+/// Why check only the first argument?
+/// Because most function in the standard library involving synchronization primitives
+/// receive it through the first argument. For instance:
+///  * `std::clone::Clone::clone`
+///  * `std::ops::Deref::deref`
+///  * `std::ops::DerefMut::deref_mut`
+///  * `std::result::Result::<T, E>::unwrap`
+///  * `std::sync::Arc::<T>::new`
 ///
 /// Receives a reference to the memory of the caller function to
 /// link the return local variable to the synchronization variable.
@@ -155,7 +166,10 @@ pub fn link_return_value_if_sync_variable<'tcx>(
     caller_function_def_id: rustc_hir::def_id::DefId,
     tcx: rustc_middle::ty::TyCtxt<'tcx>,
 ) {
-    let first_argument = extract_nth_argument(args, 0);
+    let Some(first_argument) = extract_nth_argument_as_place(args, 0) else {
+         // Nothing to check: Either the first argument is not present or it is a constant.
+        return;
+    };
     link_if_sync_variable(
         &return_value,
         &first_argument,

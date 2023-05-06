@@ -21,9 +21,6 @@ pub enum FunctionCall {
     /// Abridged function call.
     /// Non-recursive call for the translation process.
     Foreign,
-    /// Abridged function call that involves a synchronization primitive.
-    /// Non-recursive call for the translation process.
-    ForeignWithSyncPrimitive,
     /// MIR function call (the "default" case).
     /// Recursive call for the translation process.
     MirFunction,
@@ -62,11 +59,6 @@ impl FunctionCall {
     /// Returns the corresponding variant for the function or `None` otherwise.
     fn is_supported_function(function_name: &str) -> Option<Self> {
         match function_name {
-            "std::clone::Clone::clone"
-            | "std::ops::Deref::deref"
-            | "std::ops::DerefMut::deref_mut"
-            | "std::result::Result::<T, E>::unwrap"
-            | "std::sync::Arc::<T>::new" => Some(Self::ForeignWithSyncPrimitive),
             "std::sync::Condvar::new" => Some(Self::CondVarNew),
             "std::sync::Condvar::notify_one" => Some(Self::CondVarNotifyOne),
             "std::sync::Condvar::wait" => Some(Self::CondVarWait),

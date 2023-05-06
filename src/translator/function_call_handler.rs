@@ -22,25 +22,27 @@ impl<'tcx> Translator<'tcx> {
         let function_name = self.tcx.def_path_str(function_def_id);
 
         match function_call {
-            FunctionCall::ForeignWithSyncPrimitive => {
-                self.call_foreign_function_with_sync_primitive(
+            FunctionCall::CondVarNew => {
+                self.call_condvar_new(&function_name, args, destination, &function_call_places);
+            }
+            FunctionCall::CondVarNotifyOne => {
+                self.call_condvar_notify_one(
                     &function_name,
                     args,
                     destination,
                     &function_call_places,
                 );
             }
-            FunctionCall::CondVarNew => {
-                self.call_condvar_new(&function_name, destination, &function_call_places);
-            }
-            FunctionCall::CondVarNotifyOne => {
-                self.call_condvar_notify_one(&function_name, args, &function_call_places);
-            }
             FunctionCall::CondVarWait => {
                 self.call_condvar_wait(args, destination, &function_call_places);
             }
             FunctionCall::Foreign => {
-                self.call_foreign_function(&function_name, &function_call_places);
+                self.call_foreign_function(
+                    &function_name,
+                    args,
+                    destination,
+                    &function_call_places,
+                );
             }
             FunctionCall::MirFunction => {
                 let (start_place, end_place, _) = function_call_places;
@@ -52,10 +54,10 @@ impl<'tcx> Translator<'tcx> {
                 self.call_mutex_lock(&function_name, args, destination, &function_call_places);
             }
             FunctionCall::MutexNew => {
-                self.call_mutex_new(&function_name, destination, &function_call_places);
+                self.call_mutex_new(&function_name, args, destination, &function_call_places);
             }
             FunctionCall::ThreadJoin => {
-                self.call_thread_join(&function_name, args, &function_call_places);
+                self.call_thread_join(&function_name, args, destination, &function_call_places);
             }
             FunctionCall::ThreadSpawn => {
                 self.call_thread_spawn(&function_name, args, destination, &function_call_places);
@@ -72,34 +74,25 @@ impl<'tcx> Translator<'tcx> {
     /// A separate counter is incremented every time that
     /// the function is called to generate a unique label.
     ///
+    /// Performs a check to keep track of synchronization primitives.
+    /// In case the first argument is a mutex, lock guard, join handle or condition variable,
+    /// it links the first argument of the function to its return value.
+    ///
     /// Returns the transition that represents the function call.
     fn call_foreign_function(
-        &mut self,
-        function_name: &str,
-        function_call_places: &FunctionPlaces,
-    ) -> TransitionRef {
-        let index = self.function_counter.get_count(function_name);
-        self.function_counter.increment(function_name);
-        call_foreign_function(
-            function_call_places,
-            &foreign_call_transition_labels(function_name, index),
-            &mut self.net,
-        )
-    }
-
-    /// Handler for the case `FunctionCall::ForeignWithSyncPrimitive`.
-    /// It is an extension of `call_foreign_function` that performs a check
-    /// to keep track of synchronization primitives.
-    /// The goal is to link the first argument of the function to its return value
-    /// in case the first argument is a mutex, lock guard, join handle or condition variable.
-    fn call_foreign_function_with_sync_primitive(
         &mut self,
         function_name: &str,
         args: &[rustc_middle::mir::Operand<'tcx>],
         destination: rustc_middle::mir::Place<'tcx>,
         function_call_places: &FunctionPlaces,
-    ) {
-        self.call_foreign_function(function_name, function_call_places);
+    ) -> TransitionRef {
+        let index = self.function_counter.get_count(function_name);
+        self.function_counter.increment(function_name);
+        let function_transition = call_foreign_function(
+            function_call_places,
+            &foreign_call_transition_labels(function_name, index),
+            &mut self.net,
+        );
 
         let current_function = self.call_stack.peek_mut();
         link_return_value_if_sync_variable(
@@ -109,16 +102,19 @@ impl<'tcx> Translator<'tcx> {
             current_function.def_id,
             self.tcx,
         );
+
+        function_transition
     }
 
     /// Handler for the case `FunctionCall::CondvarNew`.
     fn call_condvar_new(
         &mut self,
         function_name: &str,
+        args: &[rustc_middle::mir::Operand<'tcx>],
         destination: rustc_middle::mir::Place<'tcx>,
         function_call_places: &FunctionPlaces,
     ) {
-        self.call_foreign_function(function_name, function_call_places);
+        self.call_foreign_function(function_name, args, destination, function_call_places);
 
         let current_function = self.call_stack.peek_mut();
         self.condvar_manager.translate_side_effects_new(
@@ -133,9 +129,11 @@ impl<'tcx> Translator<'tcx> {
         &mut self,
         function_name: &str,
         args: &[rustc_middle::mir::Operand<'tcx>],
+        destination: rustc_middle::mir::Place<'tcx>,
         function_call_places: &FunctionPlaces,
     ) {
-        let notify_one_transition = self.call_foreign_function(function_name, function_call_places);
+        let notify_one_transition =
+            self.call_foreign_function(function_name, args, destination, function_call_places);
 
         let current_function = self.call_stack.peek_mut();
         self.condvar_manager.translate_side_effects_notify_one(
@@ -177,7 +175,7 @@ impl<'tcx> Translator<'tcx> {
         function_call_places: &FunctionPlaces,
     ) {
         let transition_function_call =
-            self.call_foreign_function(function_name, function_call_places);
+            self.call_foreign_function(function_name, args, destination, function_call_places);
 
         let current_function = self.call_stack.peek_mut();
         self.mutex_manager.translate_side_effects_lock(
@@ -193,10 +191,11 @@ impl<'tcx> Translator<'tcx> {
     fn call_mutex_new(
         &mut self,
         function_name: &str,
+        args: &[rustc_middle::mir::Operand<'tcx>],
         destination: rustc_middle::mir::Place<'tcx>,
         function_call_places: &FunctionPlaces,
     ) {
-        self.call_foreign_function(function_name, function_call_places);
+        self.call_foreign_function(function_name, args, destination, function_call_places);
 
         let current_function = self.call_stack.peek_mut();
         self.mutex_manager.translate_side_effects_new(
@@ -211,10 +210,11 @@ impl<'tcx> Translator<'tcx> {
         &mut self,
         function_name: &str,
         args: &[rustc_middle::mir::Operand<'tcx>],
+        destination: rustc_middle::mir::Place<'tcx>,
         function_call_places: &FunctionPlaces,
     ) {
         let transition_function_call =
-            self.call_foreign_function(function_name, function_call_places);
+            self.call_foreign_function(function_name, args, destination, function_call_places);
 
         let current_function = self.call_stack.peek();
         self.thread_manager.translate_side_effects_join(
@@ -233,7 +233,7 @@ impl<'tcx> Translator<'tcx> {
         function_call_places: &FunctionPlaces,
     ) {
         let transition_function_call =
-            self.call_foreign_function(function_name, function_call_places);
+            self.call_foreign_function(function_name, args, destination, function_call_places);
 
         let current_function = self.call_stack.peek_mut();
         self.thread_manager.translate_side_effects_spawn(

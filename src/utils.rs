@@ -69,6 +69,32 @@ pub fn extract_nth_argument<'tcx>(
     }
 }
 
+/// Extracts the n-th argument from the arguments for the function call.
+/// Returns the place corresponding to that argument.
+///
+/// This is also useful for obtaining the self reference for method calls.
+/// For example: The call `mutex.lock()` desugars to `std::sync::Mutex::lock(&mutex)`
+/// where `&self` is the first argument.
+///
+/// If the argument can not be found (the array is shorter than the `index` argument)
+/// or the argument is a constant (which does not have a `Place` representation),
+/// then the function returns `None`.
+pub fn extract_nth_argument_as_place<'tcx>(
+    args: &[rustc_middle::mir::Operand<'tcx>],
+    index: usize,
+) -> Option<rustc_middle::mir::Place<'tcx>> {
+    let Some(operand) = args.get(index) else {
+        return None;
+    };
+
+    match operand {
+        rustc_middle::mir::Operand::Move(place) | rustc_middle::mir::Operand::Copy(place) => {
+            Some(*place)
+        }
+        rustc_middle::mir::Operand::Constant(_) => None,
+    }
+}
+
 /// Extracts the closure passed as the 0-th argument to `std::thread::spawn`.
 /// Returns the place corresponding to that argument.
 ///
