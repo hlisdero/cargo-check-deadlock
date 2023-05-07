@@ -35,3 +35,12 @@ mod in_a_loop {
         "./examples/results/function_call/in_a_loop/"
     );
 }
+
+mod two_calls_same_function {
+    use super::utils;
+
+    utils::generate_tests_for_example_program!(
+        "./examples/programs/function_call/two_calls_same_function.rs",
+        "./examples/results/function_call/two_calls_same_function/"
+    );
+}
