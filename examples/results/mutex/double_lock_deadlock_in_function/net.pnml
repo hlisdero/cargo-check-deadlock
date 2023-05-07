@@ -171,6 +171,11 @@
           <text>first_deadlock_RETURN</text>
         </name>
       </transition>
+      <transition id="first_deadlock_UNWIND_6">
+        <name>
+          <text>first_deadlock_UNWIND_6</text>
+        </name>
+      </transition>
       <transition id="first_deadlock_UNWIND_7">
         <name>
           <text>first_deadlock_UNWIND_7</text>
@@ -214,6 +219,11 @@
       <transition id="second_deadlock_RETURN">
         <name>
           <text>second_deadlock_RETURN</text>
+        </name>
+      </transition>
+      <transition id="second_deadlock_UNWIND_6">
+        <name>
+          <text>second_deadlock_UNWIND_6</text>
         </name>
       </transition>
       <transition id="second_deadlock_UNWIND_7">
@@ -381,6 +391,14 @@
           <text>1</text>
         </inscription>
       </arc>
+      <arc source="first_deadlock_BB6" target="first_deadlock_UNWIND_6" id="(first_deadlock_BB6, first_deadlock_UNWIND_6)">
+        <name>
+          <text>(first_deadlock_BB6, first_deadlock_UNWIND_6)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
       <arc source="first_deadlock_BB7" target="first_deadlock_UNWIND_7" id="(first_deadlock_BB7, first_deadlock_UNWIND_7)">
         <name>
           <text>(first_deadlock_BB7, first_deadlock_UNWIND_7)</text>
@@ -485,6 +503,14 @@
           <text>1</text>
         </inscription>
       </arc>
+      <arc source="second_deadlock_BB6" target="second_deadlock_UNWIND_6" id="(second_deadlock_BB6, second_deadlock_UNWIND_6)">
+        <name>
+          <text>(second_deadlock_BB6, second_deadlock_UNWIND_6)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
       <arc source="second_deadlock_BB7" target="second_deadlock_UNWIND_7" id="(second_deadlock_BB7, second_deadlock_UNWIND_7)">
         <name>
           <text>(second_deadlock_BB7, second_deadlock_UNWIND_7)</text>
@@ -568,6 +594,14 @@
       <arc source="first_deadlock_RETURN" target="main_BB1" id="(first_deadlock_RETURN, main_BB1)">
         <name>
           <text>(first_deadlock_RETURN, main_BB1)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="first_deadlock_UNWIND_6" target="PROGRAM_PANIC" id="(first_deadlock_UNWIND_6, PROGRAM_PANIC)">
+        <name>
+          <text>(first_deadlock_UNWIND_6, PROGRAM_PANIC)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -664,6 +698,14 @@
       <arc source="second_deadlock_RETURN" target="main_BB2" id="(second_deadlock_RETURN, main_BB2)">
         <name>
           <text>(second_deadlock_RETURN, main_BB2)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="second_deadlock_UNWIND_6" target="PROGRAM_PANIC" id="(second_deadlock_UNWIND_6, PROGRAM_PANIC)">
+        <name>
+          <text>(second_deadlock_UNWIND_6, PROGRAM_PANIC)</text>
         </name>
         <inscription>
           <text>1</text>

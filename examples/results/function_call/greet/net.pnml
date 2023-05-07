@@ -305,6 +305,11 @@
           <text>main_SWITCH_INT_9</text>
         </name>
       </transition>
+      <transition id="main_UNWIND_15">
+        <name>
+          <text>main_UNWIND_15</text>
+        </name>
+      </transition>
       <transition id="main_UNWIND_16">
         <name>
           <text>main_UNWIND_16</text>
@@ -534,6 +539,14 @@
       <arc source="main_BB15" target="main_DROP_15" id="(main_BB15, main_DROP_15)">
         <name>
           <text>(main_BB15, main_DROP_15)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main_BB15" target="main_UNWIND_15" id="(main_BB15, main_UNWIND_15)">
+        <name>
+          <text>(main_BB15, main_UNWIND_15)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -934,6 +947,14 @@
       <arc source="main_SWITCH_INT_9" target="main_BB9" id="(main_SWITCH_INT_9, main_BB9)">
         <name>
           <text>(main_SWITCH_INT_9, main_BB9)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main_UNWIND_15" target="PROGRAM_PANIC" id="(main_UNWIND_15, PROGRAM_PANIC)">
+        <name>
+          <text>(main_UNWIND_15, PROGRAM_PANIC)</text>
         </name>
         <inscription>
           <text>1</text>

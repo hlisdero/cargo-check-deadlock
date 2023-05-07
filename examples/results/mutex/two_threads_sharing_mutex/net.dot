@@ -57,7 +57,10 @@ digraph petrinet {
     main_RETURN [shape="box" xlabel="" label="main_RETURN"];
     main_SWITCH_INT_12 [shape="box" xlabel="" label="main_SWITCH_INT_12"];
     main_SWITCH_INT_14 [shape="box" xlabel="" label="main_SWITCH_INT_14"];
+    main_UNWIND_11 [shape="box" xlabel="" label="main_UNWIND_11"];
+    main_UNWIND_12 [shape="box" xlabel="" label="main_UNWIND_12"];
     main_UNWIND_13 [shape="box" xlabel="" label="main_UNWIND_13"];
+    main_UNWIND_14 [shape="box" xlabel="" label="main_UNWIND_14"];
     main__closure_0__BB0_STMT0 [shape="box" xlabel="" label="main__closure_0__BB0_STMT0"];
     main__closure_0__BB1_STMT0 [shape="box" xlabel="" label="main__closure_0__BB1_STMT0"];
     main__closure_0__DROP_2 [shape="box" xlabel="" label="main__closure_0__DROP_2"];
@@ -65,6 +68,7 @@ digraph petrinet {
     main__closure_0__DROP_5 [shape="box" xlabel="" label="main__closure_0__DROP_5"];
     main__closure_0__DROP_UNWIND_2 [shape="box" xlabel="" label="main__closure_0__DROP_UNWIND_2"];
     main__closure_0__RETURN [shape="box" xlabel="" label="main__closure_0__RETURN"];
+    main__closure_0__UNWIND_5 [shape="box" xlabel="" label="main__closure_0__UNWIND_5"];
     main__closure_0__UNWIND_6 [shape="box" xlabel="" label="main__closure_0__UNWIND_6"];
     std_clone_Clone_clone_0_CALL [shape="box" xlabel="" label="std_clone_Clone_clone_0_CALL"];
     std_clone_Clone_clone_0_CALL_UNWIND [shape="box" xlabel="" label="std_clone_Clone_clone_0_CALL_UNWIND"];
@@ -91,9 +95,12 @@ digraph petrinet {
     main_BB1 -> std_sync_Arc_T_new_0_CALL;
     main_BB10 -> main_RETURN;
     main_BB11 -> main_DROP_11;
+    main_BB11 -> main_UNWIND_11;
     main_BB12 -> main_DROP_12;
+    main_BB12 -> main_UNWIND_12;
     main_BB13 -> main_UNWIND_13;
     main_BB14 -> main_DROP_14;
+    main_BB14 -> main_UNWIND_14;
     main_BB15 -> main_SWITCH_INT_12;
     main_BB15 -> main_SWITCH_INT_14;
     main_BB2 -> main_BB2_STMT0;
@@ -129,6 +136,7 @@ digraph petrinet {
     main__closure_0__BB3 -> main__closure_0__DROP_3;
     main__closure_0__BB4 -> main__closure_0__RETURN;
     main__closure_0__BB5 -> main__closure_0__DROP_5;
+    main__closure_0__BB5 -> main__closure_0__UNWIND_5;
     main__closure_0__BB6 -> main__closure_0__UNWIND_6;
     main_BB0_STMT0 -> main_BB0_END_PLACE;
     main_BB2_STMT0 -> main_BB2_END_PLACE;
@@ -152,7 +160,10 @@ digraph petrinet {
     main_RETURN -> PROGRAM_END;
     main_SWITCH_INT_12 -> main_BB12;
     main_SWITCH_INT_14 -> main_BB14;
+    main_UNWIND_11 -> PROGRAM_PANIC;
+    main_UNWIND_12 -> PROGRAM_PANIC;
     main_UNWIND_13 -> PROGRAM_PANIC;
+    main_UNWIND_14 -> PROGRAM_PANIC;
     main__closure_0__BB0_STMT0 -> main__closure_0__BB0_END_PLACE;
     main__closure_0__BB1_STMT0 -> main__closure_0__BB1_END_PLACE;
     main__closure_0__DROP_2 -> MUTEX_0;
@@ -161,6 +172,7 @@ digraph petrinet {
     main__closure_0__DROP_5 -> main__closure_0__BB6;
     main__closure_0__DROP_UNWIND_2 -> main__closure_0__BB5;
     main__closure_0__RETURN -> THREAD_0_END;
+    main__closure_0__UNWIND_5 -> THREAD_0_END;
     main__closure_0__UNWIND_6 -> THREAD_0_END;
     std_clone_Clone_clone_0_CALL -> main_BB3;
     std_clone_Clone_clone_0_CALL_UNWIND -> main_BB12;

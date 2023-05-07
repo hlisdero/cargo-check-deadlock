@@ -94,15 +94,7 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
                 place,
                 target,
                 unwind,
-            } => {
-                let transition_drop = function.drop(target, unwind, &mut self.net);
-                self.mutex_manager.handle_lock_guard_drop(
-                    place,
-                    &transition_drop,
-                    &function.memory,
-                    &mut self.net,
-                );
-            }
+            } => self.drop_terminator(place, target, unwind),
             TerminatorKind::Call {
                 ref func,
                 ref args,
@@ -120,9 +112,7 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
                 msg: _,
                 target,
                 unwind,
-            } => {
-                function.assert(target, unwind, &mut self.net);
-            }
+            } => self.assert_terminator(target, unwind),
             TerminatorKind::Yield { .. } => {
                 unimplemented!("TerminatorKind::Yield not implemented yet")
             }

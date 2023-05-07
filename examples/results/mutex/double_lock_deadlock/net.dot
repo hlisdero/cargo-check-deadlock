@@ -19,6 +19,7 @@ digraph petrinet {
     main_DROP_6 [shape="box" xlabel="" label="main_DROP_6"];
     main_DROP_UNWIND_3 [shape="box" xlabel="" label="main_DROP_UNWIND_3"];
     main_RETURN [shape="box" xlabel="" label="main_RETURN"];
+    main_UNWIND_6 [shape="box" xlabel="" label="main_UNWIND_6"];
     main_UNWIND_7 [shape="box" xlabel="" label="main_UNWIND_7"];
     std_sync_Mutex_T_lock_0_CALL [shape="box" xlabel="" label="std_sync_Mutex_T_lock_0_CALL"];
     std_sync_Mutex_T_lock_1_CALL [shape="box" xlabel="" label="std_sync_Mutex_T_lock_1_CALL"];
@@ -37,6 +38,7 @@ digraph petrinet {
     main_BB4 -> main_DROP_4;
     main_BB5 -> main_RETURN;
     main_BB6 -> main_DROP_6;
+    main_BB6 -> main_UNWIND_6;
     main_BB7 -> main_UNWIND_7;
     main_BB1_STMT0 -> main_BB1_END_PLACE;
     main_BB2_STMT0 -> main_BB2_END_PLACE;
@@ -48,6 +50,7 @@ digraph petrinet {
     main_DROP_6 -> main_BB7;
     main_DROP_UNWIND_3 -> main_BB6;
     main_RETURN -> PROGRAM_END;
+    main_UNWIND_6 -> PROGRAM_PANIC;
     main_UNWIND_7 -> PROGRAM_PANIC;
     std_sync_Mutex_T_lock_0_CALL -> main_BB2;
     std_sync_Mutex_T_lock_1_CALL -> main_BB3;

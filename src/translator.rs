@@ -270,6 +270,85 @@ impl<'tcx> Translator<'tcx> {
         );
     }
 
+    /// Handler for the enum variant `TerminatorKind::Drop` in the MIR Visitor.
+    /// <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/mir/enum.TerminatorKind.html#variant.Drop>
+    fn drop_terminator(
+        &mut self,
+        place: rustc_middle::mir::Place<'tcx>,
+        target: rustc_middle::mir::BasicBlock,
+        unwind: rustc_middle::mir::UnwindAction,
+    ) {
+        let function = self.call_stack.peek_mut();
+
+        match unwind {
+            rustc_middle::mir::UnwindAction::Cleanup(cleanup) => {
+                let transition_drop = function.drop(target, Some(cleanup), &mut self.net);
+                self.mutex_manager.handle_lock_guard_drop(
+                    place,
+                    &transition_drop,
+                    &function.memory,
+                    &mut self.net,
+                );
+            }
+            rustc_middle::mir::UnwindAction::Continue => {
+                let transition_drop = function.drop(target, None, &mut self.net);
+                self.mutex_manager.handle_lock_guard_drop(
+                    place,
+                    &transition_drop,
+                    &function.memory,
+                    &mut self.net,
+                );
+            }
+            rustc_middle::mir::UnwindAction::Terminate => {
+                let transition_drop = function.drop(target, None, &mut self.net);
+                self.mutex_manager.handle_lock_guard_drop(
+                    place,
+                    &transition_drop,
+                    &function.memory,
+                    &mut self.net,
+                );
+                function.unwind(&self.program_panic, &mut self.net);
+            }
+            rustc_middle::mir::UnwindAction::Unreachable => {
+                let transition_drop = function.drop(target, None, &mut self.net);
+                self.mutex_manager.handle_lock_guard_drop(
+                    place,
+                    &transition_drop,
+                    &function.memory,
+                    &mut self.net,
+                );
+                function.unreachable(&self.program_end, &mut self.net);
+            }
+        }
+    }
+
+    /// Handler for the enum variant `TerminatorKind::Assert` in the MIR Visitor.
+    /// <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/mir/enum.TerminatorKind.html#variant.Assert>
+    fn assert_terminator(
+        &mut self,
+        target: rustc_middle::mir::BasicBlock,
+        unwind: rustc_middle::mir::UnwindAction,
+    ) {
+        let function = self.call_stack.peek_mut();
+
+        match unwind {
+            rustc_middle::mir::UnwindAction::Cleanup(cleanup) => {
+                function.assert(target, Some(cleanup), &mut self.net);
+            }
+            rustc_middle::mir::UnwindAction::Continue => {
+                function.assert(target, None, &mut self.net);
+            }
+            rustc_middle::mir::UnwindAction::Terminate => {
+                function.assert(target, None, &mut self.net);
+                function.unwind(&self.program_panic, &mut self.net);
+            }
+            rustc_middle::mir::UnwindAction::Unreachable => {
+                function.assert(target, None, &mut self.net);
+                function.unreachable(&self.program_end, &mut self.net);
+            }
+        }
+    }
+
     /// Main translation loop for the threads.
     /// Gets a thread from the thread manager and translates it.
     /// If mutexes were passed to the thread, move them to the memory of the thread function.

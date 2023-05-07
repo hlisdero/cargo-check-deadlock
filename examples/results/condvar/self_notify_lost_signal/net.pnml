@@ -226,6 +226,11 @@
           <text>main_UNWIND_8</text>
         </name>
       </transition>
+      <transition id="main_UNWIND_9">
+        <name>
+          <text>main_UNWIND_9</text>
+        </name>
+      </transition>
       <transition id="std_result_Result_unwrap_0_CALL">
         <name>
           <text>std_result_Result_unwrap_0_CALL</text>
@@ -519,6 +524,14 @@
           <text>1</text>
         </inscription>
       </arc>
+      <arc source="main_BB9" target="main_UNWIND_9" id="(main_BB9, main_UNWIND_9)">
+        <name>
+          <text>(main_BB9, main_UNWIND_9)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
       <arc source="CONDVAR_0_T1" target="CONDVAR_0_P1" id="(CONDVAR_0_T1, CONDVAR_0_P1)">
         <name>
           <text>(CONDVAR_0_T1, CONDVAR_0_P1)</text>
@@ -674,6 +687,14 @@
       <arc source="main_UNWIND_8" target="PROGRAM_PANIC" id="(main_UNWIND_8, PROGRAM_PANIC)">
         <name>
           <text>(main_UNWIND_8, PROGRAM_PANIC)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main_UNWIND_9" target="PROGRAM_PANIC" id="(main_UNWIND_9, PROGRAM_PANIC)">
+        <name>
+          <text>(main_UNWIND_9, PROGRAM_PANIC)</text>
         </name>
         <inscription>
           <text>1</text>

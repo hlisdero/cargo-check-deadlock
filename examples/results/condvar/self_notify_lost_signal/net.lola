@@ -120,6 +120,11 @@ TRANSITION main_UNWIND_8
     main_BB8 : 1;
   PRODUCE
     PROGRAM_PANIC : 1;
+TRANSITION main_UNWIND_9
+  CONSUME
+    main_BB9 : 1;
+  PRODUCE
+    PROGRAM_PANIC : 1;
 TRANSITION std_result_Result_unwrap_0_CALL
   CONSUME
     main_BB3 : 1;

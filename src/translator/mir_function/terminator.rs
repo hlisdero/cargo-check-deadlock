@@ -49,8 +49,8 @@ impl<'tcx> MirFunction<'tcx> {
     /// of the drop terminator.
     /// Returns the transition that represents dropping the variable.
     ///
-    /// Optionally, if the unwind action contains a cleanup block, connects the active basic block to the next basic
-    /// block contained in the argument `unwind` of the drop terminator.
+    /// Optionally, if a cleanup block is present, connects the active basic block
+    /// to the next basic block identified as the argument `cleanup`.
     ///
     /// # Panics
     ///
@@ -58,13 +58,13 @@ impl<'tcx> MirFunction<'tcx> {
     pub fn drop(
         &mut self,
         target: rustc_middle::mir::BasicBlock,
-        unwind: rustc_middle::mir::UnwindAction,
+        cleanup: Option<rustc_middle::mir::BasicBlock>,
         net: &mut PetriNet,
     ) -> TransitionRef {
         let (active_block, target_block) = self.get_pair_active_block_target_block(target, net);
         let transition_drop = active_block.drop(target_block, net);
 
-        if let rustc_middle::mir::UnwindAction::Cleanup(cleanup) = unwind {
+        if let Some(cleanup) = cleanup {
             let (active_block, cleanup_block) =
                 self.get_pair_active_block_target_block(cleanup, net);
             active_block.drop_cleanup(cleanup_block, net);
@@ -74,8 +74,8 @@ impl<'tcx> MirFunction<'tcx> {
 
     /// Connects the active basic block to the next basic block identified as the argument `target`
     /// of the assert terminator.
-    /// Optionally, if the unwind action contains a cleanup block, connects the active basic block to the next basic
-    /// block contained in the argument `unwind` of the assert terminator.
+    /// Optionally, if a cleanup block is present, connects the active basic block
+    /// to the next basic block identified as the argument `cleanup`.
     ///
     /// # Panics
     ///
@@ -83,13 +83,13 @@ impl<'tcx> MirFunction<'tcx> {
     pub fn assert(
         &mut self,
         target: rustc_middle::mir::BasicBlock,
-        unwind: rustc_middle::mir::UnwindAction,
+        cleanup: Option<rustc_middle::mir::BasicBlock>,
         net: &mut PetriNet,
     ) {
         let (active_block, target_block) = self.get_pair_active_block_target_block(target, net);
         active_block.assert(target_block, net);
 
-        if let rustc_middle::mir::UnwindAction::Cleanup(cleanup) = unwind {
+        if let Some(cleanup) = cleanup {
             let (active_block, cleanup_block) =
                 self.get_pair_active_block_target_block(cleanup, net);
             active_block.assert_cleanup(cleanup_block, net);

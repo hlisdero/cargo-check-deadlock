@@ -238,9 +238,19 @@ TRANSITION main_SWITCH_INT_20
     main_BB21 : 1;
   PRODUCE
     main_BB20 : 1;
+TRANSITION main_UNWIND_18
+  CONSUME
+    main_BB18 : 1;
+  PRODUCE
+    PROGRAM_PANIC : 1;
 TRANSITION main_UNWIND_19
   CONSUME
     main_BB19 : 1;
+  PRODUCE
+    PROGRAM_PANIC : 1;
+TRANSITION main_UNWIND_20
+  CONSUME
+    main_BB20 : 1;
   PRODUCE
     PROGRAM_PANIC : 1;
 TRANSITION main__closure_0__BB0_STMT0
@@ -308,6 +318,16 @@ TRANSITION main__closure_0__RETURN
 TRANSITION main__closure_0__UNWIND_10
   CONSUME
     main__closure_0__BB10 : 1;
+  PRODUCE
+    THREAD_0_END : 1;
+TRANSITION main__closure_0__UNWIND_8
+  CONSUME
+    main__closure_0__BB8 : 1;
+  PRODUCE
+    THREAD_0_END : 1;
+TRANSITION main__closure_0__UNWIND_9
+  CONSUME
+    main__closure_0__BB9 : 1;
   PRODUCE
     THREAD_0_END : 1;
 TRANSITION std_clone_Clone_clone_0_CALL

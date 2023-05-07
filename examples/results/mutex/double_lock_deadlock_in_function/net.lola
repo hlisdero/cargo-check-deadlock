@@ -67,6 +67,11 @@ TRANSITION first_deadlock_RETURN
     first_deadlock_BB5 : 1;
   PRODUCE
     main_BB1 : 1;
+TRANSITION first_deadlock_UNWIND_6
+  CONSUME
+    first_deadlock_BB6 : 1;
+  PRODUCE
+    PROGRAM_PANIC : 1;
 TRANSITION first_deadlock_UNWIND_7
   CONSUME
     first_deadlock_BB7 : 1;
@@ -115,6 +120,11 @@ TRANSITION second_deadlock_RETURN
     second_deadlock_BB5 : 1;
   PRODUCE
     main_BB2 : 1;
+TRANSITION second_deadlock_UNWIND_6
+  CONSUME
+    second_deadlock_BB6 : 1;
+  PRODUCE
+    PROGRAM_PANIC : 1;
 TRANSITION second_deadlock_UNWIND_7
   CONSUME
     second_deadlock_BB7 : 1;
