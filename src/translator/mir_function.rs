@@ -46,12 +46,10 @@ impl<'tcx> MirFunction<'tcx> {
     /// Uses the `rustc_middle::ty::TyCtxt` to get the MIR body and the name of the function.
     pub fn new(
         def_id: rustc_hir::def_id::DefId,
+        function_name: String,
         start_place: PlaceRef,
         end_place: PlaceRef,
-        tcx: &mut rustc_middle::ty::TyCtxt,
     ) -> Self {
-        let function_name = tcx.def_path_str(def_id);
-
         Self {
             def_id,
             name: function_name,

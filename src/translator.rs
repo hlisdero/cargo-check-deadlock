@@ -134,7 +134,8 @@ impl<'tcx> Translator<'tcx> {
         start_place: PlaceRef,
         end_place: PlaceRef,
     ) {
-        let function = MirFunction::new(function_def_id, start_place, end_place, &mut self.tcx);
+        let function_name = self.tcx.def_path_str(function_def_id);
+        let function = MirFunction::new(function_def_id, function_name, start_place, end_place);
         self.call_stack.push(function);
     }
 
@@ -255,6 +256,7 @@ impl<'tcx> Translator<'tcx> {
 
         self.start_function_call(
             function_def_id,
+            &function_name,
             args,
             destination,
             (start_place, end_place, cleanup_place),

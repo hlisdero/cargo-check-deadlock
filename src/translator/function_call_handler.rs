@@ -20,14 +20,14 @@ impl<'tcx> Translator<'tcx> {
     pub fn start_function_call(
         &mut self,
         function_def_id: rustc_hir::def_id::DefId,
+        function_name: &str,
         args: &[rustc_middle::mir::Operand<'tcx>],
         destination: rustc_middle::mir::Place<'tcx>,
         function_call_places: FunctionPlaces,
     ) {
-        let function_name = self.tcx.def_path_str(function_def_id);
         // Sync or multithreading function
         if self.check_supported_sync_function(
-            &function_name,
+            function_name,
             args,
             destination,
             &function_call_places,
@@ -35,12 +35,12 @@ impl<'tcx> Translator<'tcx> {
             return;
         }
         // Default case for standard and core library calls
-        if is_foreign_function(function_def_id, self.tcx) {
-            self.call_foreign_function(&function_name, args, destination, &function_call_places);
+        if is_foreign_function(function_def_id, function_name, self.tcx) {
+            self.call_foreign_function(function_name, args, destination, &function_call_places);
             return;
         }
         // Default case: A function with MIR representation
-        self.call_mir_function(function_def_id, &function_name, function_call_places);
+        self.call_mir_function(function_def_id, function_name, function_call_places);
     }
 
     /// Checks if the function name corresponds to one of the

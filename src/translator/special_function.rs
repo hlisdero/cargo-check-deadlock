@@ -51,12 +51,12 @@ pub fn is_panic_function(function_name: &str) -> bool {
 /// - the function belongs to the exclusions listed in `FUNCTIONS_EXCLUDED_FROM_TRANSLATION`
 pub fn is_foreign_function(
     function_def_id: rustc_hir::def_id::DefId,
+    function_name: &str,
     tcx: rustc_middle::ty::TyCtxt,
 ) -> bool {
-    let function_name = tcx.def_path_str(function_def_id);
-    tcx.is_foreign_item(function_def_id)
+    is_function_excluded_from_translation(function_name)
+        || tcx.is_foreign_item(function_def_id)
         || !tcx.is_mir_available(function_def_id)
-        || is_function_excluded_from_translation(&function_name)
 }
 
 /// Creates an abridged Petri net representation of a function call.
