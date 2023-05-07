@@ -6,6 +6,7 @@
 //! For an introduction to MIR see:
 //! <https://rustc-dev-guide.rust-lang.org/mir/index.html>
 
+use super::sync::{handle_aggregate_assignment, link_if_sync_variable};
 use super::Translator;
 use rustc_middle::mir::visit::Visitor;
 use rustc_middle::mir::TerminatorKind;
@@ -24,6 +25,10 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
         self.super_basic_block_data(block, data);
     }
 
+    /// Keep track of synchronization variables in assignments
+    /// (mutex, lock guards, join handles and condition variables).
+    /// The idea is to link the right-hand side with the left-hand side of the assigment
+    /// if a synchronization variable is involved.
     fn visit_assign(
         &mut self,
         place: &rustc_middle::mir::Place<'tcx>,
@@ -31,17 +36,22 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
         location: rustc_middle::mir::Location,
     ) {
         match rvalue {
-            rustc_middle::mir::Rvalue::Use(rustc_middle::mir::Operand::Copy(rhs)) => {
-                self.handle_use_copy_assignment(place, rhs);
-            }
-            rustc_middle::mir::Rvalue::Use(rustc_middle::mir::Operand::Move(rhs)) => {
-                self.handle_use_move_assignment(place, rhs);
-            }
-            rustc_middle::mir::Rvalue::Ref(_, _, rhs) => {
-                self.handle_ref_assignment(place, rhs);
+            rustc_middle::mir::Rvalue::Use(
+                rustc_middle::mir::Operand::Copy(rhs) | rustc_middle::mir::Operand::Move(rhs),
+            )
+            | rustc_middle::mir::Rvalue::Ref(_, _, rhs) => {
+                let function = self.call_stack.peek_mut();
+                link_if_sync_variable(place, rhs, &mut function.memory, function.def_id, self.tcx);
             }
             rustc_middle::mir::Rvalue::Aggregate(_, operands) => {
-                self.handle_aggregate_assignment(place, &operands.raw);
+                let function = self.call_stack.peek_mut();
+                handle_aggregate_assignment(
+                    place,
+                    &operands.raw,
+                    &mut function.memory,
+                    function.def_id,
+                    self.tcx,
+                );
             }
             // No need to do anything for the other cases for now.
             _ => {}

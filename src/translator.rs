@@ -40,9 +40,7 @@ use log::info;
 use mir_function::MirFunction;
 use rustc_middle::mir::visit::Visitor;
 use special_function::{call_diverging_function, call_panic_function, is_panic_function};
-use sync::{
-    handle_aggregate_assignment, link_if_sync_variable, CondvarManager, MutexManager, ThreadManager,
-};
+use sync::{CondvarManager, MutexManager, ThreadManager};
 
 /// Translator error message when no main function is found in the source code.
 pub const ERR_NO_MAIN_FUNCTION_FOUND: &str = "ERROR: No main function found in the source code";
@@ -369,63 +367,5 @@ impl<'tcx> Translator<'tcx> {
             thread.move_sync_variables(&mut new_function.memory, self.tcx);
             self.translate_top_call_stack();
         }
-    }
-
-    /// Handles MIR assignments of the form: `_X = _Y`
-    /// This is the handler for the enum variant `rustc_middle::mir::Rvalue::Use` in the MIR Visitor
-    /// when the argument is of the type `rustc_middle::mir::Operand::Copy`.
-    /// <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/mir/enum.Rvalue.html#variant.Use>
-    /// <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/mir/syntax/enum.Operand.html#variant.Copy>
-    fn handle_use_copy_assignment(
-        &mut self,
-        place: &rustc_middle::mir::Place<'tcx>,
-        rhs: &rustc_middle::mir::Place<'tcx>,
-    ) {
-        let function = self.call_stack.peek_mut();
-        link_if_sync_variable(place, rhs, &mut function.memory, function.def_id, self.tcx);
-    }
-
-    /// Handles MIR assignments of the form: `_X = move _Y`
-    /// This is the handler for the enum variant `rustc_middle::mir::Rvalue::Use` in the MIR Visitor
-    /// when the argument is of the type `rustc_middle::mir::Operand::Move`.
-    /// <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/mir/enum.Rvalue.html#variant.Use>
-    /// <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/mir/syntax/enum.Operand.html#variant.Move>
-    fn handle_use_move_assignment(
-        &mut self,
-        place: &rustc_middle::mir::Place<'tcx>,
-        rhs: &rustc_middle::mir::Place<'tcx>,
-    ) {
-        let function = self.call_stack.peek_mut();
-        link_if_sync_variable(place, rhs, &mut function.memory, function.def_id, self.tcx);
-    }
-
-    /// Handles MIR assignments of the form: `_X = &_Y`
-    /// This is the handler for the enum variant `rustc_middle::mir::Rvalue::Ref` in the MIR Visitor.
-    /// <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/mir/enum.Rvalue.html#variant.Ref>
-    fn handle_ref_assignment(
-        &mut self,
-        place: &rustc_middle::mir::Place<'tcx>,
-        rhs: &rustc_middle::mir::Place<'tcx>,
-    ) {
-        let function = self.call_stack.peek_mut();
-        link_if_sync_variable(place, rhs, &mut function.memory, function.def_id, self.tcx);
-    }
-
-    /// Handles MIR assignments of the form: `_X = { copy_data: move _Y }`.
-    /// This is the handler for the enum variant `rustc_middle::mir::Rvalue::Aggregate` in the MIR Visitor.
-    /// <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/mir/enum.Rvalue.html#variant.Aggregate>
-    fn handle_aggregate_assignment(
-        &mut self,
-        place: &rustc_middle::mir::Place<'tcx>,
-        operands: &Vec<rustc_middle::mir::Operand<'tcx>>,
-    ) {
-        let function = self.call_stack.peek_mut();
-        handle_aggregate_assignment(
-            place,
-            operands,
-            &mut function.memory,
-            function.def_id,
-            self.tcx,
-        );
     }
 }
