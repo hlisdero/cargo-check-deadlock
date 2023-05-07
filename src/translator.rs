@@ -185,18 +185,6 @@ impl<'tcx> Translator<'tcx> {
         let start_place = current_function.get_start_place_for_function_call();
         info!("Encountered function call: {function_name}");
 
-        if is_panic_function(&function_name) {
-            // Function call which starts an abnormal termination of the program.
-            // Non-recursive call for the translation process.
-            call_panic_function(
-                &start_place,
-                &self.program_panic,
-                &current_function.name,
-                &mut self.net,
-            );
-            return;
-        }
-
         // Depending on whether a return or a unwind for the function are present,
         // we have different possibilities for the function call end place and the (optional) cleanup place.
         let (end_place, cleanup_place) = match (target, unwind) {
@@ -236,7 +224,17 @@ impl<'tcx> Translator<'tcx> {
             (None, rustc_middle::mir::UnwindAction::Continue) => {
                 // Call to a function which does not return (Return type: -> !).
                 // Non-recursive call for the translation process.
-                call_diverging_function(&start_place, &function_name, &mut self.net);
+                // `panic!`-related functions are a special case of this.
+                if is_panic_function(&function_name) {
+                    call_panic_function(
+                        &start_place,
+                        &self.program_panic,
+                        &current_function.name,
+                        &mut self.net,
+                    );
+                } else {
+                    call_diverging_function(&start_place, &function_name, &mut self.net);
+                }
                 return;
             }
             (Some(return_block), rustc_middle::mir::UnwindAction::Unreachable) => {
