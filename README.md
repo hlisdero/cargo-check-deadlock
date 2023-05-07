@@ -48,7 +48,7 @@ This proves extremely useful to get feedback on the types, compiler errors, etc.
 
 As time goes on and the compiler internals change, the code will inevitably need changes to work again.
 
-**The current state of the repository compiled without warnings and with all tests passing with** `rustc 1.71.0-nightly (87b1f891e 2023-04-29)`
+**The current state of the repository compiled without warnings and with all tests passing with** `rustc 1.71.0-nightly (a77c55248 2023-05-06)`
 
 ### Installation
 
