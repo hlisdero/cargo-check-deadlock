@@ -10,7 +10,7 @@ use crate::data_structures::petri_net_interface::{
 };
 use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef, TransitionRef};
 use crate::naming::function::{diverging_call_transition_label, panic_transition_label};
-use crate::translator::function_call::FunctionPlaces;
+use crate::translator::function_call_handler::FunctionPlaces;
 
 const PANIC_FUNCTIONS: [&str; 5] = [
     "core::panicking::assert_failed",

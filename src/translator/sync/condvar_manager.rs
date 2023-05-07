@@ -10,7 +10,7 @@ use crate::data_structures::petri_net_interface::{
 };
 use crate::data_structures::petri_net_interface::{PetriNet, TransitionRef};
 use crate::naming::condvar::wait_transition_labels;
-use crate::translator::function_call::FunctionPlaces;
+use crate::translator::function_call_handler::FunctionPlaces;
 use crate::translator::mir_function::Memory;
 use crate::utils::extract_nth_argument_as_place;
 use log::debug;
