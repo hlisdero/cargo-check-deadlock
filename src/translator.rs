@@ -365,6 +365,7 @@ impl<'tcx> Translator<'tcx> {
             info!("Moving sync variables to the thread function...");
             thread.move_sync_variables(&mut new_function.memory, self.tcx);
             self.translate_top_call_stack();
+            info!("Finished translating thread {}", thread.index);
         }
     }
 }
