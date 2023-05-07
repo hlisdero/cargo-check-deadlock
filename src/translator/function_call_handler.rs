@@ -25,41 +25,14 @@ impl<'tcx> Translator<'tcx> {
         function_call_places: FunctionPlaces,
     ) {
         let function_name = self.tcx.def_path_str(function_def_id);
-        match function_name.as_str() {
-            "std::sync::Condvar::new" => {
-                self.call_condvar_new(&function_name, args, destination, &function_call_places);
-                return;
-            }
-            "std::sync::Condvar::notify_one" => {
-                self.call_condvar_notify_one(
-                    &function_name,
-                    args,
-                    destination,
-                    &function_call_places,
-                );
-                return;
-            }
-            "std::sync::Condvar::wait" => {
-                self.call_condvar_wait(args, destination, &function_call_places);
-                return;
-            }
-            "std::sync::Mutex::<T>::lock" => {
-                self.call_mutex_lock(&function_name, args, destination, &function_call_places);
-                return;
-            }
-            "std::sync::Mutex::<T>::new" => {
-                self.call_mutex_new(&function_name, args, destination, &function_call_places);
-                return;
-            }
-            "std::thread::spawn" => {
-                self.call_thread_spawn(&function_name, args, destination, &function_call_places);
-                return;
-            }
-            "std::thread::JoinHandle::<T>::join" => {
-                self.call_thread_join(&function_name, args, destination, &function_call_places);
-                return;
-            }
-            _ => {}
+        // Sync or multithreading function
+        if self.check_supported_sync_function(
+            &function_name,
+            args,
+            destination,
+            &function_call_places,
+        ) {
+            return;
         }
         // Default case for standard and core library calls
         if is_foreign_function(function_def_id, self.tcx) {
@@ -67,6 +40,66 @@ impl<'tcx> Translator<'tcx> {
             return;
         }
         // Default case: A function with MIR representation
+        self.call_mir_function(function_def_id, &function_name, function_call_places);
+    }
+
+    /// Checks if the function name corresponds to one of the
+    /// supported synchronization or multithreading functions.
+    /// If this is the case, calls the corresponding handler and returns `true`.
+    /// Otherwise, it returns `false`.
+    fn check_supported_sync_function(
+        &mut self,
+        function_name: &str,
+        args: &[rustc_middle::mir::Operand<'tcx>],
+        destination: rustc_middle::mir::Place<'tcx>,
+        function_call_places: &FunctionPlaces,
+    ) -> bool {
+        match function_name {
+            "std::sync::Condvar::new" => {
+                self.call_condvar_new(function_name, args, destination, function_call_places);
+                true
+            }
+            "std::sync::Condvar::notify_one" => {
+                self.call_condvar_notify_one(
+                    function_name,
+                    args,
+                    destination,
+                    function_call_places,
+                );
+                true
+            }
+            "std::sync::Condvar::wait" => {
+                self.call_condvar_wait(args, destination, function_call_places);
+                true
+            }
+            "std::sync::Mutex::<T>::lock" => {
+                self.call_mutex_lock(function_name, args, destination, function_call_places);
+                true
+            }
+            "std::sync::Mutex::<T>::new" => {
+                self.call_mutex_new(function_name, args, destination, function_call_places);
+                true
+            }
+            "std::thread::spawn" => {
+                self.call_thread_spawn(function_name, args, destination, function_call_places);
+                true
+            }
+            "std::thread::JoinHandle::<T>::join" => {
+                self.call_thread_join(function_name, args, destination, function_call_places);
+                true
+            }
+            _ => false,
+        }
+    }
+
+    /// Call to a MIR function. It is the default for user-defined functions in the code.
+    /// It is a recursive call for the translation process.
+    fn call_mir_function(
+        &mut self,
+        function_def_id: rustc_hir::def_id::DefId,
+        function_name: &str,
+        function_call_places: FunctionPlaces,
+    ) {
         let (start_place, end_place, _) = function_call_places;
         self.push_function_to_call_stack(function_def_id, start_place, end_place);
         info!("Pushed function {function_name} to the translation callstack");
