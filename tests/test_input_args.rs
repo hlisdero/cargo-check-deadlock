@@ -53,19 +53,20 @@ fn does_not_generate_output_by_default() {
 
     let mut cmd = Command::cargo_bin("granite2").expect("Command not found");
 
-    cmd.arg(file.path());
+    cmd.arg(file.path())
+        .arg("--filename=does_not_generate_output_by_default");
     cmd.assert()
         .success()
         .stdout(predicate::str::is_empty())
         .stderr(predicate::str::is_empty());
 
-    if std::path::Path::new("./net.dot").exists() {
-        panic!("Should not generate a net.dot file by default");
+    if std::path::Path::new("./does_not_generate_output_by_default.dot").exists() {
+        panic!("Should not generate a .dot file by default");
     }
-    if std::path::Path::new("./net.lola").exists() {
-        panic!("Should not generate a net.lola file by default");
+    if std::path::Path::new("./does_not_generate_output_by_default.lola").exists() {
+        panic!("Should not generate a .lola file by default");
     }
-    if std::path::Path::new("./net.pnml").exists() {
-        panic!("Should not generate a net.pnml file by default");
+    if std::path::Path::new("./does_not_generate_output_by_default.pnml").exists() {
+        panic!("Should not generate a .pnml file by default");
     }
 }
