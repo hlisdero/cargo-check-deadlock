@@ -2,7 +2,8 @@
 
 use super::Translator;
 use crate::data_structures::petri_net_interface::{PlaceRef, TransitionRef};
-use crate::naming::function::foreign_call_transition_labels;
+use crate::naming::function::{foreign_call_transition_labels, indexed_mir_function_name};
+use crate::translator::mir_function::MirFunction;
 use crate::translator::special_function::{call_foreign_function, is_foreign_function};
 use crate::translator::sync::link_return_value_if_sync_variable;
 use log::info;
@@ -94,14 +95,25 @@ impl<'tcx> Translator<'tcx> {
 
     /// Call to a MIR function. It is the default for user-defined functions in the code.
     /// It is a recursive call for the translation process.
+    ///
+    /// A separate counter is incremented every time that
+    /// the function is called to generate a unique label.
     fn call_mir_function(
         &mut self,
         function_def_id: rustc_hir::def_id::DefId,
         function_name: &str,
         function_call_places: FunctionPlaces,
     ) {
+        let index = self.function_counter.get_count(function_name);
+        self.function_counter.increment(function_name);
+
         let (start_place, end_place, _) = function_call_places;
-        self.push_function_to_call_stack(function_def_id, start_place, end_place);
+        self.call_stack.push(MirFunction::new(
+            function_def_id,
+            indexed_mir_function_name(function_name, index),
+            start_place,
+            end_place,
+        ));
         info!("Pushed function {function_name} to the translation callstack");
         self.translate_top_call_stack();
     }

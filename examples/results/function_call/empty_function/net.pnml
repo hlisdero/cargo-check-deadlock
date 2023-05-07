@@ -25,9 +25,9 @@
           <text>main_BB1</text>
         </name>
       </place>
-      <transition id="call_RETURN">
+      <transition id="call_0_RETURN">
         <name>
-          <text>call_RETURN</text>
+          <text>call_0_RETURN</text>
         </name>
       </transition>
       <transition id="main_RETURN">
@@ -35,9 +35,9 @@
           <text>main_RETURN</text>
         </name>
       </transition>
-      <arc source="PROGRAM_START" target="call_RETURN" id="(PROGRAM_START, call_RETURN)">
+      <arc source="PROGRAM_START" target="call_0_RETURN" id="(PROGRAM_START, call_0_RETURN)">
         <name>
-          <text>(PROGRAM_START, call_RETURN)</text>
+          <text>(PROGRAM_START, call_0_RETURN)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -51,9 +51,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="call_RETURN" target="main_BB1" id="(call_RETURN, main_BB1)">
+      <arc source="call_0_RETURN" target="main_BB1" id="(call_0_RETURN, main_BB1)">
         <name>
-          <text>(call_RETURN, main_BB1)</text>
+          <text>(call_0_RETURN, main_BB1)</text>
         </name>
         <inscription>
           <text>1</text>

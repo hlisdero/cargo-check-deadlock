@@ -12,6 +12,12 @@
 
 use super::sanitize;
 
+/// Indexed function name for a call to a MIR function.
+#[inline]
+pub fn indexed_mir_function_name(function_name: &str, index: usize) -> String {
+    format!("{}_{index}", sanitize(function_name))
+}
+
 /// Label of the transition for the return statement of a function.
 #[inline]
 pub fn return_transition_label(function_name: &str) -> String {

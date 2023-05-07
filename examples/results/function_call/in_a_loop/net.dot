@@ -13,7 +13,7 @@ digraph petrinet {
     main_BB4_END_PLACE [shape="circle" xlabel="main_BB4_END_PLACE" label=""];
     main_BB5 [shape="circle" xlabel="main_BB5" label=""];
     main_BB6 [shape="circle" xlabel="main_BB6" label=""];
-    call_RETURN [shape="box" xlabel="" label="call_RETURN"];
+    call_0_RETURN [shape="box" xlabel="" label="call_0_RETURN"];
     main_BB0_STMT0 [shape="box" xlabel="" label="main_BB0_STMT0"];
     main_BB1_STMT0 [shape="box" xlabel="" label="main_BB1_STMT0"];
     main_BB2_STMT0 [shape="box" xlabel="" label="main_BB2_STMT0"];
@@ -38,10 +38,10 @@ digraph petrinet {
     main_BB3_END_PLACE -> main_SWITCH_INT_5;
     main_BB3_END_PLACE -> main_SWITCH_INT_6;
     main_BB4 -> main_BB4_STMT0;
-    main_BB4_END_PLACE -> call_RETURN;
+    main_BB4_END_PLACE -> call_0_RETURN;
     main_BB5 -> main_UNREACHABLE_5;
     main_BB6 -> main_RETURN;
-    call_RETURN -> main_BB2;
+    call_0_RETURN -> main_BB2;
     main_BB0_STMT0 -> main_BB0_END_PLACE;
     main_BB1_STMT0 -> main_BB1_END_PLACE;
     main_BB2_STMT0 -> main_BB2_END_PLACE;

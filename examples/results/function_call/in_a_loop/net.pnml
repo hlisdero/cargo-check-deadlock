@@ -75,9 +75,9 @@
           <text>main_BB6</text>
         </name>
       </place>
-      <transition id="call_RETURN">
+      <transition id="call_0_RETURN">
         <name>
-          <text>call_RETURN</text>
+          <text>call_0_RETURN</text>
         </name>
       </transition>
       <transition id="main_BB0_STMT0">
@@ -233,9 +233,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB4_END_PLACE" target="call_RETURN" id="(main_BB4_END_PLACE, call_RETURN)">
+      <arc source="main_BB4_END_PLACE" target="call_0_RETURN" id="(main_BB4_END_PLACE, call_0_RETURN)">
         <name>
-          <text>(main_BB4_END_PLACE, call_RETURN)</text>
+          <text>(main_BB4_END_PLACE, call_0_RETURN)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -257,9 +257,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="call_RETURN" target="main_BB2" id="(call_RETURN, main_BB2)">
+      <arc source="call_0_RETURN" target="main_BB2" id="(call_0_RETURN, main_BB2)">
         <name>
-          <text>(call_RETURN, main_BB2)</text>
+          <text>(call_0_RETURN, main_BB2)</text>
         </name>
         <inscription>
           <text>1</text>
