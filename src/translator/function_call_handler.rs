@@ -112,7 +112,11 @@ impl<'tcx> Translator<'tcx> {
         let index = self.function_counter.get_count(function_name);
         self.function_counter.increment(function_name);
 
-        let (start_place, end_place, _) = function_call_places;
+        let (start_place, end_place, cleanup_place) = function_call_places;
+        assert!(
+            !cleanup_place.is_some(),
+            "BUG: Function with MIR representation should not have a cleanup place"
+        );
         self.call_stack.push(MirFunction::new(
             function_def_id,
             indexed_mir_function_name(function_name, index),
