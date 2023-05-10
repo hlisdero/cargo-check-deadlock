@@ -27,6 +27,15 @@ mod double_lock_deadlock {
     );
 }
 
+mod drop_mutex_guard_manually {
+    use super::utils;
+
+    utils::generate_tests_for_example_program!(
+        "./examples/programs/mutex/drop_mutex_guard_manually.rs",
+        "./examples/results/mutex/drop_mutex_guard_manually/"
+    );
+}
+
 mod two_threads_sharing_mutex {
     use super::utils;
 

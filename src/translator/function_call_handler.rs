@@ -6,6 +6,7 @@ use crate::naming::function::{foreign_call_transition_labels, indexed_mir_functi
 use crate::translator::mir_function::MirFunction;
 use crate::translator::special_function::{call_foreign_function, is_foreign_function};
 use crate::translator::sync::link_return_value_if_sync_variable;
+use crate::utils::extract_nth_argument_as_place;
 use log::info;
 
 /// A convenient typedef to pass the start place, the end place
@@ -56,6 +57,10 @@ impl<'tcx> Translator<'tcx> {
         function_call_places: &FunctionPlaces,
     ) -> bool {
         match function_name {
+            "std::mem::drop" => {
+                self.call_mem_drop(function_name, args, destination, function_call_places);
+                true
+            }
             "std::sync::Condvar::new" => {
                 self.call_condvar_new(function_name, args, destination, function_call_places);
                 true
@@ -158,6 +163,30 @@ impl<'tcx> Translator<'tcx> {
         );
 
         function_transition
+    }
+
+    /// Call to `std::mem::drop`.
+    /// Non-recursive call for the translation process.
+    fn call_mem_drop(
+        &mut self,
+        function_name: &str,
+        args: &[rustc_middle::mir::Operand<'tcx>],
+        destination: rustc_middle::mir::Place<'tcx>,
+        function_call_places: &FunctionPlaces,
+    ) {
+        let transition_drop =
+            self.call_foreign_function(function_name, args, destination, function_call_places);
+
+        let current_function = self.call_stack.peek_mut();
+        let Some(dropped_place) = extract_nth_argument_as_place(args, 0) else {
+            panic!("BUG: `std::mem::drop` should receive the value to be dropped as a place")
+        };
+        self.mutex_manager.handle_lock_guard_drop(
+            dropped_place,
+            &transition_drop,
+            &current_function.memory,
+            &mut self.net,
+        );
     }
 
     /// Call to `std::sync::Condvar::new`.
