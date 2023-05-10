@@ -18,9 +18,12 @@ pub mod thread;
 
 /// Sanitize the function name for the DOT format:
 /// - Replace generic types "<T>" with "T".
+/// - Replace lifetimes "'a" with simply "a".
 /// - Replace double colons with underscores.
 /// - Replace curly braces with underscores.
 /// - Replace pound sign with underscores.
+/// - Replace great-than and less-than sign with underscores.
+/// - Replace spaces with underscores.
 #[inline]
 fn sanitize(function_name: &str) -> String {
     function_name
@@ -28,6 +31,6 @@ fn sanitize(function_name: &str) -> String {
         .replace("<T, A>", "T_A")
         .replace("<'a>", "a")
         .replace("::", "_")
-        .replace(['{', '}', '#'], "_")
         .replace("Result_<T, E>", "Result")
+        .replace(['{', '}', '#', '<', '>', ' '], "_") // Catch-all case
 }

@@ -9,6 +9,15 @@ mod abort {
     );
 }
 
+mod calculator {
+    use super::utils;
+
+    utils::generate_tests_for_example_program!(
+        "./examples/programs/basic/calculator.rs",
+        "./examples/results/basic/calculator/"
+    );
+}
+
 mod empty_main {
     use super::utils;
 
