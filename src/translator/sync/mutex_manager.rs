@@ -48,7 +48,7 @@ impl MutexManager {
         &self,
         args: &[rustc_middle::mir::Operand<'tcx>],
         return_value: rustc_middle::mir::Place<'tcx>,
-        transition_function_call: &TransitionRef,
+        lock_transitions: &(TransitionRef, Option<TransitionRef>),
         net: &mut PetriNet,
         memory: &mut Memory<'tcx>,
     ) {
@@ -57,7 +57,13 @@ impl MutexManager {
             "BUG: `std::sync::Mutex::<T>::lock` should receive the self reference as a place",
         );
         let mutex_ref = memory.get_linked_mutex(&self_ref);
-        self.add_lock_guard(*mutex_ref, transition_function_call, net);
+        self.add_lock_guard(*mutex_ref, &lock_transitions.0, net);
+        // If there is a drop transition for the cleanup of the lock function, connect it to the mutex too!
+        // Otherwise the deadlock will not be detected since the program
+        // could continue down the cleanup path and end in the panic end state.
+        if let Some(drop_transition) = &lock_transitions.1 {
+            self.add_lock_guard(*mutex_ref, drop_transition, net);
+        }
         // The return value contains a new lock guard. Link the local variable to it.
         memory.link_place_to_lock_guard(return_value, *mutex_ref);
         debug!("NEW LOCK GUARD: {return_value:?}");

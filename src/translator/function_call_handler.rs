@@ -141,17 +141,19 @@ impl<'tcx> Translator<'tcx> {
     /// In case the first argument is a mutex, lock guard, join handle or condition variable,
     /// it links the first argument of the function to its return value.
     ///
-    /// Returns the transition that represents the function call.
+    /// Returns a tuple containing two transition references:
+    /// The first for the transition representing the function call and
+    /// an (optional) second for the transition representing the cleanup call.
     fn call_foreign_function(
         &mut self,
         function_name: &str,
         args: &[rustc_middle::mir::Operand<'tcx>],
         destination: rustc_middle::mir::Place<'tcx>,
         function_call_places: &FunctionPlaces,
-    ) -> TransitionRef {
+    ) -> (TransitionRef, Option<TransitionRef>) {
         let index = self.function_counter.get_count(function_name);
         self.function_counter.increment(function_name);
-        let function_transition = call_foreign_function(
+        let function_transitions = call_foreign_function(
             function_call_places,
             &foreign_call_transition_labels(function_name, index),
             &mut self.net,
@@ -166,7 +168,7 @@ impl<'tcx> Translator<'tcx> {
             self.tcx,
         );
 
-        function_transition
+        function_transitions
     }
 
     /// Call to `std::mem::drop`.
@@ -178,7 +180,7 @@ impl<'tcx> Translator<'tcx> {
         destination: rustc_middle::mir::Place<'tcx>,
         function_call_places: &FunctionPlaces,
     ) {
-        let transition_drop =
+        let drop_transitions =
             self.call_foreign_function(function_name, args, destination, function_call_places);
 
         let current_function = self.call_stack.peek_mut();
@@ -187,7 +189,7 @@ impl<'tcx> Translator<'tcx> {
         };
         self.mutex_manager.handle_lock_guard_drop(
             dropped_place,
-            &transition_drop,
+            &drop_transitions.0,
             &current_function.memory,
             &mut self.net,
         );
@@ -221,13 +223,13 @@ impl<'tcx> Translator<'tcx> {
         destination: rustc_middle::mir::Place<'tcx>,
         function_call_places: &FunctionPlaces,
     ) {
-        let notify_one_transition =
+        let notify_one_transitions =
             self.call_foreign_function(function_name, args, destination, function_call_places);
 
         let current_function = self.call_stack.peek_mut();
         self.condvar_manager.translate_side_effects_notify_one(
             args,
-            &notify_one_transition,
+            &notify_one_transitions.0,
             &mut self.net,
             &mut current_function.memory,
         );
@@ -265,14 +267,14 @@ impl<'tcx> Translator<'tcx> {
         destination: rustc_middle::mir::Place<'tcx>,
         function_call_places: &FunctionPlaces,
     ) {
-        let transition_function_call =
+        let lock_transitions =
             self.call_foreign_function(function_name, args, destination, function_call_places);
 
         let current_function = self.call_stack.peek_mut();
         self.mutex_manager.translate_side_effects_lock(
             args,
             destination,
-            &transition_function_call,
+            &lock_transitions,
             &mut self.net,
             &mut current_function.memory,
         );
@@ -306,13 +308,13 @@ impl<'tcx> Translator<'tcx> {
         destination: rustc_middle::mir::Place<'tcx>,
         function_call_places: &FunctionPlaces,
     ) {
-        let transition_function_call =
+        let join_transitions =
             self.call_foreign_function(function_name, args, destination, function_call_places);
 
         let current_function = self.call_stack.peek();
         self.thread_manager.translate_side_effects_join(
             args,
-            transition_function_call,
+            join_transitions.0,
             &current_function.memory,
         );
     }
@@ -326,14 +328,14 @@ impl<'tcx> Translator<'tcx> {
         destination: rustc_middle::mir::Place<'tcx>,
         function_call_places: &FunctionPlaces,
     ) {
-        let transition_function_call =
+        let spawn_transitions =
             self.call_foreign_function(function_name, args, destination, function_call_places);
 
         let current_function = self.call_stack.peek_mut();
         self.thread_manager.translate_side_effects_spawn(
             args,
             destination,
-            transition_function_call,
+            spawn_transitions.0,
             &mut current_function.memory,
             current_function.def_id,
             self.tcx,

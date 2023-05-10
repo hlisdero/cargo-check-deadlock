@@ -154,6 +154,14 @@
           <text>1</text>
         </inscription>
       </arc>
+      <arc source="MUTEX_0" target="std_sync_Mutex_T_lock_1_CALL_UNWIND" id="(MUTEX_0, std_sync_Mutex_T_lock_1_CALL_UNWIND)">
+        <name>
+          <text>(MUTEX_0, std_sync_Mutex_T_lock_1_CALL_UNWIND)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
       <arc source="PROGRAM_START" target="std_sync_Mutex_T_new_0_CALL" id="(PROGRAM_START, std_sync_Mutex_T_new_0_CALL)">
         <name>
           <text>(PROGRAM_START, std_sync_Mutex_T_new_0_CALL)</text>

@@ -63,25 +63,32 @@ pub fn is_foreign_function(
 /// Connects the start place and end place through a new transition.
 /// If an optional cleanup place is provided, it connects the start
 /// place and cleanup place through a second new transition.
-/// Returns the transition reference representing the function call.
+///
+/// Returns a tuple containing two transition references:
+/// The first for the transition representing the function call and
+/// an (optional) second for the transition representing the cleanup call.
 pub fn call_foreign_function(
     function_call_places: &FunctionPlaces,
     transition_labels: &(String, String),
     net: &mut PetriNet,
-) -> TransitionRef {
+) -> (TransitionRef, Option<TransitionRef>) {
     let (start_place, end_place, cleanup_place) = function_call_places;
 
     let transition_foreign_call = net.add_transition(&transition_labels.0);
     add_arc_place_transition(net, start_place, &transition_foreign_call);
     add_arc_transition_place(net, &transition_foreign_call, end_place);
 
-    if let Some(cleanup_place) = cleanup_place {
-        let transition_unwind_call = net.add_transition(&transition_labels.1);
-        add_arc_place_transition(net, start_place, &transition_unwind_call);
-        add_arc_transition_place(net, &transition_unwind_call, cleanup_place);
-    }
+    let transition_cleanup_call = match cleanup_place {
+        Some(cleanup_place) => {
+            let transition_cleanup_call = net.add_transition(&transition_labels.1);
+            add_arc_place_transition(net, start_place, &transition_cleanup_call);
+            add_arc_transition_place(net, &transition_cleanup_call, cleanup_place);
+            Some(transition_cleanup_call)
+        }
+        None => None,
+    };
 
-    transition_foreign_call
+    (transition_foreign_call, transition_cleanup_call)
 }
 
 /// Creates an abridged Petri net representation of a diverging function call.

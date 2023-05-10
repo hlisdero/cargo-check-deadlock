@@ -167,6 +167,7 @@ TRANSITION std_sync_Mutex_T_lock_1_CALL
     first_deadlock_0_BB3 : 1;
 TRANSITION std_sync_Mutex_T_lock_1_CALL_UNWIND
   CONSUME
+    MUTEX_0 : 1,
     first_deadlock_0_BB2_END_PLACE : 1;
   PRODUCE
     first_deadlock_0_BB6 : 1;
@@ -184,6 +185,7 @@ TRANSITION std_sync_Mutex_T_lock_3_CALL
     second_deadlock_0_BB3 : 1;
 TRANSITION std_sync_Mutex_T_lock_3_CALL_UNWIND
   CONSUME
+    MUTEX_1 : 1,
     second_deadlock_0_BB2_END_PLACE : 1;
   PRODUCE
     second_deadlock_0_BB6 : 1;

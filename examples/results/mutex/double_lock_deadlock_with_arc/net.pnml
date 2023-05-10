@@ -241,9 +241,25 @@
           <text>1</text>
         </inscription>
       </arc>
+      <arc source="MUTEX_0" target="std_sync_Mutex_T_lock_0_CALL_UNWIND" id="(MUTEX_0, std_sync_Mutex_T_lock_0_CALL_UNWIND)">
+        <name>
+          <text>(MUTEX_0, std_sync_Mutex_T_lock_0_CALL_UNWIND)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
       <arc source="MUTEX_0" target="std_sync_Mutex_T_lock_1_CALL" id="(MUTEX_0, std_sync_Mutex_T_lock_1_CALL)">
         <name>
           <text>(MUTEX_0, std_sync_Mutex_T_lock_1_CALL)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="MUTEX_0" target="std_sync_Mutex_T_lock_1_CALL_UNWIND" id="(MUTEX_0, std_sync_Mutex_T_lock_1_CALL_UNWIND)">
+        <name>
+          <text>(MUTEX_0, std_sync_Mutex_T_lock_1_CALL_UNWIND)</text>
         </name>
         <inscription>
           <text>1</text>

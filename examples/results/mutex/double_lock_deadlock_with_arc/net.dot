@@ -45,7 +45,9 @@ digraph petrinet {
     std_sync_Mutex_T_lock_1_CALL_UNWIND [shape="box" xlabel="" label="std_sync_Mutex_T_lock_1_CALL_UNWIND"];
     std_sync_Mutex_T_new_0_CALL [shape="box" xlabel="" label="std_sync_Mutex_T_new_0_CALL"];
     MUTEX_0 -> std_sync_Mutex_T_lock_0_CALL;
+    MUTEX_0 -> std_sync_Mutex_T_lock_0_CALL_UNWIND;
     MUTEX_0 -> std_sync_Mutex_T_lock_1_CALL;
+    MUTEX_0 -> std_sync_Mutex_T_lock_1_CALL_UNWIND;
     PROGRAM_START -> std_sync_Mutex_T_new_0_CALL;
     main_BB1 -> std_sync_Arc_T_new_0_CALL;
     main_BB10 -> main_DROP_10;

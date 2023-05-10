@@ -289,6 +289,7 @@ TRANSITION std_sync_Mutex_T_lock_0_CALL
     main_BB6 : 1;
 TRANSITION std_sync_Mutex_T_lock_0_CALL_UNWIND
   CONSUME
+    MUTEX_0 : 1,
     main_BB5_END_PLACE : 1;
   PRODUCE
     main_BB15 : 1;
@@ -300,6 +301,7 @@ TRANSITION std_sync_Mutex_T_lock_1_CALL
     main__closure_0__BB2 : 1;
 TRANSITION std_sync_Mutex_T_lock_1_CALL_UNWIND
   CONSUME
+    MUTEX_0 : 1,
     main__closure_0__BB1_END_PLACE : 1;
   PRODUCE
     main__closure_0__BB5 : 1;
