@@ -114,7 +114,7 @@ impl<'tcx> Translator<'tcx> {
 
         let (start_place, end_place, cleanup_place) = function_call_places;
         assert!(
-            !cleanup_place.is_some(),
+            cleanup_place.is_none(),
             "BUG: Function with MIR representation should not have a cleanup place"
         );
         self.call_stack.push(MirFunction::new(
