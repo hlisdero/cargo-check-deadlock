@@ -36,7 +36,42 @@ PLACE
     main_BB9_END_PLACE;
 
 MARKING
+    PROGRAM_END : 0,
+    PROGRAM_PANIC : 0,
     PROGRAM_START : 1,
+    main_BB1 : 0,
+    main_BB10 : 0,
+    main_BB10_END_PLACE : 0,
+    main_BB10_STMT0_END : 0,
+    main_BB10_STMT1_END : 0,
+    main_BB10_STMT2_END : 0,
+    main_BB11 : 0,
+    main_BB11_END_PLACE : 0,
+    main_BB11_STMT0_END : 0,
+    main_BB11_STMT1_END : 0,
+    main_BB12 : 0,
+    main_BB13 : 0,
+    main_BB14 : 0,
+    main_BB15 : 0,
+    main_BB16 : 0,
+    main_BB2 : 0,
+    main_BB2_END_PLACE : 0,
+    main_BB3 : 0,
+    main_BB4 : 0,
+    main_BB4_END_PLACE : 0,
+    main_BB4_STMT0_END : 0,
+    main_BB4_STMT1_END : 0,
+    main_BB5 : 0,
+    main_BB5_END_PLACE : 0,
+    main_BB6 : 0,
+    main_BB6_END_PLACE : 0,
+    main_BB6_STMT0_END : 0,
+    main_BB6_STMT1_END : 0,
+    main_BB7 : 0,
+    main_BB8 : 0,
+    main_BB9 : 0,
+    main_BB9_END_PLACE : 0;
+
 TRANSITION core_fmt_rt_Argument_a_new_display_0_CALL
   CONSUME
     main_BB5_END_PLACE : 1;

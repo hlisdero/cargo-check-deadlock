@@ -28,8 +28,32 @@ PLACE
 
 MARKING
     CONDVAR_0_P1 : 1,
+    CONDVAR_0_P2 : 0,
+    CONDVAR_0_P3 : 0,
+    CONDVAR_0_P4 : 0,
     MUTEX_0 : 1,
+    PROGRAM_END : 0,
+    PROGRAM_PANIC : 0,
     PROGRAM_START : 1,
+    main_BB0_END_PLACE : 0,
+    main_BB1 : 0,
+    main_BB10 : 0,
+    main_BB2 : 0,
+    main_BB2_END_PLACE : 0,
+    main_BB3 : 0,
+    main_BB4 : 0,
+    main_BB4_END_PLACE : 0,
+    main_BB4_STMT0_END : 0,
+    main_BB5 : 0,
+    main_BB5_END_PLACE : 0,
+    main_BB5_STMT0_END : 0,
+    main_BB5_STMT1_END : 0,
+    main_BB6 : 0,
+    main_BB7 : 0,
+    main_BB7_END_PLACE : 0,
+    main_BB8 : 0,
+    main_BB9 : 0;
+
 TRANSITION CONDVAR_0_T1
   CONSUME
     CONDVAR_0_P1 : 1,

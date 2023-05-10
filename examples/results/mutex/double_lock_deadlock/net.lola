@@ -15,7 +15,19 @@ PLACE
 
 MARKING
     MUTEX_0 : 1,
+    PROGRAM_END : 0,
+    PROGRAM_PANIC : 0,
     PROGRAM_START : 1,
+    main_BB1 : 0,
+    main_BB1_END_PLACE : 0,
+    main_BB2 : 0,
+    main_BB2_END_PLACE : 0,
+    main_BB3 : 0,
+    main_BB4 : 0,
+    main_BB5 : 0,
+    main_BB6 : 0,
+    main_BB7 : 0;
+
 TRANSITION main_BB1_STMT0
   CONSUME
     main_BB1 : 1;

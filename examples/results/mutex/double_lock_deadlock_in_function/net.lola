@@ -28,7 +28,30 @@ PLACE
 MARKING
     MUTEX_0 : 1,
     MUTEX_1 : 1,
+    PROGRAM_END : 0,
+    PROGRAM_PANIC : 0,
     PROGRAM_START : 1,
+    first_deadlock_0_BB1 : 0,
+    first_deadlock_0_BB1_END_PLACE : 0,
+    first_deadlock_0_BB2 : 0,
+    first_deadlock_0_BB2_END_PLACE : 0,
+    first_deadlock_0_BB3 : 0,
+    first_deadlock_0_BB4 : 0,
+    first_deadlock_0_BB5 : 0,
+    first_deadlock_0_BB6 : 0,
+    first_deadlock_0_BB7 : 0,
+    main_BB1 : 0,
+    main_BB2 : 0,
+    second_deadlock_0_BB1 : 0,
+    second_deadlock_0_BB1_END_PLACE : 0,
+    second_deadlock_0_BB2 : 0,
+    second_deadlock_0_BB2_END_PLACE : 0,
+    second_deadlock_0_BB3 : 0,
+    second_deadlock_0_BB4 : 0,
+    second_deadlock_0_BB5 : 0,
+    second_deadlock_0_BB6 : 0,
+    second_deadlock_0_BB7 : 0;
+
 TRANSITION first_deadlock_0_BB1_STMT0
   CONSUME
     first_deadlock_0_BB1 : 1;
