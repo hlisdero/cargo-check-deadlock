@@ -48,7 +48,7 @@ This proves extremely useful to get feedback on the types, compiler errors, etc.
 
 As time goes on and the compiler internals change, the code will inevitably need changes to work again.
 
-**The current state of the repository compiled without warnings and with all tests passing with** `rustc 1.71.0-nightly (a77c55248 2023-05-06)`
+**The current state of the repository compiled without warnings and with all tests passing with** `rustc 1.71.0-nightly (2f6bc5d25 2023-05-09)`
 
 ### Installation
 
@@ -82,7 +82,7 @@ As time goes on and the compiler internals change, the code will inevitably need
 Write a valid Rust program that compiles correctly, e.g. `rust_program.rs` then run
 
 ```sh
-granite2 <path_to_program>/rust_program.rs --output-file=lola --output-file=pnml --output-file=dot
+granite2 <path_to_program>/rust_program.rs --format=lola --format=pnml --format=dot
 ```
 
 Three files called `net.lola`, `net.pnml` and `net.dot` should appear in the CWD.
@@ -121,7 +121,7 @@ To graph a given DOT result, you may use the [Graphviz Online tool](https://drea
 
 ## Contributing
 
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+Contributions are what makes the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
 If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
 Don't forget to give the project a star! Thanks again!
