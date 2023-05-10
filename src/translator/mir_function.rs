@@ -136,7 +136,7 @@ impl<'tcx> MirFunction<'tcx> {
             .insert(block_number, basic_block)
             .is_some()
         {
-            panic!("BUG: Basic blocks should only be added once to the function.")
+            panic!("BUG: Basic blocks should only be added once to the function.");
         }
     }
 

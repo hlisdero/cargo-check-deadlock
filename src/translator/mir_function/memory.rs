@@ -141,7 +141,7 @@ impl<'tcx> Memory<'tcx> {
     /// If the place is not linked to a lock guard, then the function panics.
     pub fn get_linked_lock_guard(&self, place: &rustc_middle::mir::Place<'tcx>) -> &MutexRef {
         let Some(lock_guard) = self.places_linked_to_lock_guards.get(place) else {
-            panic!("BUG: The place {place:?} should be linked to a lock guard")
+            panic!("BUG: The place {place:?} should be linked to a lock guard");
         };
         lock_guard
     }
@@ -153,7 +153,7 @@ impl<'tcx> Memory<'tcx> {
     /// If the place is not linked to a join handle, then the function panics.
     pub fn get_linked_join_handle(&self, place: &rustc_middle::mir::Place<'tcx>) -> &ThreadRef {
         let Some(join_handle) = self.places_linked_to_join_handles.get(place) else {
-            panic!("BUG: The place {place:?} should be linked to a join handle")
+            panic!("BUG: The place {place:?} should be linked to a join handle");
         };
         join_handle
     }
@@ -165,7 +165,7 @@ impl<'tcx> Memory<'tcx> {
     /// If the place is not linked to a condition variable, then the function panics.
     pub fn get_linked_condvar(&self, place: &rustc_middle::mir::Place<'tcx>) -> &CondvarRef {
         let Some(condvar) = self.places_linked_to_condvars.get(place) else {
-            panic!("BUG: The place {place:?} should be linked to a condition variable")
+            panic!("BUG: The place {place:?} should be linked to a condition variable");
         };
         condvar
     }

@@ -38,7 +38,7 @@ pub fn extract_def_id_of_called_function_from_operand<'tcx>(
         rustc_middle::ty::TyKind::FnDef(def_id, _)
         | rustc_middle::ty::TyKind::Closure(def_id, _) => *def_id,
         _ => {
-            panic!("TyKind::FnDef, a function definition, but got: {function_type:?}")
+            panic!("TyKind::FnDef, a function definition, but got: {function_type:?}");
         }
     }
 }

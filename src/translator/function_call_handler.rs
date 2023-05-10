@@ -179,7 +179,7 @@ impl<'tcx> Translator<'tcx> {
 
         let current_function = self.call_stack.peek_mut();
         let Some(dropped_place) = extract_nth_argument_as_place(args, 0) else {
-            panic!("BUG: `std::mem::drop` should receive the value to be dropped as a place")
+            panic!("BUG: `std::mem::drop` should receive the value to be dropped as a place");
         };
         self.mutex_manager.handle_lock_guard_drop(
             dropped_place,
