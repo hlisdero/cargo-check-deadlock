@@ -273,46 +273,26 @@ impl<'tcx> Translator<'tcx> {
     ) {
         let function = self.call_stack.peek_mut();
 
-        match unwind {
+        let transition_drop = match unwind {
             rustc_middle::mir::UnwindAction::Cleanup(cleanup) => {
-                let transition_drop = function.drop(target, Some(cleanup), &mut self.net);
-                self.mutex_manager.handle_lock_guard_drop(
-                    place,
-                    &transition_drop,
-                    &function.memory,
-                    &mut self.net,
-                );
+                function.drop(target, Some(cleanup), &mut self.net)
             }
-            rustc_middle::mir::UnwindAction::Continue => {
-                let transition_drop = function.drop(target, None, &mut self.net);
-                self.mutex_manager.handle_lock_guard_drop(
-                    place,
-                    &transition_drop,
-                    &function.memory,
-                    &mut self.net,
-                );
-            }
+            rustc_middle::mir::UnwindAction::Continue => function.drop(target, None, &mut self.net),
             rustc_middle::mir::UnwindAction::Terminate => {
-                let transition_drop = function.drop(target, None, &mut self.net);
-                self.mutex_manager.handle_lock_guard_drop(
-                    place,
-                    &transition_drop,
-                    &function.memory,
-                    &mut self.net,
-                );
                 function.unwind(&self.program_panic, &mut self.net);
+                function.drop(target, None, &mut self.net)
             }
             rustc_middle::mir::UnwindAction::Unreachable => {
-                let transition_drop = function.drop(target, None, &mut self.net);
-                self.mutex_manager.handle_lock_guard_drop(
-                    place,
-                    &transition_drop,
-                    &function.memory,
-                    &mut self.net,
-                );
                 function.unreachable(&self.program_end, &mut self.net);
+                function.drop(target, None, &mut self.net)
             }
-        }
+        };
+        self.mutex_manager.handle_lock_guard_drop(
+            place,
+            &transition_drop,
+            &function.memory,
+            &mut self.net,
+        );
     }
 
     /// Handler for the enum variant `TerminatorKind::Assert` in the MIR Visitor.
