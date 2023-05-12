@@ -1,0 +1,22 @@
+digraph petrinet {
+    PROGRAM_END [shape="circle" xlabel="PROGRAM_END" label=""];
+    PROGRAM_PANIC [shape="circle" xlabel="PROGRAM_PANIC" label=""];
+    PROGRAM_START [shape="circle" xlabel="PROGRAM_START" label="•"];
+    THREAD_0_END [shape="circle" xlabel="THREAD_0_END" label=""];
+    THREAD_0_START [shape="circle" xlabel="THREAD_0_START" label=""];
+    main_BB1 [shape="circle" xlabel="main_BB1" label=""];
+    main_BB2 [shape="circle" xlabel="main_BB2" label=""];
+    main_DROP_1 [shape="box" xlabel="" label="main_DROP_1"];
+    main_RETURN [shape="box" xlabel="" label="main_RETURN"];
+    main__closure_0__RETURN [shape="box" xlabel="" label="main__closure_0__RETURN"];
+    std_thread_spawn_0_CALL [shape="box" xlabel="" label="std_thread_spawn_0_CALL"];
+    PROGRAM_START -> std_thread_spawn_0_CALL;
+    THREAD_0_START -> main__closure_0__RETURN;
+    main_BB1 -> main_DROP_1;
+    main_BB2 -> main_RETURN;
+    main_DROP_1 -> main_BB2;
+    main_RETURN -> PROGRAM_END;
+    main__closure_0__RETURN -> THREAD_0_END;
+    std_thread_spawn_0_CALL -> THREAD_0_START;
+    std_thread_spawn_0_CALL -> main_BB1;
+}
