@@ -115,6 +115,11 @@
           <text>main_BB18_END_PLACE</text>
         </name>
       </place>
+      <place id="main_BB18_STMT0_END">
+        <name>
+          <text>main_BB18_STMT0_END</text>
+        </name>
+      </place>
       <place id="main_BB19">
         <name>
           <text>main_BB19</text>
@@ -528,6 +533,11 @@
       <transition id="main_BB18_STMT0">
         <name>
           <text>main_BB18_STMT0</text>
+        </name>
+      </transition>
+      <transition id="main_BB18_STMT1">
+        <name>
+          <text>main_BB18_STMT1</text>
         </name>
       </transition>
       <transition id="main_BB27_STMT0">
@@ -1237,6 +1247,14 @@
       <arc source="main_BB18_END_PLACE" target="std_string_String_as_str_0_CALL_UNWIND" id="(main_BB18_END_PLACE, std_string_String_as_str_0_CALL_UNWIND)">
         <name>
           <text>(main_BB18_END_PLACE, std_string_String_as_str_0_CALL_UNWIND)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main_BB18_STMT0_END" target="main_BB18_STMT1" id="(main_BB18_STMT0_END, main_BB18_STMT1)">
+        <name>
+          <text>(main_BB18_STMT0_END, main_BB18_STMT1)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -2074,9 +2092,17 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB18_STMT0" target="main_BB18_END_PLACE" id="(main_BB18_STMT0, main_BB18_END_PLACE)">
+      <arc source="main_BB18_STMT0" target="main_BB18_STMT0_END" id="(main_BB18_STMT0, main_BB18_STMT0_END)">
         <name>
-          <text>(main_BB18_STMT0, main_BB18_END_PLACE)</text>
+          <text>(main_BB18_STMT0, main_BB18_STMT0_END)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main_BB18_STMT1" target="main_BB18_END_PLACE" id="(main_BB18_STMT1, main_BB18_END_PLACE)">
+        <name>
+          <text>(main_BB18_STMT1, main_BB18_END_PLACE)</text>
         </name>
         <inscription>
           <text>1</text>

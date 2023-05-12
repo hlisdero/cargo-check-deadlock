@@ -21,6 +21,7 @@ PLACE
     main_BB17_END_PLACE,
     main_BB18,
     main_BB18_END_PLACE,
+    main_BB18_STMT0_END,
     main_BB19,
     main_BB2,
     main_BB20,
@@ -109,6 +110,7 @@ MARKING
     main_BB17_END_PLACE : 0,
     main_BB18 : 0,
     main_BB18_END_PLACE : 0,
+    main_BB18_STMT0_END : 0,
     main_BB19 : 0,
     main_BB2 : 0,
     main_BB20 : 0,
@@ -267,6 +269,11 @@ TRANSITION main_BB17_STMT0
 TRANSITION main_BB18_STMT0
   CONSUME
     main_BB18 : 1;
+  PRODUCE
+    main_BB18_STMT0_END : 1;
+TRANSITION main_BB18_STMT1
+  CONSUME
+    main_BB18_STMT0_END : 1;
   PRODUCE
     main_BB18_END_PLACE : 1;
 TRANSITION main_BB27_STMT0

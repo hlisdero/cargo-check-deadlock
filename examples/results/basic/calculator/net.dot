@@ -21,6 +21,7 @@ digraph petrinet {
     main_BB17_END_PLACE [shape="circle" xlabel="main_BB17_END_PLACE" label=""];
     main_BB18 [shape="circle" xlabel="main_BB18" label=""];
     main_BB18_END_PLACE [shape="circle" xlabel="main_BB18_END_PLACE" label=""];
+    main_BB18_STMT0_END [shape="circle" xlabel="main_BB18_STMT0_END" label=""];
     main_BB19 [shape="circle" xlabel="main_BB19" label=""];
     main_BB2 [shape="circle" xlabel="main_BB2" label=""];
     main_BB20 [shape="circle" xlabel="main_BB20" label=""];
@@ -104,6 +105,7 @@ digraph petrinet {
     main_BB16_STMT0 [shape="box" xlabel="" label="main_BB16_STMT0"];
     main_BB17_STMT0 [shape="box" xlabel="" label="main_BB17_STMT0"];
     main_BB18_STMT0 [shape="box" xlabel="" label="main_BB18_STMT0"];
+    main_BB18_STMT1 [shape="box" xlabel="" label="main_BB18_STMT1"];
     main_BB27_STMT0 [shape="box" xlabel="" label="main_BB27_STMT0"];
     main_BB27_STMT1 [shape="box" xlabel="" label="main_BB27_STMT1"];
     main_BB27_STMT2 [shape="box" xlabel="" label="main_BB27_STMT2"];
@@ -229,6 +231,7 @@ digraph petrinet {
     main_BB18 -> main_BB18_STMT0;
     main_BB18_END_PLACE -> std_string_String_as_str_0_CALL;
     main_BB18_END_PLACE -> std_string_String_as_str_0_CALL_UNWIND;
+    main_BB18_STMT0_END -> main_BB18_STMT1;
     main_BB19 -> std_cmp_PartialEq_eq_0_CALL;
     main_BB19 -> std_cmp_PartialEq_eq_0_CALL_UNWIND;
     main_BB2 -> main_BB2_STMT0;
@@ -333,7 +336,8 @@ digraph petrinet {
     main_BB15_STMT0 -> main_BB15_END_PLACE;
     main_BB16_STMT0 -> main_BB16_END_PLACE;
     main_BB17_STMT0 -> main_BB17_END_PLACE;
-    main_BB18_STMT0 -> main_BB18_END_PLACE;
+    main_BB18_STMT0 -> main_BB18_STMT0_END;
+    main_BB18_STMT1 -> main_BB18_END_PLACE;
     main_BB27_STMT0 -> main_BB27_STMT0_END;
     main_BB27_STMT1 -> main_BB27_STMT1_END;
     main_BB27_STMT2 -> main_BB27_END_PLACE;
