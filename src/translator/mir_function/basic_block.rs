@@ -6,9 +6,7 @@
 //! It also stores a vector of `Statement` which forms a chain of places and transitions.
 
 use super::statement::Statement;
-use crate::data_structures::petri_net_interface::{
-    add_arc_place_transition, add_arc_transition_place,
-};
+use crate::data_structures::petri_net_interface::connect_places;
 use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef, TransitionRef};
 use crate::naming::basic_block::{
     assert_cleanup_transition_label, assert_transition_label, drop_cleanup_transition_label,
@@ -78,88 +76,51 @@ impl BasicBlock {
 
     /// Connects the end place of this block to the start place of the `target` basic block.
     pub fn goto(&self, target: &Self, net: &mut PetriNet) {
-        self.connect_end_to_next_place(
-            &target.start_place,
-            net,
-            &goto_transition_label(&self.function_name, self.index),
-        );
+        let label = goto_transition_label(&self.function_name, self.index);
+        connect_places(net, &self.end_place, &target.start_place, &label);
     }
 
     /// Connects the end place of this block to the start place of the `target` basic block.
     pub fn switch_int(&self, target: &Self, index: usize, net: &mut PetriNet) {
-        self.connect_end_to_next_place(
-            &target.start_place,
-            net,
-            &switch_int_transition_label(&self.function_name, index),
-        );
+        let label = switch_int_transition_label(&self.function_name, index);
+        connect_places(net, &self.end_place, &target.start_place, &label);
     }
 
     /// Connects the end place of this block to the unwind place.
     pub fn unwind(&self, unwind_place: &PlaceRef, net: &mut PetriNet) {
-        self.connect_end_to_next_place(
-            unwind_place,
-            net,
-            &unwind_transition_label(&self.function_name, self.index),
-        );
+        let label = unwind_transition_label(&self.function_name, self.index);
+        connect_places(net, &self.end_place, unwind_place, &label);
     }
 
     /// Connects the end place of this block to the start place of the `target` basic block.
     /// Returns the new transition created to connect the two basic blocks.
     pub fn drop(&self, target: &Self, net: &mut PetriNet) -> TransitionRef {
-        let transition =
-            net.add_transition(&drop_transition_label(&self.function_name, self.index));
-        add_arc_place_transition(net, &self.end_place, &transition);
-        add_arc_transition_place(net, &transition, &target.start_place);
-        transition
+        let label = drop_transition_label(&self.function_name, self.index);
+        connect_places(net, &self.end_place, &target.start_place, &label)
     }
 
     /// Connects the end place of this block to the start place of the `cleanup` basic block.
     pub fn drop_cleanup(&self, cleanup: &Self, net: &mut PetriNet) {
-        self.connect_end_to_next_place(
-            &cleanup.start_place,
-            net,
-            &drop_cleanup_transition_label(&self.function_name, self.index),
-        );
+        let label = drop_cleanup_transition_label(&self.function_name, self.index);
+        connect_places(net, &self.end_place, &cleanup.start_place, &label);
     }
 
     /// Connects the end place of this block to the start place of the `assert` basic block.
     pub fn assert(&self, target: &Self, net: &mut PetriNet) {
-        self.connect_end_to_next_place(
-            &target.start_place,
-            net,
-            &assert_transition_label(&self.function_name, self.index),
-        );
+        let label = assert_transition_label(&self.function_name, self.index);
+        connect_places(net, &self.end_place, &target.start_place, &label);
     }
 
     /// Connects the end place of this block to the start place of the `cleanup` basic block.
     pub fn assert_cleanup(&self, cleanup: &Self, net: &mut PetriNet) {
-        self.connect_end_to_next_place(
-            &cleanup.start_place,
-            net,
-            &assert_cleanup_transition_label(&self.function_name, self.index),
-        );
+        let label = assert_cleanup_transition_label(&self.function_name, self.index);
+        connect_places(net, &self.end_place, &cleanup.start_place, &label);
     }
 
     /// Connects the end place of this block to the end place.
     pub fn unreachable(&self, end_place: &PlaceRef, net: &mut PetriNet) {
-        self.connect_end_to_next_place(
-            end_place,
-            net,
-            &unreachable_transition_label(&self.function_name, self.index),
-        );
-    }
-
-    /// Connects the end place of this block to the start place of the next basic block.
-    /// This is the generic function used to implement the handlers for the other terminators.
-    fn connect_end_to_next_place(
-        &self,
-        next_place: &PlaceRef,
-        net: &mut PetriNet,
-        transition_label: &str,
-    ) {
-        let transition = net.add_transition(transition_label);
-        add_arc_place_transition(net, &self.end_place, &transition);
-        add_arc_transition_place(net, &transition, next_place);
+        let label = unreachable_transition_label(&self.function_name, self.index);
+        connect_places(net, &self.end_place, end_place, &label);
     }
 
     /// Prepares the start place for the next statement.

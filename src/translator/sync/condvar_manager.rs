@@ -6,7 +6,7 @@
 use super::condvar::Condvar;
 use super::MutexManager;
 use crate::data_structures::petri_net_interface::{
-    add_arc_place_transition, add_arc_transition_place,
+    add_arc_place_transition, add_arc_transition_place, connect_places,
 };
 use crate::data_structures::petri_net_interface::{PetriNet, TransitionRef};
 use crate::naming::condvar::wait_transition_labels;
@@ -151,9 +151,7 @@ impl CondvarManager {
                 let wait_end_transition = net.add_transition(&transition_labels.1);
                 add_arc_transition_place(net, &wait_end_transition, end_place);
 
-                let unwind_transition = net.add_transition(&transition_labels.2);
-                add_arc_place_transition(net, start_place, &unwind_transition);
-                add_arc_transition_place(net, &unwind_transition, cleanup_place);
+                connect_places(net, start_place, cleanup_place, &transition_labels.2);
 
                 (wait_start_transition, wait_end_transition)
             }

@@ -5,9 +5,7 @@
 //! or simply functions which we are not interested in translating.
 //! For example: Calls to standard library methods, iterators, etc.
 
-use crate::data_structures::petri_net_interface::{
-    add_arc_place_transition, add_arc_transition_place,
-};
+use crate::data_structures::petri_net_interface::{add_arc_place_transition, connect_places};
 use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef};
 use crate::naming::function::{diverging_call_transition_label, panic_transition_label};
 use crate::translator::function::{Places, Transitions};
@@ -75,10 +73,7 @@ pub fn call_foreign_function(
             start_place,
             end_place,
         } => {
-            let transition = net.add_transition(&transition_labels.0);
-            add_arc_place_transition(net, start_place, &transition);
-            add_arc_transition_place(net, &transition, end_place);
-
+            let transition = connect_places(net, start_place, end_place, &transition_labels.0);
             Transitions::Basic { transition }
         }
         Places::WithCleanup {
@@ -86,13 +81,9 @@ pub fn call_foreign_function(
             end_place,
             cleanup_place,
         } => {
-            let transition = net.add_transition(&transition_labels.0);
-            add_arc_place_transition(net, start_place, &transition);
-            add_arc_transition_place(net, &transition, end_place);
-
-            let cleanup_transition = net.add_transition(&transition_labels.1);
-            add_arc_place_transition(net, start_place, &cleanup_transition);
-            add_arc_transition_place(net, &cleanup_transition, cleanup_place);
+            let transition = connect_places(net, start_place, end_place, &transition_labels.0);
+            let cleanup_transition =
+                connect_places(net, start_place, cleanup_place, &transition_labels.1);
 
             Transitions::WithCleanup {
                 transition,
@@ -119,7 +110,6 @@ pub fn call_panic_function(
     function_name: &str,
     net: &mut PetriNet,
 ) {
-    let transition = net.add_transition(&panic_transition_label(function_name));
-    add_arc_place_transition(net, start_place, &transition);
-    add_arc_transition_place(net, &transition, unwind_place);
+    let label = panic_transition_label(function_name);
+    connect_places(net, start_place, unwind_place, &label);
 }

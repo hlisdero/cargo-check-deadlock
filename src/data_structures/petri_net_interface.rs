@@ -45,3 +45,21 @@ pub fn add_arc_transition_place(
             );
         });
 }
+
+/// Connects two places through a new transition created for this purpose.
+/// Returns the new transition created with the given label.
+///
+/// # Panics
+///
+/// If the arcs could not be created, then the function panics.
+pub fn connect_places(
+    net: &mut PetriNet,
+    start_place: &PlaceRef,
+    end_place: &PlaceRef,
+    transition_label: &str,
+) -> TransitionRef {
+    let transition = net.add_transition(transition_label);
+    add_arc_place_transition(net, start_place, &transition);
+    add_arc_transition_place(net, &transition, end_place);
+    transition
+}

@@ -2,9 +2,7 @@
 //! <https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/enum.TerminatorKind.html>
 
 use super::MirFunction;
-use crate::data_structures::petri_net_interface::{
-    add_arc_place_transition, add_arc_transition_place,
-};
+use crate::data_structures::petri_net_interface::connect_places;
 use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef, TransitionRef};
 use crate::naming::function::return_transition_label;
 
@@ -101,10 +99,7 @@ impl<'tcx> MirFunction<'tcx> {
     pub fn return_statement(&mut self, net: &mut PetriNet) {
         let start_place = self.prepare_start_place_for_return_statement();
         let label = return_transition_label(&self.name);
-
-        let transition = net.add_transition(&label);
-        add_arc_place_transition(net, &start_place, &transition);
-        add_arc_transition_place(net, &transition, &self.end_place);
+        connect_places(net, &start_place, &self.end_place, &label);
     }
 
     /// Connects the active basic block to a given end place.
