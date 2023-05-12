@@ -4,7 +4,7 @@
 
 Translate the MIR representation of the source code to a Petri net which can then be exported.
 The project is intended to be used to find deadlocks in Rust code by translating the source code,
-exporting it to the LoLA format and then using the LoLA model checker to verify the property of absence of deadlock.
+exporting it to the LoLA format, and then using the LoLA model checker to verify the absence of deadlocks.
 
 ### Supported export formats
 
@@ -43,7 +43,7 @@ The project must be compiled with the nightly toolchain to access the private cr
 The toolchain file `rust-toolchain` in the root folder overrides the currently active toolchain for this project.
 See the `rustup` documentation for more information: <https://rust-lang.github.io/rustup/overrides.html#the-toolchain-file>
 
-The `settings.json` configures VS Code to instruct the [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer) extension to autodiscover the right toolchain.
+The `settings.json` configures VS Code to instruct the [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer) extension to auto-discover the right toolchain.
 This proves extremely useful to get feedback on the types, compiler errors, etc. that result from working with the private crates of `rustc`.
 
 As time goes on and the compiler internals change, the code will inevitably need changes to work again.
@@ -59,7 +59,7 @@ As time goes on and the compiler internals change, the code will inevitably need
    ```
 
 2. Make sure that the sysroot points to a nightly toolchain when running it from the project directory
-   _The output should be something like:_ `$HOME/.rustup/toolchains/nightly-<platform>`
+   _The output should be something like_ `$HOME/.rustup/toolchains/nightly-<platform>`
 
    ```sh
    rustc --print=sysroot
