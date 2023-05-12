@@ -5,7 +5,6 @@ PLACE
     THREAD_0_END,
     THREAD_0_START,
     main_BB1,
-    main_BB1_END_PLACE,
     main_BB2,
     main_BB3;
 
@@ -16,15 +15,9 @@ MARKING
     THREAD_0_END : 0,
     THREAD_0_START : 0,
     main_BB1 : 0,
-    main_BB1_END_PLACE : 0,
     main_BB2 : 0,
     main_BB3 : 0;
 
-TRANSITION main_BB1_STMT0
-  CONSUME
-    main_BB1 : 1;
-  PRODUCE
-    main_BB1_END_PLACE : 1;
 TRANSITION main_DROP_2
   CONSUME
     main_BB2 : 1;
@@ -43,7 +36,7 @@ TRANSITION main__closure_0__RETURN
 TRANSITION std_thread_JoinHandle_T_join_0_CALL
   CONSUME
     THREAD_0_END : 1,
-    main_BB1_END_PLACE : 1;
+    main_BB1 : 1;
   PRODUCE
     main_BB2 : 1;
 TRANSITION std_thread_spawn_0_CALL

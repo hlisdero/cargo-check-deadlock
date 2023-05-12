@@ -13,7 +13,6 @@ pub mod condvar;
 pub mod function;
 pub mod mutex;
 pub mod program;
-pub mod statement;
 pub mod thread;
 
 /// Sanitize the function name for the DOT format:

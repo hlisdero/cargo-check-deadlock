@@ -14,7 +14,6 @@
 
 mod basic_block;
 mod memory;
-mod statement;
 mod terminator;
 
 use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef};
@@ -82,7 +81,7 @@ impl<'tcx> MirFunction<'tcx> {
             self.start_place.clone()
         } else {
             let active_block = self.get_active_block();
-            active_block.end_place.clone()
+            active_block.place.clone()
         }
     }
 
@@ -97,22 +96,6 @@ impl<'tcx> MirFunction<'tcx> {
             "BUG: Function should have an active basic block set before calling methods that modify it.",
         );
         let active_block = self.basic_blocks.get(&active_block_index).expect(
-            "BUG: The basic block cannot be retrieved. The index for the active block is invalid.",
-        );
-        active_block
-    }
-
-    /// Returns a mutable reference to the active basic block.
-    ///
-    /// # Panics
-    ///
-    /// If the active basic block is not set, then the functions panics.
-    /// If the active basic block cannot be retrieved, then the function panics.
-    fn get_mut_active_block(&mut self) -> &mut BasicBlock {
-        let active_block_index = self.active_block.expect(
-            "BUG: Function should have an active basic block set before calling methods that modify it.",
-        );
-        let active_block = self.basic_blocks.get_mut(&active_block_index).expect(
             "BUG: The basic block cannot be retrieved. The index for the active block is invalid.",
         );
         active_block
@@ -192,7 +175,7 @@ impl<'tcx> MirFunction<'tcx> {
     /// Clones the place reference to simplify using it.
     pub fn get_start_place_for_function_call(&self) -> PlaceRef {
         let active_block = self.get_active_block();
-        active_block.end_place.clone()
+        active_block.place.clone()
     }
 
     /// Returns the end place for a function call, i.e., the start place of the given block number.
@@ -204,27 +187,6 @@ impl<'tcx> MirFunction<'tcx> {
         net: &mut PetriNet,
     ) -> PlaceRef {
         let return_block = self.get_or_add_basic_block(block_number, net);
-        return_block.start_place.clone()
-    }
-
-    /// Adds a statement to the active basic block.
-    ///
-    /// # Panics
-    ///
-    /// If there is no active basic block set, then the function panics.
-    pub fn add_statement(&mut self, statement: &rustc_middle::mir::Statement, net: &mut PetriNet) {
-        let active_block = self.get_mut_active_block();
-        active_block.add_statement(statement, net);
-    }
-
-    /// Finishes the statement block of the active basic block.
-    /// No more statements may be added to this basic block.
-    ///
-    /// # Panics
-    ///
-    /// If there is no active basic block set, then the function panics.
-    pub fn finish_statement_block(&mut self, net: &mut PetriNet) {
-        let active_block = self.get_mut_active_block();
-        active_block.finish_statement_block(net);
+        return_block.place.clone()
     }
 }

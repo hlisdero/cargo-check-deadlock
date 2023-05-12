@@ -41,19 +41,9 @@
           <text>first_deadlock_0_BB1</text>
         </name>
       </place>
-      <place id="first_deadlock_0_BB1_END_PLACE">
-        <name>
-          <text>first_deadlock_0_BB1_END_PLACE</text>
-        </name>
-      </place>
       <place id="first_deadlock_0_BB2">
         <name>
           <text>first_deadlock_0_BB2</text>
-        </name>
-      </place>
-      <place id="first_deadlock_0_BB2_END_PLACE">
-        <name>
-          <text>first_deadlock_0_BB2_END_PLACE</text>
         </name>
       </place>
       <place id="first_deadlock_0_BB3">
@@ -96,19 +86,9 @@
           <text>second_deadlock_0_BB1</text>
         </name>
       </place>
-      <place id="second_deadlock_0_BB1_END_PLACE">
-        <name>
-          <text>second_deadlock_0_BB1_END_PLACE</text>
-        </name>
-      </place>
       <place id="second_deadlock_0_BB2">
         <name>
           <text>second_deadlock_0_BB2</text>
-        </name>
-      </place>
-      <place id="second_deadlock_0_BB2_END_PLACE">
-        <name>
-          <text>second_deadlock_0_BB2_END_PLACE</text>
         </name>
       </place>
       <place id="second_deadlock_0_BB3">
@@ -136,16 +116,6 @@
           <text>second_deadlock_0_BB7</text>
         </name>
       </place>
-      <transition id="first_deadlock_0_BB1_STMT0">
-        <name>
-          <text>first_deadlock_0_BB1_STMT0</text>
-        </name>
-      </transition>
-      <transition id="first_deadlock_0_BB2_STMT0">
-        <name>
-          <text>first_deadlock_0_BB2_STMT0</text>
-        </name>
-      </transition>
       <transition id="first_deadlock_0_DROP_3">
         <name>
           <text>first_deadlock_0_DROP_3</text>
@@ -184,16 +154,6 @@
       <transition id="main_RETURN">
         <name>
           <text>main_RETURN</text>
-        </name>
-      </transition>
-      <transition id="second_deadlock_0_BB1_STMT0">
-        <name>
-          <text>second_deadlock_0_BB1_STMT0</text>
-        </name>
-      </transition>
-      <transition id="second_deadlock_0_BB2_STMT0">
-        <name>
-          <text>second_deadlock_0_BB2_STMT0</text>
         </name>
       </transition>
       <transition id="second_deadlock_0_DROP_3">
@@ -327,41 +287,25 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="first_deadlock_0_BB1" target="first_deadlock_0_BB1_STMT0" id="(first_deadlock_0_BB1, first_deadlock_0_BB1_STMT0)">
+      <arc source="first_deadlock_0_BB1" target="std_sync_Mutex_T_lock_0_CALL" id="(first_deadlock_0_BB1, std_sync_Mutex_T_lock_0_CALL)">
         <name>
-          <text>(first_deadlock_0_BB1, first_deadlock_0_BB1_STMT0)</text>
+          <text>(first_deadlock_0_BB1, std_sync_Mutex_T_lock_0_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="first_deadlock_0_BB1_END_PLACE" target="std_sync_Mutex_T_lock_0_CALL" id="(first_deadlock_0_BB1_END_PLACE, std_sync_Mutex_T_lock_0_CALL)">
+      <arc source="first_deadlock_0_BB2" target="std_sync_Mutex_T_lock_1_CALL" id="(first_deadlock_0_BB2, std_sync_Mutex_T_lock_1_CALL)">
         <name>
-          <text>(first_deadlock_0_BB1_END_PLACE, std_sync_Mutex_T_lock_0_CALL)</text>
+          <text>(first_deadlock_0_BB2, std_sync_Mutex_T_lock_1_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="first_deadlock_0_BB2" target="first_deadlock_0_BB2_STMT0" id="(first_deadlock_0_BB2, first_deadlock_0_BB2_STMT0)">
+      <arc source="first_deadlock_0_BB2" target="std_sync_Mutex_T_lock_1_CALL_UNWIND" id="(first_deadlock_0_BB2, std_sync_Mutex_T_lock_1_CALL_UNWIND)">
         <name>
-          <text>(first_deadlock_0_BB2, first_deadlock_0_BB2_STMT0)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="first_deadlock_0_BB2_END_PLACE" target="std_sync_Mutex_T_lock_1_CALL" id="(first_deadlock_0_BB2_END_PLACE, std_sync_Mutex_T_lock_1_CALL)">
-        <name>
-          <text>(first_deadlock_0_BB2_END_PLACE, std_sync_Mutex_T_lock_1_CALL)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="first_deadlock_0_BB2_END_PLACE" target="std_sync_Mutex_T_lock_1_CALL_UNWIND" id="(first_deadlock_0_BB2_END_PLACE, std_sync_Mutex_T_lock_1_CALL_UNWIND)">
-        <name>
-          <text>(first_deadlock_0_BB2_END_PLACE, std_sync_Mutex_T_lock_1_CALL_UNWIND)</text>
+          <text>(first_deadlock_0_BB2, std_sync_Mutex_T_lock_1_CALL_UNWIND)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -439,41 +383,25 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="second_deadlock_0_BB1" target="second_deadlock_0_BB1_STMT0" id="(second_deadlock_0_BB1, second_deadlock_0_BB1_STMT0)">
+      <arc source="second_deadlock_0_BB1" target="std_sync_Mutex_T_lock_2_CALL" id="(second_deadlock_0_BB1, std_sync_Mutex_T_lock_2_CALL)">
         <name>
-          <text>(second_deadlock_0_BB1, second_deadlock_0_BB1_STMT0)</text>
+          <text>(second_deadlock_0_BB1, std_sync_Mutex_T_lock_2_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="second_deadlock_0_BB1_END_PLACE" target="std_sync_Mutex_T_lock_2_CALL" id="(second_deadlock_0_BB1_END_PLACE, std_sync_Mutex_T_lock_2_CALL)">
+      <arc source="second_deadlock_0_BB2" target="std_sync_Mutex_T_lock_3_CALL" id="(second_deadlock_0_BB2, std_sync_Mutex_T_lock_3_CALL)">
         <name>
-          <text>(second_deadlock_0_BB1_END_PLACE, std_sync_Mutex_T_lock_2_CALL)</text>
+          <text>(second_deadlock_0_BB2, std_sync_Mutex_T_lock_3_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="second_deadlock_0_BB2" target="second_deadlock_0_BB2_STMT0" id="(second_deadlock_0_BB2, second_deadlock_0_BB2_STMT0)">
+      <arc source="second_deadlock_0_BB2" target="std_sync_Mutex_T_lock_3_CALL_UNWIND" id="(second_deadlock_0_BB2, std_sync_Mutex_T_lock_3_CALL_UNWIND)">
         <name>
-          <text>(second_deadlock_0_BB2, second_deadlock_0_BB2_STMT0)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="second_deadlock_0_BB2_END_PLACE" target="std_sync_Mutex_T_lock_3_CALL" id="(second_deadlock_0_BB2_END_PLACE, std_sync_Mutex_T_lock_3_CALL)">
-        <name>
-          <text>(second_deadlock_0_BB2_END_PLACE, std_sync_Mutex_T_lock_3_CALL)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="second_deadlock_0_BB2_END_PLACE" target="std_sync_Mutex_T_lock_3_CALL_UNWIND" id="(second_deadlock_0_BB2_END_PLACE, std_sync_Mutex_T_lock_3_CALL_UNWIND)">
-        <name>
-          <text>(second_deadlock_0_BB2_END_PLACE, std_sync_Mutex_T_lock_3_CALL_UNWIND)</text>
+          <text>(second_deadlock_0_BB2, std_sync_Mutex_T_lock_3_CALL_UNWIND)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -530,22 +458,6 @@
       <arc source="second_deadlock_0_BB7" target="second_deadlock_0_UNWIND_7" id="(second_deadlock_0_BB7, second_deadlock_0_UNWIND_7)">
         <name>
           <text>(second_deadlock_0_BB7, second_deadlock_0_UNWIND_7)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="first_deadlock_0_BB1_STMT0" target="first_deadlock_0_BB1_END_PLACE" id="(first_deadlock_0_BB1_STMT0, first_deadlock_0_BB1_END_PLACE)">
-        <name>
-          <text>(first_deadlock_0_BB1_STMT0, first_deadlock_0_BB1_END_PLACE)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="first_deadlock_0_BB2_STMT0" target="first_deadlock_0_BB2_END_PLACE" id="(first_deadlock_0_BB2_STMT0, first_deadlock_0_BB2_END_PLACE)">
-        <name>
-          <text>(first_deadlock_0_BB2_STMT0, first_deadlock_0_BB2_END_PLACE)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -634,22 +546,6 @@
       <arc source="main_RETURN" target="PROGRAM_END" id="(main_RETURN, PROGRAM_END)">
         <name>
           <text>(main_RETURN, PROGRAM_END)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="second_deadlock_0_BB1_STMT0" target="second_deadlock_0_BB1_END_PLACE" id="(second_deadlock_0_BB1_STMT0, second_deadlock_0_BB1_END_PLACE)">
-        <name>
-          <text>(second_deadlock_0_BB1_STMT0, second_deadlock_0_BB1_END_PLACE)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="second_deadlock_0_BB2_STMT0" target="second_deadlock_0_BB2_END_PLACE" id="(second_deadlock_0_BB2_STMT0, second_deadlock_0_BB2_END_PLACE)">
-        <name>
-          <text>(second_deadlock_0_BB2_STMT0, second_deadlock_0_BB2_END_PLACE)</text>
         </name>
         <inscription>
           <text>1</text>

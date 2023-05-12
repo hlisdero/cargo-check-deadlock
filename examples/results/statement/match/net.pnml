@@ -25,11 +25,6 @@
           <text>main_BB1</text>
         </name>
       </place>
-      <place id="main_BB1_END_PLACE">
-        <name>
-          <text>main_BB1_END_PLACE</text>
-        </name>
-      </place>
       <place id="main_BB2">
         <name>
           <text>main_BB2</text>
@@ -50,11 +45,6 @@
           <text>main_BB5</text>
         </name>
       </place>
-      <transition id="main_BB1_STMT0">
-        <name>
-          <text>main_BB1_STMT0</text>
-        </name>
-      </transition>
       <transition id="main_DROP_2">
         <name>
           <text>main_DROP_2</text>
@@ -103,25 +93,17 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB1" target="main_BB1_STMT0" id="(main_BB1, main_BB1_STMT0)">
+      <arc source="main_BB1" target="std_iter_ExactSizeIterator_len_0_CALL" id="(main_BB1, std_iter_ExactSizeIterator_len_0_CALL)">
         <name>
-          <text>(main_BB1, main_BB1_STMT0)</text>
+          <text>(main_BB1, std_iter_ExactSizeIterator_len_0_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB1_END_PLACE" target="std_iter_ExactSizeIterator_len_0_CALL" id="(main_BB1_END_PLACE, std_iter_ExactSizeIterator_len_0_CALL)">
+      <arc source="main_BB1" target="std_iter_ExactSizeIterator_len_0_CALL_UNWIND" id="(main_BB1, std_iter_ExactSizeIterator_len_0_CALL_UNWIND)">
         <name>
-          <text>(main_BB1_END_PLACE, std_iter_ExactSizeIterator_len_0_CALL)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BB1_END_PLACE" target="std_iter_ExactSizeIterator_len_0_CALL_UNWIND" id="(main_BB1_END_PLACE, std_iter_ExactSizeIterator_len_0_CALL_UNWIND)">
-        <name>
-          <text>(main_BB1_END_PLACE, std_iter_ExactSizeIterator_len_0_CALL_UNWIND)</text>
+          <text>(main_BB1, std_iter_ExactSizeIterator_len_0_CALL_UNWIND)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -162,14 +144,6 @@
       <arc source="main_BB5" target="main_UNWIND_5" id="(main_BB5, main_UNWIND_5)">
         <name>
           <text>(main_BB5, main_UNWIND_5)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BB1_STMT0" target="main_BB1_END_PLACE" id="(main_BB1_STMT0, main_BB1_END_PLACE)">
-        <name>
-          <text>(main_BB1_STMT0, main_BB1_END_PLACE)</text>
         </name>
         <inscription>
           <text>1</text>

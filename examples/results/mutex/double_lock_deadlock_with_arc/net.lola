@@ -8,13 +8,9 @@ PLACE
     main_BB11,
     main_BB12,
     main_BB2,
-    main_BB2_END_PLACE,
     main_BB3,
-    main_BB3_END_PLACE,
     main_BB4,
-    main_BB4_END_PLACE,
     main_BB5,
-    main_BB5_END_PLACE,
     main_BB6,
     main_BB7,
     main_BB8,
@@ -30,38 +26,14 @@ MARKING
     main_BB11 : 0,
     main_BB12 : 0,
     main_BB2 : 0,
-    main_BB2_END_PLACE : 0,
     main_BB3 : 0,
-    main_BB3_END_PLACE : 0,
     main_BB4 : 0,
-    main_BB4_END_PLACE : 0,
     main_BB5 : 0,
-    main_BB5_END_PLACE : 0,
     main_BB6 : 0,
     main_BB7 : 0,
     main_BB8 : 0,
     main_BB9 : 0;
 
-TRANSITION main_BB2_STMT0
-  CONSUME
-    main_BB2 : 1;
-  PRODUCE
-    main_BB2_END_PLACE : 1;
-TRANSITION main_BB3_STMT0
-  CONSUME
-    main_BB3 : 1;
-  PRODUCE
-    main_BB3_END_PLACE : 1;
-TRANSITION main_BB4_STMT0
-  CONSUME
-    main_BB4 : 1;
-  PRODUCE
-    main_BB4_END_PLACE : 1;
-TRANSITION main_BB5_STMT0
-  CONSUME
-    main_BB5 : 1;
-  PRODUCE
-    main_BB5_END_PLACE : 1;
 TRANSITION main_DROP_10
   CONSUME
     main_BB10 : 1;
@@ -122,22 +94,22 @@ TRANSITION main_UNWIND_12
     PROGRAM_PANIC : 1;
 TRANSITION std_ops_Deref_deref_0_CALL
   CONSUME
-    main_BB2_END_PLACE : 1;
+    main_BB2 : 1;
   PRODUCE
     main_BB3 : 1;
 TRANSITION std_ops_Deref_deref_0_CALL_UNWIND
   CONSUME
-    main_BB2_END_PLACE : 1;
+    main_BB2 : 1;
   PRODUCE
     main_BB11 : 1;
 TRANSITION std_ops_Deref_deref_1_CALL
   CONSUME
-    main_BB4_END_PLACE : 1;
+    main_BB4 : 1;
   PRODUCE
     main_BB5 : 1;
 TRANSITION std_ops_Deref_deref_1_CALL_UNWIND
   CONSUME
-    main_BB4_END_PLACE : 1;
+    main_BB4 : 1;
   PRODUCE
     main_BB10 : 1;
 TRANSITION std_sync_Arc_T_new_0_CALL
@@ -148,25 +120,25 @@ TRANSITION std_sync_Arc_T_new_0_CALL
 TRANSITION std_sync_Mutex_T_lock_0_CALL
   CONSUME
     MUTEX_0 : 1,
-    main_BB3_END_PLACE : 1;
+    main_BB3 : 1;
   PRODUCE
     main_BB4 : 1;
 TRANSITION std_sync_Mutex_T_lock_0_CALL_UNWIND
   CONSUME
     MUTEX_0 : 1,
-    main_BB3_END_PLACE : 1;
+    main_BB3 : 1;
   PRODUCE
     main_BB11 : 1;
 TRANSITION std_sync_Mutex_T_lock_1_CALL
   CONSUME
     MUTEX_0 : 1,
-    main_BB5_END_PLACE : 1;
+    main_BB5 : 1;
   PRODUCE
     main_BB6 : 1;
 TRANSITION std_sync_Mutex_T_lock_1_CALL_UNWIND
   CONSUME
     MUTEX_0 : 1,
-    main_BB5_END_PLACE : 1;
+    main_BB5 : 1;
   PRODUCE
     main_BB10 : 1;
 TRANSITION std_sync_Mutex_T_new_0_CALL

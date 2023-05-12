@@ -51,11 +51,6 @@
           <text>1</text>
         </initialMarking>
       </place>
-      <place id="main_BB0_END_PLACE">
-        <name>
-          <text>main_BB0_END_PLACE</text>
-        </name>
-      </place>
       <place id="main_BB1">
         <name>
           <text>main_BB1</text>
@@ -71,11 +66,6 @@
           <text>main_BB2</text>
         </name>
       </place>
-      <place id="main_BB2_END_PLACE">
-        <name>
-          <text>main_BB2_END_PLACE</text>
-        </name>
-      </place>
       <place id="main_BB3">
         <name>
           <text>main_BB3</text>
@@ -86,34 +76,9 @@
           <text>main_BB4</text>
         </name>
       </place>
-      <place id="main_BB4_END_PLACE">
-        <name>
-          <text>main_BB4_END_PLACE</text>
-        </name>
-      </place>
-      <place id="main_BB4_STMT0_END">
-        <name>
-          <text>main_BB4_STMT0_END</text>
-        </name>
-      </place>
       <place id="main_BB5">
         <name>
           <text>main_BB5</text>
-        </name>
-      </place>
-      <place id="main_BB5_END_PLACE">
-        <name>
-          <text>main_BB5_END_PLACE</text>
-        </name>
-      </place>
-      <place id="main_BB5_STMT0_END">
-        <name>
-          <text>main_BB5_STMT0_END</text>
-        </name>
-      </place>
-      <place id="main_BB5_STMT1_END">
-        <name>
-          <text>main_BB5_STMT1_END</text>
         </name>
       </place>
       <place id="main_BB6">
@@ -124,11 +89,6 @@
       <place id="main_BB7">
         <name>
           <text>main_BB7</text>
-        </name>
-      </place>
-      <place id="main_BB7_END_PLACE">
-        <name>
-          <text>main_BB7_END_PLACE</text>
         </name>
       </place>
       <place id="main_BB8">
@@ -149,46 +109,6 @@
       <transition id="CONDVAR_0_T2">
         <name>
           <text>CONDVAR_0_T2</text>
-        </name>
-      </transition>
-      <transition id="main_BB0_STMT0">
-        <name>
-          <text>main_BB0_STMT0</text>
-        </name>
-      </transition>
-      <transition id="main_BB2_STMT0">
-        <name>
-          <text>main_BB2_STMT0</text>
-        </name>
-      </transition>
-      <transition id="main_BB4_STMT0">
-        <name>
-          <text>main_BB4_STMT0</text>
-        </name>
-      </transition>
-      <transition id="main_BB4_STMT1">
-        <name>
-          <text>main_BB4_STMT1</text>
-        </name>
-      </transition>
-      <transition id="main_BB5_STMT0">
-        <name>
-          <text>main_BB5_STMT0</text>
-        </name>
-      </transition>
-      <transition id="main_BB5_STMT1">
-        <name>
-          <text>main_BB5_STMT1</text>
-        </name>
-      </transition>
-      <transition id="main_BB5_STMT2">
-        <name>
-          <text>main_BB5_STMT2</text>
-        </name>
-      </transition>
-      <transition id="main_BB7_STMT0">
-        <name>
-          <text>main_BB7_STMT0</text>
         </name>
       </transition>
       <transition id="main_DROP_6">
@@ -340,17 +260,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="PROGRAM_START" target="main_BB0_STMT0" id="(PROGRAM_START, main_BB0_STMT0)">
+      <arc source="PROGRAM_START" target="std_sync_Mutex_T_new_0_CALL" id="(PROGRAM_START, std_sync_Mutex_T_new_0_CALL)">
         <name>
-          <text>(PROGRAM_START, main_BB0_STMT0)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BB0_END_PLACE" target="std_sync_Mutex_T_new_0_CALL" id="(main_BB0_END_PLACE, std_sync_Mutex_T_new_0_CALL)">
-        <name>
-          <text>(main_BB0_END_PLACE, std_sync_Mutex_T_new_0_CALL)</text>
+          <text>(PROGRAM_START, std_sync_Mutex_T_new_0_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -380,17 +292,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB2" target="main_BB2_STMT0" id="(main_BB2, main_BB2_STMT0)">
+      <arc source="main_BB2" target="std_sync_Mutex_T_lock_0_CALL" id="(main_BB2, std_sync_Mutex_T_lock_0_CALL)">
         <name>
-          <text>(main_BB2, main_BB2_STMT0)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BB2_END_PLACE" target="std_sync_Mutex_T_lock_0_CALL" id="(main_BB2_END_PLACE, std_sync_Mutex_T_lock_0_CALL)">
-        <name>
-          <text>(main_BB2_END_PLACE, std_sync_Mutex_T_lock_0_CALL)</text>
+          <text>(main_BB2, std_sync_Mutex_T_lock_0_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -404,73 +308,33 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB4" target="main_BB4_STMT0" id="(main_BB4, main_BB4_STMT0)">
+      <arc source="main_BB4" target="std_sync_Condvar_notify_one_0_CALL" id="(main_BB4, std_sync_Condvar_notify_one_0_CALL)">
         <name>
-          <text>(main_BB4, main_BB4_STMT0)</text>
+          <text>(main_BB4, std_sync_Condvar_notify_one_0_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB4_END_PLACE" target="std_sync_Condvar_notify_one_0_CALL" id="(main_BB4_END_PLACE, std_sync_Condvar_notify_one_0_CALL)">
+      <arc source="main_BB4" target="std_sync_Condvar_notify_one_0_CALL_UNWIND" id="(main_BB4, std_sync_Condvar_notify_one_0_CALL_UNWIND)">
         <name>
-          <text>(main_BB4_END_PLACE, std_sync_Condvar_notify_one_0_CALL)</text>
+          <text>(main_BB4, std_sync_Condvar_notify_one_0_CALL_UNWIND)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB4_END_PLACE" target="std_sync_Condvar_notify_one_0_CALL_UNWIND" id="(main_BB4_END_PLACE, std_sync_Condvar_notify_one_0_CALL_UNWIND)">
+      <arc source="main_BB5" target="std_sync_Condvar_wait_0_START" id="(main_BB5, std_sync_Condvar_wait_0_START)">
         <name>
-          <text>(main_BB4_END_PLACE, std_sync_Condvar_notify_one_0_CALL_UNWIND)</text>
+          <text>(main_BB5, std_sync_Condvar_wait_0_START)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB4_STMT0_END" target="main_BB4_STMT1" id="(main_BB4_STMT0_END, main_BB4_STMT1)">
+      <arc source="main_BB5" target="std_sync_Condvar_wait_0_UNWIND" id="(main_BB5, std_sync_Condvar_wait_0_UNWIND)">
         <name>
-          <text>(main_BB4_STMT0_END, main_BB4_STMT1)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BB5" target="main_BB5_STMT0" id="(main_BB5, main_BB5_STMT0)">
-        <name>
-          <text>(main_BB5, main_BB5_STMT0)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BB5_END_PLACE" target="std_sync_Condvar_wait_0_START" id="(main_BB5_END_PLACE, std_sync_Condvar_wait_0_START)">
-        <name>
-          <text>(main_BB5_END_PLACE, std_sync_Condvar_wait_0_START)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BB5_END_PLACE" target="std_sync_Condvar_wait_0_UNWIND" id="(main_BB5_END_PLACE, std_sync_Condvar_wait_0_UNWIND)">
-        <name>
-          <text>(main_BB5_END_PLACE, std_sync_Condvar_wait_0_UNWIND)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BB5_STMT0_END" target="main_BB5_STMT1" id="(main_BB5_STMT0_END, main_BB5_STMT1)">
-        <name>
-          <text>(main_BB5_STMT0_END, main_BB5_STMT1)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BB5_STMT1_END" target="main_BB5_STMT2" id="(main_BB5_STMT1_END, main_BB5_STMT2)">
-        <name>
-          <text>(main_BB5_STMT1_END, main_BB5_STMT2)</text>
+          <text>(main_BB5, std_sync_Condvar_wait_0_UNWIND)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -492,17 +356,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB7" target="main_BB7_STMT0" id="(main_BB7, main_BB7_STMT0)">
+      <arc source="main_BB7" target="main_RETURN" id="(main_BB7, main_RETURN)">
         <name>
-          <text>(main_BB7, main_BB7_STMT0)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BB7_END_PLACE" target="main_RETURN" id="(main_BB7_END_PLACE, main_RETURN)">
-        <name>
-          <text>(main_BB7_END_PLACE, main_RETURN)</text>
+          <text>(main_BB7, main_RETURN)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -551,70 +407,6 @@
       <arc source="CONDVAR_0_T2" target="CONDVAR_0_P4" id="(CONDVAR_0_T2, CONDVAR_0_P4)">
         <name>
           <text>(CONDVAR_0_T2, CONDVAR_0_P4)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BB0_STMT0" target="main_BB0_END_PLACE" id="(main_BB0_STMT0, main_BB0_END_PLACE)">
-        <name>
-          <text>(main_BB0_STMT0, main_BB0_END_PLACE)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BB2_STMT0" target="main_BB2_END_PLACE" id="(main_BB2_STMT0, main_BB2_END_PLACE)">
-        <name>
-          <text>(main_BB2_STMT0, main_BB2_END_PLACE)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BB4_STMT0" target="main_BB4_STMT0_END" id="(main_BB4_STMT0, main_BB4_STMT0_END)">
-        <name>
-          <text>(main_BB4_STMT0, main_BB4_STMT0_END)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BB4_STMT1" target="main_BB4_END_PLACE" id="(main_BB4_STMT1, main_BB4_END_PLACE)">
-        <name>
-          <text>(main_BB4_STMT1, main_BB4_END_PLACE)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BB5_STMT0" target="main_BB5_STMT0_END" id="(main_BB5_STMT0, main_BB5_STMT0_END)">
-        <name>
-          <text>(main_BB5_STMT0, main_BB5_STMT0_END)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BB5_STMT1" target="main_BB5_STMT1_END" id="(main_BB5_STMT1, main_BB5_STMT1_END)">
-        <name>
-          <text>(main_BB5_STMT1, main_BB5_STMT1_END)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BB5_STMT2" target="main_BB5_END_PLACE" id="(main_BB5_STMT2, main_BB5_END_PLACE)">
-        <name>
-          <text>(main_BB5_STMT2, main_BB5_END_PLACE)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BB7_STMT0" target="main_BB7_END_PLACE" id="(main_BB7_STMT0, main_BB7_END_PLACE)">
-        <name>
-          <text>(main_BB7_STMT0, main_BB7_END_PLACE)</text>
         </name>
         <inscription>
           <text>1</text>

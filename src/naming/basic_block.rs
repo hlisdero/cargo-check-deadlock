@@ -12,16 +12,10 @@
 
 use super::sanitize;
 
-/// Label of the start place of any `BasicBlock`.
+/// Label of the place of any `BasicBlock`.
 #[inline]
-pub fn start_place_label(function_name: &str, index: usize) -> String {
+pub fn place_label(function_name: &str, index: usize) -> String {
     format!("{}_BB{index}", sanitize(function_name))
-}
-
-/// Label of the end place of any `BasicBlock`.
-#[inline]
-pub fn end_place_label(function_name: &str, index: usize) -> String {
-    format!("{}_BB{index}_END_PLACE", sanitize(function_name))
 }
 
 /// Label of the transition that represents a goto terminator to another `BasicBlock`.

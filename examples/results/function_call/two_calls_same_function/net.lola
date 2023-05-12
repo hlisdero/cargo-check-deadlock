@@ -2,41 +2,20 @@ PLACE
     PROGRAM_END,
     PROGRAM_PANIC,
     PROGRAM_START,
-    main_BB0_END_PLACE,
     main_BB1,
-    main_BB1_END_PLACE,
     main_BB2,
     main_BB3,
-    main_BB3_END_PLACE,
     main_BB4;
 
 MARKING
     PROGRAM_END : 0,
     PROGRAM_PANIC : 0,
     PROGRAM_START : 1,
-    main_BB0_END_PLACE : 0,
     main_BB1 : 0,
-    main_BB1_END_PLACE : 0,
     main_BB2 : 0,
     main_BB3 : 0,
-    main_BB3_END_PLACE : 0,
     main_BB4 : 0;
 
-TRANSITION main_BB0_STMT0
-  CONSUME
-    PROGRAM_START : 1;
-  PRODUCE
-    main_BB0_END_PLACE : 1;
-TRANSITION main_BB1_STMT0
-  CONSUME
-    main_BB1 : 1;
-  PRODUCE
-    main_BB1_END_PLACE : 1;
-TRANSITION main_BB3_STMT0
-  CONSUME
-    main_BB3 : 1;
-  PRODUCE
-    main_BB3_END_PLACE : 1;
 TRANSITION main_PANIC
   CONSUME
     main_BB2 : 1;
@@ -49,21 +28,21 @@ TRANSITION main_RETURN
     PROGRAM_END : 1;
 TRANSITION main_SWITCH_INT_2
   CONSUME
-    main_BB1_END_PLACE : 1;
+    main_BB1 : 1;
   PRODUCE
     main_BB2 : 1;
 TRANSITION main_SWITCH_INT_3
   CONSUME
-    main_BB1_END_PLACE : 1;
+    main_BB1 : 1;
   PRODUCE
     main_BB3 : 1;
 TRANSITION simple_function_0_RETURN
   CONSUME
-    main_BB0_END_PLACE : 1;
+    PROGRAM_START : 1;
   PRODUCE
     main_BB1 : 1;
 TRANSITION simple_function_1_RETURN
   CONSUME
-    main_BB3_END_PLACE : 1;
+    main_BB3 : 1;
   PRODUCE
     main_BB4 : 1;

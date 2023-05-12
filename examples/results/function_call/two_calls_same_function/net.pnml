@@ -20,19 +20,9 @@
           <text>1</text>
         </initialMarking>
       </place>
-      <place id="main_BB0_END_PLACE">
-        <name>
-          <text>main_BB0_END_PLACE</text>
-        </name>
-      </place>
       <place id="main_BB1">
         <name>
           <text>main_BB1</text>
-        </name>
-      </place>
-      <place id="main_BB1_END_PLACE">
-        <name>
-          <text>main_BB1_END_PLACE</text>
         </name>
       </place>
       <place id="main_BB2">
@@ -45,31 +35,11 @@
           <text>main_BB3</text>
         </name>
       </place>
-      <place id="main_BB3_END_PLACE">
-        <name>
-          <text>main_BB3_END_PLACE</text>
-        </name>
-      </place>
       <place id="main_BB4">
         <name>
           <text>main_BB4</text>
         </name>
       </place>
-      <transition id="main_BB0_STMT0">
-        <name>
-          <text>main_BB0_STMT0</text>
-        </name>
-      </transition>
-      <transition id="main_BB1_STMT0">
-        <name>
-          <text>main_BB1_STMT0</text>
-        </name>
-      </transition>
-      <transition id="main_BB3_STMT0">
-        <name>
-          <text>main_BB3_STMT0</text>
-        </name>
-      </transition>
       <transition id="main_PANIC">
         <name>
           <text>main_PANIC</text>
@@ -100,41 +70,25 @@
           <text>simple_function_1_RETURN</text>
         </name>
       </transition>
-      <arc source="PROGRAM_START" target="main_BB0_STMT0" id="(PROGRAM_START, main_BB0_STMT0)">
+      <arc source="PROGRAM_START" target="simple_function_0_RETURN" id="(PROGRAM_START, simple_function_0_RETURN)">
         <name>
-          <text>(PROGRAM_START, main_BB0_STMT0)</text>
+          <text>(PROGRAM_START, simple_function_0_RETURN)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB0_END_PLACE" target="simple_function_0_RETURN" id="(main_BB0_END_PLACE, simple_function_0_RETURN)">
+      <arc source="main_BB1" target="main_SWITCH_INT_2" id="(main_BB1, main_SWITCH_INT_2)">
         <name>
-          <text>(main_BB0_END_PLACE, simple_function_0_RETURN)</text>
+          <text>(main_BB1, main_SWITCH_INT_2)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB1" target="main_BB1_STMT0" id="(main_BB1, main_BB1_STMT0)">
+      <arc source="main_BB1" target="main_SWITCH_INT_3" id="(main_BB1, main_SWITCH_INT_3)">
         <name>
-          <text>(main_BB1, main_BB1_STMT0)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BB1_END_PLACE" target="main_SWITCH_INT_2" id="(main_BB1_END_PLACE, main_SWITCH_INT_2)">
-        <name>
-          <text>(main_BB1_END_PLACE, main_SWITCH_INT_2)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BB1_END_PLACE" target="main_SWITCH_INT_3" id="(main_BB1_END_PLACE, main_SWITCH_INT_3)">
-        <name>
-          <text>(main_BB1_END_PLACE, main_SWITCH_INT_3)</text>
+          <text>(main_BB1, main_SWITCH_INT_3)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -148,17 +102,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB3" target="main_BB3_STMT0" id="(main_BB3, main_BB3_STMT0)">
+      <arc source="main_BB3" target="simple_function_1_RETURN" id="(main_BB3, simple_function_1_RETURN)">
         <name>
-          <text>(main_BB3, main_BB3_STMT0)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BB3_END_PLACE" target="simple_function_1_RETURN" id="(main_BB3_END_PLACE, simple_function_1_RETURN)">
-        <name>
-          <text>(main_BB3_END_PLACE, simple_function_1_RETURN)</text>
+          <text>(main_BB3, simple_function_1_RETURN)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -167,30 +113,6 @@
       <arc source="main_BB4" target="main_RETURN" id="(main_BB4, main_RETURN)">
         <name>
           <text>(main_BB4, main_RETURN)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BB0_STMT0" target="main_BB0_END_PLACE" id="(main_BB0_STMT0, main_BB0_END_PLACE)">
-        <name>
-          <text>(main_BB0_STMT0, main_BB0_END_PLACE)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BB1_STMT0" target="main_BB1_END_PLACE" id="(main_BB1_STMT0, main_BB1_END_PLACE)">
-        <name>
-          <text>(main_BB1_STMT0, main_BB1_END_PLACE)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BB3_STMT0" target="main_BB3_END_PLACE" id="(main_BB3_STMT0, main_BB3_END_PLACE)">
-        <name>
-          <text>(main_BB3_STMT0, main_BB3_END_PLACE)</text>
         </name>
         <inscription>
           <text>1</text>

@@ -9,11 +9,8 @@ PLACE
     PROGRAM_START,
     main_BB1,
     main_BB2,
-    main_BB2_END_PLACE,
     main_BB3,
     main_BB4,
-    main_BB4_END_PLACE,
-    main_BB4_STMT0_END,
     main_BB5,
     main_BB6;
 
@@ -28,11 +25,8 @@ MARKING
     PROGRAM_START : 1,
     main_BB1 : 0,
     main_BB2 : 0,
-    main_BB2_END_PLACE : 0,
     main_BB3 : 0,
     main_BB4 : 0,
-    main_BB4_END_PLACE : 0,
-    main_BB4_STMT0_END : 0,
     main_BB5 : 0,
     main_BB6 : 0;
 
@@ -49,21 +43,6 @@ TRANSITION CONDVAR_0_T2
   PRODUCE
     CONDVAR_0_P1 : 1,
     CONDVAR_0_P4 : 1;
-TRANSITION main_BB2_STMT0
-  CONSUME
-    main_BB2 : 1;
-  PRODUCE
-    main_BB2_END_PLACE : 1;
-TRANSITION main_BB4_STMT0
-  CONSUME
-    main_BB4 : 1;
-  PRODUCE
-    main_BB4_STMT0_END : 1;
-TRANSITION main_BB4_STMT1
-  CONSUME
-    main_BB4_STMT0_END : 1;
-  PRODUCE
-    main_BB4_END_PLACE : 1;
 TRANSITION main_DROP_5
   CONSUME
     main_BB5 : 1;
@@ -94,14 +73,14 @@ TRANSITION std_sync_Condvar_wait_0_END
 TRANSITION std_sync_Condvar_wait_0_START
   CONSUME
     CONDVAR_0_P1 : 1,
-    main_BB4_END_PLACE : 1;
+    main_BB4 : 1;
   PRODUCE
     CONDVAR_0_P3 : 1,
     MUTEX_0 : 1;
 TRANSITION std_sync_Mutex_T_lock_0_CALL
   CONSUME
     MUTEX_0 : 1,
-    main_BB2_END_PLACE : 1;
+    main_BB2 : 1;
   PRODUCE
     main_BB3 : 1;
 TRANSITION std_sync_Mutex_T_new_0_CALL

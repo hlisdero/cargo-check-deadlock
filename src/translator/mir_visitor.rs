@@ -60,24 +60,12 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
         self.super_assign(place, rvalue, location);
     }
 
-    fn visit_statement(
-        &mut self,
-        statement: &rustc_middle::mir::Statement<'tcx>,
-        location: rustc_middle::mir::Location,
-    ) {
-        let function = self.call_stack.peek_mut();
-        function.add_statement(statement, &mut self.net);
-
-        self.super_statement(statement, location);
-    }
-
     fn visit_terminator(
         &mut self,
         terminator: &rustc_middle::mir::Terminator<'tcx>,
         location: rustc_middle::mir::Location,
     ) {
         let function = self.call_stack.peek_mut();
-        function.finish_statement_block(&mut self.net);
 
         match terminator.kind {
             TerminatorKind::Goto { target } => {

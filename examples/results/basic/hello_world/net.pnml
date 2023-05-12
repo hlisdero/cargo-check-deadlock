@@ -20,16 +20,6 @@
           <text>1</text>
         </initialMarking>
       </place>
-      <place id="main_BB0_END_PLACE">
-        <name>
-          <text>main_BB0_END_PLACE</text>
-        </name>
-      </place>
-      <place id="main_BB0_STMT0_END">
-        <name>
-          <text>main_BB0_STMT0_END</text>
-        </name>
-      </place>
       <place id="main_BB1">
         <name>
           <text>main_BB1</text>
@@ -40,16 +30,6 @@
           <text>main_BB2</text>
         </name>
       </place>
-      <transition id="main_BB0_STMT0">
-        <name>
-          <text>main_BB0_STMT0</text>
-        </name>
-      </transition>
-      <transition id="main_BB0_STMT1">
-        <name>
-          <text>main_BB0_STMT1</text>
-        </name>
-      </transition>
       <transition id="main_RETURN">
         <name>
           <text>main_RETURN</text>
@@ -65,25 +45,9 @@
           <text>std_io__print_0_CALL</text>
         </name>
       </transition>
-      <arc source="PROGRAM_START" target="main_BB0_STMT0" id="(PROGRAM_START, main_BB0_STMT0)">
+      <arc source="PROGRAM_START" target="std_fmt_Arguments_a_new_const_0_CALL" id="(PROGRAM_START, std_fmt_Arguments_a_new_const_0_CALL)">
         <name>
-          <text>(PROGRAM_START, main_BB0_STMT0)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BB0_END_PLACE" target="std_fmt_Arguments_a_new_const_0_CALL" id="(main_BB0_END_PLACE, std_fmt_Arguments_a_new_const_0_CALL)">
-        <name>
-          <text>(main_BB0_END_PLACE, std_fmt_Arguments_a_new_const_0_CALL)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BB0_STMT0_END" target="main_BB0_STMT1" id="(main_BB0_STMT0_END, main_BB0_STMT1)">
-        <name>
-          <text>(main_BB0_STMT0_END, main_BB0_STMT1)</text>
+          <text>(PROGRAM_START, std_fmt_Arguments_a_new_const_0_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -100,22 +64,6 @@
       <arc source="main_BB2" target="main_RETURN" id="(main_BB2, main_RETURN)">
         <name>
           <text>(main_BB2, main_RETURN)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BB0_STMT0" target="main_BB0_STMT0_END" id="(main_BB0_STMT0, main_BB0_STMT0_END)">
-        <name>
-          <text>(main_BB0_STMT0, main_BB0_STMT0_END)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BB0_STMT1" target="main_BB0_END_PLACE" id="(main_BB0_STMT1, main_BB0_END_PLACE)">
-        <name>
-          <text>(main_BB0_STMT1, main_BB0_END_PLACE)</text>
         </name>
         <inscription>
           <text>1</text>

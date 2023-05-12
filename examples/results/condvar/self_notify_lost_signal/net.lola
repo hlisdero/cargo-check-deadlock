@@ -7,22 +7,14 @@ PLACE
     PROGRAM_END,
     PROGRAM_PANIC,
     PROGRAM_START,
-    main_BB0_END_PLACE,
     main_BB1,
     main_BB10,
     main_BB2,
-    main_BB2_END_PLACE,
     main_BB3,
     main_BB4,
-    main_BB4_END_PLACE,
-    main_BB4_STMT0_END,
     main_BB5,
-    main_BB5_END_PLACE,
-    main_BB5_STMT0_END,
-    main_BB5_STMT1_END,
     main_BB6,
     main_BB7,
-    main_BB7_END_PLACE,
     main_BB8,
     main_BB9;
 
@@ -35,22 +27,14 @@ MARKING
     PROGRAM_END : 0,
     PROGRAM_PANIC : 0,
     PROGRAM_START : 1,
-    main_BB0_END_PLACE : 0,
     main_BB1 : 0,
     main_BB10 : 0,
     main_BB2 : 0,
-    main_BB2_END_PLACE : 0,
     main_BB3 : 0,
     main_BB4 : 0,
-    main_BB4_END_PLACE : 0,
-    main_BB4_STMT0_END : 0,
     main_BB5 : 0,
-    main_BB5_END_PLACE : 0,
-    main_BB5_STMT0_END : 0,
-    main_BB5_STMT1_END : 0,
     main_BB6 : 0,
     main_BB7 : 0,
-    main_BB7_END_PLACE : 0,
     main_BB8 : 0,
     main_BB9 : 0;
 
@@ -67,46 +51,6 @@ TRANSITION CONDVAR_0_T2
   PRODUCE
     CONDVAR_0_P1 : 1,
     CONDVAR_0_P4 : 1;
-TRANSITION main_BB0_STMT0
-  CONSUME
-    PROGRAM_START : 1;
-  PRODUCE
-    main_BB0_END_PLACE : 1;
-TRANSITION main_BB2_STMT0
-  CONSUME
-    main_BB2 : 1;
-  PRODUCE
-    main_BB2_END_PLACE : 1;
-TRANSITION main_BB4_STMT0
-  CONSUME
-    main_BB4 : 1;
-  PRODUCE
-    main_BB4_STMT0_END : 1;
-TRANSITION main_BB4_STMT1
-  CONSUME
-    main_BB4_STMT0_END : 1;
-  PRODUCE
-    main_BB4_END_PLACE : 1;
-TRANSITION main_BB5_STMT0
-  CONSUME
-    main_BB5 : 1;
-  PRODUCE
-    main_BB5_STMT0_END : 1;
-TRANSITION main_BB5_STMT1
-  CONSUME
-    main_BB5_STMT0_END : 1;
-  PRODUCE
-    main_BB5_STMT1_END : 1;
-TRANSITION main_BB5_STMT2
-  CONSUME
-    main_BB5_STMT1_END : 1;
-  PRODUCE
-    main_BB5_END_PLACE : 1;
-TRANSITION main_BB7_STMT0
-  CONSUME
-    main_BB7 : 1;
-  PRODUCE
-    main_BB7_END_PLACE : 1;
 TRANSITION main_DROP_6
   CONSUME
     main_BB6 : 1;
@@ -126,7 +70,7 @@ TRANSITION main_DROP_UNWIND_6
     main_BB10 : 1;
 TRANSITION main_RETURN
   CONSUME
-    main_BB7_END_PLACE : 1;
+    main_BB7 : 1;
   PRODUCE
     PROGRAM_END : 1;
 TRANSITION main_SWITCH_INT_8
@@ -161,13 +105,13 @@ TRANSITION std_sync_Condvar_new_0_CALL
     main_BB2 : 1;
 TRANSITION std_sync_Condvar_notify_one_0_CALL
   CONSUME
-    main_BB4_END_PLACE : 1;
+    main_BB4 : 1;
   PRODUCE
     CONDVAR_0_P2 : 1,
     main_BB5 : 1;
 TRANSITION std_sync_Condvar_notify_one_0_CALL_UNWIND
   CONSUME
-    main_BB4_END_PLACE : 1;
+    main_BB4 : 1;
   PRODUCE
     main_BB10 : 1;
 TRANSITION std_sync_Condvar_wait_0_END
@@ -179,23 +123,23 @@ TRANSITION std_sync_Condvar_wait_0_END
 TRANSITION std_sync_Condvar_wait_0_START
   CONSUME
     CONDVAR_0_P1 : 1,
-    main_BB5_END_PLACE : 1;
+    main_BB5 : 1;
   PRODUCE
     CONDVAR_0_P3 : 1,
     MUTEX_0 : 1;
 TRANSITION std_sync_Condvar_wait_0_UNWIND
   CONSUME
-    main_BB5_END_PLACE : 1;
+    main_BB5 : 1;
   PRODUCE
     main_BB10 : 1;
 TRANSITION std_sync_Mutex_T_lock_0_CALL
   CONSUME
     MUTEX_0 : 1,
-    main_BB2_END_PLACE : 1;
+    main_BB2 : 1;
   PRODUCE
     main_BB3 : 1;
 TRANSITION std_sync_Mutex_T_new_0_CALL
   CONSUME
-    main_BB0_END_PLACE : 1;
+    PROGRAM_START : 1;
   PRODUCE
     main_BB1 : 1;

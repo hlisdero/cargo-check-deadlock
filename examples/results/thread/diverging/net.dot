@@ -5,11 +5,9 @@ digraph petrinet {
     THREAD_0_END [shape="circle" xlabel="THREAD_0_END" label=""];
     THREAD_0_START [shape="circle" xlabel="THREAD_0_START" label=""];
     main_BB1 [shape="circle" xlabel="main_BB1" label=""];
-    main_BB1_END_PLACE [shape="circle" xlabel="main_BB1_END_PLACE" label=""];
     main_BB2 [shape="circle" xlabel="main_BB2" label=""];
     main_BB3 [shape="circle" xlabel="main_BB3" label=""];
     main__closure_0__BB1 [shape="circle" xlabel="main__closure_0__BB1" label=""];
-    main_BB1_STMT0 [shape="box" xlabel="" label="main_BB1_STMT0"];
     main_DROP_2 [shape="box" xlabel="" label="main_DROP_2"];
     main_RETURN [shape="box" xlabel="" label="main_RETURN"];
     main__closure_0__GOTO_0 [shape="box" xlabel="" label="main__closure_0__GOTO_0"];
@@ -19,12 +17,10 @@ digraph petrinet {
     PROGRAM_START -> std_thread_spawn_0_CALL;
     THREAD_0_END -> std_thread_JoinHandle_T_join_0_CALL;
     THREAD_0_START -> main__closure_0__GOTO_0;
-    main_BB1 -> main_BB1_STMT0;
-    main_BB1_END_PLACE -> std_thread_JoinHandle_T_join_0_CALL;
+    main_BB1 -> std_thread_JoinHandle_T_join_0_CALL;
     main_BB2 -> main_DROP_2;
     main_BB3 -> main_RETURN;
     main__closure_0__BB1 -> main__closure_0__GOTO_1;
-    main_BB1_STMT0 -> main_BB1_END_PLACE;
     main_DROP_2 -> main_BB3;
     main_RETURN -> PROGRAM_END;
     main__closure_0__GOTO_0 -> main__closure_0__BB1;

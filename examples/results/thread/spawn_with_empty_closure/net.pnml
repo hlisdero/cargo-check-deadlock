@@ -35,11 +35,6 @@
           <text>main_BB1</text>
         </name>
       </place>
-      <place id="main_BB1_END_PLACE">
-        <name>
-          <text>main_BB1_END_PLACE</text>
-        </name>
-      </place>
       <place id="main_BB2">
         <name>
           <text>main_BB2</text>
@@ -50,11 +45,6 @@
           <text>main_BB3</text>
         </name>
       </place>
-      <transition id="main_BB1_STMT0">
-        <name>
-          <text>main_BB1_STMT0</text>
-        </name>
-      </transition>
       <transition id="main_DROP_2">
         <name>
           <text>main_DROP_2</text>
@@ -104,17 +94,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB1" target="main_BB1_STMT0" id="(main_BB1, main_BB1_STMT0)">
+      <arc source="main_BB1" target="std_thread_JoinHandle_T_join_0_CALL" id="(main_BB1, std_thread_JoinHandle_T_join_0_CALL)">
         <name>
-          <text>(main_BB1, main_BB1_STMT0)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BB1_END_PLACE" target="std_thread_JoinHandle_T_join_0_CALL" id="(main_BB1_END_PLACE, std_thread_JoinHandle_T_join_0_CALL)">
-        <name>
-          <text>(main_BB1_END_PLACE, std_thread_JoinHandle_T_join_0_CALL)</text>
+          <text>(main_BB1, std_thread_JoinHandle_T_join_0_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -131,14 +113,6 @@
       <arc source="main_BB3" target="main_RETURN" id="(main_BB3, main_RETURN)">
         <name>
           <text>(main_BB3, main_RETURN)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BB1_STMT0" target="main_BB1_END_PLACE" id="(main_BB1_STMT0, main_BB1_END_PLACE)">
-        <name>
-          <text>(main_BB1_STMT0, main_BB1_END_PLACE)</text>
         </name>
         <inscription>
           <text>1</text>

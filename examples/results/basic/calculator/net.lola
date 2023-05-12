@@ -4,24 +4,14 @@ PLACE
     PROGRAM_START,
     main_BB1,
     main_BB10,
-    main_BB10_END_PLACE,
     main_BB11,
-    main_BB11_END_PLACE,
     main_BB12,
-    main_BB12_END_PLACE,
     main_BB13,
-    main_BB13_END_PLACE,
     main_BB14,
-    main_BB14_END_PLACE,
     main_BB15,
-    main_BB15_END_PLACE,
     main_BB16,
-    main_BB16_END_PLACE,
     main_BB17,
-    main_BB17_END_PLACE,
     main_BB18,
-    main_BB18_END_PLACE,
-    main_BB18_STMT0_END,
     main_BB19,
     main_BB2,
     main_BB20,
@@ -32,60 +22,27 @@ PLACE
     main_BB25,
     main_BB26,
     main_BB27,
-    main_BB27_END_PLACE,
-    main_BB27_STMT0_END,
-    main_BB27_STMT1_END,
     main_BB28,
-    main_BB28_END_PLACE,
-    main_BB28_STMT0_END,
-    main_BB28_STMT1_END,
     main_BB29,
-    main_BB29_END_PLACE,
-    main_BB29_STMT0_END,
-    main_BB29_STMT1_END,
-    main_BB2_END_PLACE,
     main_BB3,
     main_BB30,
-    main_BB30_END_PLACE,
-    main_BB30_STMT0_END,
-    main_BB30_STMT1_END,
     main_BB31,
-    main_BB31_END_PLACE,
-    main_BB31_STMT0_END,
-    main_BB31_STMT1_END,
     main_BB32,
-    main_BB32_END_PLACE,
-    main_BB32_STMT0_END,
-    main_BB32_STMT1_END,
     main_BB33,
     main_BB34,
     main_BB35,
-    main_BB35_END_PLACE,
-    main_BB35_STMT0_END,
-    main_BB35_STMT1_END,
     main_BB36,
-    main_BB36_END_PLACE,
-    main_BB36_STMT0_END,
-    main_BB36_STMT1_END,
     main_BB37,
     main_BB38,
     main_BB39,
     main_BB4,
     main_BB40,
     main_BB41,
-    main_BB4_END_PLACE,
-    main_BB4_STMT0_END,
-    main_BB4_STMT1_END,
     main_BB5,
-    main_BB5_END_PLACE,
     main_BB6,
-    main_BB6_END_PLACE,
-    main_BB6_STMT0_END,
-    main_BB6_STMT1_END,
     main_BB7,
     main_BB8,
-    main_BB9,
-    main_BB9_END_PLACE;
+    main_BB9;
 
 MARKING
     PROGRAM_END : 0,
@@ -93,24 +50,14 @@ MARKING
     PROGRAM_START : 1,
     main_BB1 : 0,
     main_BB10 : 0,
-    main_BB10_END_PLACE : 0,
     main_BB11 : 0,
-    main_BB11_END_PLACE : 0,
     main_BB12 : 0,
-    main_BB12_END_PLACE : 0,
     main_BB13 : 0,
-    main_BB13_END_PLACE : 0,
     main_BB14 : 0,
-    main_BB14_END_PLACE : 0,
     main_BB15 : 0,
-    main_BB15_END_PLACE : 0,
     main_BB16 : 0,
-    main_BB16_END_PLACE : 0,
     main_BB17 : 0,
-    main_BB17_END_PLACE : 0,
     main_BB18 : 0,
-    main_BB18_END_PLACE : 0,
-    main_BB18_STMT0_END : 0,
     main_BB19 : 0,
     main_BB2 : 0,
     main_BB20 : 0,
@@ -121,326 +68,78 @@ MARKING
     main_BB25 : 0,
     main_BB26 : 0,
     main_BB27 : 0,
-    main_BB27_END_PLACE : 0,
-    main_BB27_STMT0_END : 0,
-    main_BB27_STMT1_END : 0,
     main_BB28 : 0,
-    main_BB28_END_PLACE : 0,
-    main_BB28_STMT0_END : 0,
-    main_BB28_STMT1_END : 0,
     main_BB29 : 0,
-    main_BB29_END_PLACE : 0,
-    main_BB29_STMT0_END : 0,
-    main_BB29_STMT1_END : 0,
-    main_BB2_END_PLACE : 0,
     main_BB3 : 0,
     main_BB30 : 0,
-    main_BB30_END_PLACE : 0,
-    main_BB30_STMT0_END : 0,
-    main_BB30_STMT1_END : 0,
     main_BB31 : 0,
-    main_BB31_END_PLACE : 0,
-    main_BB31_STMT0_END : 0,
-    main_BB31_STMT1_END : 0,
     main_BB32 : 0,
-    main_BB32_END_PLACE : 0,
-    main_BB32_STMT0_END : 0,
-    main_BB32_STMT1_END : 0,
     main_BB33 : 0,
     main_BB34 : 0,
     main_BB35 : 0,
-    main_BB35_END_PLACE : 0,
-    main_BB35_STMT0_END : 0,
-    main_BB35_STMT1_END : 0,
     main_BB36 : 0,
-    main_BB36_END_PLACE : 0,
-    main_BB36_STMT0_END : 0,
-    main_BB36_STMT1_END : 0,
     main_BB37 : 0,
     main_BB38 : 0,
     main_BB39 : 0,
     main_BB4 : 0,
     main_BB40 : 0,
     main_BB41 : 0,
-    main_BB4_END_PLACE : 0,
-    main_BB4_STMT0_END : 0,
-    main_BB4_STMT1_END : 0,
     main_BB5 : 0,
-    main_BB5_END_PLACE : 0,
     main_BB6 : 0,
-    main_BB6_END_PLACE : 0,
-    main_BB6_STMT0_END : 0,
-    main_BB6_STMT1_END : 0,
     main_BB7 : 0,
     main_BB8 : 0,
-    main_BB9 : 0,
-    main_BB9_END_PLACE : 0;
+    main_BB9 : 0;
 
 TRANSITION core_fmt_rt_Argument_a_new_display_0_CALL
   CONSUME
-    main_BB5_END_PLACE : 1;
+    main_BB5 : 1;
   PRODUCE
     main_BB6 : 1;
 TRANSITION core_fmt_rt_Argument_a_new_display_0_CALL_UNWIND
   CONSUME
-    main_BB5_END_PLACE : 1;
+    main_BB5 : 1;
   PRODUCE
     main_BB40 : 1;
 TRANSITION core_fmt_rt_Argument_a_new_display_1_CALL
   CONSUME
-    main_BB27_END_PLACE : 1;
+    main_BB27 : 1;
   PRODUCE
     main_BB32 : 1;
 TRANSITION core_fmt_rt_Argument_a_new_display_1_CALL_UNWIND
   CONSUME
-    main_BB27_END_PLACE : 1;
+    main_BB27 : 1;
   PRODUCE
     main_BB40 : 1;
 TRANSITION core_fmt_rt_Argument_a_new_display_2_CALL
   CONSUME
-    main_BB35_END_PLACE : 1;
+    main_BB35 : 1;
   PRODUCE
     main_BB36 : 1;
 TRANSITION core_fmt_rt_Argument_a_new_display_2_CALL_UNWIND
   CONSUME
-    main_BB35_END_PLACE : 1;
+    main_BB35 : 1;
   PRODUCE
     main_BB40 : 1;
 TRANSITION core_str__impl_str__parse_0_CALL
   CONSUME
-    main_BB11_END_PLACE : 1;
+    main_BB11 : 1;
   PRODUCE
     main_BB12 : 1;
 TRANSITION core_str__impl_str__parse_0_CALL_UNWIND
   CONSUME
-    main_BB11_END_PLACE : 1;
+    main_BB11 : 1;
   PRODUCE
     main_BB40 : 1;
 TRANSITION core_str__impl_str__parse_1_CALL
   CONSUME
-    main_BB15_END_PLACE : 1;
+    main_BB15 : 1;
   PRODUCE
     main_BB16 : 1;
 TRANSITION core_str__impl_str__parse_1_CALL_UNWIND
   CONSUME
-    main_BB15_END_PLACE : 1;
-  PRODUCE
-    main_BB40 : 1;
-TRANSITION main_BB10_STMT0
-  CONSUME
-    main_BB10 : 1;
-  PRODUCE
-    main_BB10_END_PLACE : 1;
-TRANSITION main_BB11_STMT0
-  CONSUME
-    main_BB11 : 1;
-  PRODUCE
-    main_BB11_END_PLACE : 1;
-TRANSITION main_BB12_STMT0
-  CONSUME
-    main_BB12 : 1;
-  PRODUCE
-    main_BB12_END_PLACE : 1;
-TRANSITION main_BB13_STMT0
-  CONSUME
-    main_BB13 : 1;
-  PRODUCE
-    main_BB13_END_PLACE : 1;
-TRANSITION main_BB14_STMT0
-  CONSUME
-    main_BB14 : 1;
-  PRODUCE
-    main_BB14_END_PLACE : 1;
-TRANSITION main_BB15_STMT0
-  CONSUME
     main_BB15 : 1;
   PRODUCE
-    main_BB15_END_PLACE : 1;
-TRANSITION main_BB16_STMT0
-  CONSUME
-    main_BB16 : 1;
-  PRODUCE
-    main_BB16_END_PLACE : 1;
-TRANSITION main_BB17_STMT0
-  CONSUME
-    main_BB17 : 1;
-  PRODUCE
-    main_BB17_END_PLACE : 1;
-TRANSITION main_BB18_STMT0
-  CONSUME
-    main_BB18 : 1;
-  PRODUCE
-    main_BB18_STMT0_END : 1;
-TRANSITION main_BB18_STMT1
-  CONSUME
-    main_BB18_STMT0_END : 1;
-  PRODUCE
-    main_BB18_END_PLACE : 1;
-TRANSITION main_BB27_STMT0
-  CONSUME
-    main_BB27 : 1;
-  PRODUCE
-    main_BB27_STMT0_END : 1;
-TRANSITION main_BB27_STMT1
-  CONSUME
-    main_BB27_STMT0_END : 1;
-  PRODUCE
-    main_BB27_STMT1_END : 1;
-TRANSITION main_BB27_STMT2
-  CONSUME
-    main_BB27_STMT1_END : 1;
-  PRODUCE
-    main_BB27_END_PLACE : 1;
-TRANSITION main_BB28_STMT0
-  CONSUME
-    main_BB28 : 1;
-  PRODUCE
-    main_BB28_STMT0_END : 1;
-TRANSITION main_BB28_STMT1
-  CONSUME
-    main_BB28_STMT0_END : 1;
-  PRODUCE
-    main_BB28_STMT1_END : 1;
-TRANSITION main_BB28_STMT2
-  CONSUME
-    main_BB28_STMT1_END : 1;
-  PRODUCE
-    main_BB28_END_PLACE : 1;
-TRANSITION main_BB29_STMT0
-  CONSUME
-    main_BB29 : 1;
-  PRODUCE
-    main_BB29_STMT0_END : 1;
-TRANSITION main_BB29_STMT1
-  CONSUME
-    main_BB29_STMT0_END : 1;
-  PRODUCE
-    main_BB29_STMT1_END : 1;
-TRANSITION main_BB29_STMT2
-  CONSUME
-    main_BB29_STMT1_END : 1;
-  PRODUCE
-    main_BB29_END_PLACE : 1;
-TRANSITION main_BB2_STMT0
-  CONSUME
-    main_BB2 : 1;
-  PRODUCE
-    main_BB2_END_PLACE : 1;
-TRANSITION main_BB30_STMT0
-  CONSUME
-    main_BB30 : 1;
-  PRODUCE
-    main_BB30_STMT0_END : 1;
-TRANSITION main_BB30_STMT1
-  CONSUME
-    main_BB30_STMT0_END : 1;
-  PRODUCE
-    main_BB30_STMT1_END : 1;
-TRANSITION main_BB30_STMT2
-  CONSUME
-    main_BB30_STMT1_END : 1;
-  PRODUCE
-    main_BB30_END_PLACE : 1;
-TRANSITION main_BB31_STMT0
-  CONSUME
-    main_BB31 : 1;
-  PRODUCE
-    main_BB31_STMT0_END : 1;
-TRANSITION main_BB31_STMT1
-  CONSUME
-    main_BB31_STMT0_END : 1;
-  PRODUCE
-    main_BB31_STMT1_END : 1;
-TRANSITION main_BB31_STMT2
-  CONSUME
-    main_BB31_STMT1_END : 1;
-  PRODUCE
-    main_BB31_END_PLACE : 1;
-TRANSITION main_BB32_STMT0
-  CONSUME
-    main_BB32 : 1;
-  PRODUCE
-    main_BB32_STMT0_END : 1;
-TRANSITION main_BB32_STMT1
-  CONSUME
-    main_BB32_STMT0_END : 1;
-  PRODUCE
-    main_BB32_STMT1_END : 1;
-TRANSITION main_BB32_STMT2
-  CONSUME
-    main_BB32_STMT1_END : 1;
-  PRODUCE
-    main_BB32_END_PLACE : 1;
-TRANSITION main_BB35_STMT0
-  CONSUME
-    main_BB35 : 1;
-  PRODUCE
-    main_BB35_STMT0_END : 1;
-TRANSITION main_BB35_STMT1
-  CONSUME
-    main_BB35_STMT0_END : 1;
-  PRODUCE
-    main_BB35_STMT1_END : 1;
-TRANSITION main_BB35_STMT2
-  CONSUME
-    main_BB35_STMT1_END : 1;
-  PRODUCE
-    main_BB35_END_PLACE : 1;
-TRANSITION main_BB36_STMT0
-  CONSUME
-    main_BB36 : 1;
-  PRODUCE
-    main_BB36_STMT0_END : 1;
-TRANSITION main_BB36_STMT1
-  CONSUME
-    main_BB36_STMT0_END : 1;
-  PRODUCE
-    main_BB36_STMT1_END : 1;
-TRANSITION main_BB36_STMT2
-  CONSUME
-    main_BB36_STMT1_END : 1;
-  PRODUCE
-    main_BB36_END_PLACE : 1;
-TRANSITION main_BB4_STMT0
-  CONSUME
-    main_BB4 : 1;
-  PRODUCE
-    main_BB4_STMT0_END : 1;
-TRANSITION main_BB4_STMT1
-  CONSUME
-    main_BB4_STMT0_END : 1;
-  PRODUCE
-    main_BB4_STMT1_END : 1;
-TRANSITION main_BB4_STMT2
-  CONSUME
-    main_BB4_STMT1_END : 1;
-  PRODUCE
-    main_BB4_END_PLACE : 1;
-TRANSITION main_BB5_STMT0
-  CONSUME
-    main_BB5 : 1;
-  PRODUCE
-    main_BB5_END_PLACE : 1;
-TRANSITION main_BB6_STMT0
-  CONSUME
-    main_BB6 : 1;
-  PRODUCE
-    main_BB6_STMT0_END : 1;
-TRANSITION main_BB6_STMT1
-  CONSUME
-    main_BB6_STMT0_END : 1;
-  PRODUCE
-    main_BB6_STMT1_END : 1;
-TRANSITION main_BB6_STMT2
-  CONSUME
-    main_BB6_STMT1_END : 1;
-  PRODUCE
-    main_BB6_END_PLACE : 1;
-TRANSITION main_BB9_STMT0
-  CONSUME
-    main_BB9 : 1;
-  PRODUCE
-    main_BB9_END_PLACE : 1;
+    main_BB40 : 1;
 TRANSITION main_DROP_38
   CONSUME
     main_BB38 : 1;
@@ -453,22 +152,22 @@ TRANSITION main_DROP_40
     main_BB41 : 1;
 TRANSITION main_GOTO_28
   CONSUME
-    main_BB28_END_PLACE : 1;
+    main_BB28 : 1;
   PRODUCE
     main_BB35 : 1;
 TRANSITION main_GOTO_29
   CONSUME
-    main_BB29_END_PLACE : 1;
+    main_BB29 : 1;
   PRODUCE
     main_BB35 : 1;
 TRANSITION main_GOTO_30
   CONSUME
-    main_BB30_END_PLACE : 1;
+    main_BB30 : 1;
   PRODUCE
     main_BB35 : 1;
 TRANSITION main_GOTO_31
   CONSUME
-    main_BB31_END_PLACE : 1;
+    main_BB31 : 1;
   PRODUCE
     main_BB35 : 1;
 TRANSITION main_RETURN
@@ -583,32 +282,32 @@ TRANSITION std_env_args_0_CALL
     main_BB1 : 1;
 TRANSITION std_fmt_Arguments_a_new_v1_0_CALL
   CONSUME
-    main_BB6_END_PLACE : 1;
+    main_BB6 : 1;
   PRODUCE
     main_BB7 : 1;
 TRANSITION std_fmt_Arguments_a_new_v1_0_CALL_UNWIND
   CONSUME
-    main_BB6_END_PLACE : 1;
+    main_BB6 : 1;
   PRODUCE
     main_BB40 : 1;
 TRANSITION std_fmt_Arguments_a_new_v1_1_CALL
   CONSUME
-    main_BB32_END_PLACE : 1;
+    main_BB32 : 1;
   PRODUCE
     main_BB33 : 1;
 TRANSITION std_fmt_Arguments_a_new_v1_1_CALL_UNWIND
   CONSUME
-    main_BB32_END_PLACE : 1;
+    main_BB32 : 1;
   PRODUCE
     main_BB40 : 1;
 TRANSITION std_fmt_Arguments_a_new_v1_2_CALL
   CONSUME
-    main_BB36_END_PLACE : 1;
+    main_BB36 : 1;
   PRODUCE
     main_BB37 : 1;
 TRANSITION std_fmt_Arguments_a_new_v1_2_CALL_UNWIND
   CONSUME
-    main_BB36_END_PLACE : 1;
+    main_BB36 : 1;
   PRODUCE
     main_BB40 : 1;
 TRANSITION std_io__eprint_0_CALL
@@ -648,62 +347,62 @@ TRANSITION std_iter_Iterator_collect_0_CALL
     main_BB2 : 1;
 TRANSITION std_ops_Deref_deref_0_CALL
   CONSUME
-    main_BB10_END_PLACE : 1;
+    main_BB10 : 1;
   PRODUCE
     main_BB11 : 1;
 TRANSITION std_ops_Deref_deref_0_CALL_UNWIND
   CONSUME
-    main_BB10_END_PLACE : 1;
+    main_BB10 : 1;
   PRODUCE
     main_BB40 : 1;
 TRANSITION std_ops_Deref_deref_1_CALL
   CONSUME
-    main_BB14_END_PLACE : 1;
+    main_BB14 : 1;
   PRODUCE
     main_BB15 : 1;
 TRANSITION std_ops_Deref_deref_1_CALL_UNWIND
   CONSUME
-    main_BB14_END_PLACE : 1;
+    main_BB14 : 1;
   PRODUCE
     main_BB40 : 1;
 TRANSITION std_ops_Index_index_0_CALL
   CONSUME
-    main_BB4_END_PLACE : 1;
+    main_BB4 : 1;
   PRODUCE
     main_BB5 : 1;
 TRANSITION std_ops_Index_index_0_CALL_UNWIND
   CONSUME
-    main_BB4_END_PLACE : 1;
+    main_BB4 : 1;
   PRODUCE
     main_BB40 : 1;
 TRANSITION std_ops_Index_index_1_CALL
   CONSUME
-    main_BB9_END_PLACE : 1;
+    main_BB9 : 1;
   PRODUCE
     main_BB10 : 1;
 TRANSITION std_ops_Index_index_1_CALL_UNWIND
   CONSUME
-    main_BB9_END_PLACE : 1;
+    main_BB9 : 1;
   PRODUCE
     main_BB40 : 1;
 TRANSITION std_ops_Index_index_2_CALL
   CONSUME
-    main_BB13_END_PLACE : 1;
+    main_BB13 : 1;
   PRODUCE
     main_BB14 : 1;
 TRANSITION std_ops_Index_index_2_CALL_UNWIND
   CONSUME
-    main_BB13_END_PLACE : 1;
+    main_BB13 : 1;
   PRODUCE
     main_BB40 : 1;
 TRANSITION std_ops_Index_index_3_CALL
   CONSUME
-    main_BB17_END_PLACE : 1;
+    main_BB17 : 1;
   PRODUCE
     main_BB18 : 1;
 TRANSITION std_ops_Index_index_3_CALL_UNWIND
   CONSUME
-    main_BB17_END_PLACE : 1;
+    main_BB17 : 1;
   PRODUCE
     main_BB40 : 1;
 TRANSITION std_process_exit_0_CALL
@@ -718,41 +417,41 @@ TRANSITION std_process_exit_1_CALL
     main_BB40 : 1;
 TRANSITION std_result_Result_expect_0_CALL
   CONSUME
-    main_BB12_END_PLACE : 1;
+    main_BB12 : 1;
   PRODUCE
     main_BB13 : 1;
 TRANSITION std_result_Result_expect_0_CALL_UNWIND
   CONSUME
-    main_BB12_END_PLACE : 1;
+    main_BB12 : 1;
   PRODUCE
     main_BB40 : 1;
 TRANSITION std_result_Result_expect_1_CALL
   CONSUME
-    main_BB16_END_PLACE : 1;
+    main_BB16 : 1;
   PRODUCE
     main_BB17 : 1;
 TRANSITION std_result_Result_expect_1_CALL_UNWIND
   CONSUME
-    main_BB16_END_PLACE : 1;
+    main_BB16 : 1;
   PRODUCE
     main_BB40 : 1;
 TRANSITION std_string_String_as_str_0_CALL
   CONSUME
-    main_BB18_END_PLACE : 1;
+    main_BB18 : 1;
   PRODUCE
     main_BB19 : 1;
 TRANSITION std_string_String_as_str_0_CALL_UNWIND
   CONSUME
-    main_BB18_END_PLACE : 1;
+    main_BB18 : 1;
   PRODUCE
     main_BB40 : 1;
 TRANSITION std_vec_Vec_T_A_len_0_CALL
   CONSUME
-    main_BB2_END_PLACE : 1;
+    main_BB2 : 1;
   PRODUCE
     main_BB3 : 1;
 TRANSITION std_vec_Vec_T_A_len_0_CALL_UNWIND
   CONSUME
-    main_BB2_END_PLACE : 1;
+    main_BB2 : 1;
   PRODUCE
     main_BB40 : 1;
