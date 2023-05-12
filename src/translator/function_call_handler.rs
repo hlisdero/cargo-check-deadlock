@@ -99,21 +99,22 @@ impl<'tcx> Translator<'tcx> {
         let index = self.function_counter.get_count(function_name);
         self.function_counter.increment(function_name);
 
-        let (start_place, end_place) = match places {
+        match places {
             Places::WithCleanup { .. } => {
                 panic!("BUG: Function with MIR representation should not have a cleanup place");
             }
             Places::Basic {
                 start_place,
                 end_place,
-            } => (start_place, end_place),
-        };
-        self.call_stack.push(MirFunction::new(
-            function_def_id,
-            indexed_mir_function_name(function_name, index),
-            start_place,
-            end_place,
-        ));
+            } => {
+                self.call_stack.push(MirFunction::new(
+                    function_def_id,
+                    indexed_mir_function_name(function_name, index),
+                    start_place,
+                    end_place,
+                ));
+            }
+        }
         info!("Pushed function {function_name} to the translation callstack");
         self.translate_top_call_stack();
     }
