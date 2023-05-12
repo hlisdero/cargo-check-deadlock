@@ -5,6 +5,7 @@
 
 use super::mutex::Mutex;
 use crate::data_structures::petri_net_interface::{PetriNet, TransitionRef};
+use crate::translator::function::Transitions;
 use crate::translator::mir_function::Memory;
 use crate::utils::extract_nth_argument_as_place;
 use log::debug;
@@ -48,7 +49,7 @@ impl MutexManager {
         &self,
         args: &[rustc_middle::mir::Operand<'tcx>],
         return_value: rustc_middle::mir::Place<'tcx>,
-        lock_transitions: &(TransitionRef, Option<TransitionRef>),
+        transitions: Transitions,
         net: &mut PetriNet,
         memory: &mut Memory<'tcx>,
     ) {
@@ -57,12 +58,21 @@ impl MutexManager {
             "BUG: `std::sync::Mutex::<T>::lock` should receive the self reference as a place",
         );
         let mutex_ref = memory.get_linked_mutex(&self_ref);
-        self.add_lock_guard(*mutex_ref, &lock_transitions.0, net);
-        // If there is a drop transition for the cleanup of the lock function, connect it to the mutex too!
-        // Otherwise the deadlock will not be detected since the program
-        // could continue down the cleanup path and end in the panic end state.
-        if let Some(drop_transition) = &lock_transitions.1 {
-            self.add_lock_guard(*mutex_ref, drop_transition, net);
+
+        match transitions {
+            Transitions::Basic { transition } => {
+                self.add_lock_guard(*mutex_ref, &transition, net);
+            }
+            Transitions::WithCleanup {
+                transition,
+                cleanup_transition,
+            } => {
+                self.add_lock_guard(*mutex_ref, &transition, net);
+                // If there is a drop transition for the cleanup of the lock function, connect it to the mutex too!
+                // Otherwise the deadlock will not be detected since the program
+                // could continue down the cleanup path and end in the panic end state.
+                self.add_lock_guard(*mutex_ref, &cleanup_transition, net);
+            }
         }
         // The return value contains a new lock guard. Link the local variable to it.
         memory.link_place_to_lock_guard(return_value, *mutex_ref);

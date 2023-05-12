@@ -25,6 +25,7 @@
 //! A `HashMapCounter` keeps track of how many time each function name has been seen so far.
 //! After every call the counter for the corresponding function is incremented.
 
+mod function;
 mod function_call_handler;
 mod mir_function;
 mod mir_visitor;
@@ -36,7 +37,7 @@ use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef};
 use crate::data_structures::stack::Stack;
 use crate::naming::program::{PROGRAM_END, PROGRAM_PANIC, PROGRAM_START};
 use crate::utils::extract_def_id_of_called_function_from_operand;
-use function_call_handler::FunctionPlaces;
+use function::Places;
 use log::info;
 use mir_function::MirFunction;
 use rustc_middle::mir::visit::Visitor;
@@ -256,12 +257,12 @@ impl<'tcx> Translator<'tcx> {
         };
 
         let places = match cleanup_place {
-            Some(cleanup_place) => FunctionPlaces::FunctionWithCleanup {
+            Some(cleanup_place) => Places::WithCleanup {
                 start_place,
                 end_place,
                 cleanup_place,
             },
-            None => FunctionPlaces::Function {
+            None => Places::Basic {
                 start_place,
                 end_place,
             },

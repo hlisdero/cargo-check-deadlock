@@ -8,9 +8,9 @@
 use crate::data_structures::petri_net_interface::{
     add_arc_place_transition, add_arc_transition_place,
 };
-use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef, TransitionRef};
+use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef};
 use crate::naming::function::{diverging_call_transition_label, panic_transition_label};
-use crate::translator::function_call_handler::FunctionPlaces;
+use crate::translator::function::{Places, Transitions};
 
 const PANIC_FUNCTIONS: [&str; 5] = [
     "core::panicking::assert_failed",
@@ -64,39 +64,40 @@ pub fn is_foreign_function(
 /// If an optional cleanup place is provided, it connects the start
 /// place and cleanup place through a second new transition.
 ///
-/// Returns a tuple containing two transition references:
-/// The first for the transition representing the function call and
-/// an (optional) second for the transition representing the cleanup call.
+/// Returns the transition representing the function call.
 pub fn call_foreign_function(
-    places: &FunctionPlaces,
+    places: &Places,
     transition_labels: &(String, String),
     net: &mut PetriNet,
-) -> (TransitionRef, Option<TransitionRef>) {
+) -> Transitions {
     match places {
-        FunctionPlaces::Function {
+        Places::Basic {
             start_place,
             end_place,
         } => {
-            let transition_foreign_call = net.add_transition(&transition_labels.0);
-            add_arc_place_transition(net, start_place, &transition_foreign_call);
-            add_arc_transition_place(net, &transition_foreign_call, end_place);
+            let transition = net.add_transition(&transition_labels.0);
+            add_arc_place_transition(net, start_place, &transition);
+            add_arc_transition_place(net, &transition, end_place);
 
-            (transition_foreign_call, None)
+            Transitions::Basic { transition }
         }
-        FunctionPlaces::FunctionWithCleanup {
+        Places::WithCleanup {
             start_place,
             end_place,
             cleanup_place,
         } => {
-            let transition_foreign_call = net.add_transition(&transition_labels.0);
-            add_arc_place_transition(net, start_place, &transition_foreign_call);
-            add_arc_transition_place(net, &transition_foreign_call, end_place);
+            let transition = net.add_transition(&transition_labels.0);
+            add_arc_place_transition(net, start_place, &transition);
+            add_arc_transition_place(net, &transition, end_place);
 
-            let transition_cleanup_call = net.add_transition(&transition_labels.1);
-            add_arc_place_transition(net, start_place, &transition_cleanup_call);
-            add_arc_transition_place(net, &transition_cleanup_call, cleanup_place);
+            let cleanup_transition = net.add_transition(&transition_labels.1);
+            add_arc_place_transition(net, start_place, &cleanup_transition);
+            add_arc_transition_place(net, &cleanup_transition, cleanup_place);
 
-            (transition_foreign_call, Some(transition_cleanup_call))
+            Transitions::WithCleanup {
+                transition,
+                cleanup_transition,
+            }
         }
     }
 }

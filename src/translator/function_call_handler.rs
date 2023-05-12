@@ -1,31 +1,14 @@
 //! Submodule for defining the translator handler methods for every function call supported.
 
 use super::Translator;
-use crate::data_structures::petri_net_interface::{PlaceRef, TransitionRef};
+
 use crate::naming::function::{foreign_call_transition_labels, indexed_mir_function_name};
+use crate::translator::function::{Places, Transitions};
 use crate::translator::mir_function::MirFunction;
 use crate::translator::special_function::{call_foreign_function, is_foreign_function};
 use crate::translator::sync::link_return_value_if_sync_variable;
 use crate::utils::extract_nth_argument_as_place;
 use log::info;
-
-/// An enum containing the Petri net places for a function call.
-pub enum FunctionPlaces {
-    /// A normal function with a start and an end place.
-    /// These places represent where the function starts and ends in the Petri net.
-    Function {
-        start_place: PlaceRef,
-        end_place: PlaceRef,
-    },
-    /// A function with a start, an end place, and a cleanup place.
-    /// These places represent where the function starts and ends in the Petri net.
-    /// The cleanup place is an alternative termination path taken in case of errors.
-    FunctionWithCleanup {
-        start_place: PlaceRef,
-        end_place: PlaceRef,
-        cleanup_place: PlaceRef,
-    },
-}
 
 impl<'tcx> Translator<'tcx> {
     /// Starts the corresponding handler for the function call.
@@ -39,7 +22,7 @@ impl<'tcx> Translator<'tcx> {
         function_name: &str,
         args: &[rustc_middle::mir::Operand<'tcx>],
         destination: rustc_middle::mir::Place<'tcx>,
-        places: FunctionPlaces,
+        places: Places,
     ) {
         // Sync or multithreading function
         if self.check_supported_sync_function(function_name, args, destination, &places) {
@@ -63,7 +46,7 @@ impl<'tcx> Translator<'tcx> {
         function_name: &str,
         args: &[rustc_middle::mir::Operand<'tcx>],
         destination: rustc_middle::mir::Place<'tcx>,
-        places: &FunctionPlaces,
+        places: &Places,
     ) -> bool {
         match function_name {
             "std::mem::drop" => {
@@ -111,16 +94,16 @@ impl<'tcx> Translator<'tcx> {
         &mut self,
         function_def_id: rustc_hir::def_id::DefId,
         function_name: &str,
-        places: FunctionPlaces,
+        places: Places,
     ) {
         let index = self.function_counter.get_count(function_name);
         self.function_counter.increment(function_name);
 
         let (start_place, end_place) = match places {
-            FunctionPlaces::FunctionWithCleanup { .. } => {
+            Places::WithCleanup { .. } => {
                 panic!("BUG: Function with MIR representation should not have a cleanup place");
             }
-            FunctionPlaces::Function {
+            Places::Basic {
                 start_place,
                 end_place,
             } => (start_place, end_place),
@@ -149,19 +132,17 @@ impl<'tcx> Translator<'tcx> {
     /// In case the first argument is a mutex, lock guard, join handle or condition variable,
     /// it links the first argument of the function to its return value.
     ///
-    /// Returns a tuple containing two transition references:
-    /// The first for the transition representing the function call and
-    /// an (optional) second for the transition representing the cleanup call.
+    /// Returns the transitions representing the function call.
     fn call_foreign_function(
         &mut self,
         function_name: &str,
         args: &[rustc_middle::mir::Operand<'tcx>],
         destination: rustc_middle::mir::Place<'tcx>,
-        places: &FunctionPlaces,
-    ) -> (TransitionRef, Option<TransitionRef>) {
+        places: &Places,
+    ) -> Transitions {
         let index = self.function_counter.get_count(function_name);
         self.function_counter.increment(function_name);
-        let function_transitions = call_foreign_function(
+        let transitions = call_foreign_function(
             places,
             &foreign_call_transition_labels(function_name, index),
             &mut self.net,
@@ -176,7 +157,7 @@ impl<'tcx> Translator<'tcx> {
             self.tcx,
         );
 
-        function_transitions
+        transitions
     }
 
     /// Call to `std::mem::drop`.
@@ -186,9 +167,9 @@ impl<'tcx> Translator<'tcx> {
         function_name: &str,
         args: &[rustc_middle::mir::Operand<'tcx>],
         destination: rustc_middle::mir::Place<'tcx>,
-        places: &FunctionPlaces,
+        places: &Places,
     ) {
-        let drop_transitions = self.call_foreign_function(function_name, args, destination, places);
+        let transitions = self.call_foreign_function(function_name, args, destination, places);
 
         let current_function = self.call_stack.peek_mut();
         let Some(dropped_place) = extract_nth_argument_as_place(args, 0) else {
@@ -196,7 +177,7 @@ impl<'tcx> Translator<'tcx> {
         };
         self.mutex_manager.handle_lock_guard_drop(
             dropped_place,
-            &drop_transitions.0,
+            transitions.get_transition(),
             &current_function.memory,
             &mut self.net,
         );
@@ -209,7 +190,7 @@ impl<'tcx> Translator<'tcx> {
         function_name: &str,
         args: &[rustc_middle::mir::Operand<'tcx>],
         destination: rustc_middle::mir::Place<'tcx>,
-        places: &FunctionPlaces,
+        places: &Places,
     ) {
         self.call_foreign_function(function_name, args, destination, places);
 
@@ -228,15 +209,14 @@ impl<'tcx> Translator<'tcx> {
         function_name: &str,
         args: &[rustc_middle::mir::Operand<'tcx>],
         destination: rustc_middle::mir::Place<'tcx>,
-        places: &FunctionPlaces,
+        places: &Places,
     ) {
-        let notify_one_transitions =
-            self.call_foreign_function(function_name, args, destination, places);
+        let transitions = self.call_foreign_function(function_name, args, destination, places);
 
         let current_function = self.call_stack.peek_mut();
         self.condvar_manager.translate_side_effects_notify_one(
             args,
-            &notify_one_transitions.0,
+            transitions.get_transition(),
             &mut self.net,
             &mut current_function.memory,
         );
@@ -248,7 +228,7 @@ impl<'tcx> Translator<'tcx> {
         &mut self,
         args: &[rustc_middle::mir::Operand<'tcx>],
         destination: rustc_middle::mir::Place<'tcx>,
-        places: &FunctionPlaces,
+        places: &Places,
     ) {
         let wait_transitions = self
             .condvar_manager
@@ -272,15 +252,15 @@ impl<'tcx> Translator<'tcx> {
         function_name: &str,
         args: &[rustc_middle::mir::Operand<'tcx>],
         destination: rustc_middle::mir::Place<'tcx>,
-        places: &FunctionPlaces,
+        places: &Places,
     ) {
-        let lock_transitions = self.call_foreign_function(function_name, args, destination, places);
+        let transitions = self.call_foreign_function(function_name, args, destination, places);
 
         let current_function = self.call_stack.peek_mut();
         self.mutex_manager.translate_side_effects_lock(
             args,
             destination,
-            &lock_transitions,
+            transitions,
             &mut self.net,
             &mut current_function.memory,
         );
@@ -293,7 +273,7 @@ impl<'tcx> Translator<'tcx> {
         function_name: &str,
         args: &[rustc_middle::mir::Operand<'tcx>],
         destination: rustc_middle::mir::Place<'tcx>,
-        places: &FunctionPlaces,
+        places: &Places,
     ) {
         self.call_foreign_function(function_name, args, destination, places);
 
@@ -312,16 +292,18 @@ impl<'tcx> Translator<'tcx> {
         function_name: &str,
         args: &[rustc_middle::mir::Operand<'tcx>],
         destination: rustc_middle::mir::Place<'tcx>,
-        places: &FunctionPlaces,
+        places: &Places,
     ) {
-        let join_transitions = self.call_foreign_function(function_name, args, destination, places);
+        let transitions = self.call_foreign_function(function_name, args, destination, places);
+        let transition = match transitions {
+            Transitions::Basic { transition } | Transitions::WithCleanup { transition, .. } => {
+                transition
+            }
+        };
 
         let current_function = self.call_stack.peek();
-        self.thread_manager.translate_side_effects_join(
-            args,
-            join_transitions.0,
-            &current_function.memory,
-        );
+        self.thread_manager
+            .translate_side_effects_join(args, transition, &current_function.memory);
     }
 
     /// Call to `std::thread::spawn`.
@@ -331,16 +313,20 @@ impl<'tcx> Translator<'tcx> {
         function_name: &str,
         args: &[rustc_middle::mir::Operand<'tcx>],
         destination: rustc_middle::mir::Place<'tcx>,
-        places: &FunctionPlaces,
+        places: &Places,
     ) {
-        let spawn_transitions =
-            self.call_foreign_function(function_name, args, destination, places);
+        let transitions = self.call_foreign_function(function_name, args, destination, places);
+        let transition = match transitions {
+            Transitions::Basic { transition } | Transitions::WithCleanup { transition, .. } => {
+                transition
+            }
+        };
 
         let current_function = self.call_stack.peek_mut();
         self.thread_manager.translate_side_effects_spawn(
             args,
             destination,
-            spawn_transitions.0,
+            transition,
             &mut current_function.memory,
             current_function.def_id,
             self.tcx,

@@ -10,7 +10,7 @@ use crate::data_structures::petri_net_interface::{
 };
 use crate::data_structures::petri_net_interface::{PetriNet, TransitionRef};
 use crate::naming::condvar::wait_transition_labels;
-use crate::translator::function_call_handler::FunctionPlaces;
+use crate::translator::function::Places;
 use crate::translator::mir_function::Memory;
 use crate::utils::extract_nth_argument_as_place;
 use log::debug;
@@ -38,7 +38,7 @@ impl CondvarManager {
     /// Returns the pair of transitions that represent the function call.
     pub fn translate_call_wait(
         &mut self,
-        places: &FunctionPlaces,
+        places: &Places,
         net: &mut PetriNet,
     ) -> (TransitionRef, TransitionRef) {
         let index = self.wait_counter;
@@ -123,12 +123,12 @@ impl CondvarManager {
     /// - End place connected to a new "wait end" transition.
     /// Returns the pair of two transitions.
     fn create_wait_function_call(
-        places: &FunctionPlaces,
+        places: &Places,
         transition_labels: &(String, String, String),
         net: &mut PetriNet,
     ) -> (TransitionRef, TransitionRef) {
         match places {
-            FunctionPlaces::Function {
+            Places::Basic {
                 start_place,
                 end_place,
             } => {
@@ -140,7 +140,7 @@ impl CondvarManager {
 
                 (wait_start_transition, wait_end_transition)
             }
-            FunctionPlaces::FunctionWithCleanup {
+            Places::WithCleanup {
                 start_place,
                 end_place,
                 cleanup_place,
