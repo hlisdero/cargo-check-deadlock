@@ -189,12 +189,15 @@ impl<'tcx> Translator<'tcx> {
 
         // Depending on whether a return or a unwind for the function are present,
         // we have different possibilities for the function call end place and the (optional) cleanup place.
-        let (end_place, cleanup_place) = match (target, unwind) {
+        let places = match (target, unwind) {
             (Some(return_block), rustc_middle::mir::UnwindAction::Continue) => {
                 // MIR function or foreign function calls without a cleanup block.
                 let end_place =
                     current_function.get_end_place_for_function_call(return_block, &mut self.net);
-                (end_place, None)
+                Places::Basic {
+                    start_place,
+                    end_place,
+                }
             }
             (Some(return_block), rustc_middle::mir::UnwindAction::Cleanup(cleanup_block)) => {
                 // The usual foreign function call case.
@@ -202,18 +205,29 @@ impl<'tcx> Translator<'tcx> {
                     current_function.get_end_place_for_function_call(return_block, &mut self.net);
                 let cleanup_place =
                     current_function.get_end_place_for_function_call(cleanup_block, &mut self.net);
-                (end_place, Some(cleanup_place))
+                Places::WithCleanup {
+                    start_place,
+                    end_place,
+                    cleanup_place,
+                }
             }
             (Some(return_block), rustc_middle::mir::UnwindAction::Terminate) => {
                 // Specific foreign function calls that terminate the program (abort).
                 let end_place =
                     current_function.get_end_place_for_function_call(return_block, &mut self.net);
                 // Connect cleanup to panic place
-                (end_place, Some(self.program_panic.clone()))
+                Places::WithCleanup {
+                    start_place,
+                    end_place,
+                    cleanup_place: self.program_panic.clone(),
+                }
             }
             (None, rustc_middle::mir::UnwindAction::Terminate) => {
                 // Foreign function calls that simply terminate the program.
-                (self.program_panic.clone(), None)
+                Places::Basic {
+                    start_place,
+                    end_place: self.program_panic.clone(),
+                }
             }
             (None, rustc_middle::mir::UnwindAction::Cleanup(cleanup_block)) => {
                 // A very special case seen in functions like `std::process::exit`
@@ -221,7 +235,10 @@ impl<'tcx> Translator<'tcx> {
                 // This needs to be modelled differently than a diverging function.
                 let end_place =
                     current_function.get_end_place_for_function_call(cleanup_block, &mut self.net);
-                (end_place, None)
+                Places::Basic {
+                    start_place,
+                    end_place,
+                }
             }
             (None, rustc_middle::mir::UnwindAction::Continue) => {
                 // Call to a function which does not return (Return type: -> !).
@@ -246,26 +263,21 @@ impl<'tcx> Translator<'tcx> {
                 let end_place =
                     current_function.get_end_place_for_function_call(return_block, &mut self.net);
                 // Connect cleanup to program end place.
-                (end_place, Some(self.program_end.clone()))
+                Places::WithCleanup {
+                    start_place,
+                    end_place,
+                    cleanup_place: self.program_end.clone(),
+                }
             }
             (None, rustc_middle::mir::UnwindAction::Unreachable) => {
                 // Support the unreachable case simply by matching the cleanup place to the program end place.
                 // This is a compromise solution to avoid polluting the panic state with these extraneous states
                 // that are actually not reachable during execution.
-                (self.program_end.clone(), None)
+                Places::Basic {
+                    start_place,
+                    end_place: self.program_end.clone(),
+                }
             }
-        };
-
-        let places = match cleanup_place {
-            Some(cleanup_place) => Places::WithCleanup {
-                start_place,
-                end_place,
-                cleanup_place,
-            },
-            None => Places::Basic {
-                start_place,
-                end_place,
-            },
         };
 
         self.start_function_call(function_def_id, &function_name, args, destination, places);
