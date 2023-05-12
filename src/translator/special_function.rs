@@ -68,27 +68,37 @@ pub fn is_foreign_function(
 /// The first for the transition representing the function call and
 /// an (optional) second for the transition representing the cleanup call.
 pub fn call_foreign_function(
-    function_call_places: &FunctionPlaces,
+    places: &FunctionPlaces,
     transition_labels: &(String, String),
     net: &mut PetriNet,
 ) -> (TransitionRef, Option<TransitionRef>) {
-    let (start_place, end_place, cleanup_place) = function_call_places;
+    match places {
+        FunctionPlaces::Function {
+            start_place,
+            end_place,
+        } => {
+            let transition_foreign_call = net.add_transition(&transition_labels.0);
+            add_arc_place_transition(net, start_place, &transition_foreign_call);
+            add_arc_transition_place(net, &transition_foreign_call, end_place);
 
-    let transition_foreign_call = net.add_transition(&transition_labels.0);
-    add_arc_place_transition(net, start_place, &transition_foreign_call);
-    add_arc_transition_place(net, &transition_foreign_call, end_place);
+            (transition_foreign_call, None)
+        }
+        FunctionPlaces::FunctionWithCleanup {
+            start_place,
+            end_place,
+            cleanup_place,
+        } => {
+            let transition_foreign_call = net.add_transition(&transition_labels.0);
+            add_arc_place_transition(net, start_place, &transition_foreign_call);
+            add_arc_transition_place(net, &transition_foreign_call, end_place);
 
-    let transition_cleanup_call = match cleanup_place {
-        Some(cleanup_place) => {
             let transition_cleanup_call = net.add_transition(&transition_labels.1);
             add_arc_place_transition(net, start_place, &transition_cleanup_call);
             add_arc_transition_place(net, &transition_cleanup_call, cleanup_place);
-            Some(transition_cleanup_call)
-        }
-        None => None,
-    };
 
-    (transition_foreign_call, transition_cleanup_call)
+            (transition_foreign_call, Some(transition_cleanup_call))
+        }
+    }
 }
 
 /// Creates an abridged Petri net representation of a diverging function call.

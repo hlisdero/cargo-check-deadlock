@@ -36,6 +36,7 @@ use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef};
 use crate::data_structures::stack::Stack;
 use crate::naming::program::{PROGRAM_END, PROGRAM_PANIC, PROGRAM_START};
 use crate::utils::extract_def_id_of_called_function_from_operand;
+use function_call_handler::FunctionPlaces;
 use log::info;
 use mir_function::MirFunction;
 use rustc_middle::mir::visit::Visitor;
@@ -254,13 +255,19 @@ impl<'tcx> Translator<'tcx> {
             }
         };
 
-        self.start_function_call(
-            function_def_id,
-            &function_name,
-            args,
-            destination,
-            (start_place, end_place, cleanup_place),
-        );
+        let places = match cleanup_place {
+            Some(cleanup_place) => FunctionPlaces::FunctionWithCleanup {
+                start_place,
+                end_place,
+                cleanup_place,
+            },
+            None => FunctionPlaces::Function {
+                start_place,
+                end_place,
+            },
+        };
+
+        self.start_function_call(function_def_id, &function_name, args, destination, places);
     }
 
     /// Handler for the enum variant `TerminatorKind::Drop` in the MIR Visitor.

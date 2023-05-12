@@ -38,12 +38,12 @@ impl CondvarManager {
     /// Returns the pair of transitions that represent the function call.
     pub fn translate_call_wait(
         &mut self,
-        function_call_places: &FunctionPlaces,
+        places: &FunctionPlaces,
         net: &mut PetriNet,
     ) -> (TransitionRef, TransitionRef) {
         let index = self.wait_counter;
         self.wait_counter += 1;
-        Self::create_wait_function_call(function_call_places, &wait_transition_labels(index), net)
+        Self::create_wait_function_call(places, &wait_transition_labels(index), net)
     }
 
     /// Translates the side effects for `std::sync::Condvar::new` i.e.,
@@ -123,25 +123,41 @@ impl CondvarManager {
     /// - End place connected to a new "wait end" transition.
     /// Returns the pair of two transitions.
     fn create_wait_function_call(
-        function_call_places: &FunctionPlaces,
+        places: &FunctionPlaces,
         transition_labels: &(String, String, String),
         net: &mut PetriNet,
     ) -> (TransitionRef, TransitionRef) {
-        let (start_place, end_place, cleanup_place) = function_call_places;
+        match places {
+            FunctionPlaces::Function {
+                start_place,
+                end_place,
+            } => {
+                let wait_start_transition = net.add_transition(&transition_labels.0);
+                add_arc_place_transition(net, start_place, &wait_start_transition);
 
-        let wait_start_transition = net.add_transition(&transition_labels.0);
-        add_arc_place_transition(net, start_place, &wait_start_transition);
+                let wait_end_transition = net.add_transition(&transition_labels.1);
+                add_arc_transition_place(net, &wait_end_transition, end_place);
 
-        let wait_end_transition = net.add_transition(&transition_labels.1);
-        add_arc_transition_place(net, &wait_end_transition, end_place);
+                (wait_start_transition, wait_end_transition)
+            }
+            FunctionPlaces::FunctionWithCleanup {
+                start_place,
+                end_place,
+                cleanup_place,
+            } => {
+                let wait_start_transition = net.add_transition(&transition_labels.0);
+                add_arc_place_transition(net, start_place, &wait_start_transition);
 
-        if let Some(cleanup_place) = cleanup_place {
-            let unwind_transition = net.add_transition(&transition_labels.2);
-            add_arc_place_transition(net, start_place, &unwind_transition);
-            add_arc_transition_place(net, &unwind_transition, cleanup_place);
+                let wait_end_transition = net.add_transition(&transition_labels.1);
+                add_arc_transition_place(net, &wait_end_transition, end_place);
+
+                let unwind_transition = net.add_transition(&transition_labels.2);
+                add_arc_place_transition(net, start_place, &unwind_transition);
+                add_arc_transition_place(net, &unwind_transition, cleanup_place);
+
+                (wait_start_transition, wait_end_transition)
+            }
         }
-
-        (wait_start_transition, wait_end_transition)
     }
 
     /// Links the condition variable to the representation of
