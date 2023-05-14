@@ -1,4 +1,5 @@
 use clap::Parser;
+use granite2::model_checker::*;
 use granite2::{OutputFormat, PetriNet};
 use log::info;
 
@@ -30,6 +31,10 @@ struct CliArgs {
     /// The format for the output. Multiple formats can be specified.
     #[arg(long, value_enum)]
     format: Vec<OutputFormat>,
+
+    /// If set, a reachability analysis to find deadlocks is performed.
+    #[arg(long)]
+    deadlock_analysis: bool,
 
     /// Verbosity flag.
     #[clap(flatten)]
@@ -88,6 +93,18 @@ fn main() {
     ) {
         eprintln!("{err_str}");
         std::process::exit(ERR_OUTPUT_FILE_GENERATION);
+    }
+
+    if args.deadlock_analysis {
+        let mut filepath = args.output_folder.to_path_buf();
+        filepath.push(&args.filename);
+        filepath.set_extension(OutputFormat::Lola.to_string());
+
+        if lola::check_deadlock(filepath) {
+            println!("Result: Deadlock can be reached according to the `LoLA` model checker");
+        } else {
+            println!("Result: The program is deadlock-free according to the `LoLA` model checker");
+        }
     }
 }
 

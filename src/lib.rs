@@ -31,6 +31,7 @@ extern crate rustc_span;
 
 mod compiler_config;
 mod data_structures;
+pub mod model_checker;
 mod naming;
 mod output_format;
 mod sysroot;
