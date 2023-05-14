@@ -18,15 +18,6 @@ mod greet {
     );
 }
 
-mod empty_main {
-    use super::utils;
-
-    utils::generate_tests_for_example_program!(
-        "./examples/programs/basic/empty_main.rs",
-        "./examples/results/basic/empty_main/"
-    );
-}
-
 mod hello_world {
     use super::utils;
 

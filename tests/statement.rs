@@ -9,6 +9,15 @@ mod abort {
     );
 }
 
+mod empty_main {
+    use super::utils;
+
+    utils::generate_tests_for_example_program!(
+        "./examples/programs/statement/empty_main.rs",
+        "./examples/results/statement/empty_main/"
+    );
+}
+
 mod infinite_loop {
     use super::utils;
 
