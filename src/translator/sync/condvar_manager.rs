@@ -42,7 +42,7 @@ impl CondvarManager {
     /// Returns the pair of transitions that represent the function call.
     pub fn translate_call_wait(
         &mut self,
-        places: &Places,
+        places: Places,
         net: &mut PetriNet,
     ) -> (TransitionRef, TransitionRef) {
         let index = self.wait_counter;
@@ -55,10 +55,10 @@ impl CondvarManager {
                 end_place,
             } => {
                 let wait_start_transition = net.add_transition(&transition_labels.0);
-                add_arc_place_transition(net, start_place, &wait_start_transition);
+                add_arc_place_transition(net, &start_place, &wait_start_transition);
 
                 let wait_end_transition = net.add_transition(&transition_labels.1);
-                add_arc_transition_place(net, &wait_end_transition, end_place);
+                add_arc_transition_place(net, &wait_end_transition, &end_place);
 
                 (wait_start_transition, wait_end_transition)
             }
@@ -68,12 +68,12 @@ impl CondvarManager {
                 cleanup_place,
             } => {
                 let wait_start_transition = net.add_transition(&transition_labels.0);
-                add_arc_place_transition(net, start_place, &wait_start_transition);
+                add_arc_place_transition(net, &start_place, &wait_start_transition);
 
                 let wait_end_transition = net.add_transition(&transition_labels.1);
-                add_arc_transition_place(net, &wait_end_transition, end_place);
+                add_arc_transition_place(net, &wait_end_transition, &end_place);
 
-                connect_places(net, start_place, cleanup_place, &transition_labels.2);
+                connect_places(net, &start_place, &cleanup_place, &transition_labels.2);
 
                 (wait_start_transition, wait_end_transition)
             }

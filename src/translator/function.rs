@@ -21,6 +21,22 @@ pub enum Places {
     },
 }
 
+impl Places {
+    pub fn ignore_cleanup_place(self) -> Self {
+        match self {
+            Self::Basic { .. } => self,
+            Self::WithCleanup {
+                start_place,
+                end_place,
+                ..
+            } => Self::Basic {
+                start_place,
+                end_place,
+            },
+        }
+    }
+}
+
 /// An enum containing the Petri net transitions for a function call.
 pub enum Transitions {
     /// A basic function modelled with a single transition.

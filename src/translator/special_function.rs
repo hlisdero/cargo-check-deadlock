@@ -67,7 +67,7 @@ pub fn is_foreign_function(
 ///
 /// Returns the transition representing the function call.
 pub fn call_foreign_function(
-    places: &Places,
+    places: Places,
     transition_labels: &(String, String),
     net: &mut PetriNet,
 ) -> Transitions {
@@ -76,7 +76,7 @@ pub fn call_foreign_function(
             start_place,
             end_place,
         } => {
-            let transition = connect_places(net, start_place, end_place, &transition_labels.0);
+            let transition = connect_places(net, &start_place, &end_place, &transition_labels.0);
             Transitions::Basic { transition }
         }
         Places::WithCleanup {
@@ -84,9 +84,9 @@ pub fn call_foreign_function(
             end_place,
             cleanup_place,
         } => {
-            let transition = connect_places(net, start_place, end_place, &transition_labels.0);
+            let transition = connect_places(net, &start_place, &end_place, &transition_labels.0);
             let cleanup_transition =
-                connect_places(net, start_place, cleanup_place, &transition_labels.1);
+                connect_places(net, &start_place, &cleanup_place, &transition_labels.1);
 
             Transitions::WithCleanup {
                 transition,

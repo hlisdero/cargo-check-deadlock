@@ -20,6 +20,28 @@ pub use mutex_manager::{MutexManager, MutexRef};
 pub use thread::Thread;
 pub use thread_manager::{ThreadManager, ThreadRef};
 
+const SUPPORTED_SYNC_FUNCTIONS: [&str; 8] = [
+    "std::mem::drop",
+    "std::sync::Condvar::new",
+    "std::sync::Condvar::notify_one",
+    "std::sync::Condvar::wait",
+    "std::sync::Mutex::<T>::lock",
+    "std::sync::Mutex::<T>::new",
+    "std::thread::spawn",
+    "std::thread::JoinHandle::<T>::join",
+];
+
+/// Checks whether the function name corresponds to one of the
+/// supported synchronization or multithreading functions.
+pub fn is_supported_sync_function(function_name: &str) -> bool {
+    for name in SUPPORTED_SYNC_FUNCTIONS {
+        if function_name == name {
+            return true;
+        }
+    }
+    false
+}
+
 /// Handles MIR assignments of the form: `_X = { copy_data: move _Y }`.
 /// If the right-hand side contains a synchronization variable, link it to the left-hand side.
 pub fn handle_aggregate_assignment<'tcx>(
