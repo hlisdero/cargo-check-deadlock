@@ -1,0 +1,801 @@
+PLACE
+    MUTEX_0,
+    PROGRAM_END,
+    PROGRAM_PANIC,
+    PROGRAM_START,
+    THREAD_0_END,
+    THREAD_0_START,
+    THREAD_1_END,
+    THREAD_1_START,
+    main_BB1,
+    main_BB10,
+    main_BB11,
+    main_BB12,
+    main_BB13,
+    main_BB14,
+    main_BB15,
+    main_BB16,
+    main_BB17,
+    main_BB18,
+    main_BB19,
+    main_BB2,
+    main_BB20,
+    main_BB21,
+    main_BB22,
+    main_BB23,
+    main_BB24,
+    main_BB25,
+    main_BB26,
+    main_BB27,
+    main_BB28,
+    main_BB29,
+    main_BB3,
+    main_BB30,
+    main_BB4,
+    main_BB5,
+    main_BB6,
+    main_BB7,
+    main_BB8,
+    main_BB9,
+    main__closure_0__BB1,
+    main__closure_0__BB10,
+    main__closure_0__BB11,
+    main__closure_0__BB12,
+    main__closure_0__BB13,
+    main__closure_0__BB14,
+    main__closure_0__BB15,
+    main__closure_0__BB16,
+    main__closure_0__BB17,
+    main__closure_0__BB18,
+    main__closure_0__BB2,
+    main__closure_0__BB3,
+    main__closure_0__BB4,
+    main__closure_0__BB5,
+    main__closure_0__BB6,
+    main__closure_0__BB7,
+    main__closure_0__BB8,
+    main__closure_0__BB9,
+    main__closure_1__BB1,
+    main__closure_1__BB10,
+    main__closure_1__BB11,
+    main__closure_1__BB12,
+    main__closure_1__BB13,
+    main__closure_1__BB14,
+    main__closure_1__BB15,
+    main__closure_1__BB16,
+    main__closure_1__BB17,
+    main__closure_1__BB18,
+    main__closure_1__BB2,
+    main__closure_1__BB3,
+    main__closure_1__BB4,
+    main__closure_1__BB5,
+    main__closure_1__BB6,
+    main__closure_1__BB7,
+    main__closure_1__BB8,
+    main__closure_1__BB9;
+
+MARKING
+    MUTEX_0 : 1,
+    PROGRAM_END : 0,
+    PROGRAM_PANIC : 0,
+    PROGRAM_START : 1,
+    THREAD_0_END : 0,
+    THREAD_0_START : 0,
+    THREAD_1_END : 0,
+    THREAD_1_START : 0,
+    main_BB1 : 0,
+    main_BB10 : 0,
+    main_BB11 : 0,
+    main_BB12 : 0,
+    main_BB13 : 0,
+    main_BB14 : 0,
+    main_BB15 : 0,
+    main_BB16 : 0,
+    main_BB17 : 0,
+    main_BB18 : 0,
+    main_BB19 : 0,
+    main_BB2 : 0,
+    main_BB20 : 0,
+    main_BB21 : 0,
+    main_BB22 : 0,
+    main_BB23 : 0,
+    main_BB24 : 0,
+    main_BB25 : 0,
+    main_BB26 : 0,
+    main_BB27 : 0,
+    main_BB28 : 0,
+    main_BB29 : 0,
+    main_BB3 : 0,
+    main_BB30 : 0,
+    main_BB4 : 0,
+    main_BB5 : 0,
+    main_BB6 : 0,
+    main_BB7 : 0,
+    main_BB8 : 0,
+    main_BB9 : 0,
+    main__closure_0__BB1 : 0,
+    main__closure_0__BB10 : 0,
+    main__closure_0__BB11 : 0,
+    main__closure_0__BB12 : 0,
+    main__closure_0__BB13 : 0,
+    main__closure_0__BB14 : 0,
+    main__closure_0__BB15 : 0,
+    main__closure_0__BB16 : 0,
+    main__closure_0__BB17 : 0,
+    main__closure_0__BB18 : 0,
+    main__closure_0__BB2 : 0,
+    main__closure_0__BB3 : 0,
+    main__closure_0__BB4 : 0,
+    main__closure_0__BB5 : 0,
+    main__closure_0__BB6 : 0,
+    main__closure_0__BB7 : 0,
+    main__closure_0__BB8 : 0,
+    main__closure_0__BB9 : 0,
+    main__closure_1__BB1 : 0,
+    main__closure_1__BB10 : 0,
+    main__closure_1__BB11 : 0,
+    main__closure_1__BB12 : 0,
+    main__closure_1__BB13 : 0,
+    main__closure_1__BB14 : 0,
+    main__closure_1__BB15 : 0,
+    main__closure_1__BB16 : 0,
+    main__closure_1__BB17 : 0,
+    main__closure_1__BB18 : 0,
+    main__closure_1__BB2 : 0,
+    main__closure_1__BB3 : 0,
+    main__closure_1__BB4 : 0,
+    main__closure_1__BB5 : 0,
+    main__closure_1__BB6 : 0,
+    main__closure_1__BB7 : 0,
+    main__closure_1__BB8 : 0,
+    main__closure_1__BB9 : 0;
+
+TRANSITION core_fmt_rt_Argument_a_new_display_0_CALL
+  CONSUME
+    main_BB14 : 1;
+  PRODUCE
+    main_BB15 : 1;
+TRANSITION core_fmt_rt_Argument_a_new_display_0_CALL_UNWIND
+  CONSUME
+    main_BB14 : 1;
+  PRODUCE
+    main_BB20 : 1;
+TRANSITION main_DROP_17
+  CONSUME
+    main_BB17 : 1;
+  PRODUCE
+    MUTEX_0 : 1,
+    main_BB18 : 1;
+TRANSITION main_DROP_18
+  CONSUME
+    main_BB18 : 1;
+  PRODUCE
+    main_BB19 : 1;
+TRANSITION main_DROP_20
+  CONSUME
+    main_BB20 : 1;
+  PRODUCE
+    MUTEX_0 : 1,
+    main_BB24 : 1;
+TRANSITION main_DROP_21
+  CONSUME
+    main_BB21 : 1;
+  PRODUCE
+    main_BB22 : 1;
+TRANSITION main_DROP_23
+  CONSUME
+    main_BB23 : 1;
+  PRODUCE
+    main_BB26 : 1;
+TRANSITION main_DROP_25
+  CONSUME
+    main_BB25 : 1;
+  PRODUCE
+    main_BB28 : 1;
+TRANSITION main_DROP_27
+  CONSUME
+    main_BB27 : 1;
+  PRODUCE
+    main_BB30 : 1;
+TRANSITION main_DROP_29
+  CONSUME
+    main_BB29 : 1;
+  PRODUCE
+    main_BB21 : 1;
+TRANSITION main_DROP_UNWIND_17
+  CONSUME
+    main_BB17 : 1;
+  PRODUCE
+    main_BB24 : 1;
+TRANSITION main_RETURN
+  CONSUME
+    main_BB19 : 1;
+  PRODUCE
+    PROGRAM_END : 1;
+TRANSITION main_SWITCH_INT_21
+  CONSUME
+    main_BB30 : 1;
+  PRODUCE
+    main_BB21 : 1;
+TRANSITION main_SWITCH_INT_23
+  CONSUME
+    main_BB24 : 1;
+  PRODUCE
+    main_BB23 : 1;
+TRANSITION main_SWITCH_INT_25
+  CONSUME
+    main_BB26 : 1;
+  PRODUCE
+    main_BB25 : 1;
+TRANSITION main_SWITCH_INT_26
+  CONSUME
+    main_BB24 : 1;
+  PRODUCE
+    main_BB26 : 1;
+TRANSITION main_SWITCH_INT_27
+  CONSUME
+    main_BB28 : 1;
+  PRODUCE
+    main_BB27 : 1;
+TRANSITION main_SWITCH_INT_28
+  CONSUME
+    main_BB26 : 1;
+  PRODUCE
+    main_BB28 : 1;
+TRANSITION main_SWITCH_INT_29
+  CONSUME
+    main_BB30 : 1;
+  PRODUCE
+    main_BB29 : 1;
+TRANSITION main_SWITCH_INT_30
+  CONSUME
+    main_BB28 : 1;
+  PRODUCE
+    main_BB30 : 1;
+TRANSITION main_UNWIND_20
+  CONSUME
+    main_BB20 : 1;
+  PRODUCE
+    PROGRAM_PANIC : 1;
+TRANSITION main_UNWIND_21
+  CONSUME
+    main_BB21 : 1;
+  PRODUCE
+    PROGRAM_PANIC : 1;
+TRANSITION main_UNWIND_22
+  CONSUME
+    main_BB22 : 1;
+  PRODUCE
+    PROGRAM_PANIC : 1;
+TRANSITION main_UNWIND_23
+  CONSUME
+    main_BB23 : 1;
+  PRODUCE
+    PROGRAM_PANIC : 1;
+TRANSITION main_UNWIND_25
+  CONSUME
+    main_BB25 : 1;
+  PRODUCE
+    PROGRAM_PANIC : 1;
+TRANSITION main_UNWIND_27
+  CONSUME
+    main_BB27 : 1;
+  PRODUCE
+    PROGRAM_PANIC : 1;
+TRANSITION main_UNWIND_29
+  CONSUME
+    main_BB29 : 1;
+  PRODUCE
+    PROGRAM_PANIC : 1;
+TRANSITION main__closure_0__ASSERT_11
+  CONSUME
+    main__closure_0__BB11 : 1;
+  PRODUCE
+    main__closure_0__BB12 : 1;
+TRANSITION main__closure_0__ASSERT_CLEANUP_11
+  CONSUME
+    main__closure_0__BB11 : 1;
+  PRODUCE
+    main__closure_0__BB15 : 1;
+TRANSITION main__closure_0__DROP_12
+  CONSUME
+    main__closure_0__BB12 : 1;
+  PRODUCE
+    MUTEX_0 : 1,
+    main__closure_0__BB1 : 1;
+TRANSITION main__closure_0__DROP_13
+  CONSUME
+    main__closure_0__BB13 : 1;
+  PRODUCE
+    main__closure_0__BB14 : 1;
+TRANSITION main__closure_0__DROP_15
+  CONSUME
+    main__closure_0__BB15 : 1;
+  PRODUCE
+    MUTEX_0 : 1,
+    main__closure_0__BB17 : 1;
+TRANSITION main__closure_0__DROP_16
+  CONSUME
+    main__closure_0__BB16 : 1;
+  PRODUCE
+    MUTEX_0 : 1,
+    main__closure_0__BB17 : 1;
+TRANSITION main__closure_0__DROP_17
+  CONSUME
+    main__closure_0__BB17 : 1;
+  PRODUCE
+    main__closure_0__BB18 : 1;
+TRANSITION main__closure_0__DROP_5
+  CONSUME
+    main__closure_0__BB5 : 1;
+  PRODUCE
+    MUTEX_0 : 1,
+    main__closure_0__BB6 : 1;
+TRANSITION main__closure_0__DROP_UNWIND_12
+  CONSUME
+    main__closure_0__BB12 : 1;
+  PRODUCE
+    main__closure_0__BB17 : 1;
+TRANSITION main__closure_0__DROP_UNWIND_5
+  CONSUME
+    main__closure_0__BB5 : 1;
+  PRODUCE
+    main__closure_0__BB17 : 1;
+TRANSITION main__closure_0__GOTO_0
+  CONSUME
+    THREAD_0_START : 1;
+  PRODUCE
+    main__closure_0__BB1 : 1;
+TRANSITION main__closure_0__RETURN
+  CONSUME
+    main__closure_0__BB14 : 1;
+  PRODUCE
+    THREAD_0_END : 1;
+TRANSITION main__closure_0__SWITCH_INT_13
+  CONSUME
+    main__closure_0__BB6 : 1;
+  PRODUCE
+    main__closure_0__BB13 : 1;
+TRANSITION main__closure_0__SWITCH_INT_7
+  CONSUME
+    main__closure_0__BB6 : 1;
+  PRODUCE
+    main__closure_0__BB7 : 1;
+TRANSITION main__closure_0__UNWIND_15
+  CONSUME
+    main__closure_0__BB15 : 1;
+  PRODUCE
+    THREAD_0_END : 1;
+TRANSITION main__closure_0__UNWIND_16
+  CONSUME
+    main__closure_0__BB16 : 1;
+  PRODUCE
+    THREAD_0_END : 1;
+TRANSITION main__closure_0__UNWIND_17
+  CONSUME
+    main__closure_0__BB17 : 1;
+  PRODUCE
+    THREAD_0_END : 1;
+TRANSITION main__closure_0__UNWIND_18
+  CONSUME
+    main__closure_0__BB18 : 1;
+  PRODUCE
+    THREAD_0_END : 1;
+TRANSITION main__closure_1__ASSERT_11
+  CONSUME
+    main__closure_1__BB11 : 1;
+  PRODUCE
+    main__closure_1__BB12 : 1;
+TRANSITION main__closure_1__ASSERT_CLEANUP_11
+  CONSUME
+    main__closure_1__BB11 : 1;
+  PRODUCE
+    main__closure_1__BB15 : 1;
+TRANSITION main__closure_1__DROP_12
+  CONSUME
+    main__closure_1__BB12 : 1;
+  PRODUCE
+    MUTEX_0 : 1,
+    main__closure_1__BB1 : 1;
+TRANSITION main__closure_1__DROP_13
+  CONSUME
+    main__closure_1__BB13 : 1;
+  PRODUCE
+    main__closure_1__BB14 : 1;
+TRANSITION main__closure_1__DROP_15
+  CONSUME
+    main__closure_1__BB15 : 1;
+  PRODUCE
+    MUTEX_0 : 1,
+    main__closure_1__BB17 : 1;
+TRANSITION main__closure_1__DROP_16
+  CONSUME
+    main__closure_1__BB16 : 1;
+  PRODUCE
+    MUTEX_0 : 1,
+    main__closure_1__BB17 : 1;
+TRANSITION main__closure_1__DROP_17
+  CONSUME
+    main__closure_1__BB17 : 1;
+  PRODUCE
+    main__closure_1__BB18 : 1;
+TRANSITION main__closure_1__DROP_5
+  CONSUME
+    main__closure_1__BB5 : 1;
+  PRODUCE
+    MUTEX_0 : 1,
+    main__closure_1__BB6 : 1;
+TRANSITION main__closure_1__DROP_UNWIND_12
+  CONSUME
+    main__closure_1__BB12 : 1;
+  PRODUCE
+    main__closure_1__BB17 : 1;
+TRANSITION main__closure_1__DROP_UNWIND_5
+  CONSUME
+    main__closure_1__BB5 : 1;
+  PRODUCE
+    main__closure_1__BB17 : 1;
+TRANSITION main__closure_1__GOTO_0
+  CONSUME
+    THREAD_1_START : 1;
+  PRODUCE
+    main__closure_1__BB1 : 1;
+TRANSITION main__closure_1__RETURN
+  CONSUME
+    main__closure_1__BB14 : 1;
+  PRODUCE
+    THREAD_1_END : 1;
+TRANSITION main__closure_1__SWITCH_INT_13
+  CONSUME
+    main__closure_1__BB6 : 1;
+  PRODUCE
+    main__closure_1__BB13 : 1;
+TRANSITION main__closure_1__SWITCH_INT_7
+  CONSUME
+    main__closure_1__BB6 : 1;
+  PRODUCE
+    main__closure_1__BB7 : 1;
+TRANSITION main__closure_1__UNWIND_15
+  CONSUME
+    main__closure_1__BB15 : 1;
+  PRODUCE
+    THREAD_1_END : 1;
+TRANSITION main__closure_1__UNWIND_16
+  CONSUME
+    main__closure_1__BB16 : 1;
+  PRODUCE
+    THREAD_1_END : 1;
+TRANSITION main__closure_1__UNWIND_17
+  CONSUME
+    main__closure_1__BB17 : 1;
+  PRODUCE
+    THREAD_1_END : 1;
+TRANSITION main__closure_1__UNWIND_18
+  CONSUME
+    main__closure_1__BB18 : 1;
+  PRODUCE
+    THREAD_1_END : 1;
+TRANSITION std_clone_Clone_clone_0_CALL
+  CONSUME
+    main_BB2 : 1;
+  PRODUCE
+    main_BB3 : 1;
+TRANSITION std_clone_Clone_clone_0_CALL_UNWIND
+  CONSUME
+    main_BB2 : 1;
+  PRODUCE
+    main_BB21 : 1;
+TRANSITION std_clone_Clone_clone_1_CALL
+  CONSUME
+    main_BB3 : 1;
+  PRODUCE
+    main_BB4 : 1;
+TRANSITION std_clone_Clone_clone_1_CALL_UNWIND
+  CONSUME
+    main_BB3 : 1;
+  PRODUCE
+    main_BB30 : 1;
+TRANSITION std_fmt_Arguments_a_new_v1_0_CALL
+  CONSUME
+    main_BB15 : 1;
+  PRODUCE
+    main_BB16 : 1;
+TRANSITION std_fmt_Arguments_a_new_v1_0_CALL_UNWIND
+  CONSUME
+    main_BB15 : 1;
+  PRODUCE
+    main_BB20 : 1;
+TRANSITION std_io__print_0_CALL
+  CONSUME
+    main_BB16 : 1;
+  PRODUCE
+    main_BB17 : 1;
+TRANSITION std_io__print_0_CALL_UNWIND
+  CONSUME
+    main_BB16 : 1;
+  PRODUCE
+    main_BB20 : 1;
+TRANSITION std_ops_DerefMut_deref_mut_0_CALL
+  CONSUME
+    main__closure_1__BB10 : 1;
+  PRODUCE
+    main__closure_1__BB11 : 1;
+TRANSITION std_ops_DerefMut_deref_mut_0_CALL_UNWIND
+  CONSUME
+    main__closure_1__BB10 : 1;
+  PRODUCE
+    main__closure_1__BB15 : 1;
+TRANSITION std_ops_DerefMut_deref_mut_1_CALL
+  CONSUME
+    main__closure_0__BB10 : 1;
+  PRODUCE
+    main__closure_0__BB11 : 1;
+TRANSITION std_ops_DerefMut_deref_mut_1_CALL_UNWIND
+  CONSUME
+    main__closure_0__BB10 : 1;
+  PRODUCE
+    main__closure_0__BB15 : 1;
+TRANSITION std_ops_Deref_deref_0_CALL
+  CONSUME
+    main_BB10 : 1;
+  PRODUCE
+    main_BB11 : 1;
+TRANSITION std_ops_Deref_deref_0_CALL_UNWIND
+  CONSUME
+    main_BB10 : 1;
+  PRODUCE
+    main_BB24 : 1;
+TRANSITION std_ops_Deref_deref_1_CALL
+  CONSUME
+    main_BB13 : 1;
+  PRODUCE
+    main_BB14 : 1;
+TRANSITION std_ops_Deref_deref_1_CALL_UNWIND
+  CONSUME
+    main_BB13 : 1;
+  PRODUCE
+    main_BB20 : 1;
+TRANSITION std_ops_Deref_deref_2_CALL
+  CONSUME
+    main__closure_1__BB1 : 1;
+  PRODUCE
+    main__closure_1__BB2 : 1;
+TRANSITION std_ops_Deref_deref_2_CALL_UNWIND
+  CONSUME
+    main__closure_1__BB1 : 1;
+  PRODUCE
+    main__closure_1__BB17 : 1;
+TRANSITION std_ops_Deref_deref_3_CALL
+  CONSUME
+    main__closure_1__BB4 : 1;
+  PRODUCE
+    main__closure_1__BB5 : 1;
+TRANSITION std_ops_Deref_deref_3_CALL_UNWIND
+  CONSUME
+    main__closure_1__BB4 : 1;
+  PRODUCE
+    main__closure_1__BB16 : 1;
+TRANSITION std_ops_Deref_deref_4_CALL
+  CONSUME
+    main__closure_1__BB7 : 1;
+  PRODUCE
+    main__closure_1__BB8 : 1;
+TRANSITION std_ops_Deref_deref_4_CALL_UNWIND
+  CONSUME
+    main__closure_1__BB7 : 1;
+  PRODUCE
+    main__closure_1__BB17 : 1;
+TRANSITION std_ops_Deref_deref_5_CALL
+  CONSUME
+    main__closure_0__BB1 : 1;
+  PRODUCE
+    main__closure_0__BB2 : 1;
+TRANSITION std_ops_Deref_deref_5_CALL_UNWIND
+  CONSUME
+    main__closure_0__BB1 : 1;
+  PRODUCE
+    main__closure_0__BB17 : 1;
+TRANSITION std_ops_Deref_deref_6_CALL
+  CONSUME
+    main__closure_0__BB4 : 1;
+  PRODUCE
+    main__closure_0__BB5 : 1;
+TRANSITION std_ops_Deref_deref_6_CALL_UNWIND
+  CONSUME
+    main__closure_0__BB4 : 1;
+  PRODUCE
+    main__closure_0__BB16 : 1;
+TRANSITION std_ops_Deref_deref_7_CALL
+  CONSUME
+    main__closure_0__BB7 : 1;
+  PRODUCE
+    main__closure_0__BB8 : 1;
+TRANSITION std_ops_Deref_deref_7_CALL_UNWIND
+  CONSUME
+    main__closure_0__BB7 : 1;
+  PRODUCE
+    main__closure_0__BB17 : 1;
+TRANSITION std_result_Result_unwrap_0_CALL
+  CONSUME
+    main_BB7 : 1;
+  PRODUCE
+    main_BB8 : 1;
+TRANSITION std_result_Result_unwrap_0_CALL_UNWIND
+  CONSUME
+    main_BB7 : 1;
+  PRODUCE
+    main_BB24 : 1;
+TRANSITION std_result_Result_unwrap_1_CALL
+  CONSUME
+    main_BB9 : 1;
+  PRODUCE
+    main_BB10 : 1;
+TRANSITION std_result_Result_unwrap_1_CALL_UNWIND
+  CONSUME
+    main_BB9 : 1;
+  PRODUCE
+    main_BB24 : 1;
+TRANSITION std_result_Result_unwrap_2_CALL
+  CONSUME
+    main_BB12 : 1;
+  PRODUCE
+    main_BB13 : 1;
+TRANSITION std_result_Result_unwrap_2_CALL_UNWIND
+  CONSUME
+    main_BB12 : 1;
+  PRODUCE
+    main_BB24 : 1;
+TRANSITION std_result_Result_unwrap_3_CALL
+  CONSUME
+    main__closure_1__BB3 : 1;
+  PRODUCE
+    main__closure_1__BB4 : 1;
+TRANSITION std_result_Result_unwrap_3_CALL_UNWIND
+  CONSUME
+    main__closure_1__BB3 : 1;
+  PRODUCE
+    main__closure_1__BB17 : 1;
+TRANSITION std_result_Result_unwrap_4_CALL
+  CONSUME
+    main__closure_1__BB9 : 1;
+  PRODUCE
+    main__closure_1__BB10 : 1;
+TRANSITION std_result_Result_unwrap_4_CALL_UNWIND
+  CONSUME
+    main__closure_1__BB9 : 1;
+  PRODUCE
+    main__closure_1__BB17 : 1;
+TRANSITION std_result_Result_unwrap_5_CALL
+  CONSUME
+    main__closure_0__BB3 : 1;
+  PRODUCE
+    main__closure_0__BB4 : 1;
+TRANSITION std_result_Result_unwrap_5_CALL_UNWIND
+  CONSUME
+    main__closure_0__BB3 : 1;
+  PRODUCE
+    main__closure_0__BB17 : 1;
+TRANSITION std_result_Result_unwrap_6_CALL
+  CONSUME
+    main__closure_0__BB9 : 1;
+  PRODUCE
+    main__closure_0__BB10 : 1;
+TRANSITION std_result_Result_unwrap_6_CALL_UNWIND
+  CONSUME
+    main__closure_0__BB9 : 1;
+  PRODUCE
+    main__closure_0__BB17 : 1;
+TRANSITION std_sync_Arc_T_new_0_CALL
+  CONSUME
+    main_BB1 : 1;
+  PRODUCE
+    main_BB2 : 1;
+TRANSITION std_sync_Mutex_T_lock_0_CALL
+  CONSUME
+    MUTEX_0 : 1,
+    main_BB11 : 1;
+  PRODUCE
+    main_BB12 : 1;
+TRANSITION std_sync_Mutex_T_lock_0_CALL_UNWIND
+  CONSUME
+    MUTEX_0 : 1,
+    main_BB11 : 1;
+  PRODUCE
+    main_BB24 : 1;
+TRANSITION std_sync_Mutex_T_lock_1_CALL
+  CONSUME
+    MUTEX_0 : 1,
+    main__closure_1__BB2 : 1;
+  PRODUCE
+    main__closure_1__BB3 : 1;
+TRANSITION std_sync_Mutex_T_lock_1_CALL_UNWIND
+  CONSUME
+    MUTEX_0 : 1,
+    main__closure_1__BB2 : 1;
+  PRODUCE
+    main__closure_1__BB17 : 1;
+TRANSITION std_sync_Mutex_T_lock_2_CALL
+  CONSUME
+    MUTEX_0 : 1,
+    main__closure_1__BB8 : 1;
+  PRODUCE
+    main__closure_1__BB9 : 1;
+TRANSITION std_sync_Mutex_T_lock_2_CALL_UNWIND
+  CONSUME
+    MUTEX_0 : 1,
+    main__closure_1__BB8 : 1;
+  PRODUCE
+    main__closure_1__BB17 : 1;
+TRANSITION std_sync_Mutex_T_lock_3_CALL
+  CONSUME
+    MUTEX_0 : 1,
+    main__closure_0__BB2 : 1;
+  PRODUCE
+    main__closure_0__BB3 : 1;
+TRANSITION std_sync_Mutex_T_lock_3_CALL_UNWIND
+  CONSUME
+    MUTEX_0 : 1,
+    main__closure_0__BB2 : 1;
+  PRODUCE
+    main__closure_0__BB17 : 1;
+TRANSITION std_sync_Mutex_T_lock_4_CALL
+  CONSUME
+    MUTEX_0 : 1,
+    main__closure_0__BB8 : 1;
+  PRODUCE
+    main__closure_0__BB9 : 1;
+TRANSITION std_sync_Mutex_T_lock_4_CALL_UNWIND
+  CONSUME
+    MUTEX_0 : 1,
+    main__closure_0__BB8 : 1;
+  PRODUCE
+    main__closure_0__BB17 : 1;
+TRANSITION std_sync_Mutex_T_new_0_CALL
+  CONSUME
+    PROGRAM_START : 1;
+  PRODUCE
+    main_BB1 : 1;
+TRANSITION std_thread_JoinHandle_T_join_0_CALL
+  CONSUME
+    THREAD_1_END : 1,
+    main_BB6 : 1;
+  PRODUCE
+    main_BB7 : 1;
+TRANSITION std_thread_JoinHandle_T_join_0_CALL_UNWIND
+  CONSUME
+    main_BB6 : 1;
+  PRODUCE
+    main_BB24 : 1;
+TRANSITION std_thread_JoinHandle_T_join_1_CALL
+  CONSUME
+    THREAD_0_END : 1,
+    main_BB8 : 1;
+  PRODUCE
+    main_BB9 : 1;
+TRANSITION std_thread_JoinHandle_T_join_1_CALL_UNWIND
+  CONSUME
+    main_BB8 : 1;
+  PRODUCE
+    main_BB24 : 1;
+TRANSITION std_thread_spawn_0_CALL
+  CONSUME
+    main_BB4 : 1;
+  PRODUCE
+    THREAD_0_START : 1,
+    main_BB5 : 1;
+TRANSITION std_thread_spawn_0_CALL_UNWIND
+  CONSUME
+    main_BB4 : 1;
+  PRODUCE
+    main_BB28 : 1;
+TRANSITION std_thread_spawn_1_CALL
+  CONSUME
+    main_BB5 : 1;
+  PRODUCE
+    THREAD_1_START : 1,
+    main_BB6 : 1;
+TRANSITION std_thread_spawn_1_CALL_UNWIND
+  CONSUME
+    main_BB5 : 1;
+  PRODUCE
+    main_BB26 : 1;
