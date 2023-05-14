@@ -9,6 +9,15 @@ mod diverging {
     );
 }
 
+mod find_even {
+    use super::utils;
+
+    utils::generate_tests_for_example_program!(
+        "./examples/programs/function_call/find_even.rs",
+        "./examples/results/function_call/find_even/"
+    );
+}
+
 mod empty_function {
     use super::utils;
 
