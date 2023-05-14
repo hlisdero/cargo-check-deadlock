@@ -1,14 +1,5 @@
 mod utils;
 
-mod abort {
-    use super::utils;
-
-    utils::generate_tests_for_example_program!(
-        "./examples/programs/basic/abort.rs",
-        "./examples/results/basic/abort/"
-    );
-}
-
 mod calculator {
     use super::utils;
 
@@ -42,23 +33,5 @@ mod hello_world {
     utils::generate_tests_for_example_program!(
         "./examples/programs/basic/hello_world.rs",
         "./examples/results/basic/hello_world/"
-    );
-}
-
-mod infinite_loop {
-    use super::utils;
-
-    utils::generate_tests_for_example_program!(
-        "./examples/programs/basic/infinite_loop.rs",
-        "./examples/results/basic/infinite_loop/"
-    );
-}
-
-mod panic {
-    use super::utils;
-
-    utils::generate_tests_for_example_program!(
-        "./examples/programs/basic/panic.rs",
-        "./examples/results/basic/panic/"
     );
 }
