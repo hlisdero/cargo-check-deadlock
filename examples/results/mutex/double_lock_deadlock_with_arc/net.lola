@@ -123,22 +123,12 @@ TRANSITION std_sync_Mutex_T_lock_0_CALL
     main_BB3 : 1;
   PRODUCE
     main_BB4 : 1;
-TRANSITION std_sync_Mutex_T_lock_0_CALL_UNWIND
-  CONSUME
-    main_BB3 : 1;
-  PRODUCE
-    main_BB11 : 1;
 TRANSITION std_sync_Mutex_T_lock_1_CALL
   CONSUME
     MUTEX_0 : 1,
     main_BB5 : 1;
   PRODUCE
     main_BB6 : 1;
-TRANSITION std_sync_Mutex_T_lock_1_CALL_UNWIND
-  CONSUME
-    main_BB5 : 1;
-  PRODUCE
-    main_BB10 : 1;
 TRANSITION std_sync_Mutex_T_new_0_CALL
   CONSUME
     PROGRAM_START : 1;

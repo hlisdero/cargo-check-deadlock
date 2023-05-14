@@ -257,6 +257,13 @@ impl<'tcx> Translator<'tcx> {
 
     /// Call to `std::sync::Mutex::<T>::lock`.
     /// Non-recursive call for the translation process.
+    ///
+    /// There is an issue with how rustc compiles this call to MIR.
+    /// In some cases, the `std::sync::Mutex::<T>::lock` function contains a cleanup target.
+    /// This target is not called in practice but creates trouble for deadlock detection.
+    /// For instance, a simple double lock deadlock is not detected
+    /// because the second call could take the unwind path.
+    /// In conclusion: Ignore the cleanup place, do not model it. Assume `lock` never unwinds.
     fn call_mutex_lock(
         &mut self,
         function_name: &str,
@@ -264,6 +271,7 @@ impl<'tcx> Translator<'tcx> {
         destination: rustc_middle::mir::Place<'tcx>,
         places: Places,
     ) {
+        let places = places.ignore_cleanup_place();
         let transitions = self.call_foreign_function(function_name, args, destination, places);
 
         let current_function = self.call_stack.peek_mut();

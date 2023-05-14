@@ -201,11 +201,6 @@
           <text>std_sync_Mutex_T_lock_1_CALL</text>
         </name>
       </transition>
-      <transition id="std_sync_Mutex_T_lock_1_CALL_UNWIND">
-        <name>
-          <text>std_sync_Mutex_T_lock_1_CALL_UNWIND</text>
-        </name>
-      </transition>
       <transition id="std_sync_Mutex_T_lock_2_CALL">
         <name>
           <text>std_sync_Mutex_T_lock_2_CALL</text>
@@ -214,11 +209,6 @@
       <transition id="std_sync_Mutex_T_lock_3_CALL">
         <name>
           <text>std_sync_Mutex_T_lock_3_CALL</text>
-        </name>
-      </transition>
-      <transition id="std_sync_Mutex_T_lock_3_CALL_UNWIND">
-        <name>
-          <text>std_sync_Mutex_T_lock_3_CALL_UNWIND</text>
         </name>
       </transition>
       <transition id="std_sync_Mutex_T_new_0_CALL">
@@ -282,14 +272,6 @@
       <arc source="first_deadlock_0_BB2" target="std_sync_Mutex_T_lock_1_CALL" id="(first_deadlock_0_BB2, std_sync_Mutex_T_lock_1_CALL)">
         <name>
           <text>(first_deadlock_0_BB2, std_sync_Mutex_T_lock_1_CALL)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="first_deadlock_0_BB2" target="std_sync_Mutex_T_lock_1_CALL_UNWIND" id="(first_deadlock_0_BB2, std_sync_Mutex_T_lock_1_CALL_UNWIND)">
-        <name>
-          <text>(first_deadlock_0_BB2, std_sync_Mutex_T_lock_1_CALL_UNWIND)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -378,14 +360,6 @@
       <arc source="second_deadlock_0_BB2" target="std_sync_Mutex_T_lock_3_CALL" id="(second_deadlock_0_BB2, std_sync_Mutex_T_lock_3_CALL)">
         <name>
           <text>(second_deadlock_0_BB2, std_sync_Mutex_T_lock_3_CALL)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="second_deadlock_0_BB2" target="std_sync_Mutex_T_lock_3_CALL_UNWIND" id="(second_deadlock_0_BB2, std_sync_Mutex_T_lock_3_CALL_UNWIND)">
-        <name>
-          <text>(second_deadlock_0_BB2, std_sync_Mutex_T_lock_3_CALL_UNWIND)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -631,14 +605,6 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_sync_Mutex_T_lock_1_CALL_UNWIND" target="first_deadlock_0_BB6" id="(std_sync_Mutex_T_lock_1_CALL_UNWIND, first_deadlock_0_BB6)">
-        <name>
-          <text>(std_sync_Mutex_T_lock_1_CALL_UNWIND, first_deadlock_0_BB6)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
       <arc source="std_sync_Mutex_T_lock_2_CALL" target="second_deadlock_0_BB2" id="(std_sync_Mutex_T_lock_2_CALL, second_deadlock_0_BB2)">
         <name>
           <text>(std_sync_Mutex_T_lock_2_CALL, second_deadlock_0_BB2)</text>
@@ -650,14 +616,6 @@
       <arc source="std_sync_Mutex_T_lock_3_CALL" target="second_deadlock_0_BB3" id="(std_sync_Mutex_T_lock_3_CALL, second_deadlock_0_BB3)">
         <name>
           <text>(std_sync_Mutex_T_lock_3_CALL, second_deadlock_0_BB3)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="std_sync_Mutex_T_lock_3_CALL_UNWIND" target="second_deadlock_0_BB6" id="(std_sync_Mutex_T_lock_3_CALL_UNWIND, second_deadlock_0_BB6)">
-        <name>
-          <text>(std_sync_Mutex_T_lock_3_CALL_UNWIND, second_deadlock_0_BB6)</text>
         </name>
         <inscription>
           <text>1</text>

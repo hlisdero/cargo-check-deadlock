@@ -74,11 +74,6 @@ TRANSITION std_sync_Mutex_T_lock_1_CALL
     main_BB2 : 1;
   PRODUCE
     main_BB3 : 1;
-TRANSITION std_sync_Mutex_T_lock_1_CALL_UNWIND
-  CONSUME
-    main_BB2 : 1;
-  PRODUCE
-    main_BB6 : 1;
 TRANSITION std_sync_Mutex_T_new_0_CALL
   CONSUME
     PROGRAM_START : 1;

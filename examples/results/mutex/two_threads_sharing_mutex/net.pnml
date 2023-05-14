@@ -293,19 +293,9 @@
           <text>std_sync_Mutex_T_lock_0_CALL</text>
         </name>
       </transition>
-      <transition id="std_sync_Mutex_T_lock_0_CALL_UNWIND">
-        <name>
-          <text>std_sync_Mutex_T_lock_0_CALL_UNWIND</text>
-        </name>
-      </transition>
       <transition id="std_sync_Mutex_T_lock_1_CALL">
         <name>
           <text>std_sync_Mutex_T_lock_1_CALL</text>
-        </name>
-      </transition>
-      <transition id="std_sync_Mutex_T_lock_1_CALL_UNWIND">
-        <name>
-          <text>std_sync_Mutex_T_lock_1_CALL_UNWIND</text>
         </name>
       </transition>
       <transition id="std_sync_Mutex_T_new_0_CALL">
@@ -525,14 +515,6 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB5" target="std_sync_Mutex_T_lock_0_CALL_UNWIND" id="(main_BB5, std_sync_Mutex_T_lock_0_CALL_UNWIND)">
-        <name>
-          <text>(main_BB5, std_sync_Mutex_T_lock_0_CALL_UNWIND)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
       <arc source="main_BB6" target="std_thread_JoinHandle_T_join_0_CALL" id="(main_BB6, std_thread_JoinHandle_T_join_0_CALL)">
         <name>
           <text>(main_BB6, std_thread_JoinHandle_T_join_0_CALL)</text>
@@ -592,14 +574,6 @@
       <arc source="main__closure_0__BB1" target="std_sync_Mutex_T_lock_1_CALL" id="(main__closure_0__BB1, std_sync_Mutex_T_lock_1_CALL)">
         <name>
           <text>(main__closure_0__BB1, std_sync_Mutex_T_lock_1_CALL)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main__closure_0__BB1" target="std_sync_Mutex_T_lock_1_CALL_UNWIND" id="(main__closure_0__BB1, std_sync_Mutex_T_lock_1_CALL_UNWIND)">
-        <name>
-          <text>(main__closure_0__BB1, std_sync_Mutex_T_lock_1_CALL_UNWIND)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -925,25 +899,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_sync_Mutex_T_lock_0_CALL_UNWIND" target="main_BB15" id="(std_sync_Mutex_T_lock_0_CALL_UNWIND, main_BB15)">
-        <name>
-          <text>(std_sync_Mutex_T_lock_0_CALL_UNWIND, main_BB15)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
       <arc source="std_sync_Mutex_T_lock_1_CALL" target="main__closure_0__BB2" id="(std_sync_Mutex_T_lock_1_CALL, main__closure_0__BB2)">
         <name>
           <text>(std_sync_Mutex_T_lock_1_CALL, main__closure_0__BB2)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="std_sync_Mutex_T_lock_1_CALL_UNWIND" target="main__closure_0__BB5" id="(std_sync_Mutex_T_lock_1_CALL_UNWIND, main__closure_0__BB5)">
-        <name>
-          <text>(std_sync_Mutex_T_lock_1_CALL_UNWIND, main__closure_0__BB5)</text>
         </name>
         <inscription>
           <text>1</text>

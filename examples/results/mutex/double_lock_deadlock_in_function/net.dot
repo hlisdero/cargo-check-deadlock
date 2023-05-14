@@ -37,10 +37,8 @@ digraph petrinet {
     second_deadlock_0_UNWIND_7 [shape="box" xlabel="" label="second_deadlock_0_UNWIND_7"];
     std_sync_Mutex_T_lock_0_CALL [shape="box" xlabel="" label="std_sync_Mutex_T_lock_0_CALL"];
     std_sync_Mutex_T_lock_1_CALL [shape="box" xlabel="" label="std_sync_Mutex_T_lock_1_CALL"];
-    std_sync_Mutex_T_lock_1_CALL_UNWIND [shape="box" xlabel="" label="std_sync_Mutex_T_lock_1_CALL_UNWIND"];
     std_sync_Mutex_T_lock_2_CALL [shape="box" xlabel="" label="std_sync_Mutex_T_lock_2_CALL"];
     std_sync_Mutex_T_lock_3_CALL [shape="box" xlabel="" label="std_sync_Mutex_T_lock_3_CALL"];
-    std_sync_Mutex_T_lock_3_CALL_UNWIND [shape="box" xlabel="" label="std_sync_Mutex_T_lock_3_CALL_UNWIND"];
     std_sync_Mutex_T_new_0_CALL [shape="box" xlabel="" label="std_sync_Mutex_T_new_0_CALL"];
     std_sync_Mutex_T_new_1_CALL [shape="box" xlabel="" label="std_sync_Mutex_T_new_1_CALL"];
     MUTEX_0 -> std_sync_Mutex_T_lock_0_CALL;
@@ -50,7 +48,6 @@ digraph petrinet {
     PROGRAM_START -> std_sync_Mutex_T_new_0_CALL;
     first_deadlock_0_BB1 -> std_sync_Mutex_T_lock_0_CALL;
     first_deadlock_0_BB2 -> std_sync_Mutex_T_lock_1_CALL;
-    first_deadlock_0_BB2 -> std_sync_Mutex_T_lock_1_CALL_UNWIND;
     first_deadlock_0_BB3 -> first_deadlock_0_DROP_3;
     first_deadlock_0_BB3 -> first_deadlock_0_DROP_UNWIND_3;
     first_deadlock_0_BB4 -> first_deadlock_0_DROP_4;
@@ -62,7 +59,6 @@ digraph petrinet {
     main_BB2 -> main_RETURN;
     second_deadlock_0_BB1 -> std_sync_Mutex_T_lock_2_CALL;
     second_deadlock_0_BB2 -> std_sync_Mutex_T_lock_3_CALL;
-    second_deadlock_0_BB2 -> std_sync_Mutex_T_lock_3_CALL_UNWIND;
     second_deadlock_0_BB3 -> second_deadlock_0_DROP_3;
     second_deadlock_0_BB3 -> second_deadlock_0_DROP_UNWIND_3;
     second_deadlock_0_BB4 -> second_deadlock_0_DROP_4;
@@ -93,10 +89,8 @@ digraph petrinet {
     second_deadlock_0_UNWIND_7 -> PROGRAM_PANIC;
     std_sync_Mutex_T_lock_0_CALL -> first_deadlock_0_BB2;
     std_sync_Mutex_T_lock_1_CALL -> first_deadlock_0_BB3;
-    std_sync_Mutex_T_lock_1_CALL_UNWIND -> first_deadlock_0_BB6;
     std_sync_Mutex_T_lock_2_CALL -> second_deadlock_0_BB2;
     std_sync_Mutex_T_lock_3_CALL -> second_deadlock_0_BB3;
-    std_sync_Mutex_T_lock_3_CALL_UNWIND -> second_deadlock_0_BB6;
     std_sync_Mutex_T_new_0_CALL -> first_deadlock_0_BB1;
     std_sync_Mutex_T_new_1_CALL -> second_deadlock_0_BB1;
 }

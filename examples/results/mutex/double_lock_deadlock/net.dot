@@ -19,14 +19,12 @@ digraph petrinet {
     main_UNWIND_7 [shape="box" xlabel="" label="main_UNWIND_7"];
     std_sync_Mutex_T_lock_0_CALL [shape="box" xlabel="" label="std_sync_Mutex_T_lock_0_CALL"];
     std_sync_Mutex_T_lock_1_CALL [shape="box" xlabel="" label="std_sync_Mutex_T_lock_1_CALL"];
-    std_sync_Mutex_T_lock_1_CALL_UNWIND [shape="box" xlabel="" label="std_sync_Mutex_T_lock_1_CALL_UNWIND"];
     std_sync_Mutex_T_new_0_CALL [shape="box" xlabel="" label="std_sync_Mutex_T_new_0_CALL"];
     MUTEX_0 -> std_sync_Mutex_T_lock_0_CALL;
     MUTEX_0 -> std_sync_Mutex_T_lock_1_CALL;
     PROGRAM_START -> std_sync_Mutex_T_new_0_CALL;
     main_BB1 -> std_sync_Mutex_T_lock_0_CALL;
     main_BB2 -> std_sync_Mutex_T_lock_1_CALL;
-    main_BB2 -> std_sync_Mutex_T_lock_1_CALL_UNWIND;
     main_BB3 -> main_DROP_3;
     main_BB3 -> main_DROP_UNWIND_3;
     main_BB4 -> main_DROP_4;
@@ -46,6 +44,5 @@ digraph petrinet {
     main_UNWIND_7 -> PROGRAM_PANIC;
     std_sync_Mutex_T_lock_0_CALL -> main_BB2;
     std_sync_Mutex_T_lock_1_CALL -> main_BB3;
-    std_sync_Mutex_T_lock_1_CALL_UNWIND -> main_BB6;
     std_sync_Mutex_T_new_0_CALL -> main_BB1;
 }

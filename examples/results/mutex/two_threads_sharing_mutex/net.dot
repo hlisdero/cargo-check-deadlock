@@ -56,9 +56,7 @@ digraph petrinet {
     std_ops_Deref_deref_1_CALL_UNWIND [shape="box" xlabel="" label="std_ops_Deref_deref_1_CALL_UNWIND"];
     std_sync_Arc_T_new_0_CALL [shape="box" xlabel="" label="std_sync_Arc_T_new_0_CALL"];
     std_sync_Mutex_T_lock_0_CALL [shape="box" xlabel="" label="std_sync_Mutex_T_lock_0_CALL"];
-    std_sync_Mutex_T_lock_0_CALL_UNWIND [shape="box" xlabel="" label="std_sync_Mutex_T_lock_0_CALL_UNWIND"];
     std_sync_Mutex_T_lock_1_CALL [shape="box" xlabel="" label="std_sync_Mutex_T_lock_1_CALL"];
-    std_sync_Mutex_T_lock_1_CALL_UNWIND [shape="box" xlabel="" label="std_sync_Mutex_T_lock_1_CALL_UNWIND"];
     std_sync_Mutex_T_new_0_CALL [shape="box" xlabel="" label="std_sync_Mutex_T_new_0_CALL"];
     std_thread_JoinHandle_T_join_0_CALL [shape="box" xlabel="" label="std_thread_JoinHandle_T_join_0_CALL"];
     std_thread_JoinHandle_T_join_0_CALL_UNWIND [shape="box" xlabel="" label="std_thread_JoinHandle_T_join_0_CALL_UNWIND"];
@@ -88,7 +86,6 @@ digraph petrinet {
     main_BB4 -> std_ops_Deref_deref_0_CALL;
     main_BB4 -> std_ops_Deref_deref_0_CALL_UNWIND;
     main_BB5 -> std_sync_Mutex_T_lock_0_CALL;
-    main_BB5 -> std_sync_Mutex_T_lock_0_CALL_UNWIND;
     main_BB6 -> std_thread_JoinHandle_T_join_0_CALL;
     main_BB6 -> std_thread_JoinHandle_T_join_0_CALL_UNWIND;
     main_BB7 -> main_DROP_7;
@@ -97,7 +94,6 @@ digraph petrinet {
     main_BB8 -> main_DROP_UNWIND_8;
     main_BB9 -> main_DROP_9;
     main__closure_0__BB1 -> std_sync_Mutex_T_lock_1_CALL;
-    main__closure_0__BB1 -> std_sync_Mutex_T_lock_1_CALL_UNWIND;
     main__closure_0__BB2 -> main__closure_0__DROP_2;
     main__closure_0__BB2 -> main__closure_0__DROP_UNWIND_2;
     main__closure_0__BB3 -> main__closure_0__DROP_3;
@@ -138,9 +134,7 @@ digraph petrinet {
     std_ops_Deref_deref_1_CALL_UNWIND -> main__closure_0__BB5;
     std_sync_Arc_T_new_0_CALL -> main_BB2;
     std_sync_Mutex_T_lock_0_CALL -> main_BB6;
-    std_sync_Mutex_T_lock_0_CALL_UNWIND -> main_BB15;
     std_sync_Mutex_T_lock_1_CALL -> main__closure_0__BB2;
-    std_sync_Mutex_T_lock_1_CALL_UNWIND -> main__closure_0__BB5;
     std_sync_Mutex_T_new_0_CALL -> main_BB1;
     std_thread_JoinHandle_T_join_0_CALL -> main_BB7;
     std_thread_JoinHandle_T_join_0_CALL_UNWIND -> main_BB11;
