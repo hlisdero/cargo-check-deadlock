@@ -9,15 +9,6 @@ mod diverging {
     );
 }
 
-mod greet {
-    use super::utils;
-
-    utils::generate_tests_for_example_program!(
-        "./examples/programs/function_call/greet.rs",
-        "./examples/results/function_call/greet/"
-    );
-}
-
 mod empty_function {
     use super::utils;
 

@@ -18,6 +18,15 @@ mod calculator {
     );
 }
 
+mod greet {
+    use super::utils;
+
+    utils::generate_tests_for_example_program!(
+        "./examples/programs/basic/greet.rs",
+        "./examples/results/basic/greet/"
+    );
+}
+
 mod empty_main {
     use super::utils;
 
