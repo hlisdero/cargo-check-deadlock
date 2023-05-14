@@ -2,7 +2,10 @@
 
 use super::Translator;
 
-use crate::naming::function::{foreign_call_transition_labels, indexed_mir_function_name};
+use crate::data_structures::petri_net_interface::connect_places;
+use crate::naming::function::{
+    foreign_call_transition_labels, indexed_mir_function_cleanup_label, indexed_mir_function_name,
+};
 use crate::translator::function::{Places, Transitions};
 use crate::translator::mir_function::MirFunction;
 use crate::translator::special_function::{call_foreign_function, is_foreign_function};
@@ -100,8 +103,24 @@ impl<'tcx> Translator<'tcx> {
         self.function_counter.increment(function_name);
 
         match places {
-            Places::WithCleanup { .. } => {
-                panic!("BUG: Function with MIR representation should not have a cleanup place");
+            Places::WithCleanup {
+                start_place,
+                end_place,
+                cleanup_place,
+            } => {
+                connect_places(
+                    &mut self.net,
+                    &start_place,
+                    &cleanup_place,
+                    &indexed_mir_function_cleanup_label(function_name, index),
+                );
+
+                self.call_stack.push(MirFunction::new(
+                    function_def_id,
+                    indexed_mir_function_name(function_name, index),
+                    start_place,
+                    end_place,
+                ));
             }
             Places::Basic {
                 start_place,

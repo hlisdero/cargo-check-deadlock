@@ -18,6 +18,11 @@ pub fn indexed_mir_function_name(function_name: &str, index: usize) -> String {
     format!("{}_{index}", sanitize(function_name))
 }
 
+#[inline]
+pub fn indexed_mir_function_cleanup_label(function_name: &str, index: usize) -> String {
+    format!("{}_{index}_CALL_UNWIND", sanitize(function_name))
+}
+
 /// Label of the transition for the return statement of a function.
 #[inline]
 pub fn return_transition_label(function_name: &str) -> String {
