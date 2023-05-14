@@ -32,9 +32,13 @@ impl CondvarManager {
     }
 
     /// Translates a call to `std::sync::Condvar::wait` using
-    /// a representation specific to this function.
+    /// a representation specific to this function:
+    /// - Start place connected to a new "wait start" transition.
+    /// - End place connected to a new "wait end" transition.
+    ///
     /// A separate counter is incremented every time that
     /// the function is called to generate a unique label.
+    ///
     /// Returns the pair of transitions that represent the function call.
     pub fn translate_call_wait(
         &mut self,
@@ -43,7 +47,37 @@ impl CondvarManager {
     ) -> (TransitionRef, TransitionRef) {
         let index = self.wait_counter;
         self.wait_counter += 1;
-        Self::create_wait_function_call(places, &wait_transition_labels(index), net)
+        let transition_labels = &wait_transition_labels(index);
+
+        match places {
+            Places::Basic {
+                start_place,
+                end_place,
+            } => {
+                let wait_start_transition = net.add_transition(&transition_labels.0);
+                add_arc_place_transition(net, start_place, &wait_start_transition);
+
+                let wait_end_transition = net.add_transition(&transition_labels.1);
+                add_arc_transition_place(net, &wait_end_transition, end_place);
+
+                (wait_start_transition, wait_end_transition)
+            }
+            Places::WithCleanup {
+                start_place,
+                end_place,
+                cleanup_place,
+            } => {
+                let wait_start_transition = net.add_transition(&transition_labels.0);
+                add_arc_place_transition(net, start_place, &wait_start_transition);
+
+                let wait_end_transition = net.add_transition(&transition_labels.1);
+                add_arc_transition_place(net, &wait_end_transition, end_place);
+
+                connect_places(net, start_place, cleanup_place, &transition_labels.2);
+
+                (wait_start_transition, wait_end_transition)
+            }
+        }
     }
 
     /// Translates the side effects for `std::sync::Condvar::new` i.e.,
@@ -116,46 +150,6 @@ impl CondvarManager {
         let index = self.condvars.len();
         self.condvars.push(Condvar::new(index, net));
         CondvarRef(index)
-    }
-
-    /// Creates a new representation for a call to `std::sync::Condvar::wait`.
-    /// - Start place connected to a new "wait start" transition.
-    /// - End place connected to a new "wait end" transition.
-    /// Returns the pair of two transitions.
-    fn create_wait_function_call(
-        places: &Places,
-        transition_labels: &(String, String, String),
-        net: &mut PetriNet,
-    ) -> (TransitionRef, TransitionRef) {
-        match places {
-            Places::Basic {
-                start_place,
-                end_place,
-            } => {
-                let wait_start_transition = net.add_transition(&transition_labels.0);
-                add_arc_place_transition(net, start_place, &wait_start_transition);
-
-                let wait_end_transition = net.add_transition(&transition_labels.1);
-                add_arc_transition_place(net, &wait_end_transition, end_place);
-
-                (wait_start_transition, wait_end_transition)
-            }
-            Places::WithCleanup {
-                start_place,
-                end_place,
-                cleanup_place,
-            } => {
-                let wait_start_transition = net.add_transition(&transition_labels.0);
-                add_arc_place_transition(net, start_place, &wait_start_transition);
-
-                let wait_end_transition = net.add_transition(&transition_labels.1);
-                add_arc_transition_place(net, &wait_end_transition, end_place);
-
-                connect_places(net, start_place, cleanup_place, &transition_labels.2);
-
-                (wait_start_transition, wait_end_transition)
-            }
-        }
     }
 
     /// Links the condition variable to the representation of
