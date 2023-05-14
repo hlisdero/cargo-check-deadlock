@@ -1,0 +1,170 @@
+PLACE
+    PROGRAM_END,
+    PROGRAM_PANIC,
+    PROGRAM_START,
+    main_BB1,
+    main_BB10,
+    main_BB11,
+    main_BB12,
+    main_BB13,
+    main_BB14,
+    main_BB15,
+    main_BB2,
+    main_BB3,
+    main_BB4,
+    main_BB5,
+    main_BB6,
+    main_BB7,
+    main_BB8,
+    main_BB9;
+
+MARKING
+    PROGRAM_END : 0,
+    PROGRAM_PANIC : 0,
+    PROGRAM_START : 1,
+    main_BB1 : 0,
+    main_BB10 : 0,
+    main_BB11 : 0,
+    main_BB12 : 0,
+    main_BB13 : 0,
+    main_BB14 : 0,
+    main_BB15 : 0,
+    main_BB2 : 0,
+    main_BB3 : 0,
+    main_BB4 : 0,
+    main_BB5 : 0,
+    main_BB6 : 0,
+    main_BB7 : 0,
+    main_BB8 : 0,
+    main_BB9 : 0;
+
+TRANSITION alloc_alloc_exchange_malloc_0_CALL
+  CONSUME
+    PROGRAM_START : 1;
+  PRODUCE
+    main_BB1 : 1;
+TRANSITION core_fmt_rt_Argument_a_new_display_0_CALL
+  CONSUME
+    main_BB7 : 1;
+  PRODUCE
+    main_BB8 : 1;
+TRANSITION core_fmt_rt_Argument_a_new_display_0_CALL_UNWIND
+  CONSUME
+    main_BB7 : 1;
+  PRODUCE
+    main_BB12 : 1;
+TRANSITION core_slice__impl_T__get_0_CALL
+  CONSUME
+    main_BB3 : 1;
+  PRODUCE
+    main_BB4 : 1;
+TRANSITION core_slice__impl_T__get_0_CALL_UNWIND
+  CONSUME
+    main_BB3 : 1;
+  PRODUCE
+    main_BB12 : 1;
+TRANSITION main_ASSERT_1
+  CONSUME
+    main_BB1 : 1;
+  PRODUCE
+    main_BB14 : 1;
+TRANSITION main_DROP_10
+  CONSUME
+    main_BB10 : 1;
+  PRODUCE
+    main_BB11 : 1;
+TRANSITION main_DROP_12
+  CONSUME
+    main_BB12 : 1;
+  PRODUCE
+    main_BB13 : 1;
+TRANSITION main_GOTO_15
+  CONSUME
+    main_BB15 : 1;
+  PRODUCE
+    main_BB10 : 1;
+TRANSITION main_RETURN
+  CONSUME
+    main_BB11 : 1;
+  PRODUCE
+    PROGRAM_END : 1;
+TRANSITION main_SWITCH_INT_10
+  CONSUME
+    main_BB5 : 1;
+  PRODUCE
+    main_BB10 : 1;
+TRANSITION main_SWITCH_INT_6
+  CONSUME
+    main_BB5 : 1;
+  PRODUCE
+    main_BB6 : 1;
+TRANSITION main_UNWIND_1
+  CONSUME
+    main_BB1 : 1;
+  PRODUCE
+    PROGRAM_PANIC : 1;
+TRANSITION main_UNWIND_12
+  CONSUME
+    main_BB12 : 1;
+  PRODUCE
+    PROGRAM_PANIC : 1;
+TRANSITION main_UNWIND_13
+  CONSUME
+    main_BB13 : 1;
+  PRODUCE
+    PROGRAM_PANIC : 1;
+TRANSITION std_fmt_Arguments_a_new_v1_0_CALL
+  CONSUME
+    main_BB8 : 1;
+  PRODUCE
+    main_BB9 : 1;
+TRANSITION std_fmt_Arguments_a_new_v1_0_CALL_UNWIND
+  CONSUME
+    main_BB8 : 1;
+  PRODUCE
+    main_BB12 : 1;
+TRANSITION std_io__print_0_CALL
+  CONSUME
+    main_BB9 : 1;
+  PRODUCE
+    main_BB15 : 1;
+TRANSITION std_io__print_0_CALL_UNWIND
+  CONSUME
+    main_BB9 : 1;
+  PRODUCE
+    main_BB12 : 1;
+TRANSITION std_ops_Deref_deref_0_CALL
+  CONSUME
+    main_BB2 : 1;
+  PRODUCE
+    main_BB3 : 1;
+TRANSITION std_ops_Deref_deref_0_CALL_UNWIND
+  CONSUME
+    main_BB2 : 1;
+  PRODUCE
+    main_BB12 : 1;
+TRANSITION std_option_Option_T_is_some_0_CALL
+  CONSUME
+    main_BB4 : 1;
+  PRODUCE
+    main_BB5 : 1;
+TRANSITION std_option_Option_T_is_some_0_CALL_UNWIND
+  CONSUME
+    main_BB4 : 1;
+  PRODUCE
+    main_BB12 : 1;
+TRANSITION std_option_Option_T_unwrap_0_CALL
+  CONSUME
+    main_BB6 : 1;
+  PRODUCE
+    main_BB7 : 1;
+TRANSITION std_option_Option_T_unwrap_0_CALL_UNWIND
+  CONSUME
+    main_BB6 : 1;
+  PRODUCE
+    main_BB12 : 1;
+TRANSITION std_slice__impl_T__into_vec_0_CALL
+  CONSUME
+    main_BB14 : 1;
+  PRODUCE
+    main_BB2 : 1;
