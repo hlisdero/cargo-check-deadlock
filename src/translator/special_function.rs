@@ -24,9 +24,12 @@ const PANIC_FUNCTIONS: [&str; 5] = [
 /// These are:
 /// - All the standard library functions.
 /// - All the core library functions.
+/// - All the functions in `alloc`, the core allocation and collections library.
 #[inline]
 fn is_function_excluded_from_translation(function_name: &str) -> bool {
-    function_name.starts_with("std::") || function_name.starts_with("core::")
+    function_name.starts_with("std::")
+        || function_name.starts_with("core::")
+        || function_name.starts_with("alloc::")
 }
 
 /// Checks whether the function name corresponds to one of the functions
