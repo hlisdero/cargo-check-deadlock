@@ -7,8 +7,6 @@
 //!
 //! NOTE: For the library code to compile, you will need to first run the following:
 //!   rustup component add rustc-dev llvm-tools-preview
-//!
-//! Tested with rustc 1.67.0-nightly (b3bc6bf31 2022-11-24)
 
 // This feature gate is necessary to access the internal crates of the compiler.
 // It has existed for a long time and since the compiler internals will never be stabilized,
@@ -34,11 +32,13 @@ extern crate rustc_span;
 mod compiler_config;
 mod data_structures;
 mod naming;
+mod output_format;
 mod sysroot;
 mod translator;
 mod utils;
 
 pub use data_structures::petri_net_interface::PetriNet;
+pub use output_format::OutputFormat;
 
 /// Entry point for the translation of the Rust code to a Petri net.
 ///

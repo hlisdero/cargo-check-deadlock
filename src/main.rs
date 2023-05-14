@@ -1,31 +1,11 @@
-use clap::{Parser, ValueEnum};
-use granite2::PetriNet;
+use clap::Parser;
+use granite2::{OutputFormat, PetriNet};
 use log::info;
 
 const ERR_SOURCE_FILE_NOT_FOUND: i32 = 1;
 const ERR_OUTPUT_FOLDER_NOT_FOUND: i32 = 2;
 const ERR_TRANSLATION: i32 = 3;
 const ERR_OUTPUT_FILE_GENERATION: i32 = 4;
-
-#[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, ValueEnum)]
-enum OutputFormat {
-    /// Petri Net Markup Language - <https://www.pnml.org/>
-    Pnml,
-    /// LoLA - A Low Level Petri Net Analyzer - A model checker by the Universität Rostock
-    Lola,
-    /// DOT (graph description language)
-    Dot,
-}
-
-impl std::fmt::Display for OutputFormat {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        match self {
-            Self::Dot => write!(f, "dot"),
-            Self::Lola => write!(f, "lola"),
-            Self::Pnml => write!(f, "pnml"),
-        }
-    }
-}
 
 /// Convert a Rust source code file into a Petri net and export
 /// the resulting net in one of the supported formats.
@@ -118,17 +98,7 @@ fn create_output_files(
     format: &Vec<OutputFormat>,
 ) -> Result<(), std::io::Error> {
     for format in format {
-        let mut filepath = output_folder.to_path_buf();
-        filepath.push(filename);
-        filepath.set_extension(format.to_string());
-
-        info!("Creating output file {}...", filepath.to_string_lossy());
-        let mut file = std::fs::File::create(filepath)?;
-        match format {
-            OutputFormat::Dot => petri_net.to_dot(&mut file)?,
-            OutputFormat::Lola => petri_net.to_lola(&mut file)?,
-            OutputFormat::Pnml => petri_net.to_pnml(&mut file)?,
-        }
+        format.create_output_file(petri_net, filename, output_folder)?;
     }
     Ok(())
 }
