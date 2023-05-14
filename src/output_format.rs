@@ -15,6 +15,12 @@ pub enum OutputFormat {
 }
 
 impl OutputFormat {
+    /// Converts a Petri net to an output file named `filename` in the given output folder.
+    ///
+    /// # Errors
+    ///
+    /// If the file cannot be created, then the function returns an error.
+    /// If the Petri net cannot be written to the file, then the function returns an error.
     pub fn create_output_file(
         &self,
         petri_net: &PetriNet,
