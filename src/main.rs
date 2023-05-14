@@ -1,5 +1,5 @@
 use clap::Parser;
-use granite2::model_checker::*;
+use granite2::model_checker::lola;
 use granite2::{OutputFormat, PetriNet};
 use log::info;
 
@@ -96,7 +96,7 @@ fn main() {
     }
 
     if args.deadlock_analysis {
-        let mut filepath = args.output_folder.to_path_buf();
+        let mut filepath = args.output_folder;
         filepath.push(&args.filename);
         filepath.set_extension(OutputFormat::Lola.to_string());
 
