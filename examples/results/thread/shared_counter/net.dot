@@ -199,15 +199,10 @@ digraph petrinet {
     std_thread_spawn_1_CALL [shape="box" xlabel="" label="std_thread_spawn_1_CALL"];
     std_thread_spawn_1_CALL_UNWIND [shape="box" xlabel="" label="std_thread_spawn_1_CALL_UNWIND"];
     MUTEX_0 -> std_sync_Mutex_T_lock_0_CALL;
-    MUTEX_0 -> std_sync_Mutex_T_lock_0_CALL_UNWIND;
     MUTEX_0 -> std_sync_Mutex_T_lock_1_CALL;
-    MUTEX_0 -> std_sync_Mutex_T_lock_1_CALL_UNWIND;
     MUTEX_0 -> std_sync_Mutex_T_lock_2_CALL;
-    MUTEX_0 -> std_sync_Mutex_T_lock_2_CALL_UNWIND;
     MUTEX_0 -> std_sync_Mutex_T_lock_3_CALL;
-    MUTEX_0 -> std_sync_Mutex_T_lock_3_CALL_UNWIND;
     MUTEX_0 -> std_sync_Mutex_T_lock_4_CALL;
-    MUTEX_0 -> std_sync_Mutex_T_lock_4_CALL_UNWIND;
     PROGRAM_START -> std_sync_Mutex_T_new_0_CALL;
     THREAD_0_END -> std_thread_JoinHandle_T_join_1_CALL;
     THREAD_0_START -> main__closure_0__GOTO_0;

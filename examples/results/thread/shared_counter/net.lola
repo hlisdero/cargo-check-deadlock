@@ -698,7 +698,6 @@ TRANSITION std_sync_Mutex_T_lock_0_CALL
     main_BB12 : 1;
 TRANSITION std_sync_Mutex_T_lock_0_CALL_UNWIND
   CONSUME
-    MUTEX_0 : 1,
     main_BB11 : 1;
   PRODUCE
     main_BB24 : 1;
@@ -710,7 +709,6 @@ TRANSITION std_sync_Mutex_T_lock_1_CALL
     main__closure_1__BB3 : 1;
 TRANSITION std_sync_Mutex_T_lock_1_CALL_UNWIND
   CONSUME
-    MUTEX_0 : 1,
     main__closure_1__BB2 : 1;
   PRODUCE
     main__closure_1__BB17 : 1;
@@ -722,7 +720,6 @@ TRANSITION std_sync_Mutex_T_lock_2_CALL
     main__closure_1__BB9 : 1;
 TRANSITION std_sync_Mutex_T_lock_2_CALL_UNWIND
   CONSUME
-    MUTEX_0 : 1,
     main__closure_1__BB8 : 1;
   PRODUCE
     main__closure_1__BB17 : 1;
@@ -734,7 +731,6 @@ TRANSITION std_sync_Mutex_T_lock_3_CALL
     main__closure_0__BB3 : 1;
 TRANSITION std_sync_Mutex_T_lock_3_CALL_UNWIND
   CONSUME
-    MUTEX_0 : 1,
     main__closure_0__BB2 : 1;
   PRODUCE
     main__closure_0__BB17 : 1;
@@ -746,7 +742,6 @@ TRANSITION std_sync_Mutex_T_lock_4_CALL
     main__closure_0__BB9 : 1;
 TRANSITION std_sync_Mutex_T_lock_4_CALL_UNWIND
   CONSUME
-    MUTEX_0 : 1,
     main__closure_0__BB8 : 1;
   PRODUCE
     main__closure_0__BB17 : 1;

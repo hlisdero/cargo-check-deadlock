@@ -60,20 +60,11 @@ impl MutexManager {
         let mutex_ref = memory.get_linked_mutex(&self_ref);
 
         match transitions {
-            Transitions::Basic { transition } => {
+            Transitions::Basic { transition } | Transitions::WithCleanup { transition, .. } => {
                 self.add_lock_guard(*mutex_ref, &transition, net);
-            }
-            Transitions::WithCleanup {
-                transition,
-                cleanup_transition,
-            } => {
-                self.add_lock_guard(*mutex_ref, &transition, net);
-                // If there is a drop transition for the cleanup of the lock function, connect it to the mutex too!
-                // Otherwise the deadlock will not be detected since the program
-                // could continue down the cleanup path and end in the panic end state.
-                self.add_lock_guard(*mutex_ref, &cleanup_transition, net);
             }
         }
+
         // The return value contains a new lock guard. Link the local variable to it.
         memory.link_place_to_lock_guard(return_value, *mutex_ref);
         debug!("NEW LOCK GUARD: {return_value:?}");

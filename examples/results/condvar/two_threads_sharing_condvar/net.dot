@@ -106,9 +106,7 @@ digraph petrinet {
     CONDVAR_0_P4 -> std_sync_Condvar_wait_0_END;
     MUTEX_0 -> std_sync_Condvar_wait_0_END;
     MUTEX_0 -> std_sync_Mutex_T_lock_0_CALL;
-    MUTEX_0 -> std_sync_Mutex_T_lock_0_CALL_UNWIND;
     MUTEX_0 -> std_sync_Mutex_T_lock_1_CALL;
-    MUTEX_0 -> std_sync_Mutex_T_lock_1_CALL_UNWIND;
     PROGRAM_START -> std_sync_Mutex_T_new_0_CALL;
     THREAD_0_START -> std_ops_Deref_deref_2_CALL;
     THREAD_0_START -> std_ops_Deref_deref_2_CALL_UNWIND;
