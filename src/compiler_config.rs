@@ -14,7 +14,7 @@ use rustc_session::config::{self, CheckCfg};
 
 pub fn prepare_rustc_config(
     sysroot: std::path::PathBuf,
-    source_file_path: std::path::PathBuf,
+    source_code_filepath: std::path::PathBuf,
 ) -> rustc_interface::Config {
     rustc_interface::Config {
         opts: config::Options {
@@ -23,7 +23,7 @@ pub fn prepare_rustc_config(
         },
         crate_cfg: rustc_hash::FxHashSet::default(),
         crate_check_cfg: CheckCfg::default(),
-        input: config::Input::File(source_file_path),
+        input: config::Input::File(source_code_filepath),
         output_dir: None,
         output_file: None,
         file_loader: None,

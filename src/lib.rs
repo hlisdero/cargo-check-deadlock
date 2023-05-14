@@ -51,9 +51,9 @@ pub use output_format::OutputFormat;
 ///
 /// If the global typing context `rustc_middle::ty::TyCtxt` cannot be found, then the function panics.
 /// If the translation failed due to a bug, then the function panics.
-pub fn run(source_file_path: std::path::PathBuf) -> Result<PetriNet, &'static str> {
+pub fn run(source_code_filepath: std::path::PathBuf) -> Result<PetriNet, &'static str> {
     let sysroot = sysroot::get_from_rustc()?;
-    let config = compiler_config::prepare_rustc_config(sysroot, source_file_path);
+    let config = compiler_config::prepare_rustc_config(sysroot, source_code_filepath);
     let mut translation_result: Result<PetriNet, &'static str> = Err("Translation did not run");
 
     rustc_interface::run_compiler(config, |compiler| {
