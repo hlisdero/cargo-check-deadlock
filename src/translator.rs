@@ -297,15 +297,10 @@ impl<'tcx> Translator<'tcx> {
             rustc_middle::mir::UnwindAction::Cleanup(cleanup) => {
                 function.drop(target, Some(cleanup), &mut self.net)
             }
-            rustc_middle::mir::UnwindAction::Continue => function.drop(target, None, &mut self.net),
-            rustc_middle::mir::UnwindAction::Terminate => {
-                let transition = function.unwind(&self.program_panic, &mut self.net);
-                self.mutex_manager.handle_lock_guard_drop(
-                    place,
-                    &transition,
-                    &function.memory,
-                    &mut self.net,
-                );
+            // Do NOT model the `Terminate` case.
+            // It is not relevant for deadlock detection and makes the Petri nets unnecessarily bigger.
+            rustc_middle::mir::UnwindAction::Continue
+            | rustc_middle::mir::UnwindAction::Terminate => {
                 function.drop(target, None, &mut self.net)
             }
             rustc_middle::mir::UnwindAction::Unreachable => {
@@ -342,12 +337,11 @@ impl<'tcx> Translator<'tcx> {
             rustc_middle::mir::UnwindAction::Cleanup(cleanup) => {
                 function.assert(target, Some(cleanup), &mut self.net);
             }
-            rustc_middle::mir::UnwindAction::Continue => {
+            // Do NOT model the `Terminate` case.
+            // It is not relevant for deadlock detection and makes the Petri nets unnecessarily bigger.
+            rustc_middle::mir::UnwindAction::Continue
+            | rustc_middle::mir::UnwindAction::Terminate => {
                 function.assert(target, None, &mut self.net);
-            }
-            rustc_middle::mir::UnwindAction::Terminate => {
-                function.assert(target, None, &mut self.net);
-                function.unwind(&self.program_panic, &mut self.net);
             }
             rustc_middle::mir::UnwindAction::Unreachable => {
                 function.assert(target, None, &mut self.net);
