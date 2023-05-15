@@ -25,10 +25,10 @@ pub fn check_deadlock(net_filepath: std::path::PathBuf) -> bool {
     // Parse the answer to the reachability analysis and panic otherwise.
     let stderr_string =
         String::from_utf8(output.stderr).expect("Failed to conver the `lola` stderr to UTF-8");
-    if stderr_string.find("result: yes").is_some() {
+    if stderr_string.contains("result: yes") {
         return true;
     }
-    if stderr_string.find("result: no").is_some() {
+    if stderr_string.contains("result: no") {
         return false;
     }
     panic!("Unknown output in command `lola`: {stderr_string}");
