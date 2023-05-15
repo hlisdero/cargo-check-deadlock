@@ -115,6 +115,7 @@ digraph petrinet {
     main_RETURN -> PROGRAM_END;
     main_SWITCH_INT_12 -> main_BB12;
     main_SWITCH_INT_14 -> main_BB14;
+    main_UNWIND_11 -> MUTEX_0;
     main_UNWIND_11 -> PROGRAM_PANIC;
     main_UNWIND_12 -> PROGRAM_PANIC;
     main_UNWIND_13 -> PROGRAM_PANIC;

@@ -493,6 +493,14 @@
           <text>1</text>
         </inscription>
       </arc>
+      <arc source="first_deadlock_0_UNWIND_6" target="MUTEX_0" id="(first_deadlock_0_UNWIND_6, MUTEX_0)">
+        <name>
+          <text>(first_deadlock_0_UNWIND_6, MUTEX_0)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
       <arc source="first_deadlock_0_UNWIND_6" target="PROGRAM_PANIC" id="(first_deadlock_0_UNWIND_6, PROGRAM_PANIC)">
         <name>
           <text>(first_deadlock_0_UNWIND_6, PROGRAM_PANIC)</text>
@@ -584,6 +592,14 @@
       <arc source="second_deadlock_0_RETURN" target="main_BB2" id="(second_deadlock_0_RETURN, main_BB2)">
         <name>
           <text>(second_deadlock_0_RETURN, main_BB2)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="second_deadlock_0_UNWIND_6" target="MUTEX_1" id="(second_deadlock_0_UNWIND_6, MUTEX_1)">
+        <name>
+          <text>(second_deadlock_0_UNWIND_6, MUTEX_1)</text>
         </name>
         <inscription>
           <text>1</text>

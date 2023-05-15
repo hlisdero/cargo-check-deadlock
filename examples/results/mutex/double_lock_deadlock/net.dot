@@ -41,6 +41,7 @@ digraph petrinet {
     main_DROP_UNWIND_3 -> MUTEX_0;
     main_DROP_UNWIND_3 -> main_BB6;
     main_RETURN -> PROGRAM_END;
+    main_UNWIND_6 -> MUTEX_0;
     main_UNWIND_6 -> PROGRAM_PANIC;
     main_UNWIND_7 -> PROGRAM_PANIC;
     std_sync_Mutex_T_lock_0_CALL -> main_BB2;

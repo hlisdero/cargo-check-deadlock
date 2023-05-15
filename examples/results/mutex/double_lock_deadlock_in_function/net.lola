@@ -77,6 +77,7 @@ TRANSITION first_deadlock_0_UNWIND_6
   CONSUME
     first_deadlock_0_BB6 : 1;
   PRODUCE
+    MUTEX_0 : 1,
     PROGRAM_PANIC : 1;
 TRANSITION first_deadlock_0_UNWIND_7
   CONSUME
@@ -121,6 +122,7 @@ TRANSITION second_deadlock_0_UNWIND_6
   CONSUME
     second_deadlock_0_BB6 : 1;
   PRODUCE
+    MUTEX_1 : 1,
     PROGRAM_PANIC : 1;
 TRANSITION second_deadlock_0_UNWIND_7
   CONSUME

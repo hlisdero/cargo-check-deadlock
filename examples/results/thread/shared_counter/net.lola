@@ -257,6 +257,7 @@ TRANSITION main_UNWIND_20
   CONSUME
     main_BB20 : 1;
   PRODUCE
+    MUTEX_0 : 1,
     PROGRAM_PANIC : 1;
 TRANSITION main_UNWIND_21
   CONSUME
@@ -368,11 +369,13 @@ TRANSITION main__closure_0__UNWIND_15
   CONSUME
     main__closure_0__BB15 : 1;
   PRODUCE
+    MUTEX_0 : 1,
     THREAD_0_END : 1;
 TRANSITION main__closure_0__UNWIND_16
   CONSUME
     main__closure_0__BB16 : 1;
   PRODUCE
+    MUTEX_0 : 1,
     THREAD_0_END : 1;
 TRANSITION main__closure_0__UNWIND_17
   CONSUME
@@ -464,11 +467,13 @@ TRANSITION main__closure_1__UNWIND_15
   CONSUME
     main__closure_1__BB15 : 1;
   PRODUCE
+    MUTEX_0 : 1,
     THREAD_1_END : 1;
 TRANSITION main__closure_1__UNWIND_16
   CONSUME
     main__closure_1__BB16 : 1;
   PRODUCE
+    MUTEX_0 : 1,
     THREAD_1_END : 1;
 TRANSITION main__closure_1__UNWIND_17
   CONSUME

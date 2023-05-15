@@ -492,6 +492,14 @@
           <text>1</text>
         </inscription>
       </arc>
+      <arc source="main_UNWIND_9" target="MUTEX_0" id="(main_UNWIND_9, MUTEX_0)">
+        <name>
+          <text>(main_UNWIND_9, MUTEX_0)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
       <arc source="main_UNWIND_9" target="PROGRAM_PANIC" id="(main_UNWIND_9, PROGRAM_PANIC)">
         <name>
           <text>(main_UNWIND_9, PROGRAM_PANIC)</text>

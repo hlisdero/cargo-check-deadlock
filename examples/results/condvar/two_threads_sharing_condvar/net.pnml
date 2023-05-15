@@ -1168,6 +1168,14 @@
           <text>1</text>
         </inscription>
       </arc>
+      <arc source="main_UNWIND_20" target="MUTEX_0" id="(main_UNWIND_20, MUTEX_0)">
+        <name>
+          <text>(main_UNWIND_20, MUTEX_0)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
       <arc source="main_UNWIND_20" target="PROGRAM_PANIC" id="(main_UNWIND_20, PROGRAM_PANIC)">
         <name>
           <text>(main_UNWIND_20, PROGRAM_PANIC)</text>
@@ -1251,6 +1259,14 @@
       <arc source="main__closure_0__UNWIND_10" target="THREAD_0_END" id="(main__closure_0__UNWIND_10, THREAD_0_END)">
         <name>
           <text>(main__closure_0__UNWIND_10, THREAD_0_END)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main__closure_0__UNWIND_8" target="MUTEX_0" id="(main__closure_0__UNWIND_8, MUTEX_0)">
+        <name>
+          <text>(main__closure_0__UNWIND_8, MUTEX_0)</text>
         </name>
         <inscription>
           <text>1</text>

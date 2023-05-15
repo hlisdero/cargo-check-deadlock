@@ -2178,6 +2178,14 @@
           <text>1</text>
         </inscription>
       </arc>
+      <arc source="main_UNWIND_20" target="MUTEX_0" id="(main_UNWIND_20, MUTEX_0)">
+        <name>
+          <text>(main_UNWIND_20, MUTEX_0)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
       <arc source="main_UNWIND_20" target="PROGRAM_PANIC" id="(main_UNWIND_20, PROGRAM_PANIC)">
         <name>
           <text>(main_UNWIND_20, PROGRAM_PANIC)</text>
@@ -2394,9 +2402,25 @@
           <text>1</text>
         </inscription>
       </arc>
+      <arc source="main__closure_0__UNWIND_15" target="MUTEX_0" id="(main__closure_0__UNWIND_15, MUTEX_0)">
+        <name>
+          <text>(main__closure_0__UNWIND_15, MUTEX_0)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
       <arc source="main__closure_0__UNWIND_15" target="THREAD_0_END" id="(main__closure_0__UNWIND_15, THREAD_0_END)">
         <name>
           <text>(main__closure_0__UNWIND_15, THREAD_0_END)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main__closure_0__UNWIND_16" target="MUTEX_0" id="(main__closure_0__UNWIND_16, MUTEX_0)">
+        <name>
+          <text>(main__closure_0__UNWIND_16, MUTEX_0)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -2586,9 +2610,25 @@
           <text>1</text>
         </inscription>
       </arc>
+      <arc source="main__closure_1__UNWIND_15" target="MUTEX_0" id="(main__closure_1__UNWIND_15, MUTEX_0)">
+        <name>
+          <text>(main__closure_1__UNWIND_15, MUTEX_0)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
       <arc source="main__closure_1__UNWIND_15" target="THREAD_1_END" id="(main__closure_1__UNWIND_15, THREAD_1_END)">
         <name>
           <text>(main__closure_1__UNWIND_15, THREAD_1_END)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main__closure_1__UNWIND_16" target="MUTEX_0" id="(main__closure_1__UNWIND_16, MUTEX_0)">
+        <name>
+          <text>(main__closure_1__UNWIND_16, MUTEX_0)</text>
         </name>
         <inscription>
           <text>1</text>
