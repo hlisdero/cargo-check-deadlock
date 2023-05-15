@@ -14,9 +14,8 @@ use std::process::Command;
 #[must_use]
 pub fn check_deadlock(net_filepath: std::path::PathBuf) -> bool {
     let output = Command::new("lola")
-        .arg("--formula=EF (DEADLOCK AND (PROGRAM_END = 0 AND PROGRAM_PANIC = 0))")
-        .arg("-p")
         .arg(net_filepath)
+        .arg("--formula=EF (DEADLOCK AND (PROGRAM_END = 0 AND PROGRAM_PANIC = 0))")
         .output()
         .expect(
             "Could not execute `lola`. Please check that the program is installed and added to the $PATH",
@@ -24,12 +23,13 @@ pub fn check_deadlock(net_filepath: std::path::PathBuf) -> bool {
 
     // For some reason `LoLA` only generates output to `stderr`.
     // Parse the answer to the reachability analysis and panic otherwise.
-    let stdout_string = String::from_utf8_lossy(&output.stderr);
-    if stdout_string.find("result: yes").is_some() {
+    let stderr_string =
+        String::from_utf8(output.stderr).expect("Failed to conver the `lola` stderr to UTF-8");
+    if stderr_string.find("result: yes").is_some() {
         return true;
     }
-    if stdout_string.find("result: no").is_some() {
+    if stderr_string.find("result: no").is_some() {
         return false;
     }
-    panic!("Unknown output in command `lola`: {stdout_string}");
+    panic!("Unknown output in command `lola`: {stderr_string}");
 }
