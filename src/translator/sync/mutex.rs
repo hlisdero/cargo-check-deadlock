@@ -29,14 +29,14 @@ impl Mutex {
     /// Adds a lock guard for this mutex.
     /// Connects the mutex's place to the transition, then the transition will only
     /// fire if the mutex is unlocked.
-    pub fn add_lock_guard(&self, transition_lock: &TransitionRef, net: &mut PetriNet) {
-        add_arc_place_transition(net, &self.place_ref, transition_lock);
+    pub fn add_lock_guard(&self, lock_transition: &TransitionRef, net: &mut PetriNet) {
+        add_arc_place_transition(net, &self.place_ref, lock_transition);
     }
 
     /// Adds an unlock guard for this mutex.
     /// Connects the transition to the mutex's place, then the transition will
     /// replenish the token in the mutex when it fires.
-    pub fn add_unlock_guard(&self, transition_unlock: &TransitionRef, net: &mut PetriNet) {
-        add_arc_transition_place(net, transition_unlock, &self.place_ref);
+    pub fn add_unlock_guard(&self, unlock_transition: &TransitionRef, net: &mut PetriNet) {
+        add_arc_transition_place(net, unlock_transition, &self.place_ref);
     }
 }

@@ -37,7 +37,7 @@ use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef};
 use crate::data_structures::stack::Stack;
 use crate::naming::program::{PROGRAM_END, PROGRAM_PANIC, PROGRAM_START};
 use crate::utils::extract_def_id_of_called_function_from_operand;
-use function::{Places, Transitions};
+use function::Places;
 use log::info;
 use mir_function::MirFunction;
 use rustc_middle::mir::visit::Visitor;
@@ -307,20 +307,20 @@ impl<'tcx> Translator<'tcx> {
                 function.drop(target, None, &mut self.net)
             }
         };
-        // Convert the tuple to the `Transitions` enum.
-        let transitions = match cleanup_transition {
-            Some(cleanup_transition) => Transitions::WithCleanup {
-                transition,
-                cleanup_transition,
-            },
-            None => Transitions::Basic { transition },
-        };
         self.mutex_manager.handle_lock_guard_drop(
             place,
-            transitions,
+            &transition,
             &function.memory,
             &mut self.net,
         );
+        if let Some(cleanup_transition) = cleanup_transition {
+            self.mutex_manager.handle_lock_guard_drop(
+                place,
+                &cleanup_transition,
+                &function.memory,
+                &mut self.net,
+            );
+        }
     }
 
     /// Handler for the enum variant `TerminatorKind::Assert` in the MIR Visitor.

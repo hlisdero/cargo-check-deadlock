@@ -185,12 +185,34 @@ impl<'tcx> Translator<'tcx> {
         let Some(dropped_place) = extract_nth_argument_as_place(args, 0) else {
             panic!("BUG: `std::mem::drop` should receive the value to be dropped as a place");
         };
-        self.mutex_manager.handle_lock_guard_drop(
-            dropped_place,
-            transitions,
-            &current_function.memory,
-            &mut self.net,
-        );
+
+        match transitions {
+            Transitions::Basic { transition } => {
+                self.mutex_manager.handle_lock_guard_drop(
+                    dropped_place,
+                    &transition,
+                    &current_function.memory,
+                    &mut self.net,
+                );
+            }
+            Transitions::WithCleanup {
+                transition,
+                cleanup_transition,
+            } => {
+                self.mutex_manager.handle_lock_guard_drop(
+                    dropped_place,
+                    &transition,
+                    &current_function.memory,
+                    &mut self.net,
+                );
+                self.mutex_manager.handle_lock_guard_drop(
+                    dropped_place,
+                    &cleanup_transition,
+                    &current_function.memory,
+                    &mut self.net,
+                );
+            }
+        }
     }
 
     /// Call to `std::sync::Condvar::new`.
@@ -273,15 +295,19 @@ impl<'tcx> Translator<'tcx> {
     ) {
         let places = places.ignore_cleanup_place();
         let transitions = self.call_foreign_function(function_name, args, destination, places);
-
         let current_function = self.call_stack.peek_mut();
-        self.mutex_manager.translate_side_effects_lock(
-            args,
-            destination,
-            transitions,
-            &mut self.net,
-            &mut current_function.memory,
-        );
+
+        match transitions {
+            Transitions::Basic { transition } | Transitions::WithCleanup { transition, .. } => {
+                self.mutex_manager.translate_side_effects_lock(
+                    args,
+                    destination,
+                    &transition,
+                    &mut self.net,
+                    &mut current_function.memory,
+                );
+            }
+        }
     }
 
     /// Call to `std::sync::Mutex::<T>::new`.
