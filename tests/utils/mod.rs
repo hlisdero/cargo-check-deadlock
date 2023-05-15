@@ -60,7 +60,7 @@ pub fn assert_lola_result(
     cmd.arg(source_code_file)
         .arg(format!("--output-folder={output_folder}"))
         .arg(format!("--format=lola"))
-        .arg("--filename=test")
+        .arg("--filename=deadlock_test")
         .arg("--deadlock-analysis");
 
     if output_should_have_deadlock {
@@ -142,7 +142,7 @@ macro_rules! generate_lola_tests_for_example_program {
             utils::assert_lola_result(
                 $program_path,
                 $result_folder_path,
-                concat!($result_folder_path, "test.lola"),
+                concat!($result_folder_path, "deadlock_test.lola"),
                 $expected_result,
             );
         }
