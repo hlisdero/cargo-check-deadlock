@@ -225,11 +225,6 @@ TRANSITION main_SWITCH_INT_9
     main_BB3 : 1;
   PRODUCE
     main_BB9 : 1;
-TRANSITION main_UNWIND_40
-  CONSUME
-    main_BB40 : 1;
-  PRODUCE
-    PROGRAM_PANIC : 1;
 TRANSITION main_UNWIND_41
   CONSUME
     main_BB41 : 1;

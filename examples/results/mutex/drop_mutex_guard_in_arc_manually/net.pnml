@@ -108,11 +108,6 @@
           <text>main_RETURN</text>
         </name>
       </transition>
-      <transition id="main_UNWIND_10">
-        <name>
-          <text>main_UNWIND_10</text>
-        </name>
-      </transition>
       <transition id="main_UNWIND_11">
         <name>
           <text>main_UNWIND_11</text>
@@ -203,14 +198,6 @@
       <arc source="main_BB10" target="main_DROP_10" id="(main_BB10, main_DROP_10)">
         <name>
           <text>(main_BB10, main_DROP_10)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BB10" target="main_UNWIND_10" id="(main_BB10, main_UNWIND_10)">
-        <name>
-          <text>(main_BB10, main_UNWIND_10)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -371,14 +358,6 @@
       <arc source="main_RETURN" target="PROGRAM_END" id="(main_RETURN, PROGRAM_END)">
         <name>
           <text>(main_RETURN, PROGRAM_END)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_UNWIND_10" target="PROGRAM_PANIC" id="(main_UNWIND_10, PROGRAM_PANIC)">
-        <name>
-          <text>(main_UNWIND_10, PROGRAM_PANIC)</text>
         </name>
         <inscription>
           <text>1</text>

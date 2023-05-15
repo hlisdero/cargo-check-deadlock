@@ -296,19 +296,9 @@
           <text>main_SWITCH_INT_20</text>
         </name>
       </transition>
-      <transition id="main_UNWIND_18">
-        <name>
-          <text>main_UNWIND_18</text>
-        </name>
-      </transition>
       <transition id="main_UNWIND_19">
         <name>
           <text>main_UNWIND_19</text>
-        </name>
-      </transition>
-      <transition id="main_UNWIND_20">
-        <name>
-          <text>main_UNWIND_20</text>
         </name>
       </transition>
       <transition id="main__closure_0__DROP_5">
@@ -344,16 +334,6 @@
       <transition id="main__closure_0__UNWIND_10">
         <name>
           <text>main__closure_0__UNWIND_10</text>
-        </name>
-      </transition>
-      <transition id="main__closure_0__UNWIND_8">
-        <name>
-          <text>main__closure_0__UNWIND_8</text>
-        </name>
-      </transition>
-      <transition id="main__closure_0__UNWIND_9">
-        <name>
-          <text>main__closure_0__UNWIND_9</text>
         </name>
       </transition>
       <transition id="std_clone_Clone_clone_0_CALL">
@@ -712,14 +692,6 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB18" target="main_UNWIND_18" id="(main_BB18, main_UNWIND_18)">
-        <name>
-          <text>(main_BB18, main_UNWIND_18)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
       <arc source="main_BB19" target="main_UNWIND_19" id="(main_BB19, main_UNWIND_19)">
         <name>
           <text>(main_BB19, main_UNWIND_19)</text>
@@ -739,14 +711,6 @@
       <arc source="main_BB20" target="main_DROP_20" id="(main_BB20, main_DROP_20)">
         <name>
           <text>(main_BB20, main_DROP_20)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BB20" target="main_UNWIND_20" id="(main_BB20, main_UNWIND_20)">
-        <name>
-          <text>(main_BB20, main_UNWIND_20)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -968,25 +932,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main__closure_0__BB8" target="main__closure_0__UNWIND_8" id="(main__closure_0__BB8, main__closure_0__UNWIND_8)">
-        <name>
-          <text>(main__closure_0__BB8, main__closure_0__UNWIND_8)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
       <arc source="main__closure_0__BB9" target="main__closure_0__DROP_9" id="(main__closure_0__BB9, main__closure_0__DROP_9)">
         <name>
           <text>(main__closure_0__BB9, main__closure_0__DROP_9)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main__closure_0__BB9" target="main__closure_0__UNWIND_9" id="(main__closure_0__BB9, main__closure_0__UNWIND_9)">
-        <name>
-          <text>(main__closure_0__BB9, main__closure_0__UNWIND_9)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -1152,33 +1100,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_UNWIND_18" target="PROGRAM_PANIC" id="(main_UNWIND_18, PROGRAM_PANIC)">
-        <name>
-          <text>(main_UNWIND_18, PROGRAM_PANIC)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
       <arc source="main_UNWIND_19" target="PROGRAM_PANIC" id="(main_UNWIND_19, PROGRAM_PANIC)">
         <name>
           <text>(main_UNWIND_19, PROGRAM_PANIC)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_UNWIND_20" target="MUTEX_0" id="(main_UNWIND_20, MUTEX_0)">
-        <name>
-          <text>(main_UNWIND_20, MUTEX_0)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_UNWIND_20" target="PROGRAM_PANIC" id="(main_UNWIND_20, PROGRAM_PANIC)">
-        <name>
-          <text>(main_UNWIND_20, PROGRAM_PANIC)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -1259,30 +1183,6 @@
       <arc source="main__closure_0__UNWIND_10" target="THREAD_0_END" id="(main__closure_0__UNWIND_10, THREAD_0_END)">
         <name>
           <text>(main__closure_0__UNWIND_10, THREAD_0_END)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main__closure_0__UNWIND_8" target="MUTEX_0" id="(main__closure_0__UNWIND_8, MUTEX_0)">
-        <name>
-          <text>(main__closure_0__UNWIND_8, MUTEX_0)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main__closure_0__UNWIND_8" target="THREAD_0_END" id="(main__closure_0__UNWIND_8, THREAD_0_END)">
-        <name>
-          <text>(main__closure_0__UNWIND_8, THREAD_0_END)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main__closure_0__UNWIND_9" target="THREAD_0_END" id="(main__closure_0__UNWIND_9, THREAD_0_END)">
-        <name>
-          <text>(main__closure_0__UNWIND_9, THREAD_0_END)</text>
         </name>
         <inscription>
           <text>1</text>

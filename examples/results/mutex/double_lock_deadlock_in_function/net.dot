@@ -25,7 +25,6 @@ digraph petrinet {
     first_deadlock_0_DROP_6 [shape="box" xlabel="" label="first_deadlock_0_DROP_6"];
     first_deadlock_0_DROP_UNWIND_3 [shape="box" xlabel="" label="first_deadlock_0_DROP_UNWIND_3"];
     first_deadlock_0_RETURN [shape="box" xlabel="" label="first_deadlock_0_RETURN"];
-    first_deadlock_0_UNWIND_6 [shape="box" xlabel="" label="first_deadlock_0_UNWIND_6"];
     first_deadlock_0_UNWIND_7 [shape="box" xlabel="" label="first_deadlock_0_UNWIND_7"];
     main_RETURN [shape="box" xlabel="" label="main_RETURN"];
     second_deadlock_0_DROP_3 [shape="box" xlabel="" label="second_deadlock_0_DROP_3"];
@@ -33,7 +32,6 @@ digraph petrinet {
     second_deadlock_0_DROP_6 [shape="box" xlabel="" label="second_deadlock_0_DROP_6"];
     second_deadlock_0_DROP_UNWIND_3 [shape="box" xlabel="" label="second_deadlock_0_DROP_UNWIND_3"];
     second_deadlock_0_RETURN [shape="box" xlabel="" label="second_deadlock_0_RETURN"];
-    second_deadlock_0_UNWIND_6 [shape="box" xlabel="" label="second_deadlock_0_UNWIND_6"];
     second_deadlock_0_UNWIND_7 [shape="box" xlabel="" label="second_deadlock_0_UNWIND_7"];
     std_sync_Mutex_T_lock_0_CALL [shape="box" xlabel="" label="std_sync_Mutex_T_lock_0_CALL"];
     std_sync_Mutex_T_lock_1_CALL [shape="box" xlabel="" label="std_sync_Mutex_T_lock_1_CALL"];
@@ -53,7 +51,6 @@ digraph petrinet {
     first_deadlock_0_BB4 -> first_deadlock_0_DROP_4;
     first_deadlock_0_BB5 -> first_deadlock_0_RETURN;
     first_deadlock_0_BB6 -> first_deadlock_0_DROP_6;
-    first_deadlock_0_BB6 -> first_deadlock_0_UNWIND_6;
     first_deadlock_0_BB7 -> first_deadlock_0_UNWIND_7;
     main_BB1 -> std_sync_Mutex_T_new_1_CALL;
     main_BB2 -> main_RETURN;
@@ -64,7 +61,6 @@ digraph petrinet {
     second_deadlock_0_BB4 -> second_deadlock_0_DROP_4;
     second_deadlock_0_BB5 -> second_deadlock_0_RETURN;
     second_deadlock_0_BB6 -> second_deadlock_0_DROP_6;
-    second_deadlock_0_BB6 -> second_deadlock_0_UNWIND_6;
     second_deadlock_0_BB7 -> second_deadlock_0_UNWIND_7;
     first_deadlock_0_DROP_3 -> MUTEX_0;
     first_deadlock_0_DROP_3 -> first_deadlock_0_BB4;
@@ -75,8 +71,6 @@ digraph petrinet {
     first_deadlock_0_DROP_UNWIND_3 -> MUTEX_0;
     first_deadlock_0_DROP_UNWIND_3 -> first_deadlock_0_BB6;
     first_deadlock_0_RETURN -> main_BB1;
-    first_deadlock_0_UNWIND_6 -> MUTEX_0;
-    first_deadlock_0_UNWIND_6 -> PROGRAM_PANIC;
     first_deadlock_0_UNWIND_7 -> PROGRAM_PANIC;
     main_RETURN -> PROGRAM_END;
     second_deadlock_0_DROP_3 -> MUTEX_1;
@@ -88,8 +82,6 @@ digraph petrinet {
     second_deadlock_0_DROP_UNWIND_3 -> MUTEX_1;
     second_deadlock_0_DROP_UNWIND_3 -> second_deadlock_0_BB6;
     second_deadlock_0_RETURN -> main_BB2;
-    second_deadlock_0_UNWIND_6 -> MUTEX_1;
-    second_deadlock_0_UNWIND_6 -> PROGRAM_PANIC;
     second_deadlock_0_UNWIND_7 -> PROGRAM_PANIC;
     std_sync_Mutex_T_lock_0_CALL -> first_deadlock_0_BB2;
     std_sync_Mutex_T_lock_1_CALL -> first_deadlock_0_BB3;

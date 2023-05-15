@@ -26,7 +26,6 @@ digraph petrinet {
     main_SWITCH_INT_8 [shape="box" xlabel="" label="main_SWITCH_INT_8"];
     main_SWITCH_INT_9 [shape="box" xlabel="" label="main_SWITCH_INT_9"];
     main_UNWIND_8 [shape="box" xlabel="" label="main_UNWIND_8"];
-    main_UNWIND_9 [shape="box" xlabel="" label="main_UNWIND_9"];
     std_result_Result_unwrap_0_CALL [shape="box" xlabel="" label="std_result_Result_unwrap_0_CALL"];
     std_sync_Condvar_new_0_CALL [shape="box" xlabel="" label="std_sync_Condvar_new_0_CALL"];
     std_sync_Condvar_notify_one_0_CALL [shape="box" xlabel="" label="std_sync_Condvar_notify_one_0_CALL"];
@@ -59,7 +58,6 @@ digraph petrinet {
     main_BB7 -> main_RETURN;
     main_BB8 -> main_UNWIND_8;
     main_BB9 -> main_DROP_9;
-    main_BB9 -> main_UNWIND_9;
     CONDVAR_0_T1 -> CONDVAR_0_P1;
     CONDVAR_0_T2 -> CONDVAR_0_P1;
     CONDVAR_0_T2 -> CONDVAR_0_P4;
@@ -73,8 +71,6 @@ digraph petrinet {
     main_SWITCH_INT_8 -> main_BB8;
     main_SWITCH_INT_9 -> main_BB9;
     main_UNWIND_8 -> PROGRAM_PANIC;
-    main_UNWIND_9 -> MUTEX_0;
-    main_UNWIND_9 -> PROGRAM_PANIC;
     std_result_Result_unwrap_0_CALL -> main_BB4;
     std_sync_Condvar_new_0_CALL -> main_BB2;
     std_sync_Condvar_notify_one_0_CALL -> CONDVAR_0_P2;

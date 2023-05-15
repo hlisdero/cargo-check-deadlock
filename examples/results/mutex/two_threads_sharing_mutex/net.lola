@@ -114,25 +114,9 @@ TRANSITION main_SWITCH_INT_14
     main_BB15 : 1;
   PRODUCE
     main_BB14 : 1;
-TRANSITION main_UNWIND_11
-  CONSUME
-    main_BB11 : 1;
-  PRODUCE
-    MUTEX_0 : 1,
-    PROGRAM_PANIC : 1;
-TRANSITION main_UNWIND_12
-  CONSUME
-    main_BB12 : 1;
-  PRODUCE
-    PROGRAM_PANIC : 1;
 TRANSITION main_UNWIND_13
   CONSUME
     main_BB13 : 1;
-  PRODUCE
-    PROGRAM_PANIC : 1;
-TRANSITION main_UNWIND_14
-  CONSUME
-    main_BB14 : 1;
   PRODUCE
     PROGRAM_PANIC : 1;
 TRANSITION main__closure_0__DROP_2
@@ -160,11 +144,6 @@ TRANSITION main__closure_0__DROP_UNWIND_2
 TRANSITION main__closure_0__RETURN
   CONSUME
     main__closure_0__BB4 : 1;
-  PRODUCE
-    THREAD_0_END : 1;
-TRANSITION main__closure_0__UNWIND_5
-  CONSUME
-    main__closure_0__BB5 : 1;
   PRODUCE
     THREAD_0_END : 1;
 TRANSITION main__closure_0__UNWIND_6

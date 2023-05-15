@@ -19,7 +19,6 @@ digraph petrinet {
     main_DROP_8 [shape="box" xlabel="" label="main_DROP_8"];
     main_DROP_UNWIND_7 [shape="box" xlabel="" label="main_DROP_UNWIND_7"];
     main_RETURN [shape="box" xlabel="" label="main_RETURN"];
-    main_UNWIND_10 [shape="box" xlabel="" label="main_UNWIND_10"];
     main_UNWIND_11 [shape="box" xlabel="" label="main_UNWIND_11"];
     std_mem_drop_0_CALL [shape="box" xlabel="" label="std_mem_drop_0_CALL"];
     std_mem_drop_0_CALL_UNWIND [shape="box" xlabel="" label="std_mem_drop_0_CALL_UNWIND"];
@@ -36,7 +35,6 @@ digraph petrinet {
     PROGRAM_START -> std_sync_Mutex_T_new_0_CALL;
     main_BB1 -> std_sync_Arc_T_new_0_CALL;
     main_BB10 -> main_DROP_10;
-    main_BB10 -> main_UNWIND_10;
     main_BB11 -> main_UNWIND_11;
     main_BB2 -> std_ops_Deref_deref_0_CALL;
     main_BB2 -> std_ops_Deref_deref_0_CALL_UNWIND;
@@ -57,7 +55,6 @@ digraph petrinet {
     main_DROP_UNWIND_7 -> MUTEX_0;
     main_DROP_UNWIND_7 -> main_BB10;
     main_RETURN -> PROGRAM_END;
-    main_UNWIND_10 -> PROGRAM_PANIC;
     main_UNWIND_11 -> PROGRAM_PANIC;
     std_mem_drop_0_CALL -> MUTEX_0;
     std_mem_drop_0_CALL -> main_BB5;

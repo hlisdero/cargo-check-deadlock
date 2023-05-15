@@ -270,16 +270,6 @@
           <text>main_SWITCH_INT_8</text>
         </name>
       </transition>
-      <transition id="main_UNWIND_1">
-        <name>
-          <text>main_UNWIND_1</text>
-        </name>
-      </transition>
-      <transition id="main_UNWIND_12">
-        <name>
-          <text>main_UNWIND_12</text>
-        </name>
-      </transition>
       <transition id="main_UNWIND_13">
         <name>
           <text>main_UNWIND_13</text>
@@ -470,14 +460,6 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB1" target="main_UNWIND_1" id="(main_BB1, main_UNWIND_1)">
-        <name>
-          <text>(main_BB1, main_UNWIND_1)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
       <arc source="main_BB10" target="main_DROP_10" id="(main_BB10, main_DROP_10)">
         <name>
           <text>(main_BB10, main_DROP_10)</text>
@@ -497,14 +479,6 @@
       <arc source="main_BB12" target="main_DROP_12" id="(main_BB12, main_DROP_12)">
         <name>
           <text>(main_BB12, main_DROP_12)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BB12" target="main_UNWIND_12" id="(main_BB12, main_UNWIND_12)">
-        <name>
-          <text>(main_BB12, main_UNWIND_12)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -857,22 +831,6 @@
       <arc source="main_SWITCH_INT_8" target="main_BB8" id="(main_SWITCH_INT_8, main_BB8)">
         <name>
           <text>(main_SWITCH_INT_8, main_BB8)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_UNWIND_1" target="PROGRAM_PANIC" id="(main_UNWIND_1, PROGRAM_PANIC)">
-        <name>
-          <text>(main_UNWIND_1, PROGRAM_PANIC)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_UNWIND_12" target="PROGRAM_PANIC" id="(main_UNWIND_12, PROGRAM_PANIC)">
-        <name>
-          <text>(main_UNWIND_12, PROGRAM_PANIC)</text>
         </name>
         <inscription>
           <text>1</text>

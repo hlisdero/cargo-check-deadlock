@@ -10,7 +10,6 @@ digraph petrinet {
     main_DROP_2 [shape="box" xlabel="" label="main_DROP_2"];
     main_DROP_4 [shape="box" xlabel="" label="main_DROP_4"];
     main_RETURN [shape="box" xlabel="" label="main_RETURN"];
-    main_UNWIND_4 [shape="box" xlabel="" label="main_UNWIND_4"];
     main_UNWIND_5 [shape="box" xlabel="" label="main_UNWIND_5"];
     std_env_args_0_CALL [shape="box" xlabel="" label="std_env_args_0_CALL"];
     std_iter_ExactSizeIterator_len_0_CALL [shape="box" xlabel="" label="std_iter_ExactSizeIterator_len_0_CALL"];
@@ -21,12 +20,10 @@ digraph petrinet {
     main_BB2 -> main_DROP_2;
     main_BB3 -> main_RETURN;
     main_BB4 -> main_DROP_4;
-    main_BB4 -> main_UNWIND_4;
     main_BB5 -> main_UNWIND_5;
     main_DROP_2 -> main_BB3;
     main_DROP_4 -> main_BB5;
     main_RETURN -> PROGRAM_END;
-    main_UNWIND_4 -> PROGRAM_PANIC;
     main_UNWIND_5 -> PROGRAM_PANIC;
     std_env_args_0_CALL -> main_BB1;
     std_iter_ExactSizeIterator_len_0_CALL -> main_BB2;
