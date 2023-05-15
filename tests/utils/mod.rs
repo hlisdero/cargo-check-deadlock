@@ -31,7 +31,9 @@ pub fn assert_output_file(
     let expected_file_contents = std::fs::read_to_string(expected_contents_filename)
         .expect("Could not read file with expected contents to string");
 
-    assert_eq!(file_contents, expected_file_contents);
+    if file_contents != expected_file_contents {
+        panic!("The contents of {expected_contents_filename} do not match the contents of {output_filename}");
+    }
     std::fs::remove_file(output_filename).expect("Could not delete output file");
 }
 
@@ -53,8 +55,8 @@ macro_rules! generate_tests_for_example_program {
                 $program_path,
                 $result_folder_path,
                 "dot",
-                concat!($result_folder_path, "/test.dot"),
-                concat!($result_folder_path, "/net.dot"),
+                concat!($result_folder_path, "test.dot"),
+                concat!($result_folder_path, "net.dot"),
             );
         }
 
@@ -64,8 +66,8 @@ macro_rules! generate_tests_for_example_program {
                 $program_path,
                 $result_folder_path,
                 "lola",
-                concat!($result_folder_path, "/test.lola"),
-                concat!($result_folder_path, "/net.lola"),
+                concat!($result_folder_path, "test.lola"),
+                concat!($result_folder_path, "net.lola"),
             );
         }
 
@@ -75,8 +77,8 @@ macro_rules! generate_tests_for_example_program {
                 $program_path,
                 $result_folder_path,
                 "pnml",
-                concat!($result_folder_path, "/test.pnml"),
-                concat!($result_folder_path, "/net.pnml"),
+                concat!($result_folder_path, "test.pnml"),
+                concat!($result_folder_path, "net.pnml"),
             );
         }
     };
