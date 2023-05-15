@@ -10,21 +10,21 @@ fn main() {
     let counter2 = Arc::clone(&counter);
 
     // Spawn the first thread
-    let thread1 = thread::spawn(move || {
-        // Increment the counter until it reaches 1000
-        while *counter1.lock().unwrap() < 1000 {
-            let mut num = counter1.lock().unwrap();
-            *num += 1;
+    let thread1 = thread::spawn(move || loop {
+        let mut num = counter1.lock().unwrap();
+        if *num >= 1000 {
+            break;
         }
+        *num += 1;
     });
 
     // Spawn the second thread
-    let thread2 = thread::spawn(move || {
-        // Increment the counter until it reaches 1000
-        while *counter2.lock().unwrap() < 1000 {
-            let mut num = counter2.lock().unwrap();
-            *num += 1;
+    let thread2 = thread::spawn(move || loop {
+        let mut num = counter2.lock().unwrap();
+        if *num >= 1000 {
+            break;
         }
+        *num += 1;
     });
 
     // Wait for both threads to finish
