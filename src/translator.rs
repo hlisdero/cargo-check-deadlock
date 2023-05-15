@@ -299,7 +299,13 @@ impl<'tcx> Translator<'tcx> {
             }
             rustc_middle::mir::UnwindAction::Continue => function.drop(target, None, &mut self.net),
             rustc_middle::mir::UnwindAction::Terminate => {
-                function.unwind(&self.program_panic, &mut self.net);
+                let transition = function.unwind(&self.program_panic, &mut self.net);
+                self.mutex_manager.handle_lock_guard_drop(
+                    place,
+                    &transition,
+                    &function.memory,
+                    &mut self.net,
+                );
                 function.drop(target, None, &mut self.net)
             }
             rustc_middle::mir::UnwindAction::Unreachable => {

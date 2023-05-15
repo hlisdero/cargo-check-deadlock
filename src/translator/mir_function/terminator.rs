@@ -34,13 +34,14 @@ impl<'tcx> MirFunction<'tcx> {
     }
 
     /// Connects the active basic block to a given unwind place that models a `panic!` scenario or similar.
+    /// Returns the transition  that represents the unwind terminator.
     ///
     /// # Panics
     ///
     /// If there is no active basic block set, then the function panics.
-    pub fn unwind(&mut self, unwind_place: &PlaceRef, net: &mut PetriNet) {
+    pub fn unwind(&mut self, unwind_place: &PlaceRef, net: &mut PetriNet) -> TransitionRef {
         let active_block = self.get_active_block();
-        active_block.unwind(unwind_place, net);
+        active_block.unwind(unwind_place, net)
     }
 
     /// Connects the active basic block to the next basic block identified as the argument `target`

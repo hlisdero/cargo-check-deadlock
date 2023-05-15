@@ -55,9 +55,10 @@ impl BasicBlock {
     }
 
     /// Connects the end place of this block to the unwind place.
-    pub fn unwind(&self, unwind_place: &PlaceRef, net: &mut PetriNet) {
+    /// Returns the new transition created to connect the basic block with the unwind place.
+    pub fn unwind(&self, unwind_place: &PlaceRef, net: &mut PetriNet) -> TransitionRef {
         let label = unwind_transition_label(&self.function_name, self.index);
-        connect_places(net, &self.place, unwind_place, &label);
+        connect_places(net, &self.place, unwind_place, &label)
     }
 
     /// Connects the end place of this block to the start place of the `target` basic block.
@@ -68,6 +69,7 @@ impl BasicBlock {
     }
 
     /// Connects the end place of this block to the start place of the `cleanup` basic block.
+    /// Returns the new transition created to connect the two basic blocks.
     pub fn drop_cleanup(&self, cleanup: &Self, net: &mut PetriNet) -> TransitionRef {
         let label = drop_cleanup_transition_label(&self.function_name, self.index);
         connect_places(net, &self.place, &cleanup.place, &label)
