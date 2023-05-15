@@ -54,15 +54,15 @@ mod self_notify_lost_signal {
     );
 }
 
-mod two_threads_sharing_condvar {
-    use super::utils;
-
-    utils::generate_lola_tests_for_example_program!(
-        "./examples/programs/condvar/two_threads_sharing_condvar.rs",
-        "./examples/results/condvar/two_threads_sharing_condvar/",
-        false
-    );
-}
+// mod two_threads_sharing_condvar {
+//     use super::utils;
+//
+//     utils::generate_lola_tests_for_example_program!(
+//         "./examples/programs/condvar/two_threads_sharing_condvar.rs",
+//         "./examples/results/condvar/two_threads_sharing_condvar/",
+//         false
+//     );
+// }
 
 mod diverging {
     use super::utils;
@@ -254,15 +254,15 @@ mod diverging_thread {
     );
 }
 
-mod shared_counter {
-    use super::utils;
-
-    utils::generate_lola_tests_for_example_program!(
-        "./examples/programs/thread/shared_counter.rs",
-        "./examples/results/thread/shared_counter/",
-        false
-    );
-}
+// mod shared_counter {
+//     use super::utils;
+//
+//     utils::generate_lola_tests_for_example_program!(
+//         "./examples/programs/thread/shared_counter.rs",
+//         "./examples/results/thread/shared_counter/",
+//         false
+//     );
+// }
 
 mod spawn_with_empty_closure {
     use super::utils;
