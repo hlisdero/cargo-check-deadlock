@@ -40,7 +40,7 @@ impl ThreadManager {
         &mut self,
         args: &[rustc_middle::mir::Operand<'tcx>],
         return_value: rustc_middle::mir::Place<'tcx>,
-        transition_function_call: TransitionRef,
+        function_call_transition: TransitionRef,
         memory: &mut Memory<'tcx>,
         caller_function_def_id: rustc_hir::def_id::DefId,
         tcx: rustc_middle::ty::TyCtxt<'tcx>,
@@ -58,7 +58,7 @@ impl ThreadManager {
         let memory_entries = Self::find_sync_variables(closure_for_spawn, memory);
 
         let thread_ref = self.add_thread(
-            transition_function_call,
+            function_call_transition,
             thread_function_def_id,
             memory_entries,
         );
@@ -74,7 +74,7 @@ impl ThreadManager {
     pub fn translate_side_effects_join<'tcx>(
         &mut self,
         args: &[rustc_middle::mir::Operand<'tcx>],
-        transition_function_call: TransitionRef,
+        function_call_transition: TransitionRef,
         memory: &Memory<'tcx>,
     ) {
         // Retrieve the join handle from the local variable passed to the function as an argument.
@@ -82,7 +82,7 @@ impl ThreadManager {
             "BUG: `std::thread::JoinHandle::<T>::join` should receive the self reference as a place",
         );
         let thread_ref = memory.get_linked_join_handle(&self_ref);
-        self.set_join_transition(*thread_ref, transition_function_call);
+        self.set_join_transition(*thread_ref, function_call_transition);
     }
 
     /// Adds a new thread and returns a reference to it.

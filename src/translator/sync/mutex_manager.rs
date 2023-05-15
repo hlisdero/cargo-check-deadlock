@@ -48,7 +48,7 @@ impl MutexManager {
         &self,
         args: &[rustc_middle::mir::Operand<'tcx>],
         return_value: rustc_middle::mir::Place<'tcx>,
-        transition: &TransitionRef,
+        lock_transition: &TransitionRef,
         net: &mut PetriNet,
         memory: &mut Memory<'tcx>,
     ) {
@@ -57,11 +57,11 @@ impl MutexManager {
             "BUG: `std::sync::Mutex::<T>::lock` should receive the self reference as a place",
         );
         let mutex_ref = memory.get_linked_mutex(&self_ref);
-        self.add_lock_guard(*mutex_ref, transition, net);
+        self.add_lock_guard(*mutex_ref, lock_transition, net);
 
         // The return value contains a new lock guard. Link the local variable to it.
         memory.link_place_to_lock_guard(return_value, *mutex_ref);
-        debug!("NEW LOCK GUARD {return_value:?} DUE TO TRANSITION {transition}");
+        debug!("NEW LOCK GUARD {return_value:?} DUE TO TRANSITION {lock_transition}");
     }
 
     /// Checks whether the variable to be dropped is a lock guard.
@@ -71,14 +71,14 @@ impl MutexManager {
     pub fn handle_lock_guard_drop<'tcx>(
         &self,
         place: rustc_middle::mir::Place<'tcx>,
-        transition: &TransitionRef,
+        unlock_transition: &TransitionRef,
         memory: &Memory<'tcx>,
         net: &mut PetriNet,
     ) {
         if memory.is_linked_to_lock_guard(place) {
             let mutex_ref = memory.get_linked_lock_guard(&place);
-            self.add_unlock_guard(*mutex_ref, transition, net);
-            debug!("DROP LOCK GUARD {place:?} DUE TO TRANSITION {transition}");
+            self.add_unlock_guard(*mutex_ref, unlock_transition, net);
+            debug!("DROP LOCK GUARD {place:?} DUE TO TRANSITION {unlock_transition}");
         }
     }
 
@@ -100,11 +100,11 @@ impl MutexManager {
     pub fn add_lock_guard(
         &self,
         mutex_ref: MutexRef,
-        transition_lock: &TransitionRef,
+        lock_transition: &TransitionRef,
         net: &mut PetriNet,
     ) {
         let mutex = self.get_mutex_from_ref(mutex_ref);
-        mutex.add_lock_guard(transition_lock, net);
+        mutex.add_lock_guard(lock_transition, net);
     }
 
     /// Adds an unlock guard to the mutex.
