@@ -15,7 +15,7 @@ pub mod mutex;
 pub mod program;
 pub mod thread;
 
-/// Sanitize the function name for the DOT format:
+/// Sanitize the function name for the DOT and the LoLA format:
 /// - Replace generic types "<T>" with "T".
 /// - Replace lifetimes "'a" with simply "a".
 /// - Replace double colons with underscores.
