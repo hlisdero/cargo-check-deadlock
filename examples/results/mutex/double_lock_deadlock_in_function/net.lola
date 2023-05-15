@@ -66,6 +66,7 @@ TRANSITION first_deadlock_0_DROP_UNWIND_3
   CONSUME
     first_deadlock_0_BB3 : 1;
   PRODUCE
+    MUTEX_0 : 1,
     first_deadlock_0_BB6 : 1;
 TRANSITION first_deadlock_0_RETURN
   CONSUME
@@ -109,6 +110,7 @@ TRANSITION second_deadlock_0_DROP_UNWIND_3
   CONSUME
     second_deadlock_0_BB3 : 1;
   PRODUCE
+    MUTEX_1 : 1,
     second_deadlock_0_BB6 : 1;
 TRANSITION second_deadlock_0_RETURN
   CONSUME

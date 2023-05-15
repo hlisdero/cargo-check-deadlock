@@ -707,6 +707,14 @@
           <text>1</text>
         </inscription>
       </arc>
+      <arc source="main_DROP_UNWIND_8" target="MUTEX_0" id="(main_DROP_UNWIND_8, MUTEX_0)">
+        <name>
+          <text>(main_DROP_UNWIND_8, MUTEX_0)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
       <arc source="main_DROP_UNWIND_8" target="main_BB15" id="(main_DROP_UNWIND_8, main_BB15)">
         <name>
           <text>(main_DROP_UNWIND_8, main_BB15)</text>
@@ -798,6 +806,14 @@
       <arc source="main__closure_0__DROP_5" target="main__closure_0__BB6" id="(main__closure_0__DROP_5, main__closure_0__BB6)">
         <name>
           <text>(main__closure_0__DROP_5, main__closure_0__BB6)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main__closure_0__DROP_UNWIND_2" target="MUTEX_0" id="(main__closure_0__DROP_UNWIND_2, MUTEX_0)">
+        <name>
+          <text>(main__closure_0__DROP_UNWIND_2, MUTEX_0)</text>
         </name>
         <inscription>
           <text>1</text>

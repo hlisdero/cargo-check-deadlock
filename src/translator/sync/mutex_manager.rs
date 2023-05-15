@@ -70,19 +70,32 @@ impl MutexManager {
         debug!("NEW LOCK GUARD: {return_value:?}");
     }
 
-    /// Checks whether the variable to be dropped is a lock guard and
-    /// if that is the case, adds an unlock guard for the mutex corresponding
-    /// to the lock guard. Otherwise do nothing.
+    /// Checks whether the variable to be dropped is a lock guard.
+    /// If that is the case, adds an unlock guard for the mutex corresponding to the lock guard.
+    /// The unlock guard is added for the usual transition as well as the cleanup transition.
+    /// Otherwise do nothing.
     pub fn handle_lock_guard_drop<'tcx>(
         &self,
         place: rustc_middle::mir::Place<'tcx>,
-        transition_drop: &TransitionRef,
+        transitions: Transitions,
         memory: &Memory<'tcx>,
         net: &mut PetriNet,
     ) {
         if memory.is_linked_to_lock_guard(place) {
             let mutex_ref = memory.get_linked_lock_guard(&place);
-            self.add_unlock_guard(*mutex_ref, transition_drop, net);
+
+            match transitions {
+                Transitions::Basic { transition } => {
+                    self.add_unlock_guard(*mutex_ref, &transition, net);
+                }
+                Transitions::WithCleanup {
+                    transition,
+                    cleanup_transition,
+                } => {
+                    self.add_unlock_guard(*mutex_ref, &transition, net);
+                    self.add_unlock_guard(*mutex_ref, &cleanup_transition, net);
+                }
+            }
             debug!("DROP LOCK GUARD: {place:?}");
         }
     }

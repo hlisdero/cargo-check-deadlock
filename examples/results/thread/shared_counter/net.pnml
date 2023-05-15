@@ -2090,6 +2090,14 @@
           <text>1</text>
         </inscription>
       </arc>
+      <arc source="main_DROP_UNWIND_17" target="MUTEX_0" id="(main_DROP_UNWIND_17, MUTEX_0)">
+        <name>
+          <text>(main_DROP_UNWIND_17, MUTEX_0)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
       <arc source="main_DROP_UNWIND_17" target="main_BB24" id="(main_DROP_UNWIND_17, main_BB24)">
         <name>
           <text>(main_DROP_UNWIND_17, main_BB24)</text>
@@ -2322,9 +2330,25 @@
           <text>1</text>
         </inscription>
       </arc>
+      <arc source="main__closure_0__DROP_UNWIND_12" target="MUTEX_0" id="(main__closure_0__DROP_UNWIND_12, MUTEX_0)">
+        <name>
+          <text>(main__closure_0__DROP_UNWIND_12, MUTEX_0)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
       <arc source="main__closure_0__DROP_UNWIND_12" target="main__closure_0__BB17" id="(main__closure_0__DROP_UNWIND_12, main__closure_0__BB17)">
         <name>
           <text>(main__closure_0__DROP_UNWIND_12, main__closure_0__BB17)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main__closure_0__DROP_UNWIND_5" target="MUTEX_0" id="(main__closure_0__DROP_UNWIND_5, MUTEX_0)">
+        <name>
+          <text>(main__closure_0__DROP_UNWIND_5, MUTEX_0)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -2498,9 +2522,25 @@
           <text>1</text>
         </inscription>
       </arc>
+      <arc source="main__closure_1__DROP_UNWIND_12" target="MUTEX_0" id="(main__closure_1__DROP_UNWIND_12, MUTEX_0)">
+        <name>
+          <text>(main__closure_1__DROP_UNWIND_12, MUTEX_0)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
       <arc source="main__closure_1__DROP_UNWIND_12" target="main__closure_1__BB17" id="(main__closure_1__DROP_UNWIND_12, main__closure_1__BB17)">
         <name>
           <text>(main__closure_1__DROP_UNWIND_12, main__closure_1__BB17)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main__closure_1__DROP_UNWIND_5" target="MUTEX_0" id="(main__closure_1__DROP_UNWIND_5, MUTEX_0)">
+        <name>
+          <text>(main__closure_1__DROP_UNWIND_5, MUTEX_0)</text>
         </name>
         <inscription>
           <text>1</text>

@@ -97,6 +97,7 @@ TRANSITION main_DROP_UNWIND_8
   CONSUME
     main_BB8 : 1;
   PRODUCE
+    MUTEX_0 : 1,
     main_BB15 : 1;
 TRANSITION main_RETURN
   CONSUME
@@ -153,6 +154,7 @@ TRANSITION main__closure_0__DROP_UNWIND_2
   CONSUME
     main__closure_0__BB2 : 1;
   PRODUCE
+    MUTEX_0 : 1,
     main__closure_0__BB5 : 1;
 TRANSITION main__closure_0__RETURN
   CONSUME

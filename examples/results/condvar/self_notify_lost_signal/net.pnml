@@ -444,6 +444,14 @@
           <text>1</text>
         </inscription>
       </arc>
+      <arc source="main_DROP_UNWIND_6" target="MUTEX_0" id="(main_DROP_UNWIND_6, MUTEX_0)">
+        <name>
+          <text>(main_DROP_UNWIND_6, MUTEX_0)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
       <arc source="main_DROP_UNWIND_6" target="main_BB10" id="(main_DROP_UNWIND_6, main_BB10)">
         <name>
           <text>(main_DROP_UNWIND_6, main_BB10)</text>

@@ -67,6 +67,7 @@ TRANSITION main_DROP_UNWIND_6
   CONSUME
     main_BB6 : 1;
   PRODUCE
+    MUTEX_0 : 1,
     main_BB10 : 1;
 TRANSITION main_RETURN
   CONSUME

@@ -45,7 +45,7 @@ impl<'tcx> MirFunction<'tcx> {
 
     /// Connects the active basic block to the next basic block identified as the argument `target`
     /// of the drop terminator.
-    /// Returns the transition that represents dropping the variable.
+    /// Returns the pair of transitions that represent dropping the variable.
     ///
     /// Optionally, if a cleanup block is present, connects the active basic block
     /// to the next basic block identified as the argument `cleanup`.
@@ -58,16 +58,15 @@ impl<'tcx> MirFunction<'tcx> {
         target: rustc_middle::mir::BasicBlock,
         cleanup: Option<rustc_middle::mir::BasicBlock>,
         net: &mut PetriNet,
-    ) -> TransitionRef {
+    ) -> (TransitionRef, Option<TransitionRef>) {
         let (active_block, target_block) = self.get_pair_active_block_target_block(target, net);
-        let transition_drop = active_block.drop(target_block, net);
-
-        if let Some(cleanup) = cleanup {
+        let drop_transition = active_block.drop(target_block, net);
+        let cleanup_transition = cleanup.map(|cleanup| {
             let (active_block, cleanup_block) =
                 self.get_pair_active_block_target_block(cleanup, net);
-            active_block.drop_cleanup(cleanup_block, net);
-        }
-        transition_drop
+            active_block.drop_cleanup(cleanup_block, net)
+        });
+        (drop_transition, cleanup_transition)
     }
 
     /// Connects the active basic block to the next basic block identified as the argument `target`

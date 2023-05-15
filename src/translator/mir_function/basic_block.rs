@@ -68,9 +68,9 @@ impl BasicBlock {
     }
 
     /// Connects the end place of this block to the start place of the `cleanup` basic block.
-    pub fn drop_cleanup(&self, cleanup: &Self, net: &mut PetriNet) {
+    pub fn drop_cleanup(&self, cleanup: &Self, net: &mut PetriNet) -> TransitionRef {
         let label = drop_cleanup_transition_label(&self.function_name, self.index);
-        connect_places(net, &self.place, &cleanup.place, &label);
+        connect_places(net, &self.place, &cleanup.place, &label)
     }
 
     /// Connects the end place of this block to the start place of the `assert` basic block.

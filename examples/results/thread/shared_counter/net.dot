@@ -332,6 +332,7 @@ digraph petrinet {
     main_DROP_25 -> main_BB28;
     main_DROP_27 -> main_BB30;
     main_DROP_29 -> main_BB21;
+    main_DROP_UNWIND_17 -> MUTEX_0;
     main_DROP_UNWIND_17 -> main_BB24;
     main_RETURN -> PROGRAM_END;
     main_SWITCH_INT_21 -> main_BB21;
@@ -361,7 +362,9 @@ digraph petrinet {
     main__closure_0__DROP_17 -> main__closure_0__BB18;
     main__closure_0__DROP_5 -> MUTEX_0;
     main__closure_0__DROP_5 -> main__closure_0__BB6;
+    main__closure_0__DROP_UNWIND_12 -> MUTEX_0;
     main__closure_0__DROP_UNWIND_12 -> main__closure_0__BB17;
+    main__closure_0__DROP_UNWIND_5 -> MUTEX_0;
     main__closure_0__DROP_UNWIND_5 -> main__closure_0__BB17;
     main__closure_0__GOTO_0 -> main__closure_0__BB1;
     main__closure_0__RETURN -> THREAD_0_END;
@@ -383,7 +386,9 @@ digraph petrinet {
     main__closure_1__DROP_17 -> main__closure_1__BB18;
     main__closure_1__DROP_5 -> MUTEX_0;
     main__closure_1__DROP_5 -> main__closure_1__BB6;
+    main__closure_1__DROP_UNWIND_12 -> MUTEX_0;
     main__closure_1__DROP_UNWIND_12 -> main__closure_1__BB17;
+    main__closure_1__DROP_UNWIND_5 -> MUTEX_0;
     main__closure_1__DROP_UNWIND_5 -> main__closure_1__BB17;
     main__closure_1__GOTO_0 -> main__closure_1__BB1;
     main__closure_1__RETURN -> THREAD_1_END;

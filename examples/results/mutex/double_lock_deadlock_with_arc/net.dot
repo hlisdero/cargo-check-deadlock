@@ -63,7 +63,9 @@ digraph petrinet {
     main_DROP_7 -> MUTEX_0;
     main_DROP_7 -> main_BB8;
     main_DROP_8 -> main_BB9;
+    main_DROP_UNWIND_6 -> MUTEX_0;
     main_DROP_UNWIND_6 -> main_BB10;
+    main_DROP_UNWIND_7 -> MUTEX_0;
     main_DROP_UNWIND_7 -> main_BB11;
     main_RETURN -> PROGRAM_END;
     main_UNWIND_10 -> PROGRAM_PANIC;

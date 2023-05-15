@@ -52,6 +52,7 @@ TRANSITION main_DROP_UNWIND_7
   CONSUME
     main_BB7 : 1;
   PRODUCE
+    MUTEX_0 : 1,
     main_BB10 : 1;
 TRANSITION main_RETURN
   CONSUME
@@ -78,6 +79,7 @@ TRANSITION std_mem_drop_0_CALL_UNWIND
   CONSUME
     main_BB4 : 1;
   PRODUCE
+    MUTEX_0 : 1,
     main_BB10 : 1;
 TRANSITION std_ops_Deref_deref_0_CALL
   CONSUME

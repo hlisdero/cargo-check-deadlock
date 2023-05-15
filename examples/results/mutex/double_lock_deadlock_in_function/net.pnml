@@ -469,6 +469,14 @@
           <text>1</text>
         </inscription>
       </arc>
+      <arc source="first_deadlock_0_DROP_UNWIND_3" target="MUTEX_0" id="(first_deadlock_0_DROP_UNWIND_3, MUTEX_0)">
+        <name>
+          <text>(first_deadlock_0_DROP_UNWIND_3, MUTEX_0)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
       <arc source="first_deadlock_0_DROP_UNWIND_3" target="first_deadlock_0_BB6" id="(first_deadlock_0_DROP_UNWIND_3, first_deadlock_0_BB6)">
         <name>
           <text>(first_deadlock_0_DROP_UNWIND_3, first_deadlock_0_BB6)</text>
@@ -552,6 +560,14 @@
       <arc source="second_deadlock_0_DROP_6" target="second_deadlock_0_BB7" id="(second_deadlock_0_DROP_6, second_deadlock_0_BB7)">
         <name>
           <text>(second_deadlock_0_DROP_6, second_deadlock_0_BB7)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="second_deadlock_0_DROP_UNWIND_3" target="MUTEX_1" id="(second_deadlock_0_DROP_UNWIND_3, MUTEX_1)">
+        <name>
+          <text>(second_deadlock_0_DROP_UNWIND_3, MUTEX_1)</text>
         </name>
         <inscription>
           <text>1</text>

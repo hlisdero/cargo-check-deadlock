@@ -54,12 +54,14 @@ digraph petrinet {
     main_DROP_7 -> MUTEX_0;
     main_DROP_7 -> main_BB8;
     main_DROP_8 -> main_BB9;
+    main_DROP_UNWIND_7 -> MUTEX_0;
     main_DROP_UNWIND_7 -> main_BB10;
     main_RETURN -> PROGRAM_END;
     main_UNWIND_10 -> PROGRAM_PANIC;
     main_UNWIND_11 -> PROGRAM_PANIC;
     std_mem_drop_0_CALL -> MUTEX_0;
     std_mem_drop_0_CALL -> main_BB5;
+    std_mem_drop_0_CALL_UNWIND -> MUTEX_0;
     std_mem_drop_0_CALL_UNWIND -> main_BB10;
     std_ops_Deref_deref_0_CALL -> main_BB3;
     std_ops_Deref_deref_0_CALL_UNWIND -> main_BB10;

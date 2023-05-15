@@ -187,7 +187,7 @@ impl<'tcx> Translator<'tcx> {
         };
         self.mutex_manager.handle_lock_guard_drop(
             dropped_place,
-            transitions.get_transition(),
+            transitions,
             &current_function.memory,
             &mut self.net,
         );

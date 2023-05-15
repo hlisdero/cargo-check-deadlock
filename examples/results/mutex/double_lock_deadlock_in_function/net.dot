@@ -72,6 +72,7 @@ digraph petrinet {
     first_deadlock_0_DROP_4 -> first_deadlock_0_BB5;
     first_deadlock_0_DROP_6 -> MUTEX_0;
     first_deadlock_0_DROP_6 -> first_deadlock_0_BB7;
+    first_deadlock_0_DROP_UNWIND_3 -> MUTEX_0;
     first_deadlock_0_DROP_UNWIND_3 -> first_deadlock_0_BB6;
     first_deadlock_0_RETURN -> main_BB1;
     first_deadlock_0_UNWIND_6 -> PROGRAM_PANIC;
@@ -83,6 +84,7 @@ digraph petrinet {
     second_deadlock_0_DROP_4 -> second_deadlock_0_BB5;
     second_deadlock_0_DROP_6 -> MUTEX_1;
     second_deadlock_0_DROP_6 -> second_deadlock_0_BB7;
+    second_deadlock_0_DROP_UNWIND_3 -> MUTEX_1;
     second_deadlock_0_DROP_UNWIND_3 -> second_deadlock_0_BB6;
     second_deadlock_0_RETURN -> main_BB2;
     second_deadlock_0_UNWIND_6 -> PROGRAM_PANIC;

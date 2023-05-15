@@ -206,6 +206,7 @@ TRANSITION main_DROP_UNWIND_17
   CONSUME
     main_BB17 : 1;
   PRODUCE
+    MUTEX_0 : 1,
     main_BB24 : 1;
 TRANSITION main_RETURN
   CONSUME
@@ -335,11 +336,13 @@ TRANSITION main__closure_0__DROP_UNWIND_12
   CONSUME
     main__closure_0__BB12 : 1;
   PRODUCE
+    MUTEX_0 : 1,
     main__closure_0__BB17 : 1;
 TRANSITION main__closure_0__DROP_UNWIND_5
   CONSUME
     main__closure_0__BB5 : 1;
   PRODUCE
+    MUTEX_0 : 1,
     main__closure_0__BB17 : 1;
 TRANSITION main__closure_0__GOTO_0
   CONSUME
@@ -429,11 +432,13 @@ TRANSITION main__closure_1__DROP_UNWIND_12
   CONSUME
     main__closure_1__BB12 : 1;
   PRODUCE
+    MUTEX_0 : 1,
     main__closure_1__BB17 : 1;
 TRANSITION main__closure_1__DROP_UNWIND_5
   CONSUME
     main__closure_1__BB5 : 1;
   PRODUCE
+    MUTEX_0 : 1,
     main__closure_1__BB17 : 1;
 TRANSITION main__closure_1__GOTO_0
   CONSUME
