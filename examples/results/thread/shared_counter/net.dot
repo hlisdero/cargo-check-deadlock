@@ -353,10 +353,13 @@ digraph petrinet {
     std_result_Result_unwrap_1_CALL -> main_BB10;
     std_result_Result_unwrap_1_CALL_UNWIND -> main_BB24;
     std_result_Result_unwrap_2_CALL -> main_BB13;
+    std_result_Result_unwrap_2_CALL_UNWIND -> MUTEX_0;
     std_result_Result_unwrap_2_CALL_UNWIND -> main_BB24;
     std_result_Result_unwrap_3_CALL -> main__closure_1__BB4;
+    std_result_Result_unwrap_3_CALL_UNWIND -> MUTEX_0;
     std_result_Result_unwrap_3_CALL_UNWIND -> main__closure_1__BB13;
     std_result_Result_unwrap_4_CALL -> main__closure_0__BB4;
+    std_result_Result_unwrap_4_CALL_UNWIND -> MUTEX_0;
     std_result_Result_unwrap_4_CALL_UNWIND -> main__closure_0__BB13;
     std_sync_Arc_T_new_0_CALL -> main_BB2;
     std_sync_Mutex_T_lock_0_CALL -> main_BB12;

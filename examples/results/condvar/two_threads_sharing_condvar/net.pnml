@@ -1276,6 +1276,14 @@
           <text>1</text>
         </inscription>
       </arc>
+      <arc source="std_result_Result_unwrap_0_CALL_UNWIND" target="MUTEX_0" id="(std_result_Result_unwrap_0_CALL_UNWIND, MUTEX_0)">
+        <name>
+          <text>(std_result_Result_unwrap_0_CALL_UNWIND, MUTEX_0)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
       <arc source="std_result_Result_unwrap_0_CALL_UNWIND" target="main_BB18" id="(std_result_Result_unwrap_0_CALL_UNWIND, main_BB18)">
         <name>
           <text>(std_result_Result_unwrap_0_CALL_UNWIND, main_BB18)</text>
@@ -1292,6 +1300,14 @@
           <text>1</text>
         </inscription>
       </arc>
+      <arc source="std_result_Result_unwrap_1_CALL_UNWIND" target="MUTEX_0" id="(std_result_Result_unwrap_1_CALL_UNWIND, MUTEX_0)">
+        <name>
+          <text>(std_result_Result_unwrap_1_CALL_UNWIND, MUTEX_0)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
       <arc source="std_result_Result_unwrap_1_CALL_UNWIND" target="main_BB21" id="(std_result_Result_unwrap_1_CALL_UNWIND, main_BB21)">
         <name>
           <text>(std_result_Result_unwrap_1_CALL_UNWIND, main_BB21)</text>
@@ -1303,6 +1319,14 @@
       <arc source="std_result_Result_unwrap_2_CALL" target="main__closure_0__BB3" id="(std_result_Result_unwrap_2_CALL, main__closure_0__BB3)">
         <name>
           <text>(std_result_Result_unwrap_2_CALL, main__closure_0__BB3)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="std_result_Result_unwrap_2_CALL_UNWIND" target="MUTEX_0" id="(std_result_Result_unwrap_2_CALL_UNWIND, MUTEX_0)">
+        <name>
+          <text>(std_result_Result_unwrap_2_CALL_UNWIND, MUTEX_0)</text>
         </name>
         <inscription>
           <text>1</text>

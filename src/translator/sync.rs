@@ -20,8 +20,9 @@ pub use mutex_manager::{MutexManager, MutexRef};
 pub use thread::Thread;
 pub use thread_manager::{ThreadManager, ThreadRef};
 
-const SUPPORTED_SYNC_FUNCTIONS: [&str; 8] = [
+const SUPPORTED_SYNC_FUNCTIONS: [&str; 9] = [
     "std::mem::drop",
+    "std::result::Result::<T, E>::unwrap",
     "std::sync::Condvar::new",
     "std::sync::Condvar::notify_one",
     "std::sync::Condvar::wait",

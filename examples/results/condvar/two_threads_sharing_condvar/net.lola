@@ -272,6 +272,7 @@ TRANSITION std_result_Result_unwrap_0_CALL_UNWIND
   CONSUME
     main_BB8 : 1;
   PRODUCE
+    MUTEX_0 : 1,
     main_BB18 : 1;
 TRANSITION std_result_Result_unwrap_1_CALL
   CONSUME
@@ -282,6 +283,7 @@ TRANSITION std_result_Result_unwrap_1_CALL_UNWIND
   CONSUME
     main_BB13 : 1;
   PRODUCE
+    MUTEX_0 : 1,
     main_BB21 : 1;
 TRANSITION std_result_Result_unwrap_2_CALL
   CONSUME
@@ -292,6 +294,7 @@ TRANSITION std_result_Result_unwrap_2_CALL_UNWIND
   CONSUME
     main__closure_0__BB2 : 1;
   PRODUCE
+    MUTEX_0 : 1,
     main__closure_0__BB9 : 1;
 TRANSITION std_sync_Arc_T_new_0_CALL
   CONSUME

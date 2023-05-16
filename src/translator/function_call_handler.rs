@@ -53,6 +53,9 @@ impl<'tcx> Translator<'tcx> {
             "std::mem::drop" => {
                 self.call_mem_drop(function_name, args, destination, places);
             }
+            "std::result::Result::<T, E>::unwrap" => {
+                self.call_result_unwrap(function_name, args, destination, places);
+            }
             "std::sync::Condvar::new" => {
                 self.call_condvar_new(function_name, args, destination, places);
             }
@@ -207,6 +210,47 @@ impl<'tcx> Translator<'tcx> {
                 );
                 self.mutex_manager.handle_lock_guard_drop(
                     dropped_place,
+                    &cleanup_transition,
+                    &current_function.memory,
+                    &mut self.net,
+                );
+            }
+        }
+    }
+
+    /// Call to `std::result::Result::<T, E>::unwrap`.
+    /// Non-recursive call for the translation process.
+    ///
+    /// There is an important detail regarding how rustc interprets this call in conjunction with mutexes.
+    /// In some cases, the `std::result::Result::<T, E>::unwrap` function applied
+    /// to the return value of `std::sync::Mutex::<T>::lock` does not generate code to drop the mutex guard
+    /// since it considers that the mutex was never locked in the first place.
+    /// Nonetheless, for the purposes of the Petri net model, it is necessary to unlock the mutex in this case.
+    fn call_result_unwrap(
+        &mut self,
+        function_name: &str,
+        args: &[rustc_middle::mir::Operand<'tcx>],
+        destination: rustc_middle::mir::Place<'tcx>,
+        places: Places,
+    ) {
+        let transitions = self.call_foreign_function(function_name, args, destination, places);
+
+        let current_function = self.call_stack.peek_mut();
+        let Some(unwrapped_place) = extract_nth_argument_as_place(args, 0) else {
+            panic!("BUG: `std::result::Result::<T, E>::unwrap` should receive the value to be unwrapped as a place");
+        };
+
+        match transitions {
+            Transitions::Basic { .. } => {
+                panic!(
+                    "BUG: `std::result::Result::<T, E>::unwrap` should always have a cleanup place"
+                )
+            }
+            Transitions::WithCleanup {
+                cleanup_transition, ..
+            } => {
+                self.mutex_manager.handle_lock_guard_drop(
+                    unwrapped_place,
                     &cleanup_transition,
                     &current_function.memory,
                     &mut self.net,
