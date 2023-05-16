@@ -240,22 +240,16 @@ impl<'tcx> Translator<'tcx> {
             panic!("BUG: `std::result::Result::<T, E>::unwrap` should receive the value to be unwrapped as a place");
         };
 
-        match transitions {
-            Transitions::Basic { .. } => {
-                panic!(
-                    "BUG: `std::result::Result::<T, E>::unwrap` should always have a cleanup place"
-                )
-            }
-            Transitions::WithCleanup {
-                cleanup_transition, ..
-            } => {
-                self.mutex_manager.handle_lock_guard_drop(
-                    unwrapped_place,
-                    &cleanup_transition,
-                    &current_function.memory,
-                    &mut self.net,
-                );
-            }
+        if let Transitions::WithCleanup {
+            cleanup_transition, ..
+        } = transitions
+        {
+            self.mutex_manager.handle_lock_guard_drop(
+                unwrapped_place,
+                &cleanup_transition,
+                &current_function.memory,
+                &mut self.net,
+            );
         }
     }
 
