@@ -100,7 +100,7 @@ fn main() {
         filepath.push(&args.filename);
         filepath.set_extension(OutputFormat::Lola.to_string());
 
-        if lola::check_deadlock(filepath) {
+        if lola::check_deadlock(&filepath) {
             println!("Result: Deadlock can be reached according to the model checker `LoLA`");
         } else {
             println!("Result: The program is deadlock-free according to the model checker `LoLA`");
