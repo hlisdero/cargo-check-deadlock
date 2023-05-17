@@ -98,7 +98,7 @@ impl ThreadManager {
         ),
     ) -> ThreadRef {
         let index = self.threads.len();
-        self.threads.push_front(Thread::new(
+        self.threads.push_back(Thread::new(
             spawn_transition,
             thread_function_def_id,
             memory_entries.0,
@@ -107,7 +107,7 @@ impl ThreadManager {
             memory_entries.3,
             index,
         ));
-        info!("Found thread {index} and pushed it to the thread translation queue");
+        info!("Found thread {index} and pushed it to the back of the thread translation queue");
         ThreadRef(index)
     }
 
