@@ -10,14 +10,6 @@ use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef};
 use crate::naming::function::{diverging_call_transition_label, panic_transition_label};
 use crate::translator::function::{Places, Transitions};
 
-const PANIC_FUNCTIONS: [&str; 5] = [
-    "core::panicking::assert_failed",
-    "core::panicking::panic",
-    "core::panicking::panic_fmt",
-    "std::rt::begin_panic",
-    "std::rt::begin_panic_fmt",
-];
-
 /// Checks whether the function name corresponds to one of the functions
 /// that should be excluded from the translation.
 ///
@@ -35,12 +27,14 @@ fn is_function_excluded_from_translation(function_name: &str) -> bool {
 /// Checks whether the function name corresponds to one of the functions
 /// that starts a panic, i.e. an unwind of the stack.
 pub fn is_panic_function(function_name: &str) -> bool {
-    for name in PANIC_FUNCTIONS {
-        if function_name == name {
-            return true;
-        }
-    }
-    false
+    matches!(
+        function_name,
+        "core::panicking::assert_failed"
+            | "core::panicking::panic"
+            | "core::panicking::panic_fmt"
+            | "std::rt::begin_panic"
+            | "std::rt::begin_panic_fmt"
+    )
 }
 
 /// Checks whether the function with the given `DefId` should be treated
