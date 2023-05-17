@@ -441,11 +441,6 @@
           <text>std_sync_Condvar_wait_0_START</text>
         </name>
       </transition>
-      <transition id="std_sync_Condvar_wait_0_UNWIND">
-        <name>
-          <text>std_sync_Condvar_wait_0_UNWIND</text>
-        </name>
-      </transition>
       <transition id="std_sync_Mutex_T_lock_0_CALL">
         <name>
           <text>std_sync_Mutex_T_lock_0_CALL</text>
@@ -610,14 +605,6 @@
       <arc source="main_BB12" target="std_sync_Condvar_wait_0_START" id="(main_BB12, std_sync_Condvar_wait_0_START)">
         <name>
           <text>(main_BB12, std_sync_Condvar_wait_0_START)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BB12" target="std_sync_Condvar_wait_0_UNWIND" id="(main_BB12, std_sync_Condvar_wait_0_UNWIND)">
-        <name>
-          <text>(main_BB12, std_sync_Condvar_wait_0_UNWIND)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -1378,14 +1365,6 @@
       <arc source="std_sync_Condvar_wait_0_START" target="MUTEX_0" id="(std_sync_Condvar_wait_0_START, MUTEX_0)">
         <name>
           <text>(std_sync_Condvar_wait_0_START, MUTEX_0)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="std_sync_Condvar_wait_0_UNWIND" target="main_BB21" id="(std_sync_Condvar_wait_0_UNWIND, main_BB21)">
-        <name>
-          <text>(std_sync_Condvar_wait_0_UNWIND, main_BB21)</text>
         </name>
         <inscription>
           <text>1</text>

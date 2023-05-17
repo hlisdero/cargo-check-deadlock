@@ -325,11 +325,6 @@ TRANSITION std_sync_Condvar_wait_0_START
   PRODUCE
     CONDVAR_0_P3 : 1,
     MUTEX_0 : 1;
-TRANSITION std_sync_Condvar_wait_0_UNWIND
-  CONSUME
-    main_BB12 : 1;
-  PRODUCE
-    main_BB21 : 1;
 TRANSITION std_sync_Mutex_T_lock_0_CALL
   CONSUME
     MUTEX_0 : 1,

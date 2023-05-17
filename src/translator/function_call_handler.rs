@@ -127,7 +127,7 @@ impl<'tcx> Translator<'tcx> {
                 ));
             }
         }
-        info!("Pushed function {function_name} to the translation callstack");
+        info!("Pushed function {function_name} to the translation call stack");
         self.translate_top_call_stack();
     }
 
@@ -275,7 +275,6 @@ impl<'tcx> Translator<'tcx> {
     /// Call to `std::sync::Condvar::notify_one`.
     /// Non-recursive call for the translation process.
     ///
-    /// There is an issue with how rustc compiles this call to MIR.
     /// In some cases, the `std::sync::Condvar::notify_one` function contains a cleanup target.
     /// This target is not called in practice but creates trouble for lost signal detection.
     /// The reason is that any call may fail, which is equivalent to saying that the `notify_one`
@@ -302,12 +301,19 @@ impl<'tcx> Translator<'tcx> {
 
     /// Call to `std::sync::Condvar::wait`.
     /// Non-recursive call for the translation process.
+    ///
+    /// In some cases, the `std::sync::Condvar::wait` function contains a cleanup target.
+    /// This target is not called in practice but creates trouble for lost signal detection.
+    /// The reason is that any call may fail, which is equivalent to saying that the `wait`
+    /// was never present in the program, leading to a false model.
+    /// In conclusion: Ignore the cleanup place, do not model it. Assume `wait` never unwinds.
     fn call_condvar_wait(
         &mut self,
         args: &[rustc_middle::mir::Operand<'tcx>],
         destination: rustc_middle::mir::Place<'tcx>,
         places: Places,
     ) {
+        let places = places.ignore_cleanup_place();
         let wait_transitions = self
             .condvar_manager
             .translate_call_wait(places, &mut self.net);
@@ -326,7 +332,6 @@ impl<'tcx> Translator<'tcx> {
     /// Call to `std::sync::Mutex::<T>::lock`.
     /// Non-recursive call for the translation process.
     ///
-    /// There is an issue with how rustc compiles this call to MIR.
     /// In some cases, the `std::sync::Mutex::<T>::lock` function contains a cleanup target.
     /// This target is not called in practice but creates trouble for deadlock detection.
     /// For instance, a simple double lock deadlock is not detected
