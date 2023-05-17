@@ -11,20 +11,6 @@ use crate::naming::function::{diverging_call_transition_label, panic_transition_
 use crate::translator::function::{Places, Transitions};
 
 /// Checks whether the function name corresponds to one of the functions
-/// that should be excluded from the translation.
-///
-/// These are:
-/// - All the standard library functions.
-/// - All the core library functions.
-/// - All the functions in `alloc`, the core allocation and collections library.
-#[inline]
-fn is_function_excluded_from_translation(function_name: &str) -> bool {
-    function_name.starts_with("std::")
-        || function_name.starts_with("core::")
-        || function_name.starts_with("alloc::")
-}
-
-/// Checks whether the function name corresponds to one of the functions
 /// that starts a panic, i.e. an unwind of the stack.
 pub fn is_panic_function(function_name: &str) -> bool {
     matches!(
@@ -41,15 +27,19 @@ pub fn is_panic_function(function_name: &str) -> bool {
 /// as a foreign function call.
 ///
 /// A foreign function call occurs when:
+/// - the function belongs to the standard library.
+/// - the function belongs to the core library.
+/// - the function belongs to the `alloc` crate, the core allocation and collections library.
 /// - the function does not have a MIR representation.
 /// - the function is a foreign item i.e., linked via extern { ... }).
-/// - the function belongs to the exclusions listed in `FUNCTIONS_EXCLUDED_FROM_TRANSLATION`
 pub fn is_foreign_function(
     function_def_id: rustc_hir::def_id::DefId,
     function_name: &str,
     tcx: rustc_middle::ty::TyCtxt,
 ) -> bool {
-    is_function_excluded_from_translation(function_name)
+    function_name.starts_with("std::")
+        || function_name.starts_with("core::")
+        || function_name.starts_with("alloc::")
         || tcx.is_foreign_item(function_def_id)
         || !tcx.is_mir_available(function_def_id)
 }
