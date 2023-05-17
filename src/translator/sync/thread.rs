@@ -26,7 +26,7 @@ use crate::data_structures::petri_net_interface::{
 use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef, TransitionRef};
 use crate::naming::thread::{end_place_label, start_place_label};
 use crate::translator::mir_function::{
-    CondvarEntries, JoinHandleEntries, LockGuardEntries, Memory, MutexEntries,
+    CondvarEntries, JoinHandleEntries, Memory, MutexEntries, MutexGuardEntries,
 };
 use crate::utils::check_substring_in_place_type;
 
@@ -37,8 +37,8 @@ pub struct Thread {
     thread_function_def_id: rustc_hir::def_id::DefId,
     /// The mutexes passed to the thread.
     mutexes: MutexEntries,
-    /// The lock guards passed to the thread.
-    lock_guards: LockGuardEntries,
+    /// The mutex guards passed to the thread.
+    mutex_guards: MutexGuardEntries,
     /// The join handles passed to the thread.
     join_handles: JoinHandleEntries,
     /// The condition variables passed to the thread.
@@ -56,7 +56,7 @@ impl Thread {
         spawn_transition: TransitionRef,
         thread_function_def_id: rustc_hir::def_id::DefId,
         mutexes: MutexEntries,
-        lock_guards: LockGuardEntries,
+        mutex_guards: MutexGuardEntries,
         join_handles: JoinHandleEntries,
         condvars: CondvarEntries,
         index: usize,
@@ -65,7 +65,7 @@ impl Thread {
             spawn_transition,
             thread_function_def_id,
             mutexes,
-            lock_guards,
+            mutex_guards,
             join_handles,
             condvars,
             join_transition: None,
@@ -143,10 +143,10 @@ impl Thread {
                 self.thread_function_def_id,
                 tcx,
             ) {
-                let mutex_ref = self.lock_guards.pop().expect(
-                    "BUG: The thread function receives more lock guards than the ones detected",
+                let mutex_guard_ref = self.mutex_guards.pop().expect(
+                    "BUG: The thread function receives more mutex guards than the ones detected",
                 );
-                memory.link_place_to_lock_guard(place, mutex_ref);
+                memory.link_place_to_mutex_guard(place, mutex_guard_ref);
             }
             if check_substring_in_place_type(
                 &place,

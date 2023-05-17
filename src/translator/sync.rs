@@ -16,7 +16,7 @@ use crate::utils::{check_substring_in_place_type, extract_nth_argument_as_place}
 pub use condvar::Condvar;
 pub use condvar_manager::{CondvarManager, CondvarRef};
 use log::debug;
-pub use mutex_manager::{MutexManager, MutexRef};
+pub use mutex_manager::{MutexGuardRef, MutexManager, MutexRef};
 pub use thread::Thread;
 pub use thread_manager::{ThreadManager, ThreadRef};
 
@@ -59,7 +59,7 @@ pub fn handle_aggregate_assignment<'tcx>(
     }
 }
 
-/// Checks if `place_linked` contains a mutex, a lock guard, a join handle or a condition variable.
+/// Checks if `place_linked` contains a mutex, a mutex guard, a join handle or a condition variable.
 /// If `place_linked` contains a synchronization variable, links it to `place_to_be_linked`.
 ///
 /// Receives a reference to the memory of the caller function to
@@ -112,7 +112,7 @@ pub fn link_if_sync_variable<'tcx>(
     }
 }
 
-/// Checks if `place_to_check_type` contains a mutex, a lock guard, a join handle or a condition variable.
+/// Checks if `place_to_check_type` contains a mutex, a mutex guard, a join handle or a condition variable.
 /// If `place_to_check_type` is of type of a synchronization variable, links `place_linked` to `place_to_be_linked`.
 ///
 /// This function decouples the place with the type of the sync variable from the place that is linked to the sync
@@ -131,7 +131,7 @@ fn generalized_link_place_if_sync_variable<'tcx>(
         caller_function_def_id,
         tcx,
     ) {
-        memory.link_place_to_same_lock_guard(*place_to_be_linked, *place_linked);
+        memory.link_place_to_same_mutex_guard(*place_to_be_linked, *place_linked);
     }
     if check_substring_in_place_type(
         place_to_check_type,
@@ -159,7 +159,7 @@ fn generalized_link_place_if_sync_variable<'tcx>(
     }
 }
 
-/// Checks if the first argument for a function call contains a mutex, a lock guard,
+/// Checks if the first argument for a function call contains a mutex, a mutex guard,
 /// a join handle or a condition variable, i.e. a synchronization variable.
 /// If the first argument contains a synchronization variable, links it to the return value.
 /// If there is no first argument or it is a constant,

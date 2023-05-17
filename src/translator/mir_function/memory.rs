@@ -4,7 +4,7 @@
 //! with mutex references. This tracks which variables contain a mutex.
 //!
 //! The memory stores a mapping of local variables (`rustc_middle::mir::Place`)
-//! with mutex references. This tracks which variables contain a lock guard.
+//! with mutex references. This tracks which variables contain a mutex guard.
 //!
 //! The memory stores a mapping of local variables (`rustc_middle::mir::Place`)
 //! with thread references. This tracks which variables contain a join handle.
@@ -15,22 +15,22 @@
 //! More info:
 //! <https://rustc-dev-guide.rust-lang.org/mir/index.html#mir-data-types>
 
-use crate::translator::sync::{CondvarRef, MutexRef, ThreadRef};
+use crate::translator::sync::{CondvarRef, MutexGuardRef, MutexRef, ThreadRef};
 use log::debug;
 use std::collections::HashMap;
 
 #[derive(Default)]
 pub struct Memory<'tcx> {
     places_linked_to_mutexes: HashMap<rustc_middle::mir::Place<'tcx>, MutexRef>,
-    places_linked_to_lock_guards: HashMap<rustc_middle::mir::Place<'tcx>, MutexRef>,
+    places_linked_to_mutex_guards: HashMap<rustc_middle::mir::Place<'tcx>, MutexGuardRef>,
     places_linked_to_join_handles: HashMap<rustc_middle::mir::Place<'tcx>, ThreadRef>,
     places_linked_to_condvars: HashMap<rustc_middle::mir::Place<'tcx>, CondvarRef>,
 }
 
 /// An auxiliary type for passing mutex memory entries from one function to the other.
 pub type MutexEntries = Vec<MutexRef>;
-/// An auxiliary type for passing lock guard memory entries from one function to the other.
-pub type LockGuardEntries = Vec<MutexRef>;
+/// An auxiliary type for passing mutex guard memory entries from one function to the other.
+pub type MutexGuardEntries = Vec<MutexGuardRef>;
 /// An auxiliary type for passing join handle memory entries from one function to the other.
 pub type JoinHandleEntries = Vec<ThreadRef>;
 /// An auxiliary type for passing condvar memory entries from one function to the other.
@@ -62,23 +62,23 @@ impl<'tcx> Memory<'tcx> {
         }
     }
 
-    /// Marks a place as containing a lock guard for a mutex.
+    /// Marks a place as containing a mutex guard for a mutex.
     ///
     /// # Panics
     ///
-    /// If the place is already linked to a lock guard, then the function panics.
-    pub fn link_place_to_lock_guard(
+    /// If the place is already linked to a mutex guard, then the function panics.
+    pub fn link_place_to_mutex_guard(
         &mut self,
         place: rustc_middle::mir::Place<'tcx>,
-        mutex_ref: MutexRef,
+        mutex_guard_ref: MutexGuardRef,
     ) {
-        let Some(old_mutex_ref) = self.places_linked_to_lock_guards.insert(place, mutex_ref) else {
+        let Some(old_mutex_guard_ref) = self.places_linked_to_mutex_guards.insert(place, mutex_guard_ref) else {
             return;
         };
-        if mutex_ref == old_mutex_ref {
-            debug!("PLACE {place:?} LINKED AGAIN TO SAME LOCK GUARD");
+        if mutex_guard_ref == old_mutex_guard_ref {
+            debug!("PLACE {place:?} LINKED AGAIN TO SAME MUTEX GUARD");
         } else {
-            debug!("PLACE {place:?} LINKED TO A DIFFERENT LOCK GUARD");
+            debug!("PLACE {place:?} LINKED TO A DIFFERENT MUTEX GUARD");
         }
     }
 
@@ -134,16 +134,16 @@ impl<'tcx> Memory<'tcx> {
         mutex
     }
 
-    /// Returns the mutex for the lock guard linked to the given place.
+    /// Returns the mutex for the mutex guard linked to the given place.
     ///
     /// # Panics
     ///
-    /// If the place is not linked to a lock guard, then the function panics.
-    pub fn get_linked_lock_guard(&self, place: &rustc_middle::mir::Place<'tcx>) -> &MutexRef {
-        let Some(lock_guard) = self.places_linked_to_lock_guards.get(place) else {
-            panic!("BUG: The place {place:?} should be linked to a lock guard");
+    /// If the place is not linked to a mutex guard, then the function panics.
+    pub fn get_linked_mutex_guard(&self, place: &rustc_middle::mir::Place<'tcx>) -> &MutexGuardRef {
+        let Some(mutex_guard) = self.places_linked_to_mutex_guards.get(place) else {
+            panic!("BUG: The place {place:?} should be linked to a mutex guard");
         };
-        lock_guard
+        mutex_guard
     }
 
     /// Returns the thread reference for the join handle linked to the given place.
@@ -170,9 +170,9 @@ impl<'tcx> Memory<'tcx> {
         condvar
     }
 
-    /// Checks whether the place is linked to a lock guard.
-    pub fn is_linked_to_lock_guard(&self, place: rustc_middle::mir::Place<'tcx>) -> bool {
-        self.places_linked_to_lock_guards.contains_key(&place)
+    /// Checks whether the place is linked to a mutex guard.
+    pub fn is_linked_to_mutex_guard(&self, place: rustc_middle::mir::Place<'tcx>) -> bool {
+        self.places_linked_to_mutex_guards.contains_key(&place)
     }
 
     /// Links a place to the mutex linked to another place.
@@ -193,22 +193,22 @@ impl<'tcx> Memory<'tcx> {
         debug!("SAME MUTEX: {place_to_be_linked:?} = {place_linked_to_mutex:?}");
     }
 
-    /// Links a place to the lock guard linked to another place.
-    /// After this operation both places point to the same lock guard, i.e.,
+    /// Links a place to the mutex guard linked to another place.
+    /// After this operation both places point to the same mutex guard, i.e.,
     /// the first place is an alias for the second place.
     ///
     /// # Panics
     ///
-    /// If the place to be linked is already linked to a lock guard, then the function panics.
-    /// If the place linked to a lock guard is not linked to a lock guard, then the function panics.
-    pub fn link_place_to_same_lock_guard(
+    /// If the place to be linked is already linked to a mutex guard, then the function panics.
+    /// If the place linked to a mutex guard is not linked to a mutex guard, then the function panics.
+    pub fn link_place_to_same_mutex_guard(
         &mut self,
         place_to_be_linked: rustc_middle::mir::Place<'tcx>,
-        place_linked_to_lock_guard: rustc_middle::mir::Place<'tcx>,
+        place_linked_to_mutex_guard: rustc_middle::mir::Place<'tcx>,
     ) {
-        let mutex_ref = self.get_linked_lock_guard(&place_linked_to_lock_guard);
-        self.link_place_to_lock_guard(place_to_be_linked, *mutex_ref);
-        debug!("SAME LOCK GUARD: {place_to_be_linked:?} = {place_linked_to_lock_guard:?}");
+        let mutex_guard_ref = self.get_linked_mutex_guard(&place_linked_to_mutex_guard);
+        self.link_place_to_mutex_guard(place_to_be_linked, *mutex_guard_ref);
+        debug!("SAME MUTEX GUARD: {place_to_be_linked:?} = {place_linked_to_mutex_guard:?}");
     }
 
     /// Links a place to the join handle linked to another place.
@@ -266,20 +266,20 @@ impl<'tcx> Memory<'tcx> {
         result
     }
 
-    /// Finds all the lock guards linked to the given place.
+    /// Finds all the mutex guards linked to the given place.
     /// It takes into consideration that the place may have several fields (a subtype of projections).
     /// <https://rustc-dev-guide.rust-lang.org/mir/index.html?highlight=Projections#mir-data-types>
     /// Returns a vector of places which share the same local.
-    pub fn find_lock_guards_linked_to_place(
+    pub fn find_mutex_guards_linked_to_place(
         &self,
         place: rustc_middle::mir::Place<'tcx>,
-    ) -> LockGuardEntries {
-        let mut result: LockGuardEntries = Vec::new();
-        for lock_guard_place in self.places_linked_to_lock_guards.keys() {
-            if lock_guard_place.local == place.local {
-                let mutex_ref = self.get_linked_lock_guard(lock_guard_place);
-                result.push(*mutex_ref);
-                debug!("FOUND LOCK GUARD IN PLACE {lock_guard_place:?}");
+    ) -> MutexGuardEntries {
+        let mut result: MutexGuardEntries = Vec::new();
+        for mutex_guard_place in self.places_linked_to_mutex_guards.keys() {
+            if mutex_guard_place.local == place.local {
+                let mutex_guard_ref = self.get_linked_mutex_guard(mutex_guard_place);
+                result.push(*mutex_guard_ref);
+                debug!("FOUND MUTEX GUARD IN PLACE {mutex_guard_place:?}");
             }
         }
         result
@@ -296,8 +296,8 @@ impl<'tcx> Memory<'tcx> {
         let mut result: JoinHandleEntries = Vec::new();
         for join_handle_place in self.places_linked_to_join_handles.keys() {
             if join_handle_place.local == place.local {
-                let mutex_ref = self.get_linked_join_handle(join_handle_place);
-                result.push(*mutex_ref);
+                let mutex_guard_ref = self.get_linked_join_handle(join_handle_place);
+                result.push(*mutex_guard_ref);
                 debug!("FOUND JOIN HANDLE IN PLACE {join_handle_place:?}");
             }
         }

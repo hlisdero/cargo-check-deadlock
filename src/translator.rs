@@ -308,14 +308,14 @@ impl<'tcx> Translator<'tcx> {
                 function.drop(target, None, &mut self.net)
             }
         };
-        self.mutex_manager.handle_lock_guard_drop(
+        self.mutex_manager.handle_mutex_guard_drop(
             place,
             &transition,
             &function.memory,
             &mut self.net,
         );
         if let Some(cleanup_transition) = cleanup_transition {
-            self.mutex_manager.handle_lock_guard_drop(
+            self.mutex_manager.handle_mutex_guard_drop(
                 place,
                 &cleanup_transition,
                 &function.memory,

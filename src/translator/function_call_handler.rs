@@ -142,7 +142,7 @@ impl<'tcx> Translator<'tcx> {
     /// the function is called to generate a unique label.
     ///
     /// Performs a check to keep track of synchronization primitives.
-    /// In case the first argument is a mutex, lock guard, join handle or condition variable,
+    /// In case the first argument is a mutex, mutex guard, join handle or condition variable,
     /// it links the first argument of the function to its return value.
     ///
     /// Returns the transitions representing the function call.
@@ -191,7 +191,7 @@ impl<'tcx> Translator<'tcx> {
 
         match transitions {
             Transitions::Basic { transition } => {
-                self.mutex_manager.handle_lock_guard_drop(
+                self.mutex_manager.handle_mutex_guard_drop(
                     dropped_place,
                     &transition,
                     &current_function.memory,
@@ -202,13 +202,13 @@ impl<'tcx> Translator<'tcx> {
                 transition,
                 cleanup_transition,
             } => {
-                self.mutex_manager.handle_lock_guard_drop(
+                self.mutex_manager.handle_mutex_guard_drop(
                     dropped_place,
                     &transition,
                     &current_function.memory,
                     &mut self.net,
                 );
-                self.mutex_manager.handle_lock_guard_drop(
+                self.mutex_manager.handle_mutex_guard_drop(
                     dropped_place,
                     &cleanup_transition,
                     &current_function.memory,
@@ -244,7 +244,7 @@ impl<'tcx> Translator<'tcx> {
             cleanup_transition, ..
         } = transitions
         {
-            self.mutex_manager.handle_lock_guard_drop(
+            self.mutex_manager.handle_mutex_guard_drop(
                 unwrapped_place,
                 &cleanup_transition,
                 &current_function.memory,

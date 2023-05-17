@@ -9,7 +9,7 @@
 use super::Thread;
 use crate::data_structures::petri_net_interface::TransitionRef;
 use crate::translator::mir_function::{
-    CondvarEntries, JoinHandleEntries, LockGuardEntries, Memory, MutexEntries,
+    CondvarEntries, JoinHandleEntries, Memory, MutexEntries, MutexGuardEntries,
 };
 use crate::utils::{
     extract_closure, extract_def_id_of_called_function_from_operand, extract_nth_argument_as_place,
@@ -92,7 +92,7 @@ impl ThreadManager {
         thread_function_def_id: rustc_hir::def_id::DefId,
         memory_entries: (
             MutexEntries,
-            LockGuardEntries,
+            MutexGuardEntries,
             JoinHandleEntries,
             CondvarEntries,
         ),
@@ -140,24 +140,24 @@ impl ThreadManager {
         memory: &mut Memory<'tcx>,
     ) -> (
         MutexEntries,
-        LockGuardEntries,
+        MutexGuardEntries,
         JoinHandleEntries,
         CondvarEntries,
     ) {
         closure.map_or_else(
             || {
                 let mutexes = vec![];
-                let lock_guards = vec![];
+                let mutex_guards = vec![];
                 let join_handles = vec![];
                 let condvars = vec![];
-                (mutexes, lock_guards, join_handles, condvars)
+                (mutexes, mutex_guards, join_handles, condvars)
             },
             |place| {
                 let mutexes = memory.find_mutexes_linked_to_place(place);
-                let lock_guards = memory.find_lock_guards_linked_to_place(place);
+                let mutex_guards = memory.find_mutex_guards_linked_to_place(place);
                 let join_handles = memory.find_join_handles_linked_to_place(place);
                 let condvars = memory.find_condvars_linked_to_place(place);
-                (mutexes, lock_guards, join_handles, condvars)
+                (mutexes, mutex_guards, join_handles, condvars)
             },
         )
     }
