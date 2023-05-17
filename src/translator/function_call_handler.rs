@@ -274,6 +274,13 @@ impl<'tcx> Translator<'tcx> {
 
     /// Call to `std::sync::Condvar::notify_one`.
     /// Non-recursive call for the translation process.
+    ///
+    /// There is an issue with how rustc compiles this call to MIR.
+    /// In some cases, the `std::sync::Condvar::notify_one` function contains a cleanup target.
+    /// This target is not called in practice but creates trouble for lost signal detection.
+    /// The reason is that any call may fail, which is equivalent to saying that the `notify_one`
+    /// was never present in the program, leading to a false lost signal.
+    /// In conclusion: Ignore the cleanup place, do not model it. Assume `notify_one` never unwinds.
     fn call_condvar_notify_one(
         &mut self,
         function_name: &str,
@@ -281,6 +288,7 @@ impl<'tcx> Translator<'tcx> {
         destination: rustc_middle::mir::Place<'tcx>,
         places: Places,
     ) {
+        let places = places.ignore_cleanup_place();
         let transitions = self.call_foreign_function(function_name, args, destination, places);
 
         let current_function = self.call_stack.peek_mut();

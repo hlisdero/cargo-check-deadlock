@@ -431,11 +431,6 @@
           <text>std_sync_Condvar_notify_one_0_CALL</text>
         </name>
       </transition>
-      <transition id="std_sync_Condvar_notify_one_0_CALL_UNWIND">
-        <name>
-          <text>std_sync_Condvar_notify_one_0_CALL_UNWIND</text>
-        </name>
-      </transition>
       <transition id="std_sync_Condvar_wait_0_END">
         <name>
           <text>std_sync_Condvar_wait_0_END</text>
@@ -879,14 +874,6 @@
       <arc source="main__closure_0__BB4" target="std_sync_Condvar_notify_one_0_CALL" id="(main__closure_0__BB4, std_sync_Condvar_notify_one_0_CALL)">
         <name>
           <text>(main__closure_0__BB4, std_sync_Condvar_notify_one_0_CALL)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main__closure_0__BB4" target="std_sync_Condvar_notify_one_0_CALL_UNWIND" id="(main__closure_0__BB4, std_sync_Condvar_notify_one_0_CALL_UNWIND)">
-        <name>
-          <text>(main__closure_0__BB4, std_sync_Condvar_notify_one_0_CALL_UNWIND)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -1367,14 +1354,6 @@
       <arc source="std_sync_Condvar_notify_one_0_CALL" target="main__closure_0__BB5" id="(std_sync_Condvar_notify_one_0_CALL, main__closure_0__BB5)">
         <name>
           <text>(std_sync_Condvar_notify_one_0_CALL, main__closure_0__BB5)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="std_sync_Condvar_notify_one_0_CALL_UNWIND" target="main__closure_0__BB8" id="(std_sync_Condvar_notify_one_0_CALL_UNWIND, main__closure_0__BB8)">
-        <name>
-          <text>(std_sync_Condvar_notify_one_0_CALL_UNWIND, main__closure_0__BB8)</text>
         </name>
         <inscription>
           <text>1</text>

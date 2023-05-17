@@ -105,11 +105,6 @@ TRANSITION std_sync_Condvar_notify_one_0_CALL
   PRODUCE
     CONDVAR_0_P2 : 1,
     main_BB5 : 1;
-TRANSITION std_sync_Condvar_notify_one_0_CALL_UNWIND
-  CONSUME
-    main_BB4 : 1;
-  PRODUCE
-    main_BB10 : 1;
 TRANSITION std_sync_Condvar_wait_0_END
   CONSUME
     CONDVAR_0_P4 : 1,

@@ -29,7 +29,6 @@ digraph petrinet {
     std_result_Result_unwrap_0_CALL [shape="box" xlabel="" label="std_result_Result_unwrap_0_CALL"];
     std_sync_Condvar_new_0_CALL [shape="box" xlabel="" label="std_sync_Condvar_new_0_CALL"];
     std_sync_Condvar_notify_one_0_CALL [shape="box" xlabel="" label="std_sync_Condvar_notify_one_0_CALL"];
-    std_sync_Condvar_notify_one_0_CALL_UNWIND [shape="box" xlabel="" label="std_sync_Condvar_notify_one_0_CALL_UNWIND"];
     std_sync_Condvar_wait_0_END [shape="box" xlabel="" label="std_sync_Condvar_wait_0_END"];
     std_sync_Condvar_wait_0_START [shape="box" xlabel="" label="std_sync_Condvar_wait_0_START"];
     std_sync_Condvar_wait_0_UNWIND [shape="box" xlabel="" label="std_sync_Condvar_wait_0_UNWIND"];
@@ -50,7 +49,6 @@ digraph petrinet {
     main_BB2 -> std_sync_Mutex_T_lock_0_CALL;
     main_BB3 -> std_result_Result_unwrap_0_CALL;
     main_BB4 -> std_sync_Condvar_notify_one_0_CALL;
-    main_BB4 -> std_sync_Condvar_notify_one_0_CALL_UNWIND;
     main_BB5 -> std_sync_Condvar_wait_0_START;
     main_BB5 -> std_sync_Condvar_wait_0_UNWIND;
     main_BB6 -> main_DROP_6;
@@ -75,7 +73,6 @@ digraph petrinet {
     std_sync_Condvar_new_0_CALL -> main_BB2;
     std_sync_Condvar_notify_one_0_CALL -> CONDVAR_0_P2;
     std_sync_Condvar_notify_one_0_CALL -> main_BB5;
-    std_sync_Condvar_notify_one_0_CALL_UNWIND -> main_BB10;
     std_sync_Condvar_wait_0_END -> main_BB6;
     std_sync_Condvar_wait_0_START -> CONDVAR_0_P3;
     std_sync_Condvar_wait_0_START -> MUTEX_0;
