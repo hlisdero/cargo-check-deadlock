@@ -122,7 +122,7 @@ impl<'tcx> Translator<'tcx> {
             self.program_start.clone(),
             self.program_end.clone(),
         );
-        info!("Pushed main function to the translation callstack");
+        info!("Pushed main function to the translation call stack");
         self.translate_top_call_stack();
         info!("Finished translating the main thread");
         self.translate_threads();
@@ -368,7 +368,7 @@ impl<'tcx> Translator<'tcx> {
                 thread_start_place,
                 thread_end_place,
             );
-            info!("Pushed thread function to the translation callstack");
+            info!("Pushed thread function to the translation call stack");
             let new_function = self.call_stack.peek_mut();
             info!("Moving sync variables to the thread function...");
             thread.move_sync_variables(&mut new_function.memory, self.tcx);
