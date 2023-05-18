@@ -318,6 +318,7 @@ impl<'tcx> Translator<'tcx> {
         };
 
         self.start_function_call(function_def_id, &function_name, args, destination, places);
+        self.function_counter.increment(&function_name);
     }
 
     /// Starts the corresponding handler for the function call.
@@ -336,17 +337,14 @@ impl<'tcx> Translator<'tcx> {
         // Special cases
         if function_name == "std::mem::drop" {
             self.call_mem_drop(function_name, args, destination, places);
-            self.function_counter.increment(function_name);
             return;
         }
         if function_name == "std::result::Result::<T, E>::unwrap" {
             self.call_result_unwrap(function_name, args, destination, places);
-            self.function_counter.increment(function_name);
             return;
         }
         if function_name == "std::thread::spawn" {
             self.call_thread_spawn(function_name, args, destination, places);
-            self.function_counter.increment(function_name);
             return;
         }
         // Sync or multithreading function
@@ -359,22 +357,12 @@ impl<'tcx> Translator<'tcx> {
             // A reference to the Petri net to add transitions and places
             let net = &mut self.net;
 
-            sync::call_supported_sync_function(
-                function_name,
-                index,
-                args,
-                destination,
-                places,
-                net,
-                memory,
-            );
-            self.function_counter.increment(function_name);
+            sync::call_function(function_name, index, args, destination, places, net, memory);
             return;
         }
         // Default case for standard and core library calls
         if is_foreign_function(function_def_id, function_name, self.tcx) {
             self.call_foreign_function(function_name, args, destination, places);
-            self.function_counter.increment(function_name);
             return;
         }
         // Default case: A function with MIR representation
@@ -393,7 +381,6 @@ impl<'tcx> Translator<'tcx> {
         places: Places,
     ) {
         let index = self.function_counter.get_count(function_name);
-        self.function_counter.increment(function_name);
 
         match places {
             Places::WithCleanup {

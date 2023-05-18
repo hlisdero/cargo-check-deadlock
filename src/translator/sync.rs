@@ -40,7 +40,7 @@ pub fn is_supported_function(function_name: &str) -> bool {
 }
 
 /// Calls the corresponding handler for the supported synchronization or multithreading functions.
-pub fn call_supported_sync_function<'tcx>(
+pub fn call_function<'tcx>(
     function_name: &str,
     index: usize,
     args: &[rustc_middle::mir::Operand<'tcx>],
