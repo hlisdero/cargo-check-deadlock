@@ -6,7 +6,7 @@
 //! For an introduction to MIR see:
 //! <https://rustc-dev-guide.rust-lang.org/mir/index.html>
 
-use super::sync::{handle_aggregate_assignment, link_if_sync_variable};
+use super::sync::{handle_aggregate_assignment, link_if_sync_variable, mutex};
 use super::Translator;
 use rustc_middle::mir::visit::Visitor;
 use rustc_middle::mir::TerminatorKind;
@@ -92,7 +92,30 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
                 place,
                 target,
                 unwind,
-            } => self.drop_terminator(place, target, unwind),
+            } => {
+                let (transition, cleanup_transition) = match unwind {
+                    rustc_middle::mir::UnwindAction::Cleanup(cleanup) => {
+                        function.drop(target, Some(cleanup), &mut self.net)
+                    }
+                    // Do NOT model the `Terminate` case.
+                    // It is not relevant for deadlock detection and makes the Petri nets unnecessarily bigger.
+                    rustc_middle::mir::UnwindAction::Continue
+                    | rustc_middle::mir::UnwindAction::Terminate => {
+                        function.drop(target, None, &mut self.net)
+                    }
+                    rustc_middle::mir::UnwindAction::Unreachable => {
+                        function.unreachable(&self.program_end, &mut self.net);
+                        function.drop(target, None, &mut self.net)
+                    }
+                };
+
+                let memory = &mut function.memory;
+                let net = &mut self.net;
+                mutex::handle_mutex_guard_drop(place, &transition, net, memory);
+                if let Some(cleanup_transition) = cleanup_transition {
+                    mutex::handle_mutex_guard_drop(place, &cleanup_transition, net, memory);
+                }
+            }
             TerminatorKind::Call {
                 ref func,
                 ref args,
@@ -110,7 +133,23 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
                 msg: _,
                 target,
                 unwind,
-            } => self.assert_terminator(target, unwind),
+            } => {
+                match unwind {
+                    rustc_middle::mir::UnwindAction::Cleanup(cleanup) => {
+                        function.assert(target, Some(cleanup), &mut self.net);
+                    }
+                    // Do NOT model the `Terminate` case.
+                    // It is not relevant for deadlock detection and makes the Petri nets unnecessarily bigger.
+                    rustc_middle::mir::UnwindAction::Continue
+                    | rustc_middle::mir::UnwindAction::Terminate => {
+                        function.assert(target, None, &mut self.net);
+                    }
+                    rustc_middle::mir::UnwindAction::Unreachable => {
+                        function.assert(target, None, &mut self.net);
+                        function.unreachable(&self.program_end, &mut self.net);
+                    }
+                }
+            }
             TerminatorKind::Yield { .. } => {
                 unimplemented!("TerminatorKind::Yield not implemented yet")
             }
