@@ -145,3 +145,20 @@ pub fn call_new<'tcx>(
     memory.link_place_to_mutex(destination, &mutex);
     debug!("NEW MUTEX: {destination:?}");
 }
+
+/// Checks whether the variable to be dropped is a mutex guard.
+/// If that is the case, adds an unlock arc for the mutex corresponding to the mutex guard.
+/// The unlock arc is added for the usual transition as well as the cleanup transition.
+/// Otherwise do nothing.
+pub fn handle_mutex_guard_drop<'tcx>(
+    place: rustc_middle::mir::Place<'tcx>,
+    unlock_transition: &TransitionRef,
+    net: &mut PetriNet,
+    memory: &mut Memory<'tcx>,
+) {
+    if memory.is_linked_to_mutex_guard(place) {
+        let mutex_guard_ref = memory.get_linked_mutex_guard(&place);
+        mutex_guard_ref.mutex.add_unlock_arc(unlock_transition, net);
+        debug!("DROP MUTEX GUARD {place:?} DUE TO TRANSITION {unlock_transition}");
+    }
+}

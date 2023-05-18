@@ -32,9 +32,7 @@ mod special_function;
 mod sync;
 
 use crate::data_structures::hash_map_counter::HashMapCounter;
-use crate::data_structures::petri_net_interface::{
-    connect_places, PetriNet, PlaceRef, TransitionRef,
-};
+use crate::data_structures::petri_net_interface::{connect_places, PetriNet, PlaceRef};
 use crate::data_structures::stack::Stack;
 use crate::naming::function::{
     foreign_call_transition_labels, indexed_mir_function_cleanup_label, indexed_mir_function_name,
@@ -51,6 +49,7 @@ use rustc_middle::mir::visit::Visitor;
 use special_function::{call_diverging_function, call_panic_function, is_panic_function};
 use std::cell::RefCell;
 use std::rc::Rc;
+use sync::mutex;
 use sync::thread::Thread;
 
 /// Translator error message when no main function is found in the source code.
@@ -486,16 +485,20 @@ impl<'tcx> Translator<'tcx> {
         let Some(dropped_place) = extract_nth_argument_as_place(args, 0) else {
             panic!("BUG: `std::mem::drop` should receive the value to be dropped as a place");
         };
+
+        let function = self.call_stack.peek_mut();
+        let memory = &mut function.memory;
+        let net = &mut self.net;
         match transitions {
             Transitions::Basic { transition } => {
-                self.handle_mutex_guard_drop(dropped_place, &transition);
+                mutex::handle_mutex_guard_drop(dropped_place, &transition, net, memory);
             }
             Transitions::WithCleanup {
                 transition,
                 cleanup_transition,
             } => {
-                self.handle_mutex_guard_drop(dropped_place, &transition);
-                self.handle_mutex_guard_drop(dropped_place, &cleanup_transition);
+                mutex::handle_mutex_guard_drop(dropped_place, &transition, net, memory);
+                mutex::handle_mutex_guard_drop(dropped_place, &cleanup_transition, net, memory);
             }
         }
     }
@@ -522,8 +525,11 @@ impl<'tcx> Translator<'tcx> {
         } = transitions
         {
             let unwrapped_place = extract_nth_argument_as_place(args, 0)
-                .expect("BUG: `std::result::Result::<T, E>::unwrap` should receive the value to be unwrapped as a place");
-            self.handle_mutex_guard_drop(unwrapped_place, &cleanup_transition);
+            .expect("BUG: `std::result::Result::<T, E>::unwrap` should receive the value to be unwrapped as a place");
+            let function = self.call_stack.peek_mut();
+            let memory = &mut function.memory;
+            let net = &mut self.net;
+            mutex::handle_mutex_guard_drop(unwrapped_place, &cleanup_transition, net, memory);
         }
     }
 
@@ -611,28 +617,12 @@ impl<'tcx> Translator<'tcx> {
                 function.drop(target, None, &mut self.net)
             }
         };
-        self.handle_mutex_guard_drop(place, &transition);
-        if let Some(cleanup_transition) = cleanup_transition {
-            self.handle_mutex_guard_drop(place, &cleanup_transition);
-        }
-    }
 
-    /// Checks whether the variable to be dropped is a mutex guard.
-    /// If that is the case, adds an unlock arc for the mutex corresponding to the mutex guard.
-    /// The unlock arc is added for the usual transition as well as the cleanup transition.
-    /// Otherwise do nothing.
-    pub fn handle_mutex_guard_drop(
-        &mut self,
-        place: rustc_middle::mir::Place<'tcx>,
-        unlock_transition: &TransitionRef,
-    ) {
-        let current_function = self.call_stack.peek_mut();
-        if current_function.memory.is_linked_to_mutex_guard(place) {
-            let mutex_guard_ref = current_function.memory.get_linked_mutex_guard(&place);
-            mutex_guard_ref
-                .mutex
-                .add_unlock_arc(unlock_transition, &mut self.net);
-            debug!("DROP MUTEX GUARD {place:?} DUE TO TRANSITION {unlock_transition}");
+        let memory = &mut function.memory;
+        let net = &mut self.net;
+        mutex::handle_mutex_guard_drop(place, &transition, net, memory);
+        if let Some(cleanup_transition) = cleanup_transition {
+            mutex::handle_mutex_guard_drop(place, &cleanup_transition, net, memory);
         }
     }
 
