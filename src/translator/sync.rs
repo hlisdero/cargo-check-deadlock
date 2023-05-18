@@ -30,9 +30,7 @@ pub type ThreadRef = std::rc::Rc<std::cell::RefCell<thread::Thread>>;
 pub fn is_supported_function(function_name: &str) -> bool {
     matches!(
         function_name,
-        "std::mem::drop"
-            | "std::result::Result::<T, E>::unwrap"
-            | "std::sync::Condvar::new"
+        "std::sync::Condvar::new"
             | "std::sync::Condvar::notify_one"
             | "std::sync::Condvar::wait"
             | "std::sync::Mutex::<T>::lock"

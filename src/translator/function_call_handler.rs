@@ -30,6 +30,17 @@ impl<'tcx> Translator<'tcx> {
         destination: rustc_middle::mir::Place<'tcx>,
         places: Places,
     ) {
+        // Special cases
+        if function_name == "std::mem::drop" {
+            self.call_mem_drop(function_name, args, destination, places);
+            self.function_counter.increment(function_name);
+            return;
+        }
+        if function_name == "std::result::Result::<T, E>::unwrap" {
+            self.call_result_unwrap(function_name, args, destination, places);
+            self.function_counter.increment(function_name);
+            return;
+        }
         // Sync or multithreading function
         if is_supported_function(function_name) {
             self.call_supported_sync_function(function_name, args, destination, places);
@@ -62,12 +73,6 @@ impl<'tcx> Translator<'tcx> {
         let net = &mut self.net;
 
         match function_name {
-            "std::mem::drop" => {
-                self.call_mem_drop(function_name, args, destination, places);
-            }
-            "std::result::Result::<T, E>::unwrap" => {
-                self.call_result_unwrap(function_name, args, destination, places);
-            }
             "std::sync::Condvar::new" => {
                 condvar::call_new(function_name, index, destination, places, net, memory);
             }
