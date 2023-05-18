@@ -167,7 +167,7 @@ impl Thread {
                 let condvar_ref = self.condvars.pop().expect(
                 "BUG: The thread function receives more condition variables than the ones detected",
             );
-                memory.link_place_to_condvar(place, condvar_ref);
+                memory.link_place_to_condvar(place, &condvar_ref);
             }
         }
     }

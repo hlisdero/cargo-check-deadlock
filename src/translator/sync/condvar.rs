@@ -38,6 +38,7 @@ use crate::data_structures::petri_net_interface::{
 use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef, TransitionRef};
 use crate::naming::condvar::{place_labels, transition_labels};
 
+#[derive(PartialEq, Eq)]
 pub struct Condvar {
     lost_signal_possible: PlaceRef,
     signal_input: PlaceRef,

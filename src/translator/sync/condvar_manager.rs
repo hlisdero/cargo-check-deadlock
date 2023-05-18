@@ -17,13 +17,12 @@ use std::rc::Rc;
 
 #[derive(Default)]
 pub struct CondvarManager {
-    condvars: Vec<Condvar>,
+    condvars: Vec<Rc<Condvar>>,
     wait_counter: usize,
 }
 
-/// A wrapper type around the indexes to the elements in `Vec<Condvar>`.
-#[derive(Clone, Copy, PartialEq, Eq)]
-pub struct CondvarRef(usize);
+/// A condvar reference is just a shared pointer to a cell containing the condition variable.
+pub type CondvarRef = Rc<Condvar>;
 
 impl CondvarManager {
     /// Returns a new empty `CondvarManager`.
@@ -92,7 +91,7 @@ impl CondvarManager {
     ) {
         let condvar_ref = self.add_condvar(net);
         // The return value contains a new condition variable. Link the local variable to it.
-        memory.link_place_to_condvar(return_value, condvar_ref);
+        memory.link_place_to_condvar(return_value, &condvar_ref);
         debug!("NEW CONDVAR: {return_value:?}");
     }
 
@@ -101,7 +100,6 @@ impl CondvarManager {
     /// Receives a reference to the memory of the caller function to retrieve the mutex guard
     /// contained in the local variable for the call.
     pub fn translate_side_effects_wait<'tcx>(
-        &self,
         args: &[rustc_middle::mir::Operand<'tcx>],
         return_value: rustc_middle::mir::Place<'tcx>,
         wait_transitions: &(TransitionRef, TransitionRef),
@@ -121,7 +119,7 @@ impl CondvarManager {
         let self_ref = extract_nth_argument_as_place(args, 0)
             .expect("BUG: `std::sync::Condvar::wait` should receive the self reference as a place");
         let condvar_ref = memory.get_linked_condvar(&self_ref);
-        self.link_to_wait_call(*condvar_ref, wait_transitions, net);
+        condvar_ref.link_to_wait_call(&wait_transitions.0, &wait_transitions.1, net);
         // The return value contains the mutex guard passed to the function. Link the local variable to it.
         memory.link_place_to_mutex_guard(return_value, &Rc::clone(mutex_guard_ref));
     }
@@ -131,7 +129,6 @@ impl CondvarManager {
     /// Receives a reference to the memory of the caller function to retrieve the condition variable
     /// contained in the local variable for the call.
     pub fn translate_side_effects_notify_one<'tcx>(
-        &self,
         args: &[rustc_middle::mir::Operand<'tcx>],
         notify_one_transition: &TransitionRef,
         net: &mut PetriNet,
@@ -142,49 +139,16 @@ impl CondvarManager {
             "BUG: `std::sync::Condvar::notify_one` should receive the self reference as a place",
         );
         let condvar_ref = memory.get_linked_condvar(&self_ref);
-        self.link_to_notify_one_call(*condvar_ref, notify_one_transition, net);
+        condvar_ref.link_to_notify_one_call(notify_one_transition, net);
     }
 
     /// Adds a new condition variable and creates its corresponding representation in the Petri net.
     /// Returns a reference to the new condition variable.
     fn add_condvar(&mut self, net: &mut PetriNet) -> CondvarRef {
         let index = self.condvars.len();
-        self.condvars.push(Condvar::new(index, net));
-        CondvarRef(index)
-    }
-
-    /// Links the condition variable to the representation of
-    /// a call to `std::sync::Condvar::wait`.
-    fn link_to_wait_call(
-        &self,
-        condvar_ref: CondvarRef,
-        wait_transitions: &(TransitionRef, TransitionRef),
-        net: &mut PetriNet,
-    ) {
-        let condvar = self.get_condvar_from_ref(condvar_ref);
-        condvar.link_to_wait_call(&wait_transitions.0, &wait_transitions.1, net);
-    }
-
-    /// Links the condition variable to the representation of
-    /// a call to `std::sync::Condvar::notify_one`.
-    fn link_to_notify_one_call(
-        &self,
-        condvar_ref: CondvarRef,
-        signal_transition: &TransitionRef,
-        net: &mut PetriNet,
-    ) {
-        let condvar = self.get_condvar_from_ref(condvar_ref);
-        condvar.link_to_notify_one_call(signal_transition, net);
-    }
-
-    /// Get the condition variable corresponding to the condvar reference.
-    ///
-    /// # Panics
-    ///
-    /// If the condvar reference is invalid, then the function panics.
-    fn get_condvar_from_ref(&self, condvar_ref: CondvarRef) -> &Condvar {
-        self.condvars
-            .get(condvar_ref.0)
-            .expect("BUG: The condvar reference should be a valid index for the vector of condition variables")
+        let condvar = Rc::new(Condvar::new(index, net));
+        let condvar_ref = Rc::clone(&condvar);
+        self.condvars.push(condvar);
+        condvar_ref
     }
 }

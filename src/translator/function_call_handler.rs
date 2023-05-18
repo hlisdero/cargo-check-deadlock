@@ -10,6 +10,7 @@ use crate::translator::function::{Places, Transitions};
 use crate::translator::mir_function::MirFunction;
 use crate::translator::special_function::{call_foreign_function, is_foreign_function};
 use crate::translator::sync::{is_supported_sync_function, link_return_value_if_sync_variable};
+use crate::translator::CondvarManager;
 use crate::utils::extract_nth_argument_as_place;
 use log::info;
 
@@ -267,7 +268,7 @@ impl<'tcx> Translator<'tcx> {
         let transitions = self.call_foreign_function(function_name, args, destination, places);
 
         let current_function = self.call_stack.peek_mut();
-        self.condvar_manager.translate_side_effects_notify_one(
+        CondvarManager::translate_side_effects_notify_one(
             args,
             transitions.get_transition(),
             &mut self.net,
@@ -295,7 +296,7 @@ impl<'tcx> Translator<'tcx> {
             .translate_call_wait(places, &mut self.net);
 
         let current_function = self.call_stack.peek_mut();
-        self.condvar_manager.translate_side_effects_wait(
+        CondvarManager::translate_side_effects_wait(
             args,
             destination,
             &wait_transitions,

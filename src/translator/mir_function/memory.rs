@@ -105,12 +105,12 @@ impl<'tcx> Memory<'tcx> {
     pub fn link_place_to_condvar(
         &mut self,
         place: rustc_middle::mir::Place<'tcx>,
-        condvar_ref: CondvarRef,
+        condvar_ref: &CondvarRef,
     ) {
-        let Some(old_condvar_ref) = self.places_linked_to_condvars.insert(place, condvar_ref) else {
+        let Some(old_condvar_ref) = self.places_linked_to_condvars.insert(place, Rc::clone(condvar_ref)) else {
             return;
         };
-        if condvar_ref == old_condvar_ref {
+        if *condvar_ref == old_condvar_ref {
             debug!("PLACE {place:?} LINKED AGAIN TO SAME CONDITION VARIABLE");
         } else {
             debug!("PLACE {place:?} LINKED TO A DIFFERENT CONDITION VARIABLE");
@@ -238,7 +238,7 @@ impl<'tcx> Memory<'tcx> {
         place_linked_to_condvar: rustc_middle::mir::Place<'tcx>,
     ) {
         let condvar_ref = self.get_linked_condvar(&place_linked_to_condvar);
-        self.link_place_to_condvar(place_to_be_linked, *condvar_ref);
+        self.link_place_to_condvar(place_to_be_linked, &Rc::clone(condvar_ref));
         debug!("SAME CONDVAR: {place_to_be_linked:?} = {place_linked_to_condvar:?}");
     }
 
@@ -311,7 +311,7 @@ impl<'tcx> Memory<'tcx> {
         for condvar_place in self.places_linked_to_condvars.keys() {
             if condvar_place.local == place.local {
                 let condvar_ref = self.get_linked_condvar(condvar_place);
-                result.push(*condvar_ref);
+                result.push(Rc::clone(condvar_ref));
                 debug!("FOUND CONDVAR IN PLACE {condvar_place:?}");
             }
         }
