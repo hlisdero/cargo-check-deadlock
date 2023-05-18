@@ -46,6 +46,7 @@ use crate::utils::{
 };
 use log::{debug, info};
 use rustc_middle::mir::visit::Visitor;
+use rustc_middle::mir::UnwindAction;
 use special_function::{call_diverging_function, call_panic_function, is_panic_function};
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -214,7 +215,7 @@ impl<'tcx> Translator<'tcx> {
         args: &[rustc_middle::mir::Operand<'tcx>],
         destination: rustc_middle::mir::Place<'tcx>,
         target: Option<rustc_middle::mir::BasicBlock>,
-        unwind: rustc_middle::mir::UnwindAction,
+        unwind: UnwindAction,
     ) {
         let current_function = self.call_stack.peek_mut();
         let function_def_id =
@@ -226,7 +227,7 @@ impl<'tcx> Translator<'tcx> {
         // Depending on whether a return or a unwind for the function are present,
         // we have different possibilities for the function call end place and the (optional) cleanup place.
         let places = match (target, unwind) {
-            (Some(return_block), rustc_middle::mir::UnwindAction::Continue) => {
+            (Some(return_block), UnwindAction::Continue) => {
                 // MIR function or foreign function calls without a cleanup block.
                 let end_place =
                     current_function.get_end_place_for_function_call(return_block, &mut self.net);
@@ -235,7 +236,7 @@ impl<'tcx> Translator<'tcx> {
                     end_place,
                 }
             }
-            (Some(return_block), rustc_middle::mir::UnwindAction::Cleanup(cleanup_block)) => {
+            (Some(return_block), UnwindAction::Cleanup(cleanup_block)) => {
                 // The usual foreign function call case.
                 let end_place =
                     current_function.get_end_place_for_function_call(return_block, &mut self.net);
@@ -247,7 +248,7 @@ impl<'tcx> Translator<'tcx> {
                     cleanup_place,
                 }
             }
-            (Some(return_block), rustc_middle::mir::UnwindAction::Terminate) => {
+            (Some(return_block), UnwindAction::Terminate) => {
                 // Specific foreign function calls that terminate the program (abort).
                 let end_place =
                     current_function.get_end_place_for_function_call(return_block, &mut self.net);
@@ -258,14 +259,14 @@ impl<'tcx> Translator<'tcx> {
                     cleanup_place: self.program_panic.clone(),
                 }
             }
-            (None, rustc_middle::mir::UnwindAction::Terminate) => {
+            (None, UnwindAction::Terminate) => {
                 // Foreign function calls that simply terminate the program.
                 Places::Basic {
                     start_place,
                     end_place: self.program_panic.clone(),
                 }
             }
-            (None, rustc_middle::mir::UnwindAction::Cleanup(cleanup_block)) => {
+            (None, UnwindAction::Cleanup(cleanup_block)) => {
                 // A very special case seen in functions like `std::process::exit`
                 // where the return block is actually expressed as a cleanup.
                 // This needs to be modelled differently than a diverging function.
@@ -276,7 +277,7 @@ impl<'tcx> Translator<'tcx> {
                     end_place,
                 }
             }
-            (None, rustc_middle::mir::UnwindAction::Continue) => {
+            (None, UnwindAction::Continue) => {
                 // Call to a function which does not return (Return type: -> !).
                 // Non-recursive call for the translation process.
                 // `panic!`-related functions are a special case of this.
@@ -292,7 +293,7 @@ impl<'tcx> Translator<'tcx> {
                 }
                 return;
             }
-            (Some(return_block), rustc_middle::mir::UnwindAction::Unreachable) => {
+            (Some(return_block), UnwindAction::Unreachable) => {
                 // Support the unreachable case simply by matching the cleanup place to the program end place.
                 // This is a compromise solution to avoid polluting the panic state with these extraneous states
                 // that are actually not reachable during execution.
@@ -305,7 +306,7 @@ impl<'tcx> Translator<'tcx> {
                     cleanup_place: self.program_end.clone(),
                 }
             }
-            (None, rustc_middle::mir::UnwindAction::Unreachable) => {
+            (None, UnwindAction::Unreachable) => {
                 // Support the unreachable case simply by matching the cleanup place to the program end place.
                 // This is a compromise solution to avoid polluting the panic state with these extraneous states
                 // that are actually not reachable during execution.
