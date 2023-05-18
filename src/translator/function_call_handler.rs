@@ -38,6 +38,7 @@ impl<'tcx> Translator<'tcx> {
         // Default case for standard and core library calls
         if is_foreign_function(function_def_id, function_name, self.tcx) {
             self.call_foreign_function(function_name, args, destination, places);
+            self.function_counter.increment(function_name);
             return;
         }
         // Default case: A function with MIR representation
@@ -69,23 +70,18 @@ impl<'tcx> Translator<'tcx> {
             }
             "std::sync::Condvar::new" => {
                 condvar::call_new(function_name, index, destination, places, net, memory);
-                self.function_counter.increment(function_name);
             }
             "std::sync::Condvar::notify_one" => {
                 condvar::call_notify_one(function_name, index, args, places, net, memory);
-                self.function_counter.increment(function_name);
             }
             "std::sync::Condvar::wait" => {
                 condvar::call_wait(index, args, destination, places, net, memory);
-                self.function_counter.increment(function_name);
             }
             "std::sync::Mutex::<T>::lock" => {
                 mutex::call_lock(function_name, index, args, destination, places, net, memory);
-                self.function_counter.increment(function_name);
             }
             "std::sync::Mutex::<T>::new" => {
                 mutex::call_new(function_name, index, destination, places, net, memory);
-                self.function_counter.increment(function_name);
             }
             "std::thread::spawn" => {
                 self.call_thread_spawn(function_name, args, destination, places);
@@ -95,6 +91,8 @@ impl<'tcx> Translator<'tcx> {
             }
             _ => panic!("BUG: Call handler for {function_name} is not defined"),
         }
+        // Increment the counter at the end of every call to prepare the new label.
+        self.function_counter.increment(function_name);
     }
 
     /// Call to a MIR function. It is the default for user-defined functions in the code.
@@ -170,7 +168,6 @@ impl<'tcx> Translator<'tcx> {
         places: Places,
     ) -> Transitions {
         let index = self.function_counter.get_count(function_name);
-        self.function_counter.increment(function_name);
         let transitions = call_foreign_function(
             places,
             &foreign_call_transition_labels(function_name, index),
