@@ -15,8 +15,11 @@ use crate::data_structures::petri_net_interface::{
     add_arc_place_transition, add_arc_transition_place,
 };
 use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef, TransitionRef};
+use crate::naming::function::foreign_call_transition_labels;
 use crate::naming::mutex::place_label;
+use crate::translator::function::Places;
 use crate::translator::mir_function::Memory;
+use crate::translator::special_function::call_foreign_function;
 use crate::utils::extract_nth_argument_as_place;
 use log::debug;
 use std::rc::Rc;
@@ -74,33 +77,36 @@ impl Guard {
     // }
 }
 
-/// Translates the side effects for `std::sync::Mutex::<T>::new` i.e.,
-/// the specific logic of creating a new mutex.
-/// Receives a reference to the memory of the caller function to
-/// link the return local variable to the new mutex.
-pub fn translate_side_effects_new<'tcx>(
+/// Call to `std::sync::Mutex::<T>::lock`.
+/// Non-recursive call for the translation process.
+///
+/// - Retrieves the mutex linked to the first argument (the self reference).
+/// - Adds an arc from the place of the mutex to the transition of this function call.
+/// - Creates a new `MutexGuard`.
+/// - Links the return place to the `MutexGuard`.
+///
+/// In some cases, the `std::sync::Mutex::<T>::lock` function contains a cleanup target.
+/// This target is not called in practice but creates trouble for deadlock detection.
+/// For instance, a simple double lock deadlock is not detected
+/// because the second call could take the unwind path.
+/// In conclusion: Ignore the cleanup place, do not model it. Assume `lock` never unwinds.
+pub fn call_lock<'tcx>(
+    function_name: &str,
     index: usize,
-    return_value: rustc_middle::mir::Place<'tcx>,
-    net: &mut PetriNet,
-    memory: &mut Memory<'tcx>,
-) {
-    let mutex = Rc::new(Mutex::new(index, net));
-    // The return value contains a new mutex. Link the local variable to it.
-    memory.link_place_to_mutex(return_value, &mutex);
-    debug!("NEW MUTEX: {return_value:?}");
-}
-
-/// Translates the side effects for `std::sync::Mutex::<T>::lock` i.e.,
-/// the specific logic of locking a mutex.
-/// Receives a reference to the memory of the caller function to retrieve the mutex contained
-/// in the local variable for the call and to link the return local variable to the new mutex guard.
-pub fn translate_side_effects_lock<'tcx>(
     args: &[rustc_middle::mir::Operand<'tcx>],
-    return_value: rustc_middle::mir::Place<'tcx>,
-    lock_transition: &TransitionRef,
+    destination: rustc_middle::mir::Place<'tcx>,
+    places: Places,
     net: &mut PetriNet,
     memory: &mut Memory<'tcx>,
 ) {
+    let places = places.ignore_cleanup_place();
+    let transitions = call_foreign_function(
+        places,
+        &foreign_call_transition_labels(function_name, index),
+        net,
+    );
+    let lock_transition = transitions.get_transition();
+
     // Retrieve the mutex from the local variable passed to the function as an argument.
     let self_ref = extract_nth_argument_as_place(args, 0)
         .expect("BUG: `std::sync::Mutex::<T>::lock` should receive the self reference as a place");
@@ -109,7 +115,33 @@ pub fn translate_side_effects_lock<'tcx>(
 
     // Create a new mutex guard
     let mutex_guard = Rc::new(Guard::new(Rc::clone(mutex_ref)));
+
     // The return value contains a new mutex guard. Link the local variable to it.
-    memory.link_place_to_mutex_guard(return_value, &mutex_guard);
-    debug!("NEW MUTEX GUARD {return_value:?} DUE TO TRANSITION {lock_transition}");
+    memory.link_place_to_mutex_guard(destination, &mutex_guard);
+    debug!("NEW MUTEX GUARD {destination:?} DUE TO TRANSITION {lock_transition}");
+}
+
+/// Call to `std::sync::Mutex::<T>::new`.
+/// Non-recursive call for the translation process.
+///
+/// - Creates a new `Mutex`.
+/// - Links the return place to the `Mutex`.
+pub fn call_new<'tcx>(
+    function_name: &str,
+    index: usize,
+    destination: rustc_middle::mir::Place<'tcx>,
+    places: Places,
+    net: &mut PetriNet,
+    memory: &mut Memory<'tcx>,
+) {
+    call_foreign_function(
+        places,
+        &foreign_call_transition_labels(function_name, index),
+        net,
+    );
+    // Create a new mutex
+    let mutex = Rc::new(Mutex::new(index, net));
+    // The return value contains a new mutex. Link the local variable to it.
+    memory.link_place_to_mutex(destination, &mutex);
+    debug!("NEW MUTEX: {destination:?}");
 }

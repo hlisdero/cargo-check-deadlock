@@ -80,10 +80,12 @@ impl<'tcx> Translator<'tcx> {
                 self.function_counter.increment(function_name);
             }
             "std::sync::Mutex::<T>::lock" => {
-                self.call_mutex_lock(function_name, args, destination, places);
+                mutex::call_lock(function_name, index, args, destination, places, net, memory);
+                self.function_counter.increment(function_name);
             }
             "std::sync::Mutex::<T>::new" => {
-                self.call_mutex_new(function_name, args, destination, places);
+                mutex::call_new(function_name, index, destination, places, net, memory);
+                self.function_counter.increment(function_name);
             }
             "std::thread::spawn" => {
                 self.call_thread_spawn(function_name, args, destination, places);
@@ -240,60 +242,6 @@ impl<'tcx> Translator<'tcx> {
                 .expect("BUG: `std::result::Result::<T, E>::unwrap` should receive the value to be unwrapped as a place");
             self.handle_mutex_guard_drop(unwrapped_place, &cleanup_transition);
         }
-    }
-
-    /// Call to `std::sync::Mutex::<T>::lock`.
-    /// Non-recursive call for the translation process.
-    ///
-    /// In some cases, the `std::sync::Mutex::<T>::lock` function contains a cleanup target.
-    /// This target is not called in practice but creates trouble for deadlock detection.
-    /// For instance, a simple double lock deadlock is not detected
-    /// because the second call could take the unwind path.
-    /// In conclusion: Ignore the cleanup place, do not model it. Assume `lock` never unwinds.
-    fn call_mutex_lock(
-        &mut self,
-        function_name: &str,
-        args: &[rustc_middle::mir::Operand<'tcx>],
-        destination: rustc_middle::mir::Place<'tcx>,
-        places: Places,
-    ) {
-        let places = places.ignore_cleanup_place();
-        let transitions = self.call_foreign_function(function_name, args, destination, places);
-        let current_function = self.call_stack.peek_mut();
-
-        match transitions {
-            Transitions::Basic { transition } | Transitions::WithCleanup { transition, .. } => {
-                mutex::translate_side_effects_lock(
-                    args,
-                    destination,
-                    &transition,
-                    &mut self.net,
-                    &mut current_function.memory,
-                );
-            }
-        }
-    }
-
-    /// Call to `std::sync::Mutex::<T>::new`.
-    /// Non-recursive call for the translation process.
-    fn call_mutex_new(
-        &mut self,
-        function_name: &str,
-        args: &[rustc_middle::mir::Operand<'tcx>],
-        destination: rustc_middle::mir::Place<'tcx>,
-        places: Places,
-    ) {
-        // Get the index before it is incremented in `call_foreign_function`
-        let index = self.function_counter.get_count(function_name);
-        self.call_foreign_function(function_name, args, destination, places);
-
-        let current_function = self.call_stack.peek_mut();
-        mutex::translate_side_effects_new(
-            index,
-            destination,
-            &mut self.net,
-            &mut current_function.memory,
-        );
     }
 
     /// Call to `std::thread::JoinHandle::<T>::join`.
