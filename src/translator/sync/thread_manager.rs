@@ -6,11 +6,9 @@
 //! Once the translation of the main thread is over, each thread stored
 //! here will be translated in order.
 
-use super::Thread;
+use super::{CondvarRef, MutexGuardRef, MutexRef, Thread};
 use crate::data_structures::petri_net_interface::TransitionRef;
-use crate::translator::mir_function::{
-    CondvarEntries, JoinHandleEntries, Memory, MutexEntries, MutexGuardEntries,
-};
+use crate::translator::mir_function::{Entries, Memory};
 use crate::utils::{
     extract_closure, extract_def_id_of_called_function_from_operand, extract_nth_argument_as_place,
 };
@@ -91,10 +89,10 @@ impl ThreadManager {
         spawn_transition: TransitionRef,
         thread_function_def_id: rustc_hir::def_id::DefId,
         memory_entries: (
-            MutexEntries,
-            MutexGuardEntries,
-            JoinHandleEntries,
-            CondvarEntries,
+            Entries<MutexRef>,
+            Entries<MutexGuardRef>,
+            Entries<ThreadRef>,
+            Entries<CondvarRef>,
         ),
     ) -> ThreadRef {
         let index = self.threads.len();
@@ -139,10 +137,10 @@ impl ThreadManager {
         closure: Option<rustc_middle::mir::Place<'tcx>>,
         memory: &mut Memory<'tcx>,
     ) -> (
-        MutexEntries,
-        MutexGuardEntries,
-        JoinHandleEntries,
-        CondvarEntries,
+        Entries<MutexRef>,
+        Entries<MutexGuardRef>,
+        Entries<ThreadRef>,
+        Entries<CondvarRef>,
     ) {
         closure.map_or_else(
             || {

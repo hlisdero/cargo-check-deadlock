@@ -27,14 +27,8 @@ pub struct Memory<'tcx> {
     places_linked_to_condvars: HashMap<rustc_middle::mir::Place<'tcx>, CondvarRef>,
 }
 
-/// An auxiliary type for passing mutex memory entries from one function to the other.
-pub type MutexEntries = Vec<MutexRef>;
-/// An auxiliary type for passing mutex guard memory entries from one function to the other.
-pub type MutexGuardEntries = Vec<MutexGuardRef>;
-/// An auxiliary type for passing join handle memory entries from one function to the other.
-pub type JoinHandleEntries = Vec<ThreadRef>;
-/// An auxiliary type for passing condvar memory entries from one function to the other.
-pub type CondvarEntries = Vec<CondvarRef>;
+/// An auxiliary type for passing memory entries from one function to the other.
+pub type Entries<T> = Vec<T>;
 
 impl<'tcx> Memory<'tcx> {
     /// Creates a new memory with empty mappings.
@@ -254,8 +248,8 @@ impl<'tcx> Memory<'tcx> {
     pub fn find_mutexes_linked_to_place(
         &self,
         place: rustc_middle::mir::Place<'tcx>,
-    ) -> MutexEntries {
-        let mut result: MutexEntries = Vec::new();
+    ) -> Entries<MutexRef> {
+        let mut result: Entries<MutexRef> = Vec::new();
         for mutex_place in self.places_linked_to_mutexes.keys() {
             if mutex_place.local == place.local {
                 let mutex_ref = self.get_linked_mutex(mutex_place);
@@ -273,8 +267,8 @@ impl<'tcx> Memory<'tcx> {
     pub fn find_mutex_guards_linked_to_place(
         &self,
         place: rustc_middle::mir::Place<'tcx>,
-    ) -> MutexGuardEntries {
-        let mut result: MutexGuardEntries = Vec::new();
+    ) -> Entries<MutexGuardRef> {
+        let mut result: Entries<MutexGuardRef> = Vec::new();
         for mutex_guard_place in self.places_linked_to_mutex_guards.keys() {
             if mutex_guard_place.local == place.local {
                 let mutex_guard_ref = self.get_linked_mutex_guard(mutex_guard_place);
@@ -292,8 +286,8 @@ impl<'tcx> Memory<'tcx> {
     pub fn find_join_handles_linked_to_place(
         &self,
         place: rustc_middle::mir::Place<'tcx>,
-    ) -> JoinHandleEntries {
-        let mut result: JoinHandleEntries = Vec::new();
+    ) -> Entries<ThreadRef> {
+        let mut result: Entries<ThreadRef> = Vec::new();
         for join_handle_place in self.places_linked_to_join_handles.keys() {
             if join_handle_place.local == place.local {
                 let mutex_guard_ref = self.get_linked_join_handle(join_handle_place);
@@ -311,8 +305,8 @@ impl<'tcx> Memory<'tcx> {
     pub fn find_condvars_linked_to_place(
         &self,
         place: rustc_middle::mir::Place<'tcx>,
-    ) -> CondvarEntries {
-        let mut result: CondvarEntries = Vec::new();
+    ) -> Entries<CondvarRef> {
+        let mut result: Entries<CondvarRef> = Vec::new();
         for condvar_place in self.places_linked_to_condvars.keys() {
             if condvar_place.local == place.local {
                 let condvar_ref = self.get_linked_condvar(condvar_place);

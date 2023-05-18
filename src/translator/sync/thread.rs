@@ -25,9 +25,8 @@ use crate::data_structures::petri_net_interface::{
 };
 use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef, TransitionRef};
 use crate::naming::thread::{end_place_label, start_place_label};
-use crate::translator::mir_function::{
-    CondvarEntries, JoinHandleEntries, Memory, MutexEntries, MutexGuardEntries,
-};
+use crate::translator::mir_function::{Entries, Memory};
+use crate::translator::sync::{CondvarRef, MutexGuardRef, MutexRef, ThreadRef};
 use crate::utils::check_substring_in_place_type;
 
 pub struct Thread {
@@ -36,13 +35,13 @@ pub struct Thread {
     /// The definition ID that uniquely identifies the function run by the thread.
     thread_function_def_id: rustc_hir::def_id::DefId,
     /// The mutexes passed to the thread.
-    mutexes: MutexEntries,
+    mutexes: Entries<MutexRef>,
     /// The mutex guards passed to the thread.
-    mutex_guards: MutexGuardEntries,
+    mutex_guards: Entries<MutexGuardRef>,
     /// The join handles passed to the thread.
-    join_handles: JoinHandleEntries,
+    join_handles: Entries<ThreadRef>,
     /// The condition variables passed to the thread.
-    condvars: CondvarEntries,
+    condvars: Entries<CondvarRef>,
     /// The transition to which the thread joins in at the end.
     join_transition: Option<TransitionRef>,
     /// An index to identify the thread.
@@ -55,10 +54,10 @@ impl Thread {
     pub const fn new(
         spawn_transition: TransitionRef,
         thread_function_def_id: rustc_hir::def_id::DefId,
-        mutexes: MutexEntries,
-        mutex_guards: MutexGuardEntries,
-        join_handles: JoinHandleEntries,
-        condvars: CondvarEntries,
+        mutexes: Entries<MutexRef>,
+        mutex_guards: Entries<MutexGuardRef>,
+        join_handles: Entries<ThreadRef>,
+        condvars: Entries<CondvarRef>,
         index: usize,
     ) -> Self {
         Self {

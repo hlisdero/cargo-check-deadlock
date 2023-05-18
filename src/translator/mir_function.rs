@@ -20,7 +20,7 @@ use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef};
 use basic_block::BasicBlock;
 use std::collections::HashMap;
 
-pub use memory::{CondvarEntries, JoinHandleEntries, Memory, MutexEntries, MutexGuardEntries};
+pub use memory::{Entries, Memory};
 
 pub struct MirFunction<'tcx> {
     /// The ID that uniquely identifies the function in this crate in the HIR representation.
