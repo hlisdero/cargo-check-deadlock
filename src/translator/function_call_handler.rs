@@ -10,7 +10,7 @@ use crate::translator::function::{Places, Transitions};
 use crate::translator::mir_function::MirFunction;
 use crate::translator::special_function::{call_foreign_function, is_foreign_function};
 use crate::translator::sync::{is_supported_sync_function, link_return_value_if_sync_variable};
-use crate::translator::CondvarManager;
+use crate::translator::{CondvarManager, ThreadManager};
 use crate::utils::extract_nth_argument_as_place;
 use log::info;
 
@@ -373,8 +373,7 @@ impl<'tcx> Translator<'tcx> {
         };
 
         let current_function = self.call_stack.peek();
-        self.thread_manager
-            .translate_side_effects_join(args, transition, &current_function.memory);
+        ThreadManager::translate_side_effects_join(args, transition, &current_function.memory);
     }
 
     /// Call to `std::thread::spawn`.

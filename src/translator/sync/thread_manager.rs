@@ -72,7 +72,6 @@ impl ThreadManager {
     /// Receives a reference to the memory of the caller function to retrieve
     /// the join handle linked to the local variable.
     pub fn translate_side_effects_join<'tcx>(
-        &mut self,
         args: &[rustc_middle::mir::Operand<'tcx>],
         function_call_transition: TransitionRef,
         memory: &Memory<'tcx>,
