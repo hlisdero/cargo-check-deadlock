@@ -31,7 +31,7 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
 
     /// Keep track of synchronization variables in assignments
     /// (mutex, mutex guards, join handles and condition variables).
-    /// The idea is to link the right-hand side with the left-hand side of the assigment
+    /// The idea is to link the right-hand side with the left-hand side of the assignment
     /// if a synchronization variable is involved.
     fn visit_assign(
         &mut self,
