@@ -3,7 +3,6 @@
 use super::Translator;
 
 use crate::data_structures::petri_net_interface::connect_places;
-use crate::naming::condvar::wait_transition_labels;
 use crate::naming::function::{
     foreign_call_transition_labels, indexed_mir_function_cleanup_label, indexed_mir_function_name,
 };
@@ -53,6 +52,14 @@ impl<'tcx> Translator<'tcx> {
         destination: rustc_middle::mir::Place<'tcx>,
         places: Places,
     ) {
+        // Index for transition and place labels
+        let index = self.function_counter.get_count(function_name);
+        // A reference to the memory of the current function
+        let current_function = self.call_stack.peek_mut();
+        let memory = &mut current_function.memory;
+        // A reference to the Petri net to add transitions and places
+        let net = &mut self.net;
+
         match function_name {
             "std::mem::drop" => {
                 self.call_mem_drop(function_name, args, destination, places);
@@ -61,13 +68,16 @@ impl<'tcx> Translator<'tcx> {
                 self.call_result_unwrap(function_name, args, destination, places);
             }
             "std::sync::Condvar::new" => {
-                self.call_condvar_new(function_name, args, destination, places);
+                condvar::call_new(function_name, index, destination, places, net, memory);
+                self.function_counter.increment(function_name);
             }
             "std::sync::Condvar::notify_one" => {
-                self.call_condvar_notify_one(function_name, args, destination, places);
+                condvar::call_notify_one(function_name, index, args, places, net, memory);
+                self.function_counter.increment(function_name);
             }
             "std::sync::Condvar::wait" => {
-                self.call_condvar_wait(function_name, args, destination, places);
+                condvar::call_wait(index, args, destination, places, net, memory);
+                self.function_counter.increment(function_name);
             }
             "std::sync::Mutex::<T>::lock" => {
                 self.call_mutex_lock(function_name, args, destination, places);
@@ -230,88 +240,6 @@ impl<'tcx> Translator<'tcx> {
                 .expect("BUG: `std::result::Result::<T, E>::unwrap` should receive the value to be unwrapped as a place");
             self.handle_mutex_guard_drop(unwrapped_place, &cleanup_transition);
         }
-    }
-
-    /// Call to `std::sync::Condvar::new`.
-    /// Non-recursive call for the translation process.
-    fn call_condvar_new(
-        &mut self,
-        function_name: &str,
-        args: &[rustc_middle::mir::Operand<'tcx>],
-        destination: rustc_middle::mir::Place<'tcx>,
-        places: Places,
-    ) {
-        // Get the index before it is incremented in `call_foreign_function`
-        let index = self.function_counter.get_count(function_name);
-        self.call_foreign_function(function_name, args, destination, places);
-
-        let current_function = self.call_stack.peek_mut();
-        condvar::translate_side_effects_new(
-            index,
-            destination,
-            &mut self.net,
-            &mut current_function.memory,
-        );
-    }
-
-    /// Call to `std::sync::Condvar::notify_one`.
-    /// Non-recursive call for the translation process.
-    ///
-    /// In some cases, the `std::sync::Condvar::notify_one` function contains a cleanup target.
-    /// This target is not called in practice but creates trouble for lost signal detection.
-    /// The reason is that any call may fail, which is equivalent to saying that the `notify_one`
-    /// was never present in the program, leading to a false lost signal.
-    /// In conclusion: Ignore the cleanup place, do not model it. Assume `notify_one` never unwinds.
-    fn call_condvar_notify_one(
-        &mut self,
-        function_name: &str,
-        args: &[rustc_middle::mir::Operand<'tcx>],
-        destination: rustc_middle::mir::Place<'tcx>,
-        places: Places,
-    ) {
-        let places = places.ignore_cleanup_place();
-        let transitions = self.call_foreign_function(function_name, args, destination, places);
-
-        let current_function = self.call_stack.peek_mut();
-        condvar::translate_side_effects_notify_one(
-            args,
-            transitions.get_transition(),
-            &mut self.net,
-            &mut current_function.memory,
-        );
-    }
-
-    /// Call to `std::sync::Condvar::wait`.
-    /// Non-recursive call for the translation process.
-    ///
-    /// In some cases, the `std::sync::Condvar::wait` function contains a cleanup target.
-    /// This target is not called in practice but creates trouble for lost signal detection.
-    /// The reason is that any call may fail, which is equivalent to saying that the `wait`
-    /// was never present in the program, leading to a false model.
-    /// In conclusion: Ignore the cleanup place, do not model it. Assume `wait` never unwinds.
-    fn call_condvar_wait(
-        &mut self,
-        function_name: &str,
-        args: &[rustc_middle::mir::Operand<'tcx>],
-        destination: rustc_middle::mir::Place<'tcx>,
-        places: Places,
-    ) {
-        let places = places.ignore_cleanup_place();
-        let index = self.function_counter.get_count(function_name);
-        self.function_counter.increment(function_name);
-        let transition_labels = wait_transition_labels(index);
-
-        let wait_transitions =
-            condvar::translate_call_wait(places, &transition_labels, &mut self.net);
-
-        let current_function = self.call_stack.peek_mut();
-        condvar::translate_side_effects_wait(
-            args,
-            destination,
-            &wait_transitions,
-            &mut self.net,
-            &mut current_function.memory,
-        );
     }
 
     /// Call to `std::sync::Mutex::<T>::lock`.
