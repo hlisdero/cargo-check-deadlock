@@ -17,6 +17,7 @@ use crate::data_structures::petri_net_interface::{
 use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef, TransitionRef};
 use crate::naming::mutex::place_label;
 
+#[derive(PartialEq, Eq)]
 pub struct Mutex {
     place_ref: PlaceRef,
 }
@@ -47,6 +48,7 @@ impl Mutex {
     }
 }
 
+#[derive(PartialEq, Eq)]
 pub struct Guard {
     pub mutex: MutexRef,
     // is_set: bool,

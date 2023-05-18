@@ -134,7 +134,7 @@ impl Thread {
                 let mutex_ref = self.mutexes.pop().expect(
                     "BUG: The thread function receives more mutexes than the ones detected",
                 );
-                memory.link_place_to_mutex(place, mutex_ref);
+                memory.link_place_to_mutex(place, &mutex_ref);
             }
             if check_substring_in_place_type(
                 &place,
@@ -145,7 +145,7 @@ impl Thread {
                 let mutex_guard_ref = self.mutex_guards.pop().expect(
                     "BUG: The thread function receives more mutex guards than the ones detected",
                 );
-                memory.link_place_to_mutex_guard(place, mutex_guard_ref);
+                memory.link_place_to_mutex_guard(place, &mutex_guard_ref);
             }
             if check_substring_in_place_type(
                 &place,

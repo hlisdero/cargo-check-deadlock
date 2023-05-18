@@ -184,36 +184,19 @@ impl<'tcx> Translator<'tcx> {
     ) {
         let transitions = self.call_foreign_function(function_name, args, destination, places);
 
-        let current_function = self.call_stack.peek_mut();
         let Some(dropped_place) = extract_nth_argument_as_place(args, 0) else {
             panic!("BUG: `std::mem::drop` should receive the value to be dropped as a place");
         };
-
         match transitions {
             Transitions::Basic { transition } => {
-                self.mutex_manager.handle_mutex_guard_drop(
-                    dropped_place,
-                    &transition,
-                    &current_function.memory,
-                    &mut self.net,
-                );
+                self.handle_mutex_guard_drop(dropped_place, &transition);
             }
             Transitions::WithCleanup {
                 transition,
                 cleanup_transition,
             } => {
-                self.mutex_manager.handle_mutex_guard_drop(
-                    dropped_place,
-                    &transition,
-                    &current_function.memory,
-                    &mut self.net,
-                );
-                self.mutex_manager.handle_mutex_guard_drop(
-                    dropped_place,
-                    &cleanup_transition,
-                    &current_function.memory,
-                    &mut self.net,
-                );
+                self.handle_mutex_guard_drop(dropped_place, &transition);
+                self.handle_mutex_guard_drop(dropped_place, &cleanup_transition);
             }
         }
     }
@@ -235,21 +218,14 @@ impl<'tcx> Translator<'tcx> {
     ) {
         let transitions = self.call_foreign_function(function_name, args, destination, places);
 
-        let current_function = self.call_stack.peek_mut();
-        let Some(unwrapped_place) = extract_nth_argument_as_place(args, 0) else {
-            panic!("BUG: `std::result::Result::<T, E>::unwrap` should receive the value to be unwrapped as a place");
-        };
-
         if let Transitions::WithCleanup {
             cleanup_transition, ..
         } = transitions
         {
-            self.mutex_manager.handle_mutex_guard_drop(
-                unwrapped_place,
-                &cleanup_transition,
-                &current_function.memory,
-                &mut self.net,
-            );
+            let Some(unwrapped_place) = extract_nth_argument_as_place(args, 0) else {
+                panic!("BUG: `std::result::Result::<T, E>::unwrap` should receive the value to be unwrapped as a place");
+            };
+            self.handle_mutex_guard_drop(unwrapped_place, &cleanup_transition);
         }
     }
 
@@ -324,7 +300,6 @@ impl<'tcx> Translator<'tcx> {
             destination,
             &wait_transitions,
             &mut self.net,
-            &mut self.mutex_manager,
             &mut current_function.memory,
         );
     }

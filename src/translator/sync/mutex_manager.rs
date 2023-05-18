@@ -8,20 +8,19 @@ use crate::data_structures::petri_net_interface::{PetriNet, TransitionRef};
 use crate::translator::mir_function::Memory;
 use crate::utils::extract_nth_argument_as_place;
 use log::debug;
+use std::rc::Rc;
 
 #[derive(Default)]
 pub struct MutexManager {
-    mutexes: Vec<Mutex>,
-    guards: Vec<Guard>,
+    mutexes: Vec<Rc<Mutex>>,
+    guards: Vec<Rc<Guard>>,
 }
 
-/// A wrapper type around the indexes to the elements in `Vec<Mutex>`.
-#[derive(Clone, Copy, PartialEq, Eq)]
-pub struct MutexRef(usize);
+/// A mutex reference is just a shared pointer to a cell containing the mutex.
+pub type MutexRef = Rc<Mutex>;
 
-/// A wrapper type around the indexes to the elements in `Vec<MutexGuard>`.
-#[derive(Clone, Copy, PartialEq, Eq)]
-pub struct MutexGuardRef(usize);
+/// A mutex guard reference is just a shared pointer to a cell containing the mutex guard.
+pub type MutexGuardRef = Rc<Guard>;
 
 impl MutexManager {
     /// Returns a new empty `MutexManager`.
@@ -41,7 +40,7 @@ impl MutexManager {
     ) {
         let mutex_ref = self.add_mutex(net);
         // The return value contains a new mutex. Link the local variable to it.
-        memory.link_place_to_mutex(return_value, mutex_ref);
+        memory.link_place_to_mutex(return_value, &mutex_ref);
         debug!("NEW MUTEX: {return_value:?}");
     }
 
@@ -62,111 +61,32 @@ impl MutexManager {
             "BUG: `std::sync::Mutex::<T>::lock` should receive the self reference as a place",
         );
         let mutex_ref = memory.get_linked_mutex(&self_ref);
-        self.add_lock_arc(*mutex_ref, lock_transition, net);
+        mutex_ref.add_lock_arc(lock_transition, net);
 
-        let mutex_guard_ref = self.add_mutex_guard(*mutex_ref);
+        let mutex_guard_ref = self.add_mutex_guard(mutex_ref);
         // The return value contains a new mutex guard. Link the local variable to it.
-        memory.link_place_to_mutex_guard(return_value, mutex_guard_ref);
+        memory.link_place_to_mutex_guard(return_value, &mutex_guard_ref);
         debug!("NEW MUTEX GUARD {return_value:?} DUE TO TRANSITION {lock_transition}");
-    }
-
-    /// Checks whether the variable to be dropped is a mutex guard.
-    /// If that is the case, adds an unlock arc for the mutex corresponding to the mutex guard.
-    /// The unlock arc is added for the usual transition as well as the cleanup transition.
-    /// Otherwise do nothing.
-    pub fn handle_mutex_guard_drop<'tcx>(
-        &self,
-        place: rustc_middle::mir::Place<'tcx>,
-        unlock_transition: &TransitionRef,
-        memory: &Memory<'tcx>,
-        net: &mut PetriNet,
-    ) {
-        if memory.is_linked_to_mutex_guard(place) {
-            let mutex_ref = memory.get_linked_mutex_guard(&place);
-            self.add_unlock_arc(*mutex_ref, unlock_transition, net);
-            debug!("DROP MUTEX GUARD {place:?} DUE TO TRANSITION {unlock_transition}");
-        }
     }
 
     /// Adds a new mutex and creates its corresponding representation in the Petri net.
     /// Returns a reference to the new mutex.
     fn add_mutex(&mut self, net: &mut PetriNet) -> MutexRef {
         let index = self.mutexes.len();
-        self.mutexes.push(Mutex::new(index, net));
-        MutexRef(index)
+        let mutex = Rc::new(Mutex::new(index, net));
+        let mutex_ref = Rc::clone(&mutex);
+        self.mutexes.push(mutex);
+        mutex_ref
     }
 
     /// Adds a new mutex guard from a mutex reference.
     /// Returns a reference to the new mutex guard.
-    fn add_mutex_guard(&mut self, mutex_ref: MutexRef) -> MutexGuardRef {
-        let index = self.guards.len();
-        self.guards.push(Guard::new(mutex_ref));
-        MutexGuardRef(index)
-    }
-
-    /// Adds a lock arc to the mutex.
-    /// Connects the mutex's place to the transition, then the transition will only
-    /// fire if the mutex is unlocked.
-    ///
-    /// # Panics
-    ///
-    /// If the mutex reference is invalid, then the function panics.
-    pub fn add_lock_arc(
-        &self,
-        mutex_ref: MutexRef,
-        lock_transition: &TransitionRef,
-        net: &mut PetriNet,
-    ) {
-        let mutex = self
-            .mutexes
-            .get(mutex_ref.0)
-            .expect("BUG: The mutex reference should be a valid index for the vector of mutexes");
-        mutex.add_lock_arc(lock_transition, net);
-    }
-
-    /// Adds a lock arc to the mutex reference by the mutex guard.
-    /// Connects the mutex's place to the transition, then the transition will only
-    /// fire if the mutex is unlocked.
-    ///
-    /// # Panics
-    ///
-    /// If the mutex reference is invalid, then the function panics.
-    pub fn add_lock_arc_for_underlying_mutex(
-        &self,
-        mutex_guard_ref: MutexGuardRef,
-        lock_transition: &TransitionRef,
-        net: &mut PetriNet,
-    ) {
-        let mutex_guard = self.guards.get(mutex_guard_ref.0).expect(
-            "BUG: The mutex guard reference should be a valid index for the vector of mutex guards",
-        );
-        let mutex = self
-            .mutexes
-            .get(mutex_guard.mutex.0)
-            .expect("BUG: The mutex reference should be a valid index for the vector of mutexes");
-        mutex.add_lock_arc(lock_transition, net);
-    }
-
-    /// Adds an unlock arc to the mutex guard.
-    /// Connects the transition to the mutex's place, then the transition will
-    /// replenish the token in the mutex when it fires.
-    ///
-    /// # Panics
-    ///
-    /// If the mutex guard reference is invalid, then the function panics.
-    pub fn add_unlock_arc(
-        &self,
-        mutex_guard_ref: MutexGuardRef,
-        unlock_transition: &TransitionRef,
-        net: &mut PetriNet,
-    ) {
-        let mutex_guard = self.guards.get(mutex_guard_ref.0).expect(
-            "BUG: The mutex guard reference should be a valid index for the vector of mutex guards",
-        );
-        let mutex = self
-            .mutexes
-            .get(mutex_guard.mutex.0)
-            .expect("BUG: The mutex reference should be a valid index for the vector of mutexes");
-        mutex.add_unlock_arc(unlock_transition, net);
+    fn add_mutex_guard(&mut self, mutex_ref: &MutexRef) -> MutexGuardRef {
+        // Clone the reference before storing it inside the guard.
+        let mutex_ref = Rc::clone(mutex_ref);
+        let mutex_guard = Rc::new(Guard::new(mutex_ref));
+        let mutex_guard_ref = Rc::clone(&mutex_guard);
+        self.guards.push(mutex_guard);
+        mutex_guard_ref
     }
 }

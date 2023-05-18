@@ -4,7 +4,6 @@
 //! It also performs the translation for each condition variable function.
 
 use super::condvar::Condvar;
-use super::MutexManager;
 use crate::data_structures::petri_net_interface::{
     add_arc_place_transition, add_arc_transition_place, connect_places,
 };
@@ -14,6 +13,7 @@ use crate::translator::function::Places;
 use crate::translator::mir_function::Memory;
 use crate::utils::extract_nth_argument_as_place;
 use log::debug;
+use std::rc::Rc;
 
 #[derive(Default)]
 pub struct CondvarManager {
@@ -106,7 +106,6 @@ impl CondvarManager {
         return_value: rustc_middle::mir::Place<'tcx>,
         wait_transitions: &(TransitionRef, TransitionRef),
         net: &mut PetriNet,
-        mutex_manager: &mut MutexManager,
         memory: &mut Memory<'tcx>,
     ) {
         // Retrieve the mutex guard from the local variable passed to the function as an argument.
@@ -114,15 +113,17 @@ impl CondvarManager {
             .expect("BUG: `std::sync::Condvar::wait` should receive the first argument as a place");
         let mutex_guard_ref = memory.get_linked_mutex_guard(&mutex_guard);
         // Unlock the mutex when waiting, lock it when the waiting ends.
-        mutex_manager.add_unlock_arc(*mutex_guard_ref, &wait_transitions.0, net);
-        mutex_manager.add_lock_arc_for_underlying_mutex(*mutex_guard_ref, &wait_transitions.1, net);
+        mutex_guard_ref
+            .mutex
+            .add_unlock_arc(&wait_transitions.0, net);
+        mutex_guard_ref.mutex.add_lock_arc(&wait_transitions.1, net);
         // Retrieve the condvar from the local variable passed to the function as an argument.
         let self_ref = extract_nth_argument_as_place(args, 0)
             .expect("BUG: `std::sync::Condvar::wait` should receive the self reference as a place");
         let condvar_ref = memory.get_linked_condvar(&self_ref);
         self.link_to_wait_call(*condvar_ref, wait_transitions, net);
         // The return value contains the mutex guard passed to the function. Link the local variable to it.
-        memory.link_place_to_mutex_guard(return_value, *mutex_guard_ref);
+        memory.link_place_to_mutex_guard(return_value, &Rc::clone(mutex_guard_ref));
     }
 
     /// Translates the side effects for `std::sync::Condvar::notify_one` i.e.,

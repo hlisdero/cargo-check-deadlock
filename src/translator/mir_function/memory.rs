@@ -18,6 +18,7 @@
 use crate::translator::sync::{CondvarRef, MutexGuardRef, MutexRef, ThreadRef};
 use log::debug;
 use std::collections::HashMap;
+use std::rc::Rc;
 
 #[derive(Default)]
 pub struct Memory<'tcx> {
@@ -44,12 +45,12 @@ impl<'tcx> Memory<'tcx> {
     pub fn link_place_to_mutex(
         &mut self,
         place: rustc_middle::mir::Place<'tcx>,
-        mutex_ref: MutexRef,
+        mutex_ref: &MutexRef,
     ) {
-        let Some(old_mutex_ref) = self.places_linked_to_mutexes.insert(place, mutex_ref) else {
+        let Some(old_mutex_ref) = self.places_linked_to_mutexes.insert(place, Rc::clone(mutex_ref)) else {
             return;
         };
-        if mutex_ref == old_mutex_ref {
+        if *mutex_ref == old_mutex_ref {
             debug!("PLACE {place:?} LINKED AGAIN TO SAME MUTEX");
         } else {
             debug!("PLACE {place:?} LINKED TO A DIFFERENT MUTEX");
@@ -64,12 +65,12 @@ impl<'tcx> Memory<'tcx> {
     pub fn link_place_to_mutex_guard(
         &mut self,
         place: rustc_middle::mir::Place<'tcx>,
-        mutex_guard_ref: MutexGuardRef,
+        mutex_guard_ref: &MutexGuardRef,
     ) {
-        let Some(old_mutex_guard_ref) = self.places_linked_to_mutex_guards.insert(place, mutex_guard_ref) else {
+        let Some(old_mutex_guard_ref) = self.places_linked_to_mutex_guards.insert(place, Rc::clone(mutex_guard_ref)) else {
             return;
         };
-        if mutex_guard_ref == old_mutex_guard_ref {
+        if *mutex_guard_ref == old_mutex_guard_ref {
             debug!("PLACE {place:?} LINKED AGAIN TO SAME MUTEX GUARD");
         } else {
             debug!("PLACE {place:?} LINKED TO A DIFFERENT MUTEX GUARD");
@@ -183,7 +184,7 @@ impl<'tcx> Memory<'tcx> {
         place_linked_to_mutex: rustc_middle::mir::Place<'tcx>,
     ) {
         let mutex_ref = self.get_linked_mutex(&place_linked_to_mutex);
-        self.link_place_to_mutex(place_to_be_linked, *mutex_ref);
+        self.link_place_to_mutex(place_to_be_linked, &Rc::clone(mutex_ref));
         debug!("SAME MUTEX: {place_to_be_linked:?} = {place_linked_to_mutex:?}");
     }
 
@@ -201,7 +202,7 @@ impl<'tcx> Memory<'tcx> {
         place_linked_to_mutex_guard: rustc_middle::mir::Place<'tcx>,
     ) {
         let mutex_guard_ref = self.get_linked_mutex_guard(&place_linked_to_mutex_guard);
-        self.link_place_to_mutex_guard(place_to_be_linked, *mutex_guard_ref);
+        self.link_place_to_mutex_guard(place_to_be_linked, &Rc::clone(mutex_guard_ref));
         debug!("SAME MUTEX GUARD: {place_to_be_linked:?} = {place_linked_to_mutex_guard:?}");
     }
 
@@ -253,7 +254,7 @@ impl<'tcx> Memory<'tcx> {
         for mutex_place in self.places_linked_to_mutexes.keys() {
             if mutex_place.local == place.local {
                 let mutex_ref = self.get_linked_mutex(mutex_place);
-                result.push(*mutex_ref);
+                result.push(Rc::clone(mutex_ref));
                 debug!("FOUND MUTEX IN PLACE {mutex_place:?}");
             }
         }
@@ -272,7 +273,7 @@ impl<'tcx> Memory<'tcx> {
         for mutex_guard_place in self.places_linked_to_mutex_guards.keys() {
             if mutex_guard_place.local == place.local {
                 let mutex_guard_ref = self.get_linked_mutex_guard(mutex_guard_place);
-                result.push(*mutex_guard_ref);
+                result.push(Rc::clone(mutex_guard_ref));
                 debug!("FOUND MUTEX GUARD IN PLACE {mutex_guard_place:?}");
             }
         }
