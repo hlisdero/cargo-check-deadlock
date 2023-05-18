@@ -43,7 +43,7 @@ use crate::data_structures::stack::Stack;
 use crate::naming::function::{
     foreign_call_transition_labels, indexed_mir_function_cleanup_label, indexed_mir_function_name,
 };
-use crate::naming::program::{PROGRAM_END, PROGRAM_PANIC, PROGRAM_START};
+use crate::naming::{PROGRAM_END, PROGRAM_PANIC, PROGRAM_START};
 use crate::utils::{
     extract_closure, extract_def_id_of_called_function_from_operand, extract_nth_argument_as_place,
 };

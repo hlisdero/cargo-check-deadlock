@@ -12,8 +12,14 @@ pub mod basic_block;
 pub mod condvar;
 pub mod function;
 pub mod mutex;
-pub mod program;
 pub mod thread;
+
+/// Label of the place that models the program start state.
+pub const PROGRAM_START: &str = "PROGRAM_START";
+/// Label of the place that models the normal program end state.
+pub const PROGRAM_END: &str = "PROGRAM_END";
+/// Label of the place that models the program end state after a `panic!`.
+pub const PROGRAM_PANIC: &str = "PROGRAM_PANIC";
 
 /// Sanitize the function name for the DOT and the `LoLA` format:
 /// - Replace generic types "<T>" with "T".
