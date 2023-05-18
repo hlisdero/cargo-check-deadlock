@@ -1,12 +1,9 @@
 //! Submodule for implementing the translation of synchronization primitives
 //! and the translation of thread primitives.
-//!
-//! It exposes only the necessary definitions to the outside modules.
 
 pub mod condvar;
 pub mod mutex;
 pub mod thread;
-pub mod thread_manager;
 
 use crate::translator::mir_function::Memory;
 use crate::utils::{check_substring_in_place_type, extract_nth_argument_as_place};

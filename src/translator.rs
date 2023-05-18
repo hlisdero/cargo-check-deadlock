@@ -42,7 +42,7 @@ use log::{debug, info};
 use mir_function::MirFunction;
 use rustc_middle::mir::visit::Visitor;
 use special_function::{call_diverging_function, call_panic_function, is_panic_function};
-use sync::thread_manager::ThreadManager;
+use sync::thread::Thread;
 
 /// Translator error message when no main function is found in the source code.
 pub const ERR_NO_MAIN_FUNCTION_FOUND: &str = "ERROR: No main function found in the source code";
@@ -56,7 +56,7 @@ pub struct Translator<'tcx> {
     program_panic: PlaceRef,
     call_stack: Stack<MirFunction<'tcx>>,
     function_counter: HashMapCounter,
-    thread_manager: ThreadManager,
+    threads: Vec<std::rc::Rc<std::cell::RefCell<Thread>>>,
 }
 
 impl<'tcx> Translator<'tcx> {
@@ -82,7 +82,7 @@ impl<'tcx> Translator<'tcx> {
             program_panic,
             call_stack: Stack::new(),
             function_counter: HashMapCounter::new(),
-            thread_manager: ThreadManager::default(),
+            threads: Vec::new(),
         }
     }
 
@@ -356,12 +356,12 @@ impl<'tcx> Translator<'tcx> {
     }
 
     /// Main translation loop for the threads.
-    /// Gets a thread from the thread manager and translates it.
-    /// If mutexes were passed to the thread, move them to the memory of the thread function.
-    /// Replaces the program panic place with the thread's end place, since abnormal thread
-    /// termination does not affect the main thread.
+    /// Iterate over the threads found and translate them.
+    /// If sync variables were passed to the thread, move them to the memory of the thread function.
+    /// Replaces the program panic place with the thread's end place
+    /// since abnormal thread termination does not affect the main thread.
     fn translate_threads(&mut self) {
-        for thread in self.thread_manager.get_threads_found() {
+        for thread in std::mem::take(&mut self.threads) {
             let mut thread = thread.borrow_mut();
             let index = thread.index;
 

@@ -15,6 +15,8 @@ use crate::utils::{
     extract_closure, extract_def_id_of_called_function_from_operand, extract_nth_argument_as_place,
 };
 use log::{debug, info};
+use std::cell::RefCell;
+use std::rc::Rc;
 
 impl<'tcx> Translator<'tcx> {
     /// Starts the corresponding handler for the function call.
@@ -44,6 +46,7 @@ impl<'tcx> Translator<'tcx> {
         // Sync or multithreading function
         if is_supported_function(function_name) {
             self.call_supported_sync_function(function_name, args, destination, places);
+            self.function_counter.increment(function_name);
             return;
         }
         // Default case for standard and core library calls
@@ -96,8 +99,6 @@ impl<'tcx> Translator<'tcx> {
             }
             _ => panic!("BUG: Call handler for {function_name} is not defined"),
         }
-        // Increment the counter at the end of every call to prepare the new label
-        self.function_counter.increment(function_name);
     }
 
     /// Call to a MIR function. It is the default for user-defined functions in the code.
@@ -277,15 +278,27 @@ impl<'tcx> Translator<'tcx> {
             current_function.def_id,
             self.tcx,
         );
-        // Extract the closure
+
+        // Extract the closure and find the sync variables passed in to the closure
         let closure_for_spawn = extract_closure(args);
-        // Find the sync variables passed in to the closure
         let memory_entries =
             thread::find_sync_variables(closure_for_spawn, &mut current_function.memory);
+
         // Add a new thread
-        let thread_ref =
-            self.thread_manager
-                .add_thread(transition, thread_function_def_id, memory_entries);
+        let index = self.threads.len();
+        let thread = Rc::new(RefCell::new(thread::Thread::new(
+            transition,
+            thread_function_def_id,
+            memory_entries.0,
+            memory_entries.1,
+            memory_entries.2,
+            memory_entries.3,
+            index,
+        )));
+        let thread_ref = Rc::clone(&thread);
+        self.threads.push(thread);
+        info!("Found thread {index} and pushed it to the back of the thread translation queue");
+
         // The return value contains a new join handle. Link the local variable to it.
         current_function
             .memory
