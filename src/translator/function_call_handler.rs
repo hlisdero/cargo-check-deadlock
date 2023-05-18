@@ -226,9 +226,8 @@ impl<'tcx> Translator<'tcx> {
             cleanup_transition, ..
         } = transitions
         {
-            let Some(unwrapped_place) = extract_nth_argument_as_place(args, 0) else {
-                panic!("BUG: `std::result::Result::<T, E>::unwrap` should receive the value to be unwrapped as a place");
-            };
+            let unwrapped_place = extract_nth_argument_as_place(args, 0)
+                .expect("BUG: `std::result::Result::<T, E>::unwrap` should receive the value to be unwrapped as a place");
             self.handle_mutex_guard_drop(unwrapped_place, &cleanup_transition);
         }
     }
