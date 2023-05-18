@@ -2,8 +2,10 @@
 //! <https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/enum.TerminatorKind.html>
 
 use super::MirFunction;
-use crate::data_structures::petri_net_interface::connect_places;
-use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef, TransitionRef};
+
+use crate::data_structures::petri_net_interface::{
+    connect_places, PetriNet, PlaceRef, TransitionRef,
+};
 use crate::naming::function::return_transition_label;
 
 impl<'tcx> MirFunction<'tcx> {

@@ -5,11 +5,12 @@ pub mod condvar;
 pub mod mutex;
 pub mod thread;
 
+use log::debug;
+
 use crate::data_structures::petri_net_interface::PetriNet;
 use crate::translator::function::Places;
 use crate::translator::mir_function::Memory;
 use crate::utils::{check_substring_in_place_type, extract_nth_argument_as_place};
-use log::debug;
 
 /// A mutex reference is just a shared pointer to the mutex.
 pub type MutexRef = std::rc::Rc<mutex::Mutex>;

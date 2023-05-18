@@ -15,10 +15,11 @@
 //! More info:
 //! <https://rustc-dev-guide.rust-lang.org/mir/index.html#mir-data-types>
 
-use crate::translator::sync::{CondvarRef, MutexGuardRef, MutexRef, ThreadRef};
 use log::debug;
 use std::collections::HashMap;
 use std::rc::Rc;
+
+use crate::translator::sync::{CondvarRef, MutexGuardRef, MutexRef, ThreadRef};
 
 #[derive(Default)]
 pub struct Memory<'tcx> {

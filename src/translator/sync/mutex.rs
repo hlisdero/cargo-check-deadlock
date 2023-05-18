@@ -10,7 +10,11 @@
 //! and a flag to keep track of when the value of the variable
 //! inside the mutex has been set.
 
+use log::debug;
+use std::rc::Rc;
+
 use super::MutexRef;
+
 use crate::data_structures::petri_net_interface::{
     add_arc_place_transition, add_arc_transition_place,
 };
@@ -21,8 +25,6 @@ use crate::translator::function::Places;
 use crate::translator::mir_function::Memory;
 use crate::translator::special_function::call_foreign_function;
 use crate::utils::extract_nth_argument_as_place;
-use log::debug;
-use std::rc::Rc;
 
 #[derive(PartialEq, Eq)]
 pub struct Mutex {

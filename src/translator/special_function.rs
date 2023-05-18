@@ -5,8 +5,9 @@
 //! or simply functions which we are not interested in translating.
 //! For example: Calls to standard library methods, iterators, etc.
 
-use crate::data_structures::petri_net_interface::{add_arc_place_transition, connect_places};
-use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef};
+use crate::data_structures::petri_net_interface::{
+    add_arc_place_transition, connect_places, PetriNet, PlaceRef,
+};
 use crate::naming::function::{diverging_call_transition_label, panic_transition_label};
 use crate::translator::function::{Places, Transitions};
 

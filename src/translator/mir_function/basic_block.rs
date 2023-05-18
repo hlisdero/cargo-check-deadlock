@@ -4,8 +4,9 @@
 //!
 //! The `BasicBlock` stores one reference to the place in the Petri net.
 
-use crate::data_structures::petri_net_interface::connect_places;
-use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef, TransitionRef};
+use crate::data_structures::petri_net_interface::{
+    connect_places, PetriNet, PlaceRef, TransitionRef,
+};
 use crate::naming::basic_block::{
     assert_cleanup_transition_label, assert_transition_label, drop_cleanup_transition_label,
     drop_transition_label, goto_transition_label, place_label, switch_int_transition_label,

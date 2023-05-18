@@ -31,6 +31,12 @@ mod mir_visitor;
 mod special_function;
 mod sync;
 
+use log::{debug, info};
+use rustc_middle::mir::visit::Visitor;
+use rustc_middle::mir::UnwindAction;
+use std::cell::RefCell;
+use std::rc::Rc;
+
 use crate::data_structures::hash_map_counter::HashMapCounter;
 use crate::data_structures::petri_net_interface::{connect_places, PetriNet, PlaceRef};
 use crate::data_structures::stack::Stack;
@@ -38,18 +44,15 @@ use crate::naming::function::{
     foreign_call_transition_labels, indexed_mir_function_cleanup_label, indexed_mir_function_name,
 };
 use crate::naming::program::{PROGRAM_END, PROGRAM_PANIC, PROGRAM_START};
-use crate::translator::function::{Places, Transitions};
-use crate::translator::mir_function::MirFunction;
-use crate::translator::special_function::{call_foreign_function, is_foreign_function};
 use crate::utils::{
     extract_closure, extract_def_id_of_called_function_from_operand, extract_nth_argument_as_place,
 };
-use log::{debug, info};
-use rustc_middle::mir::visit::Visitor;
-use rustc_middle::mir::UnwindAction;
-use special_function::{call_diverging_function, call_panic_function, is_panic_function};
-use std::cell::RefCell;
-use std::rc::Rc;
+use function::{Places, Transitions};
+use mir_function::MirFunction;
+use special_function::{
+    call_diverging_function, call_foreign_function, call_panic_function, is_foreign_function,
+    is_panic_function,
+};
 use sync::mutex;
 use sync::thread::Thread;
 

@@ -32,6 +32,9 @@
 //! "Modelling Multithreaded Applications Using Petri Nets" by Kavi, Moshtaghi and Chen.
 //! <https://www.researchgate.net/publication/220091454_Modeling_Multithreaded_Applications_Using_Petri_Nets>
 
+use log::debug;
+use std::rc::Rc;
+
 use crate::data_structures::petri_net_interface::{
     add_arc_place_transition, add_arc_transition_place, connect_places,
 };
@@ -42,8 +45,6 @@ use crate::translator::function::Places;
 use crate::translator::mir_function::Memory;
 use crate::translator::special_function::call_foreign_function;
 use crate::utils::extract_nth_argument_as_place;
-use log::debug;
-use std::rc::Rc;
 
 #[derive(PartialEq, Eq)]
 pub struct Condvar {

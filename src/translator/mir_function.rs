@@ -16,9 +16,10 @@ mod basic_block;
 mod memory;
 mod terminator;
 
+use std::collections::HashMap;
+
 use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef};
 use basic_block::BasicBlock;
-use std::collections::HashMap;
 
 pub use memory::{Entries, Memory};
 
