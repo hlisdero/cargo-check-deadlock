@@ -10,8 +10,10 @@ use crate::naming::function::{
 use crate::translator::function::{Places, Transitions};
 use crate::translator::mir_function::MirFunction;
 use crate::translator::special_function::{call_foreign_function, is_foreign_function};
-use crate::translator::sync::{is_supported_sync_function, link_return_value_if_sync_variable};
-use crate::translator::{CondvarManager, ThreadManager};
+use crate::translator::sync::{
+    condvar, is_supported_sync_function, link_return_value_if_sync_variable,
+};
+use crate::translator::ThreadManager;
 use crate::utils::extract_nth_argument_as_place;
 use log::info;
 
@@ -240,10 +242,13 @@ impl<'tcx> Translator<'tcx> {
         destination: rustc_middle::mir::Place<'tcx>,
         places: Places,
     ) {
+        // Get the index before it is incremented in `call_foreign_function`
+        let index = self.function_counter.get_count(function_name);
         self.call_foreign_function(function_name, args, destination, places);
 
         let current_function = self.call_stack.peek_mut();
-        self.condvar_manager.translate_side_effects_new(
+        condvar::translate_side_effects_new(
+            index,
             destination,
             &mut self.net,
             &mut current_function.memory,
@@ -269,7 +274,7 @@ impl<'tcx> Translator<'tcx> {
         let transitions = self.call_foreign_function(function_name, args, destination, places);
 
         let current_function = self.call_stack.peek_mut();
-        CondvarManager::translate_side_effects_notify_one(
+        condvar::translate_side_effects_notify_one(
             args,
             transitions.get_transition(),
             &mut self.net,
@@ -298,10 +303,10 @@ impl<'tcx> Translator<'tcx> {
         let transition_labels = wait_transition_labels(index);
 
         let wait_transitions =
-            CondvarManager::translate_call_wait(places, &transition_labels, &mut self.net);
+            condvar::translate_call_wait(places, &transition_labels, &mut self.net);
 
         let current_function = self.call_stack.peek_mut();
-        CondvarManager::translate_side_effects_wait(
+        condvar::translate_side_effects_wait(
             args,
             destination,
             &wait_transitions,

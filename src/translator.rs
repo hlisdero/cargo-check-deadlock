@@ -42,7 +42,7 @@ use log::{debug, info};
 use mir_function::MirFunction;
 use rustc_middle::mir::visit::Visitor;
 use special_function::{call_diverging_function, call_panic_function, is_panic_function};
-use sync::{CondvarManager, MutexManager, ThreadManager};
+use sync::{MutexManager, ThreadManager};
 
 /// Translator error message when no main function is found in the source code.
 pub const ERR_NO_MAIN_FUNCTION_FOUND: &str = "ERROR: No main function found in the source code";
@@ -56,7 +56,6 @@ pub struct Translator<'tcx> {
     program_panic: PlaceRef,
     call_stack: Stack<MirFunction<'tcx>>,
     function_counter: HashMapCounter,
-    condvar_manager: CondvarManager,
     mutex_manager: MutexManager,
     thread_manager: ThreadManager,
 }
@@ -84,7 +83,6 @@ impl<'tcx> Translator<'tcx> {
             program_panic,
             call_stack: Stack::new(),
             function_counter: HashMapCounter::new(),
-            condvar_manager: CondvarManager::new(),
             mutex_manager: MutexManager::new(),
             thread_manager: ThreadManager::new(),
         }

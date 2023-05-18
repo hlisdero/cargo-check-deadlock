@@ -3,8 +3,7 @@
 //!
 //! It exposes only the necessary definitions to the outside modules.
 
-mod condvar;
-mod condvar_manager;
+pub mod condvar;
 mod mutex;
 mod mutex_manager;
 mod thread;
@@ -13,12 +12,14 @@ mod thread_manager;
 use crate::translator::mir_function::Memory;
 use crate::utils::{check_substring_in_place_type, extract_nth_argument_as_place};
 
-pub use condvar::Condvar;
-pub use condvar_manager::{CondvarManager, CondvarRef};
+use condvar::Condvar;
 use log::debug;
 pub use mutex_manager::{MutexGuardRef, MutexManager, MutexRef};
 pub use thread::Thread;
 pub use thread_manager::{ThreadManager, ThreadRef};
+
+/// A condvar reference is just a shared pointer to a cell containing the condition variable.
+pub type CondvarRef = std::rc::Rc<Condvar>;
 
 /// Checks whether the function name corresponds to one of the
 /// supported synchronization or multithreading functions.
