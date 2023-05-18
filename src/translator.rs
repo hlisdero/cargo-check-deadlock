@@ -82,7 +82,7 @@ impl<'tcx> Translator<'tcx> {
             program_panic,
             call_stack: Stack::new(),
             function_counter: HashMapCounter::new(),
-            thread_manager: ThreadManager::new(),
+            thread_manager: ThreadManager::default(),
         }
     }
 

@@ -26,11 +26,6 @@ pub struct ThreadManager {
 pub type ThreadRef = Rc<RefCell<Thread>>;
 
 impl ThreadManager {
-    /// Returns a new empty `ThreadManager`.
-    pub fn new() -> Self {
-        Self::default()
-    }
-
     /// Translates the side effects for `std::thread::spawn` i.e.,
     /// the specific logic of spawning a new thread.
     /// Receives a reference to the memory of the caller function to
