@@ -12,7 +12,7 @@ use crate::translator::mir_function::MirFunction;
 use crate::translator::special_function::{call_foreign_function, is_foreign_function};
 use crate::translator::sync::condvar;
 use crate::translator::sync::mutex;
-use crate::translator::sync::{is_supported_sync_function, link_return_value_if_sync_variable};
+use crate::translator::sync::{is_supported_function, link_return_value_if_sync_variable};
 use crate::translator::ThreadManager;
 use crate::utils::extract_nth_argument_as_place;
 use log::info;
@@ -32,7 +32,7 @@ impl<'tcx> Translator<'tcx> {
         places: Places,
     ) {
         // Sync or multithreading function
-        if is_supported_sync_function(function_name) {
+        if is_supported_function(function_name) {
             self.call_supported_sync_function(function_name, args, destination, places);
             return;
         }

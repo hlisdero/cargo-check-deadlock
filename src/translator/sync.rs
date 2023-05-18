@@ -26,7 +26,7 @@ pub type CondvarRef = std::rc::Rc<condvar::Condvar>;
 
 /// Checks whether the function name corresponds to one of the
 /// supported synchronization or multithreading functions.
-pub fn is_supported_sync_function(function_name: &str) -> bool {
+pub fn is_supported_function(function_name: &str) -> bool {
     matches!(
         function_name,
         "std::mem::drop"
