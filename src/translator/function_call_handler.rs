@@ -3,6 +3,7 @@
 use super::Translator;
 
 use crate::data_structures::petri_net_interface::connect_places;
+use crate::naming::condvar::wait_transition_labels;
 use crate::naming::function::{
     foreign_call_transition_labels, indexed_mir_function_cleanup_label, indexed_mir_function_name,
 };
@@ -64,7 +65,7 @@ impl<'tcx> Translator<'tcx> {
                 self.call_condvar_notify_one(function_name, args, destination, places);
             }
             "std::sync::Condvar::wait" => {
-                self.call_condvar_wait(args, destination, places);
+                self.call_condvar_wait(function_name, args, destination, places);
             }
             "std::sync::Mutex::<T>::lock" => {
                 self.call_mutex_lock(function_name, args, destination, places);
@@ -286,14 +287,17 @@ impl<'tcx> Translator<'tcx> {
     /// In conclusion: Ignore the cleanup place, do not model it. Assume `wait` never unwinds.
     fn call_condvar_wait(
         &mut self,
+        function_name: &str,
         args: &[rustc_middle::mir::Operand<'tcx>],
         destination: rustc_middle::mir::Place<'tcx>,
         places: Places,
     ) {
         let places = places.ignore_cleanup_place();
-        let wait_transitions = self
-            .condvar_manager
-            .translate_call_wait(places, &mut self.net);
+        let index = self.function_counter.get_count(function_name);
+        let transition_labels = wait_transition_labels(index);
+
+        let wait_transitions =
+            CondvarManager::translate_call_wait(places, &transition_labels, &mut self.net);
 
         let current_function = self.call_stack.peek_mut();
         CondvarManager::translate_side_effects_wait(

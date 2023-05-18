@@ -8,7 +8,6 @@ use crate::data_structures::petri_net_interface::{
     add_arc_place_transition, add_arc_transition_place, connect_places,
 };
 use crate::data_structures::petri_net_interface::{PetriNet, TransitionRef};
-use crate::naming::condvar::wait_transition_labels;
 use crate::translator::function::Places;
 use crate::translator::mir_function::Memory;
 use crate::utils::extract_nth_argument_as_place;
@@ -18,7 +17,6 @@ use std::rc::Rc;
 #[derive(Default)]
 pub struct CondvarManager {
     condvars: Vec<Rc<Condvar>>,
-    wait_counter: usize,
 }
 
 /// A condvar reference is just a shared pointer to a cell containing the condition variable.
@@ -40,14 +38,10 @@ impl CondvarManager {
     ///
     /// Returns the pair of transitions that represent the function call.
     pub fn translate_call_wait(
-        &mut self,
         places: Places,
+        transition_labels: &(String, String, String),
         net: &mut PetriNet,
     ) -> (TransitionRef, TransitionRef) {
-        let index = self.wait_counter;
-        self.wait_counter += 1;
-        let transition_labels = &wait_transition_labels(index);
-
         match places {
             Places::Basic {
                 start_place,
