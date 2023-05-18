@@ -135,13 +135,7 @@ impl ThreadManager {
         Entries<CondvarRef>,
     ) {
         closure.map_or_else(
-            || {
-                let mutexes = vec![];
-                let mutex_guards = vec![];
-                let join_handles = vec![];
-                let condvars = vec![];
-                (mutexes, mutex_guards, join_handles, condvars)
-            },
+            || (vec![], vec![], vec![], vec![]),
             |place| {
                 let mutexes = memory.find_mutexes_linked_to_place(place);
                 let mutex_guards = memory.find_mutex_guards_linked_to_place(place);
