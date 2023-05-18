@@ -5,6 +5,8 @@ pub mod condvar;
 pub mod mutex;
 pub mod thread;
 
+use crate::data_structures::petri_net_interface::PetriNet;
+use crate::translator::function::Places;
 use crate::translator::mir_function::Memory;
 use crate::utils::{check_substring_in_place_type, extract_nth_argument_as_place};
 use log::debug;
@@ -35,6 +37,39 @@ pub fn is_supported_function(function_name: &str) -> bool {
             | "std::thread::spawn"
             | "std::thread::JoinHandle::<T>::join"
     )
+}
+
+/// Calls the corresponding handler for the supported synchronization or multithreading functions.
+pub fn call_supported_sync_function<'tcx>(
+    function_name: &str,
+    index: usize,
+    args: &[rustc_middle::mir::Operand<'tcx>],
+    destination: rustc_middle::mir::Place<'tcx>,
+    places: Places,
+    net: &mut PetriNet,
+    memory: &mut Memory<'tcx>,
+) {
+    match function_name {
+        "std::sync::Condvar::new" => {
+            condvar::call_new(function_name, index, destination, places, net, memory);
+        }
+        "std::sync::Condvar::notify_one" => {
+            condvar::call_notify_one(function_name, index, args, places, net, memory);
+        }
+        "std::sync::Condvar::wait" => {
+            condvar::call_wait(index, args, destination, places, net, memory);
+        }
+        "std::sync::Mutex::<T>::lock" => {
+            mutex::call_lock(function_name, index, args, destination, places, net, memory);
+        }
+        "std::sync::Mutex::<T>::new" => {
+            mutex::call_new(function_name, index, destination, places, net, memory);
+        }
+        "std::thread::JoinHandle::<T>::join" => {
+            thread::call_join(function_name, index, args, places, net, memory);
+        }
+        _ => panic!("BUG: Call handler for {function_name} is not defined"),
+    }
 }
 
 /// Handles MIR assignments of the form: `_X = { copy_data: move _Y }`.

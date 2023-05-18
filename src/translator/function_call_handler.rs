@@ -9,8 +9,7 @@ use crate::naming::function::{
 use crate::translator::function::{Places, Transitions};
 use crate::translator::mir_function::MirFunction;
 use crate::translator::special_function::{call_foreign_function, is_foreign_function};
-use crate::translator::sync::{condvar, mutex, thread};
-use crate::translator::sync::{is_supported_function, link_return_value_if_sync_variable};
+use crate::translator::sync;
 use crate::utils::{
     extract_closure, extract_def_id_of_called_function_from_operand, extract_nth_argument_as_place,
 };
@@ -43,9 +42,30 @@ impl<'tcx> Translator<'tcx> {
             self.function_counter.increment(function_name);
             return;
         }
+        if function_name == "std::thread::spawn" {
+            self.call_thread_spawn(function_name, args, destination, places);
+            self.function_counter.increment(function_name);
+            return;
+        }
         // Sync or multithreading function
-        if is_supported_function(function_name) {
-            self.call_supported_sync_function(function_name, args, destination, places);
+        if sync::is_supported_function(function_name) {
+            // Index for transition and place labels
+            let index = self.function_counter.get_count(function_name);
+            // A reference to the memory of the current function
+            let current_function = self.call_stack.peek_mut();
+            let memory = &mut current_function.memory;
+            // A reference to the Petri net to add transitions and places
+            let net = &mut self.net;
+
+            sync::call_supported_sync_function(
+                function_name,
+                index,
+                args,
+                destination,
+                places,
+                net,
+                memory,
+            );
             self.function_counter.increment(function_name);
             return;
         }
@@ -57,48 +77,6 @@ impl<'tcx> Translator<'tcx> {
         }
         // Default case: A function with MIR representation
         self.call_mir_function(function_def_id, function_name, places);
-    }
-
-    /// Calls the corresponding handler for the supported synchronization or multithreading functions.
-    fn call_supported_sync_function(
-        &mut self,
-        function_name: &str,
-        args: &[rustc_middle::mir::Operand<'tcx>],
-        destination: rustc_middle::mir::Place<'tcx>,
-        places: Places,
-    ) {
-        // Index for transition and place labels
-        let index = self.function_counter.get_count(function_name);
-        // A reference to the memory of the current function
-        let current_function = self.call_stack.peek_mut();
-        let memory = &mut current_function.memory;
-        // A reference to the Petri net to add transitions and places
-        let net = &mut self.net;
-
-        match function_name {
-            "std::sync::Condvar::new" => {
-                condvar::call_new(function_name, index, destination, places, net, memory);
-            }
-            "std::sync::Condvar::notify_one" => {
-                condvar::call_notify_one(function_name, index, args, places, net, memory);
-            }
-            "std::sync::Condvar::wait" => {
-                condvar::call_wait(index, args, destination, places, net, memory);
-            }
-            "std::sync::Mutex::<T>::lock" => {
-                mutex::call_lock(function_name, index, args, destination, places, net, memory);
-            }
-            "std::sync::Mutex::<T>::new" => {
-                mutex::call_new(function_name, index, destination, places, net, memory);
-            }
-            "std::thread::spawn" => {
-                self.call_thread_spawn(function_name, args, destination, places);
-            }
-            "std::thread::JoinHandle::<T>::join" => {
-                thread::call_join(function_name, index, args, places, net, memory);
-            }
-            _ => panic!("BUG: Call handler for {function_name} is not defined"),
-        }
     }
 
     /// Call to a MIR function. It is the default for user-defined functions in the code.
@@ -181,7 +159,7 @@ impl<'tcx> Translator<'tcx> {
         );
 
         let current_function = self.call_stack.peek_mut();
-        link_return_value_if_sync_variable(
+        sync::link_return_value_if_sync_variable(
             args,
             destination,
             &mut current_function.memory,
@@ -282,11 +260,11 @@ impl<'tcx> Translator<'tcx> {
         // Extract the closure and find the sync variables passed in to the closure
         let closure_for_spawn = extract_closure(args);
         let memory_entries =
-            thread::find_sync_variables(closure_for_spawn, &mut current_function.memory);
+            sync::thread::find_sync_variables(closure_for_spawn, &mut current_function.memory);
 
         // Add a new thread
         let index = self.threads.len();
-        let thread = Rc::new(RefCell::new(thread::Thread::new(
+        let thread = Rc::new(RefCell::new(sync::thread::Thread::new(
             transition,
             thread_function_def_id,
             memory_entries.0,
