@@ -70,7 +70,7 @@ pub fn run(source_code_filepath: std::path::PathBuf) -> Result<PetriNet, &'stati
             query.enter(|tcx| {
                 let mut translator = translator::Translator::new(tcx);
                 translator.run();
-                translation_result = translator.get_result();
+                translation_result = Ok(translator.get_result());
             });
         });
     });

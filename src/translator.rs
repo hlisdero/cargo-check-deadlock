@@ -53,12 +53,8 @@ use std::rc::Rc;
 use sync::mutex;
 use sync::thread::Thread;
 
-/// Translator error message when no main function is found in the source code.
-pub const ERR_NO_MAIN_FUNCTION_FOUND: &str = "ERROR: No main function found in the source code";
-
 pub struct Translator<'tcx> {
     tcx: rustc_middle::ty::TyCtxt<'tcx>,
-    err_str: Option<&'static str>,
     net: PetriNet,
     program_start: PlaceRef,
     program_end: PlaceRef,
@@ -84,7 +80,6 @@ impl<'tcx> Translator<'tcx> {
 
         Self {
             tcx,
-            err_str: None,
             net,
             program_start,
             program_end,
@@ -97,15 +92,8 @@ impl<'tcx> Translator<'tcx> {
 
     /// Returns the result of the translation, i.e. the Petri net.
     /// The ownership is transferred to the caller.
-    ///
-    /// # Errors
-    ///
-    /// If the translation failed, then an error is returned.
-    pub fn get_result(&mut self) -> Result<PetriNet, &'static str> {
-        match self.err_str {
-            Some(err_str) => Err(err_str),
-            None => Ok(std::mem::take(&mut self.net)),
-        }
+    pub fn get_result(&mut self) -> PetriNet {
+        std::mem::take(&mut self.net)
     }
 
     /// Translates the source code to a Petri net.
@@ -118,10 +106,10 @@ impl<'tcx> Translator<'tcx> {
     ///
     /// If the translation fails due to an unsupported feature present in the code, then the function panics.
     pub fn run(&mut self) {
-        let Some((main_function_id, _)) = self.tcx.entry_fn(()) else {
-            self.err_str = Some(ERR_NO_MAIN_FUNCTION_FOUND);
-            return;
-        };
+        let (main_function_id, _) = self
+            .tcx
+            .entry_fn(())
+            .expect("ERROR: No main function found in the source code");
         self.push_function_to_call_stack(
             main_function_id,
             self.program_start.clone(),
