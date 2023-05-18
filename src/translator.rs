@@ -365,7 +365,7 @@ impl<'tcx> Translator<'tcx> {
     /// Replaces the program panic place with the thread's end place, since abnormal thread
     /// termination does not affect the main thread.
     fn translate_threads(&mut self) {
-        while let Some(thread) = self.thread_manager.pop_thread() {
+        for thread in self.thread_manager.get_threads_found() {
             info!("Starting translating thread {}", thread.borrow_mut().index);
             let (thread_function_def_id, thread_start_place, thread_end_place) =
                 thread.borrow_mut().prepare_for_translation(&mut self.net);

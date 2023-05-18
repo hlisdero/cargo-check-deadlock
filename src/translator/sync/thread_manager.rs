@@ -14,12 +14,11 @@ use crate::utils::{
 };
 use log::{debug, info};
 use std::cell::RefCell;
-use std::collections::VecDeque;
 use std::rc::Rc;
 
 #[derive(Default)]
 pub struct ThreadManager {
-    threads: VecDeque<Rc<RefCell<Thread>>>,
+    threads: Vec<Rc<RefCell<Thread>>>,
 }
 
 /// A thread reference is just a shared pointer to a `RefCell` containing the thread.
@@ -110,14 +109,15 @@ impl ThreadManager {
             index,
         )));
         let thread_ref = Rc::clone(&thread);
-        self.threads.push_back(thread);
+        self.threads.push(thread);
         info!("Found thread {index} and pushed it to the back of the thread translation queue");
         thread_ref
     }
 
-    /// Removes the first element from the threads vector and returns it, or `None` if it is empty.
-    pub fn pop_thread(&mut self) -> Option<Rc<RefCell<Thread>>> {
-        self.threads.pop_front()
+    /// Returns the vector of threads found.
+    /// After this call, the `ThreadManager` cannot be used anymore.
+    pub fn get_threads_found(&mut self) -> Vec<Rc<RefCell<Thread>>> {
+        std::mem::take(&mut self.threads)
     }
 
     /// Finds sync variables captured by the closure for a new thread.
