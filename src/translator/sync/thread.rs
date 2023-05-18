@@ -24,10 +24,15 @@ use crate::data_structures::petri_net_interface::{
     add_arc_place_transition, add_arc_transition_place,
 };
 use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef, TransitionRef};
+use crate::naming::function::foreign_call_transition_labels;
 use crate::naming::thread::{end_place_label, start_place_label};
+use crate::translator::function::{Places, Transitions};
 use crate::translator::mir_function::{Entries, Memory};
+use crate::translator::special_function::call_foreign_function;
 use crate::translator::sync::{CondvarRef, MutexGuardRef, MutexRef, ThreadRef};
 use crate::utils::check_substring_in_place_type;
+use crate::utils::extract_nth_argument_as_place;
+use log::info;
 
 #[derive(PartialEq, Eq)]
 pub struct Thread {
@@ -172,4 +177,62 @@ impl Thread {
             }
         }
     }
+}
+
+/// Call to `std::thread::JoinHandle::<T>::join`.
+/// Non-recursive call for the translation process.
+///
+/// - Retrieves the join handle linked to the first argument (the self reference).
+/// - Sets the join transition for the thread.
+pub fn call_join<'tcx>(
+    function_name: &str,
+    index: usize,
+    args: &[rustc_middle::mir::Operand<'tcx>],
+    places: Places,
+    net: &mut PetriNet,
+    memory: &mut Memory<'tcx>,
+) {
+    let transitions = call_foreign_function(
+        places,
+        &foreign_call_transition_labels(function_name, index),
+        net,
+    );
+    let transition = match transitions {
+        Transitions::Basic { transition } | Transitions::WithCleanup { transition, .. } => {
+            transition
+        }
+    };
+    // Retrieve the join handle from the local variable passed to the function as an argument.
+    let self_ref = extract_nth_argument_as_place(args, 0).expect(
+        "BUG: `std::thread::JoinHandle::<T>::join` should receive the self reference as a place",
+    );
+    let thread_ref = memory.get_linked_join_handle(&self_ref);
+    thread_ref.borrow_mut().set_join_transition(transition);
+    info!("Found join call for thread {}", thread_ref.borrow().index);
+}
+
+/// Finds sync variables captured by the closure for a new thread.
+/// Returns the memory entries for each sync variable type that should be re-mapped in the new thread's memory.
+///
+/// If the closure is `None` (no variables were captured, it is a `ZeroSizedType`),
+/// then return empty vectors for the memory entries.
+pub fn find_sync_variables<'tcx>(
+    closure: Option<rustc_middle::mir::Place<'tcx>>,
+    memory: &mut Memory<'tcx>,
+) -> (
+    Entries<MutexRef>,
+    Entries<MutexGuardRef>,
+    Entries<ThreadRef>,
+    Entries<CondvarRef>,
+) {
+    closure.map_or_else(
+        || (vec![], vec![], vec![], vec![]),
+        |place| {
+            let mutexes = memory.find_mutexes_linked_to_place(place);
+            let mutex_guards = memory.find_mutex_guards_linked_to_place(place);
+            let join_handles = memory.find_join_handles_linked_to_place(place);
+            let condvars = memory.find_condvars_linked_to_place(place);
+            (mutexes, mutex_guards, join_handles, condvars)
+        },
+    )
 }

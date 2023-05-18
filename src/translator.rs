@@ -42,7 +42,7 @@ use log::{debug, info};
 use mir_function::MirFunction;
 use rustc_middle::mir::visit::Visitor;
 use special_function::{call_diverging_function, call_panic_function, is_panic_function};
-use sync::ThreadManager;
+use sync::thread_manager::ThreadManager;
 
 /// Translator error message when no main function is found in the source code.
 pub const ERR_NO_MAIN_FUNCTION_FOUND: &str = "ERROR: No main function found in the source code";

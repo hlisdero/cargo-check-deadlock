@@ -9,12 +9,12 @@ use crate::naming::function::{
 use crate::translator::function::{Places, Transitions};
 use crate::translator::mir_function::MirFunction;
 use crate::translator::special_function::{call_foreign_function, is_foreign_function};
-use crate::translator::sync::condvar;
-use crate::translator::sync::mutex;
+use crate::translator::sync::{condvar, mutex, thread};
 use crate::translator::sync::{is_supported_function, link_return_value_if_sync_variable};
-use crate::translator::ThreadManager;
-use crate::utils::extract_nth_argument_as_place;
-use log::info;
+use crate::utils::{
+    extract_closure, extract_def_id_of_called_function_from_operand, extract_nth_argument_as_place,
+};
+use log::{debug, info};
 
 impl<'tcx> Translator<'tcx> {
     /// Starts the corresponding handler for the function call.
@@ -87,7 +87,7 @@ impl<'tcx> Translator<'tcx> {
                 self.call_thread_spawn(function_name, args, destination, places);
             }
             "std::thread::JoinHandle::<T>::join" => {
-                self.call_thread_join(function_name, args, destination, places);
+                thread::call_join(function_name, index, args, places, net, memory);
             }
             _ => panic!("BUG: Call handler for {function_name} is not defined"),
         }
@@ -241,28 +241,14 @@ impl<'tcx> Translator<'tcx> {
         }
     }
 
-    /// Call to `std::thread::JoinHandle::<T>::join`.
-    /// Non-recursive call for the translation process.
-    fn call_thread_join(
-        &mut self,
-        function_name: &str,
-        args: &[rustc_middle::mir::Operand<'tcx>],
-        destination: rustc_middle::mir::Place<'tcx>,
-        places: Places,
-    ) {
-        let transitions = self.call_foreign_function(function_name, args, destination, places);
-        let transition = match transitions {
-            Transitions::Basic { transition } | Transitions::WithCleanup { transition, .. } => {
-                transition
-            }
-        };
-
-        let current_function = self.call_stack.peek();
-        ThreadManager::translate_side_effects_join(args, transition, &current_function.memory);
-    }
-
     /// Call to `std::thread::spawn`.
     /// Non-recursive call for the translation process.
+    ///
+    /// - Extracts the function `DefId` of the called function.
+    /// - Extracts the closure for the thread.
+    /// - Finds the sync variables passed in to the closure.
+    /// - Adds the thread to the `ThreadManager`.
+    /// - Links the return place to the `ThreadRef`.
     fn call_thread_spawn(
         &mut self,
         function_name: &str,
@@ -276,15 +262,29 @@ impl<'tcx> Translator<'tcx> {
                 transition
             }
         };
-
+        // Extract the definition ID of the thread function
         let current_function = self.call_stack.peek_mut();
-        self.thread_manager.translate_side_effects_spawn(
-            args,
-            destination,
-            transition,
-            &mut current_function.memory,
+        let function_to_be_run = args
+            .get(0)
+            .expect("BUG: `std::thread::spawn` should receive the function to be run");
+        let thread_function_def_id = extract_def_id_of_called_function_from_operand(
+            function_to_be_run,
             current_function.def_id,
             self.tcx,
         );
+        // Extract the closure
+        let closure_for_spawn = extract_closure(args);
+        // Find the sync variables passed in to the closure
+        let memory_entries =
+            thread::find_sync_variables(closure_for_spawn, &mut current_function.memory);
+        // Add a new thread
+        let thread_ref =
+            self.thread_manager
+                .add_thread(transition, thread_function_def_id, memory_entries);
+        // The return value contains a new join handle. Link the local variable to it.
+        current_function
+            .memory
+            .link_place_to_join_handle(destination, &thread_ref);
+        debug!("NEW JOIN HANDLE: {destination:?}");
     }
 }
