@@ -29,6 +29,7 @@ use crate::translator::mir_function::{Entries, Memory};
 use crate::translator::sync::{CondvarRef, MutexGuardRef, MutexRef, ThreadRef};
 use crate::utils::check_substring_in_place_type;
 
+#[derive(PartialEq, Eq)]
 pub struct Thread {
     /// The transition from which the thread branches off at the start.
     spawn_transition: TransitionRef,
@@ -156,7 +157,7 @@ impl Thread {
                 let thread_ref = self.join_handles.pop().expect(
                     "BUG: The thread function receives more join handles than the ones detected",
                 );
-                memory.link_place_to_join_handle(place, thread_ref);
+                memory.link_place_to_join_handle(place, &thread_ref);
             }
             if check_substring_in_place_type(
                 &place,

@@ -13,16 +13,18 @@ use crate::utils::{
     extract_closure, extract_def_id_of_called_function_from_operand, extract_nth_argument_as_place,
 };
 use log::{debug, info};
+use std::cell::RefCell;
 use std::collections::VecDeque;
+use std::rc::Rc;
 
 #[derive(Default)]
 pub struct ThreadManager {
-    threads: VecDeque<Thread>,
+    threads: VecDeque<Rc<RefCell<Thread>>>,
 }
 
-/// A wrapper type around the indexes to the elements in `VecDeque<ThreadSpan>`.
-#[derive(Clone, Copy, PartialEq, Eq)]
-pub struct ThreadRef(usize);
+/// A thread reference is just a shared pointer to a `RefCell` containing the thread.
+/// This enables the Interior Mutability pattern needed to set the join transition later on.
+pub type ThreadRef = Rc<RefCell<Thread>>;
 
 impl ThreadManager {
     /// Returns a new empty `ThreadManager`.
@@ -61,7 +63,7 @@ impl ThreadManager {
             memory_entries,
         );
         // The return value contains a new join handle. Link the local variable to it.
-        memory.link_place_to_join_handle(return_value, thread_ref);
+        memory.link_place_to_join_handle(return_value, &thread_ref);
         debug!("NEW JOIN HANDLE: {return_value:?}");
     }
 
@@ -80,7 +82,10 @@ impl ThreadManager {
             "BUG: `std::thread::JoinHandle::<T>::join` should receive the self reference as a place",
         );
         let thread_ref = memory.get_linked_join_handle(&self_ref);
-        self.set_join_transition(*thread_ref, function_call_transition);
+        thread_ref
+            .borrow_mut()
+            .set_join_transition(function_call_transition);
+        info!("Found join call for thread {}", thread_ref.borrow().index);
     }
 
     /// Adds a new thread and returns a reference to it.
@@ -96,7 +101,7 @@ impl ThreadManager {
         ),
     ) -> ThreadRef {
         let index = self.threads.len();
-        self.threads.push_back(Thread::new(
+        let thread = Rc::new(RefCell::new(Thread::new(
             spawn_transition,
             thread_function_def_id,
             memory_entries.0,
@@ -104,27 +109,15 @@ impl ThreadManager {
             memory_entries.2,
             memory_entries.3,
             index,
-        ));
+        )));
+        let thread_ref = Rc::clone(&thread);
+        self.threads.push_back(thread);
         info!("Found thread {index} and pushed it to the back of the thread translation queue");
-        ThreadRef(index)
+        thread_ref
     }
 
-    /// Sets the join transition for a thread.
-    ///
-    /// # Panics
-    ///
-    /// If the thread reference is invalid, then the function panics.
-    pub fn set_join_transition(&mut self, thread_ref: ThreadRef, join_transition: TransitionRef) {
-        let thread = self
-            .threads
-            .get_mut(thread_ref.0)
-            .expect("BUG: The thread reference should be a valid index for the vector of threads");
-        thread.set_join_transition(join_transition);
-        info!("Found join call for thread {}", thread.index);
-    }
-
-    /// Removes the last element from the threads vector and returns it, or `None` if it is empty.
-    pub fn pop_thread(&mut self) -> Option<Thread> {
+    /// Removes the first element from the threads vector and returns it, or `None` if it is empty.
+    pub fn pop_thread(&mut self) -> Option<Rc<RefCell<Thread>>> {
         self.threads.pop_front()
     }
 

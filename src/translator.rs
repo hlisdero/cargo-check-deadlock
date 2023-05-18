@@ -365,10 +365,10 @@ impl<'tcx> Translator<'tcx> {
     /// Replaces the program panic place with the thread's end place, since abnormal thread
     /// termination does not affect the main thread.
     fn translate_threads(&mut self) {
-        while let Some(mut thread) = self.thread_manager.pop_thread() {
-            info!("Starting translating thread {}", thread.index);
+        while let Some(thread) = self.thread_manager.pop_thread() {
+            info!("Starting translating thread {}", thread.borrow_mut().index);
             let (thread_function_def_id, thread_start_place, thread_end_place) =
-                thread.prepare_for_translation(&mut self.net);
+                thread.borrow_mut().prepare_for_translation(&mut self.net);
             // Replace the panic place so that unwind transitions and similar point to the thread's end place.
             self.program_panic = thread_end_place.clone();
 
@@ -380,9 +380,11 @@ impl<'tcx> Translator<'tcx> {
             info!("Pushed thread function to the translation call stack");
             let new_function = self.call_stack.peek_mut();
             info!("Moving sync variables to the thread function...");
-            thread.move_sync_variables(&mut new_function.memory, self.tcx);
+            thread
+                .borrow_mut()
+                .move_sync_variables(&mut new_function.memory, self.tcx);
             self.translate_top_call_stack();
-            info!("Finished translating thread {}", thread.index);
+            info!("Finished translating thread {}", thread.borrow_mut().index);
         }
     }
 }

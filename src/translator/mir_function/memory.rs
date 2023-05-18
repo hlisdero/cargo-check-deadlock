@@ -85,12 +85,12 @@ impl<'tcx> Memory<'tcx> {
     pub fn link_place_to_join_handle(
         &mut self,
         place: rustc_middle::mir::Place<'tcx>,
-        thread_ref: ThreadRef,
+        thread_ref: &ThreadRef,
     ) {
-        let Some(old_thread_ref) = self.places_linked_to_join_handles.insert(place, thread_ref) else {
+        let Some(old_thread_ref) = self.places_linked_to_join_handles.insert(place, Rc::clone(thread_ref)) else {
             return;
         };
-        if thread_ref == old_thread_ref {
+        if *thread_ref == old_thread_ref {
             debug!("PLACE {place:?} LINKED AGAIN TO SAME JOIN HANDLE");
         } else {
             debug!("PLACE {place:?} LINKED TO A DIFFERENT JOIN HANDLE");
@@ -220,7 +220,7 @@ impl<'tcx> Memory<'tcx> {
         place_linked_to_join_handle: rustc_middle::mir::Place<'tcx>,
     ) {
         let thread_ref = self.get_linked_join_handle(&place_linked_to_join_handle);
-        self.link_place_to_join_handle(place_to_be_linked, *thread_ref);
+        self.link_place_to_join_handle(place_to_be_linked, &Rc::clone(thread_ref));
         debug!("SAME JOIN HANDLE: {place_to_be_linked:?} = {place_linked_to_join_handle:?}");
     }
 
@@ -292,7 +292,7 @@ impl<'tcx> Memory<'tcx> {
         for join_handle_place in self.places_linked_to_join_handles.keys() {
             if join_handle_place.local == place.local {
                 let mutex_guard_ref = self.get_linked_join_handle(join_handle_place);
-                result.push(*mutex_guard_ref);
+                result.push(Rc::clone(mutex_guard_ref));
                 debug!("FOUND JOIN HANDLE IN PLACE {join_handle_place:?}");
             }
         }
