@@ -294,6 +294,7 @@ impl<'tcx> Translator<'tcx> {
     ) {
         let places = places.ignore_cleanup_place();
         let index = self.function_counter.get_count(function_name);
+        self.function_counter.increment(function_name);
         let transition_labels = wait_transition_labels(index);
 
         let wait_transitions =
