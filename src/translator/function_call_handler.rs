@@ -91,7 +91,7 @@ impl<'tcx> Translator<'tcx> {
             }
             _ => panic!("BUG: Call handler for {function_name} is not defined"),
         }
-        // Increment the counter at the end of every call to prepare the new label.
+        // Increment the counter at the end of every call to prepare the new label
         self.function_counter.increment(function_name);
     }
 
