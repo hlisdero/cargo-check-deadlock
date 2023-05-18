@@ -10,12 +10,16 @@
 //! and a flag to keep track of when the value of the variable
 //! inside the mutex has been set.
 
-use super::mutex_manager::MutexRef;
+use super::MutexRef;
 use crate::data_structures::petri_net_interface::{
     add_arc_place_transition, add_arc_transition_place,
 };
 use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef, TransitionRef};
 use crate::naming::mutex::place_label;
+use crate::translator::mir_function::Memory;
+use crate::utils::extract_nth_argument_as_place;
+use log::debug;
+use std::rc::Rc;
 
 #[derive(PartialEq, Eq)]
 pub struct Mutex {
@@ -68,4 +72,44 @@ impl Guard {
     // pub fn set(&mut self) {
     //     self.is_set = true;
     // }
+}
+
+/// Translates the side effects for `std::sync::Mutex::<T>::new` i.e.,
+/// the specific logic of creating a new mutex.
+/// Receives a reference to the memory of the caller function to
+/// link the return local variable to the new mutex.
+pub fn translate_side_effects_new<'tcx>(
+    index: usize,
+    return_value: rustc_middle::mir::Place<'tcx>,
+    net: &mut PetriNet,
+    memory: &mut Memory<'tcx>,
+) {
+    let mutex = Rc::new(Mutex::new(index, net));
+    // The return value contains a new mutex. Link the local variable to it.
+    memory.link_place_to_mutex(return_value, &mutex);
+    debug!("NEW MUTEX: {return_value:?}");
+}
+
+/// Translates the side effects for `std::sync::Mutex::<T>::lock` i.e.,
+/// the specific logic of locking a mutex.
+/// Receives a reference to the memory of the caller function to retrieve the mutex contained
+/// in the local variable for the call and to link the return local variable to the new mutex guard.
+pub fn translate_side_effects_lock<'tcx>(
+    args: &[rustc_middle::mir::Operand<'tcx>],
+    return_value: rustc_middle::mir::Place<'tcx>,
+    lock_transition: &TransitionRef,
+    net: &mut PetriNet,
+    memory: &mut Memory<'tcx>,
+) {
+    // Retrieve the mutex from the local variable passed to the function as an argument.
+    let self_ref = extract_nth_argument_as_place(args, 0)
+        .expect("BUG: `std::sync::Mutex::<T>::lock` should receive the self reference as a place");
+    let mutex_ref = memory.get_linked_mutex(&self_ref);
+    mutex_ref.add_lock_arc(lock_transition, net);
+
+    // Create a new mutex guard
+    let mutex_guard = Rc::new(Guard::new(Rc::clone(mutex_ref)));
+    // The return value contains a new mutex guard. Link the local variable to it.
+    memory.link_place_to_mutex_guard(return_value, &mutex_guard);
+    debug!("NEW MUTEX GUARD {return_value:?} DUE TO TRANSITION {lock_transition}");
 }

@@ -10,9 +10,9 @@ use crate::naming::function::{
 use crate::translator::function::{Places, Transitions};
 use crate::translator::mir_function::MirFunction;
 use crate::translator::special_function::{call_foreign_function, is_foreign_function};
-use crate::translator::sync::{
-    condvar, is_supported_sync_function, link_return_value_if_sync_variable,
-};
+use crate::translator::sync::condvar;
+use crate::translator::sync::mutex;
+use crate::translator::sync::{is_supported_sync_function, link_return_value_if_sync_variable};
 use crate::translator::ThreadManager;
 use crate::utils::extract_nth_argument_as_place;
 use log::info;
@@ -335,7 +335,7 @@ impl<'tcx> Translator<'tcx> {
 
         match transitions {
             Transitions::Basic { transition } | Transitions::WithCleanup { transition, .. } => {
-                self.mutex_manager.translate_side_effects_lock(
+                mutex::translate_side_effects_lock(
                     args,
                     destination,
                     &transition,
@@ -355,10 +355,13 @@ impl<'tcx> Translator<'tcx> {
         destination: rustc_middle::mir::Place<'tcx>,
         places: Places,
     ) {
+        // Get the index before it is incremented in `call_foreign_function`
+        let index = self.function_counter.get_count(function_name);
         self.call_foreign_function(function_name, args, destination, places);
 
         let current_function = self.call_stack.peek_mut();
-        self.mutex_manager.translate_side_effects_new(
+        mutex::translate_side_effects_new(
+            index,
             destination,
             &mut self.net,
             &mut current_function.memory,
