@@ -461,9 +461,8 @@ impl<'tcx> Translator<'tcx> {
     ) {
         let transitions = self.call_foreign_function(function_name, args, destination, places);
 
-        let Some(dropped_place) = extract_nth_argument_as_place(args, 0) else {
-            panic!("BUG: `std::mem::drop` should receive the value to be dropped as a place");
-        };
+        let dropped_place = extract_nth_argument_as_place(args, 0)
+            .expect("BUG: `std::mem::drop` should receive the value to be dropped as a place");
 
         let function = self.call_stack.peek_mut();
         let memory = &mut function.memory;
