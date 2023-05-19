@@ -42,7 +42,7 @@ pub fn check_deadlock(net_filepath: &std::path::PathBuf) -> bool {
     // For some reason `LoLA` only generates output to `stderr`.
     // Parse the answer to the reachability analysis and panic otherwise.
     let stderr_string =
-        String::from_utf8(output.stderr).expect("Failed to conver the `lola` stderr to UTF-8");
+        String::from_utf8(output.stderr).expect("Failed to convert the `lola` stderr to UTF-8");
     if stderr_string.contains("result: yes") {
         return true;
     }
