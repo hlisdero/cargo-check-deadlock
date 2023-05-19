@@ -60,23 +60,14 @@ impl Mutex {
 #[derive(PartialEq, Eq)]
 pub struct Guard {
     pub mutex: MutexRef,
-    // is_set: bool,
 }
 
 impl Guard {
     /// Creates a new mutex guard for a given mutex reference.
     /// By default, it is not set.
     pub const fn new(mutex: MutexRef) -> Self {
-        Self {
-            mutex,
-            // is_set: false,
-        }
+        Self { mutex }
     }
-
-    // Marks that the value of the mutex has been set, i.e., modified at least once.
-    // pub fn set(&mut self) {
-    //     self.is_set = true;
-    // }
 }
 
 /// Call to `std::sync::Mutex::<T>::lock`.
