@@ -134,7 +134,7 @@ pub fn call_new<'tcx>(
     // Create a new condvar
     let condvar = Rc::new(Condvar::new(index, net));
     // The return value contains a new condition variable. Link the local variable to it.
-    memory.link_place_to_condvar(destination, &condvar);
+    memory.condvar.link_place(destination, condvar);
     debug!("NEW CONDVAR: {destination:?}");
 }
 
@@ -168,7 +168,7 @@ pub fn call_notify_one<'tcx>(
     let self_ref = extract_nth_argument_as_place(args, 0).expect(
         "BUG: `std::sync::Condvar::notify_one` should receive the self reference as a place",
     );
-    let condvar_ref = memory.get_linked_condvar(&self_ref);
+    let condvar_ref = memory.condvar.get_linked_value(&self_ref);
     condvar_ref.link_to_notify_one_call(transitions.get_transition(), net);
 }
 
@@ -201,7 +201,7 @@ pub fn call_wait<'tcx>(
     // Retrieve the mutex guard from the local variable passed to the function as an argument.
     let mutex_guard = extract_nth_argument_as_place(args, 1)
         .expect("BUG: `std::sync::Condvar::wait` should receive the first argument as a place");
-    let mutex_guard_ref = memory.get_linked_mutex_guard(&mutex_guard);
+    let mutex_guard_ref = memory.mutex_guard.get_linked_value(&mutex_guard);
 
     // Unlock the mutex when waiting, lock it when the waiting ends.
     mutex_guard_ref
@@ -212,11 +212,12 @@ pub fn call_wait<'tcx>(
     // Retrieve the condvar from the local variable passed to the function as an argument.
     let self_ref = extract_nth_argument_as_place(args, 0)
         .expect("BUG: `std::sync::Condvar::wait` should receive the self reference as a place");
-    let condvar_ref = memory.get_linked_condvar(&self_ref);
+    let condvar_ref = memory.condvar.get_linked_value(&self_ref);
     condvar_ref.link_to_wait_call(&wait_transitions.0, &wait_transitions.1, net);
 
     // The return value contains the mutex guard passed to the function. Link the local variable to it.
-    memory.link_place_to_mutex_guard(destination, &Rc::clone(mutex_guard_ref));
+    let cloned_ref = Rc::clone(mutex_guard_ref);
+    memory.mutex_guard.link_place(destination, cloned_ref);
 }
 
 /// Translates a call to `std::sync::Condvar::wait` using

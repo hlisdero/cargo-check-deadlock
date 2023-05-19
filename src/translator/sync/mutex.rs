@@ -112,14 +112,14 @@ pub fn call_lock<'tcx>(
     // Retrieve the mutex from the local variable passed to the function as an argument.
     let self_ref = extract_nth_argument_as_place(args, 0)
         .expect("BUG: `std::sync::Mutex::<T>::lock` should receive the self reference as a place");
-    let mutex_ref = memory.get_linked_mutex(&self_ref);
+    let mutex_ref = memory.mutex.get_linked_value(&self_ref);
     mutex_ref.add_lock_arc(lock_transition, net);
 
     // Create a new mutex guard
     let mutex_guard = Rc::new(Guard::new(Rc::clone(mutex_ref)));
 
     // The return value contains a new mutex guard. Link the local variable to it.
-    memory.link_place_to_mutex_guard(destination, &mutex_guard);
+    memory.mutex_guard.link_place(destination, mutex_guard);
     debug!("NEW MUTEX GUARD {destination:?} DUE TO TRANSITION {lock_transition}");
 }
 
@@ -144,7 +144,7 @@ pub fn call_new<'tcx>(
     // Create a new mutex
     let mutex = Rc::new(Mutex::new(index, net));
     // The return value contains a new mutex. Link the local variable to it.
-    memory.link_place_to_mutex(destination, &mutex);
+    memory.mutex.link_place(destination, mutex);
     debug!("NEW MUTEX: {destination:?}");
 }
 
@@ -158,8 +158,8 @@ pub fn handle_mutex_guard_drop<'tcx>(
     net: &mut PetriNet,
     memory: &mut Memory<'tcx>,
 ) {
-    if memory.is_linked_to_mutex_guard(place) {
-        let mutex_guard_ref = memory.get_linked_mutex_guard(&place);
+    if memory.mutex_guard.is_linked(&place) {
+        let mutex_guard_ref = memory.mutex_guard.get_linked_value(&place);
         mutex_guard_ref.mutex.add_unlock_arc(unlock_transition, net);
         debug!("DROP MUTEX GUARD {place:?} DUE TO TRANSITION {unlock_transition}");
     }

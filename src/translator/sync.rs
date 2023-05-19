@@ -96,7 +96,7 @@ pub fn handle_aggregate_assignment<'tcx>(
 }
 
 /// Checks if `place_linked` contains a mutex, a mutex guard, a join handle or a condition variable.
-/// If `place_linked` contains a synchronization variable, links it to `place_to_be_linked`.
+/// If `place_linked` contains a synchronization variable, links it to `place_to_link`.
 ///
 /// Receives a reference to the memory of the caller function to
 /// link the return local variable to the synchronization variable.
@@ -112,7 +112,7 @@ pub fn handle_aggregate_assignment<'tcx>(
 /// It also works for checking if a function argument is a sync variable
 /// and then linking the return value to the argument.
 pub fn link_if_sync_variable<'tcx>(
-    place_to_be_linked: &rustc_middle::mir::Place<'tcx>,
+    place_to_link: &rustc_middle::mir::Place<'tcx>,
     place_linked: &rustc_middle::mir::Place<'tcx>,
     memory: &mut Memory<'tcx>,
     caller_function_def_id: rustc_hir::def_id::DefId,
@@ -127,7 +127,7 @@ pub fn link_if_sync_variable<'tcx>(
         // In the indirect case the place linked to the sync variable
         // is actually the base place of `place_linked`.
         generalized_link_place_if_sync_variable(
-            place_to_be_linked,
+            place_to_link,
             &base_place,
             place_linked,
             memory,
@@ -138,7 +138,7 @@ pub fn link_if_sync_variable<'tcx>(
         // In the normal case the place linked to the sync variable
         // is simply `place_linked`.
         generalized_link_place_if_sync_variable(
-            place_to_be_linked,
+            place_to_link,
             place_linked,
             place_linked,
             memory,
@@ -149,12 +149,12 @@ pub fn link_if_sync_variable<'tcx>(
 }
 
 /// Checks if `place_to_check_type` contains a mutex, a mutex guard, a join handle or a condition variable.
-/// If `place_to_check_type` is of type of a synchronization variable, links `place_linked` to `place_to_be_linked`.
+/// If `place_to_check_type` is of type of a synchronization variable, links `place_linked` to `place_to_link`.
 ///
 /// This function decouples the place with the type of the sync variable from the place that is linked to the sync
 /// variable. In this sense, it is "generalized" from the naive idea that these two concepts always match.
 fn generalized_link_place_if_sync_variable<'tcx>(
-    place_to_be_linked: &rustc_middle::mir::Place<'tcx>,
+    place_to_link: &rustc_middle::mir::Place<'tcx>,
     place_linked: &rustc_middle::mir::Place<'tcx>,
     place_to_check_type: &rustc_middle::mir::Place<'tcx>,
     memory: &mut Memory<'tcx>,
@@ -167,7 +167,9 @@ fn generalized_link_place_if_sync_variable<'tcx>(
         caller_function_def_id,
         tcx,
     ) {
-        memory.link_place_to_same_mutex_guard(*place_to_be_linked, *place_linked);
+        memory
+            .mutex_guard
+            .link_place_to_same_value(*place_to_link, *place_linked);
     }
     if check_substring_in_place_type(
         place_to_check_type,
@@ -175,7 +177,9 @@ fn generalized_link_place_if_sync_variable<'tcx>(
         caller_function_def_id,
         tcx,
     ) {
-        memory.link_place_to_same_mutex(*place_to_be_linked, *place_linked);
+        memory
+            .mutex
+            .link_place_to_same_value(*place_to_link, *place_linked);
     }
     if check_substring_in_place_type(
         place_to_check_type,
@@ -183,7 +187,9 @@ fn generalized_link_place_if_sync_variable<'tcx>(
         caller_function_def_id,
         tcx,
     ) {
-        memory.link_place_to_same_join_handle(*place_to_be_linked, *place_linked);
+        memory
+            .join_handle
+            .link_place_to_same_value(*place_to_link, *place_linked);
     }
     if check_substring_in_place_type(
         place_to_check_type,
@@ -191,7 +197,9 @@ fn generalized_link_place_if_sync_variable<'tcx>(
         caller_function_def_id,
         tcx,
     ) {
-        memory.link_place_to_same_condvar(*place_to_be_linked, *place_linked);
+        memory
+            .condvar
+            .link_place_to_same_value(*place_to_link, *place_linked);
     }
 }
 

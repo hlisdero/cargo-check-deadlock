@@ -545,9 +545,9 @@ impl<'tcx> Translator<'tcx> {
         );
 
         // Extract the closure and find the sync variables passed in to the closure
+        let memory = &mut current_function.memory;
         let closure_for_spawn = extract_closure(args);
-        let memory_entries =
-            sync::thread::find_sync_variables(closure_for_spawn, &mut current_function.memory);
+        let memory_entries = sync::thread::find_sync_variables(closure_for_spawn, memory);
 
         // Add a new thread
         let index = self.threads.len();
@@ -565,9 +565,7 @@ impl<'tcx> Translator<'tcx> {
         info!("Found thread {index} and pushed it to the back of the thread translation queue");
 
         // The return value contains a new join handle. Link the local variable to it.
-        current_function
-            .memory
-            .link_place_to_join_handle(destination, &thread_ref);
+        memory.join_handle.link_place(destination, thread_ref);
         debug!("NEW JOIN HANDLE: {destination:?}");
     }
 }

@@ -140,7 +140,7 @@ impl Thread {
                 let mutex_ref = self.mutexes.pop().expect(
                     "BUG: The thread function receives more mutexes than the ones detected",
                 );
-                memory.link_place_to_mutex(place, &mutex_ref);
+                memory.mutex.link_place(place, mutex_ref);
             }
             if check_substring_in_place_type(
                 &place,
@@ -151,7 +151,7 @@ impl Thread {
                 let mutex_guard_ref = self.mutex_guards.pop().expect(
                     "BUG: The thread function receives more mutex guards than the ones detected",
                 );
-                memory.link_place_to_mutex_guard(place, &mutex_guard_ref);
+                memory.mutex_guard.link_place(place, mutex_guard_ref);
             }
             if check_substring_in_place_type(
                 &place,
@@ -162,7 +162,7 @@ impl Thread {
                 let thread_ref = self.join_handles.pop().expect(
                     "BUG: The thread function receives more join handles than the ones detected",
                 );
-                memory.link_place_to_join_handle(place, &thread_ref);
+                memory.join_handle.link_place(place, thread_ref);
             }
             if check_substring_in_place_type(
                 &place,
@@ -173,7 +173,7 @@ impl Thread {
                 let condvar_ref = self.condvars.pop().expect(
                 "BUG: The thread function receives more condition variables than the ones detected",
             );
-                memory.link_place_to_condvar(place, &condvar_ref);
+                memory.condvar.link_place(place, condvar_ref);
             }
         }
     }
@@ -206,7 +206,7 @@ pub fn call_join<'tcx>(
     let self_ref = extract_nth_argument_as_place(args, 0).expect(
         "BUG: `std::thread::JoinHandle::<T>::join` should receive the self reference as a place",
     );
-    let thread_ref = memory.get_linked_join_handle(&self_ref);
+    let thread_ref = memory.join_handle.get_linked_value(&self_ref);
     thread_ref.borrow_mut().set_join_transition(transition);
     info!("Found join call for thread {}", thread_ref.borrow().index);
 }
@@ -228,10 +228,10 @@ pub fn find_sync_variables<'tcx>(
     closure.map_or_else(
         || (vec![], vec![], vec![], vec![]),
         |place| {
-            let mutexes = memory.find_mutexes_linked_to_place(place);
-            let mutex_guards = memory.find_mutex_guards_linked_to_place(place);
-            let join_handles = memory.find_join_handles_linked_to_place(place);
-            let condvars = memory.find_condvars_linked_to_place(place);
+            let mutexes = memory.mutex.find_linked_values(place);
+            let mutex_guards = memory.mutex_guard.find_linked_values(place);
+            let join_handles = memory.join_handle.find_linked_values(place);
+            let condvars = memory.condvar.find_linked_values(place);
             (mutexes, mutex_guards, join_handles, condvars)
         },
     )
