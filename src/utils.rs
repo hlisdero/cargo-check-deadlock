@@ -57,10 +57,7 @@ pub fn extract_nth_argument_as_place<'tcx>(
     args: &[rustc_middle::mir::Operand<'tcx>],
     index: usize,
 ) -> Option<rustc_middle::mir::Place<'tcx>> {
-    let Some(operand) = args.get(index) else {
-        return None;
-    };
-
+    let operand = args.get(index)?;
     match operand {
         rustc_middle::mir::Operand::Move(place) | rustc_middle::mir::Operand::Copy(place) => {
             Some(*place)

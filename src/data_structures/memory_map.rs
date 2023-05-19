@@ -69,10 +69,10 @@ where
     ///
     /// If the place is not linked to a value, then the function panics.
     pub fn get_linked_value(&self, place: &Place<'tcx>) -> &T {
-        let _type_name = std::any::type_name::<T>();
-        self.map
-            .get(place)
-            .expect("BUG: The place {place:?} should be linked to a `{_type_name}`")
+        let type_name = std::any::type_name::<T>();
+        self.map.get(place).unwrap_or_else(|| {
+            panic!("BUG: The place {place:?} should be linked to a `{type_name}`")
+        })
     }
 
     /// Checks if the place is linked to a value.

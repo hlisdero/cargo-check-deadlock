@@ -61,9 +61,9 @@ pub fn run(source_code_filepath: std::path::PathBuf) -> Result<PetriNet, &'stati
         compiler.enter(|queries| {
             // Get the global typing context (tcx: TyCtxt), which is the central data structure in the compiler.
             // <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/ty/struct.TyCtxt.html>
-            let Ok(mut query) = queries.global_ctxt() else {
-                panic!("BUG: Unable to get the global typing context needed for the Translator");
-            };
+            let mut query = queries
+                .global_ctxt()
+                .expect("BUG: Unable to get the global typing context needed for the `Translator`");
 
             // Run the translator as a query to the compiler.
             // <https://rustc-dev-guide.rust-lang.org/rustc-driver.html>
