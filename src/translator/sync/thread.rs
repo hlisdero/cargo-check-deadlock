@@ -203,9 +203,9 @@ pub fn call_join<'tcx>(
         }
     };
     // Retrieve the join handle from the local variable passed to the function as an argument.
-    let self_ref = extract_nth_argument_as_place(args, 0).expect(
-        "BUG: `std::thread::JoinHandle::<T>::join` should receive the self reference as a place",
-    );
+    let self_ref = extract_nth_argument_as_place(args, 0).unwrap_or_else(|| {
+        panic!("BUG: `{function_name}` should receive the self reference as a place")
+    });
     let thread_ref = memory.join_handle.get_linked_value(&self_ref);
     thread_ref.borrow_mut().set_join_transition(transition);
     info!("Found join call for thread {}", thread_ref.borrow().index);

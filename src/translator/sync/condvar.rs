@@ -165,9 +165,9 @@ pub fn call_notify_one<'tcx>(
         net,
     );
     // Retrieve the condvar from the local variable passed to the function as an argument.
-    let self_ref = extract_nth_argument_as_place(args, 0).expect(
-        "BUG: `std::sync::Condvar::notify_one` should receive the self reference as a place",
-    );
+    let self_ref = extract_nth_argument_as_place(args, 0).unwrap_or_else(|| {
+        panic!("BUG: `{function_name}` should receive the self reference as a place")
+    });
     let condvar_ref = memory.condvar.get_linked_value(&self_ref);
     condvar_ref.link_to_notify_one_call(transitions.get_transition(), net);
 }
@@ -193,14 +193,16 @@ pub fn call_wait<'tcx>(
     net: &mut PetriNet,
     memory: &mut Memory<'tcx>,
 ) {
+    let function_name = "std::sync::Condvar::wait";
     let places = places.ignore_cleanup_place();
     let transition_labels = wait_transition_labels(index);
 
     let wait_transitions = translate_call_wait(places, &transition_labels, net);
 
     // Retrieve the mutex guard from the local variable passed to the function as an argument.
-    let mutex_guard = extract_nth_argument_as_place(args, 1)
-        .expect("BUG: `std::sync::Condvar::wait` should receive the first argument as a place");
+    let mutex_guard = extract_nth_argument_as_place(args, 1).unwrap_or_else(|| {
+        panic!("BUG: `{function_name}` should receive the first argument as a place")
+    });
     let mutex_guard_ref = memory.mutex_guard.get_linked_value(&mutex_guard);
 
     // Unlock the mutex when waiting, lock it when the waiting ends.
@@ -210,8 +212,9 @@ pub fn call_wait<'tcx>(
     mutex_guard_ref.mutex.add_lock_arc(&wait_transitions.1, net);
 
     // Retrieve the condvar from the local variable passed to the function as an argument.
-    let self_ref = extract_nth_argument_as_place(args, 0)
-        .expect("BUG: `std::sync::Condvar::wait` should receive the self reference as a place");
+    let self_ref = extract_nth_argument_as_place(args, 0).unwrap_or_else(|| {
+        panic!("BUG: `{function_name}` should receive the self reference as a place")
+    });
     let condvar_ref = memory.condvar.get_linked_value(&self_ref);
     condvar_ref.link_to_wait_call(&wait_transitions.0, &wait_transitions.1, net);
 

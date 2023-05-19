@@ -461,8 +461,9 @@ impl<'tcx> Translator<'tcx> {
     ) {
         let transitions = self.call_foreign_function(function_name, args, destination, places);
 
-        let dropped_place = extract_nth_argument_as_place(args, 0)
-            .expect("BUG: `std::mem::drop` should receive the value to be dropped as a place");
+        let dropped_place = extract_nth_argument_as_place(args, 0).unwrap_or_else(|| {
+            panic!("BUG: `{function_name}` should receive the value to be dropped as a place")
+        });
 
         let function = self.call_stack.peek_mut();
         let memory = &mut function.memory;
@@ -502,8 +503,9 @@ impl<'tcx> Translator<'tcx> {
             cleanup_transition, ..
         } = transitions
         {
-            let unwrapped_place = extract_nth_argument_as_place(args, 0)
-            .expect("BUG: `std::result::Result::<T, E>::unwrap` should receive the value to be unwrapped as a place");
+            let unwrapped_place = extract_nth_argument_as_place(args, 0).unwrap_or_else(|| {
+                panic!("BUG: `{function_name}` should receive the value to be unwrapped as a place")
+            });
             let function = self.call_stack.peek_mut();
             let memory = &mut function.memory;
             let net = &mut self.net;
@@ -534,9 +536,9 @@ impl<'tcx> Translator<'tcx> {
         };
         // Extract the definition ID of the thread function
         let current_function = self.call_stack.peek_mut();
-        let function_to_be_run = args
-            .get(0)
-            .expect("BUG: `std::thread::spawn` should receive the function to be run");
+        let function_to_be_run = args.get(0).unwrap_or_else(|| {
+            panic!("BUG: `{function_name}` should receive the function to be run")
+        });
         let thread_function_def_id = extract_def_id_of_called_function_from_operand(
             function_to_be_run,
             current_function.def_id,

@@ -101,8 +101,9 @@ pub fn call_lock<'tcx>(
     let lock_transition = transitions.get_transition();
 
     // Retrieve the mutex from the local variable passed to the function as an argument.
-    let self_ref = extract_nth_argument_as_place(args, 0)
-        .expect("BUG: `std::sync::Mutex::<T>::lock` should receive the self reference as a place");
+    let self_ref = extract_nth_argument_as_place(args, 0).unwrap_or_else(|| {
+        panic!("BUG: `{function_name}` should receive the self reference as a place")
+    });
     let mutex_ref = memory.mutex.get_linked_value(&self_ref);
     mutex_ref.add_lock_arc(lock_transition, net);
 
