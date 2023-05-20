@@ -92,25 +92,23 @@ impl Condvar {
 
     /// Links the Petri net model of the condition variable to the representation of
     /// a call to `std::sync::Condvar::wait`.
-    /// Connects the `wait_enabled` place to the `wait_start_transition` transition.
-    /// Connects the `wait_start_transition` transition to the `waiting` place.
-    /// Connects the `waiting_for_lock` place to the `wait_end_transition` transition.
+    /// Connects the `wait_enabled` place to the `wait_start` transition.
+    /// Connects the `wait_start` transition to the `waiting` place.
+    /// Connects the `waiting_for_lock` place to the `wait_end` transition.
     /// Unlocks the mutex when the waiting starts, lock it when the waiting ends.
     pub fn link_to_wait_call(
         &self,
-        wait_start_transition: &TransitionRef,
-        wait_end_transition: &TransitionRef,
+        wait_start: &TransitionRef,
+        wait_end: &TransitionRef,
         mutex_guard_ref: &MutexGuardRef,
         net: &mut PetriNet,
     ) {
-        add_arc_place_transition(net, &self.wait_enabled, wait_start_transition);
-        add_arc_transition_place(net, wait_start_transition, &self.waiting);
-        add_arc_place_transition(net, &self.waiting_for_lock, wait_end_transition);
+        add_arc_place_transition(net, &self.wait_enabled, wait_start);
+        add_arc_transition_place(net, wait_start, &self.waiting);
+        add_arc_place_transition(net, &self.waiting_for_lock, wait_end);
 
-        mutex_guard_ref
-            .mutex
-            .add_unlock_arc(wait_start_transition, net);
-        mutex_guard_ref.mutex.add_lock_arc(wait_end_transition, net);
+        mutex_guard_ref.mutex.add_unlock_arc(wait_start, net);
+        mutex_guard_ref.mutex.add_lock_arc(wait_end, net);
     }
 
     /// Links the Petri net model of the condition variable to the representation of
@@ -217,11 +215,11 @@ pub fn call_wait<'tcx>(
             end_place,
             ..
         } => {
-            let wait_start_transition = net.add_transition(&transition_labels.0);
-            add_arc_place_transition(net, &start_place, &wait_start_transition);
-            let wait_end_transition = net.add_transition(&transition_labels.1);
-            add_arc_transition_place(net, &wait_end_transition, &end_place);
-            (wait_start_transition, wait_end_transition)
+            let wait_start = net.add_transition(&transition_labels.0);
+            add_arc_place_transition(net, &start_place, &wait_start);
+            let wait_end = net.add_transition(&transition_labels.1);
+            add_arc_transition_place(net, &wait_end, &end_place);
+            (wait_start, wait_end)
         }
     };
     // Retrieve the mutex guard from the local variable passed to the function as an argument.
