@@ -28,7 +28,7 @@ use crate::data_structures::petri_net_interface::{
 use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef, TransitionRef};
 use crate::naming::function::foreign_call_transition_labels;
 use crate::naming::thread::{end_place_label, start_place_label};
-use crate::translator::function::{Places, Transitions};
+use crate::translator::function::Places;
 use crate::translator::mir_function::{Entries, Memory};
 use crate::translator::special_function::call_foreign_function;
 use crate::translator::sync::{CondvarRef, MutexGuardRef, MutexRef, ThreadRef};
@@ -165,11 +165,7 @@ pub fn call_join<'tcx>(
         &foreign_call_transition_labels(function_name, index),
         net,
     );
-    let transition = match transitions {
-        Transitions::Basic { transition } | Transitions::WithCleanup { transition, .. } => {
-            transition
-        }
-    };
+    let transition = transitions.default();
     // Retrieve the join handle from the local variable passed to the function as an argument.
     let self_ref = extract_nth_argument_as_place(args, 0).unwrap_or_else(|| {
         panic!("BUG: `{function_name}` should receive the self reference as a place")

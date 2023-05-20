@@ -96,7 +96,7 @@ pub fn call_lock<'tcx>(
         &foreign_call_transition_labels(function_name, index),
         net,
     );
-    let lock_transition = transitions.get_transition();
+    let lock_transition = transitions.get_default();
 
     // Retrieve the mutex from the local variable passed to the function as an argument.
     let self_ref = extract_nth_argument_as_place(args, 0).unwrap_or_else(|| {

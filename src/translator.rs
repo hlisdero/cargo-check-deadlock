@@ -469,17 +469,16 @@ impl<'tcx> Translator<'tcx> {
         let memory = &mut function.memory;
         let net = &mut self.net;
         match transitions {
-            Transitions::Basic { transition } => {
-                mutex::handle_mutex_guard_drop(dropped_place, &transition, net, memory);
+            Transitions::Basic { default } => {
+                mutex::handle_mutex_guard_drop(dropped_place, &default, net, memory);
             }
-            Transitions::WithCleanup {
-                transition,
-                cleanup_transition,
-            } => {
-                mutex::handle_mutex_guard_drop(dropped_place, &transition, net, memory);
-                mutex::handle_mutex_guard_drop(dropped_place, &cleanup_transition, net, memory);
+            Transitions::WithCleanup { default, cleanup } => {
+                mutex::handle_mutex_guard_drop(dropped_place, &default, net, memory);
+                mutex::handle_mutex_guard_drop(dropped_place, &cleanup, net, memory);
             }
         }
+    }
+
     }
 
     /// Call to `std::result::Result::<T, E>::unwrap`.
@@ -499,17 +498,14 @@ impl<'tcx> Translator<'tcx> {
     ) {
         let transitions = self.call_foreign_function(function_name, args, destination, places);
 
-        if let Transitions::WithCleanup {
-            cleanup_transition, ..
-        } = transitions
-        {
+        if let Transitions::WithCleanup { cleanup, .. } = transitions {
             let unwrapped_place = extract_nth_argument_as_place(args, 0).unwrap_or_else(|| {
                 panic!("BUG: `{function_name}` should receive the value to be unwrapped as a place")
             });
             let function = self.call_stack.peek_mut();
             let memory = &mut function.memory;
             let net = &mut self.net;
-            mutex::handle_mutex_guard_drop(unwrapped_place, &cleanup_transition, net, memory);
+            mutex::handle_mutex_guard_drop(unwrapped_place, &cleanup, net, memory);
         }
     }
 
@@ -529,11 +525,8 @@ impl<'tcx> Translator<'tcx> {
         places: Places,
     ) {
         let transitions = self.call_foreign_function(function_name, args, destination, places);
-        let transition = match transitions {
-            Transitions::Basic { transition } | Transitions::WithCleanup { transition, .. } => {
-                transition
-            }
-        };
+        let transition = transitions.default();
+
         // Extract the definition ID of the thread function
         let current_function = self.call_stack.peek_mut();
         let function_to_be_run = args.get(0).unwrap_or_else(|| {

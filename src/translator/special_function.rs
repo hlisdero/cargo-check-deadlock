@@ -61,22 +61,17 @@ pub fn call_foreign_function(
             start_place,
             end_place,
         } => {
-            let transition = connect_places(net, &start_place, &end_place, &transition_labels.0);
-            Transitions::Basic { transition }
+            let default = connect_places(net, &start_place, &end_place, &transition_labels.0);
+            Transitions::Basic { default }
         }
         Places::WithCleanup {
             start_place,
             end_place,
             cleanup_place,
         } => {
-            let transition = connect_places(net, &start_place, &end_place, &transition_labels.0);
-            let cleanup_transition =
-                connect_places(net, &start_place, &cleanup_place, &transition_labels.1);
-
-            Transitions::WithCleanup {
-                transition,
-                cleanup_transition,
-            }
+            let default = connect_places(net, &start_place, &end_place, &transition_labels.0);
+            let cleanup = connect_places(net, &start_place, &cleanup_place, &transition_labels.1);
+            Transitions::WithCleanup { default, cleanup }
         }
     }
 }

@@ -40,21 +40,28 @@ impl Places {
 /// An enum containing the Petri net transitions for a function call.
 pub enum Transitions {
     /// A basic function modelled with a single transition.
-    Basic { transition: TransitionRef },
+    Basic { default: TransitionRef },
     /// A function modelled by two transitions.
-    /// One for the case that the function executes sucessfully
+    /// One for the case that the function executes successfully
     /// and the other for the cleanup in case of errors.
     WithCleanup {
-        transition: TransitionRef,
-        cleanup_transition: TransitionRef,
+        default: TransitionRef,
+        cleanup: TransitionRef,
     },
 }
 
 impl Transitions {
-    /// Returns the default transition for the function call.
-    pub const fn get_transition(&self) -> &TransitionRef {
+    /// Returns the default transition for the function call as a reference
+    pub const fn get_default(&self) -> &TransitionRef {
         match self {
-            Self::Basic { transition } | Self::WithCleanup { transition, .. } => transition,
+            Self::Basic { default } | Self::WithCleanup { default, .. } => default,
+        }
+    }
+
+    /// Returns the default transition for the function call consuming the enum value.
+    pub fn default(self) -> TransitionRef {
+        match self {
+            Self::Basic { default } | Self::WithCleanup { default, .. } => default,
         }
     }
 }

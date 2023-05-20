@@ -175,7 +175,7 @@ pub fn call_notify_one<'tcx>(
         panic!("BUG: `{function_name}` should receive the self reference as a place")
     });
     let condvar_ref = memory.condvar.get_linked_value(&self_ref);
-    condvar_ref.link_to_notify_one_call(transitions.get_transition(), net);
+    condvar_ref.link_to_notify_one_call(transitions.get_default(), net);
 }
 
 /// Call to `std::sync::Condvar::wait`.
