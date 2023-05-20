@@ -135,13 +135,13 @@ impl Thread {
                 memory.mutex.link_place(place, mutex_ref);
             }
             for mutex_guard_ref in self.mutex_guards.drain(..) {
-                memory.mutex_guard.link_place(place, mutex_guard_ref)
+                memory.mutex_guard.link_place(place, mutex_guard_ref);
             }
             for thread_ref in self.join_handles.drain(..) {
-                memory.join_handle.link_place(place, thread_ref)
+                memory.join_handle.link_place(place, thread_ref);
             }
             for condvar_ref in self.condvars.drain(..) {
-                memory.condvar.link_place(place, condvar_ref)
+                memory.condvar.link_place(place, condvar_ref);
             }
         }
     }
