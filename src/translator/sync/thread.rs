@@ -32,7 +32,7 @@ use crate::translator::function::{Places, Transitions};
 use crate::translator::mir_function::{Entries, Memory};
 use crate::translator::special_function::call_foreign_function;
 use crate::translator::sync::{CondvarRef, MutexGuardRef, MutexRef, ThreadRef};
-use crate::utils::{check_substring_in_place_type, extract_nth_argument_as_place};
+use crate::utils::extract_nth_argument_as_place;
 
 #[derive(PartialEq, Eq)]
 pub struct Thread {
@@ -131,49 +131,17 @@ impl Thread {
                 // Not interested in locals other that `_1.X`
                 continue;
             }
-            if check_substring_in_place_type(
-                &place,
-                "std::sync::Mutex<",
-                self.thread_function_def_id,
-                tcx,
-            ) {
-                let mutex_ref = self.mutexes.pop().expect(
-                    "BUG: The thread function receives more mutexes than the ones detected",
-                );
+            for mutex_ref in self.mutexes.drain(..) {
                 memory.mutex.link_place(place, mutex_ref);
             }
-            if check_substring_in_place_type(
-                &place,
-                "std::sync::MutexGuard<",
-                self.thread_function_def_id,
-                tcx,
-            ) {
-                let mutex_guard_ref = self.mutex_guards.pop().expect(
-                    "BUG: The thread function receives more mutex guards than the ones detected",
-                );
-                memory.mutex_guard.link_place(place, mutex_guard_ref);
+            for mutex_guard_ref in self.mutex_guards.drain(..) {
+                memory.mutex_guard.link_place(place, mutex_guard_ref)
             }
-            if check_substring_in_place_type(
-                &place,
-                "std::thread::JoinHandle<",
-                self.thread_function_def_id,
-                tcx,
-            ) {
-                let thread_ref = self.join_handles.pop().expect(
-                    "BUG: The thread function receives more join handles than the ones detected",
-                );
-                memory.join_handle.link_place(place, thread_ref);
+            for thread_ref in self.join_handles.drain(..) {
+                memory.join_handle.link_place(place, thread_ref)
             }
-            if check_substring_in_place_type(
-                &place,
-                "std::sync::Condvar",
-                self.thread_function_def_id,
-                tcx,
-            ) {
-                let condvar_ref = self.condvars.pop().expect(
-                "BUG: The thread function receives more condition variables than the ones detected",
-            );
-                memory.condvar.link_place(place, condvar_ref);
+            for condvar_ref in self.condvars.drain(..) {
+                memory.condvar.link_place(place, condvar_ref)
             }
         }
     }
