@@ -10,35 +10,34 @@
 //! See the reference for more information:
 //! <https://doc.rust-lang.org/stable/reference/attributes/codegen.html>
 
+use super::sanitize;
+
 /// Labels of the four places that model every `Condvar`.
-/// `P1` -> `lost_signal_possible`.
-/// `P2` -> `signal_input`.
-/// `P3` -> `wait_input`.
-/// `P4` -> `signal_output`
 #[inline]
 pub fn place_labels(index: usize) -> (String, String, String, String) {
     (
-        format!("CONDVAR_{index}_P1"),
-        format!("CONDVAR_{index}_P2"),
-        format!("CONDVAR_{index}_P3"),
-        format!("CONDVAR_{index}_P4"),
+        format!("CONDVAR_{index}_WAIT_ENABLED"),
+        format!("CONDVAR_{index}_NOTIFY"),
+        format!("CONDVAR_{index}_WAITING"),
+        format!("CONDVAR_{index}_WAITING_FOR_LOCK"),
     )
 }
 
 /// Labels of the two transitions that model every `Condvar`.
-/// `T1` -> `lost_signal_transition`.
-/// `T2` -> `signal_transition`.
 #[inline]
 pub fn transition_labels(index: usize) -> (String, String) {
-    (format!("CONDVAR_{index}_T1"), format!("CONDVAR_{index}_T2"))
+    (
+        format!("CONDVAR_{index}_LOST_SIGNAL"),
+        format!("CONDVAR_{index}_NOTIFY_RECEIVED"),
+    )
 }
 
-/// Label of the transitions that represent a call to `std::sync::Condvar::wait`.
+/// Label of the transitions that represent a call to `std::sync::Condvar::wait` or `std::sync::Condvar::wait_while`.
 #[inline]
-pub fn wait_transition_labels(index: usize) -> (String, String, String) {
+pub fn wait_transition_labels(function_name: &str, index: usize) -> (String, String, String) {
     (
-        format!("std_sync_Condvar_wait_{index}_START"),
-        format!("std_sync_Condvar_wait_{index}_END"),
-        format!("std_sync_Condvar_wait_{index}_UNWIND"),
+        format!("{}_{index}_START", sanitize(function_name)),
+        format!("{}_{index}_END", sanitize(function_name)),
+        format!("{}_{index}_SKIP", sanitize(function_name)),
     )
 }

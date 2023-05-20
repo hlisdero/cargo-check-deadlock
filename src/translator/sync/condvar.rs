@@ -5,27 +5,27 @@
 //!
 //! ```dot
 //! digraph condvar {
-//!     lost_signal_possible [shape="circle" xlabel="lost_signal_possible" label="•"];
-//!     signal_input [shape="circle" xlabel="signal_input" label=""];
-//!     wait_input [shape="circle" xlabel="wait_input" label=""];
-//!     signal_output [shape="circle" xlabel="signal_output" label=""];
-//!     lost_signal_transition [shape="box" xlabel="" label="lost_signal_transition"];
-//!     signal_transition [shape="box" xlabel="" label="signal_transition"];
-//!     lost_signal_possible -> lost_signal_transition;
-//!     signal_input -> lost_signal_transition;
-//!     lost_signal_transition -> lost_signal_possible;
-//!     signal_input -> signal_transition;
-//!     wait_input -> signal_transition;
-//!     signal_transition -> signal_output;
-//!     signal_transition -> lost_signal_possible;
+//!     wait_enabled [shape="circle" xlabel="wait_enabled" label="•"];
+//!     notify [shape="circle" xlabel="notify" label=""];
+//!     waiting [shape="circle" xlabel="waiting" label=""];
+//!     waiting_for_lock [shape="circle" xlabel="waiting_for_lock" label=""];
+//!     lost_signal [shape="box" xlabel="" label="lost_signal"];
+//!     notify_received [shape="box" xlabel="" label="notify_received"];
+//!     wait_enabled -> lost_signal;
+//!     notify -> lost_signal;
+//!     lost_signal -> wait_enabled;
+//!     notify -> notify_received;
+//!     waiting -> notify_received;
+//!     notify_received -> waiting_for_lock;
+//!     notify_received -> wait_enabled;
 //! }
 //! ```
 //!
-//! `lost_signal_possible` and `lost_signal_transition` model the behavior of lost signals.
-//! There is a conflict between the two transitions. If `wait()` is called before `signal()`,
-//! the token in `signal_input` will be consumed by `lost_signal_transition`.
-//! But if `wait()` is called first, then the token from `lost_signal_possible` will be removed,
-//! preventing the `lost_signal_transition` from firing and ensuring that a token in `signal_output`
+//! `wait_enabled` and `lost_signal` model the behavior of lost signals.
+//! There is a conflict between the two transitions. If `wait()` is called before `notify()`,
+//! the token in `notify` will be consumed by `lost_signal`.
+//! But if `wait()` is called first, then the token from `wait_enabled` will be removed,
+//! preventing the `lost_signal` from firing and ensuring that a token in `waiting_for_lock`
 //! is set, which will allow the waiting thread to continue.
 //!
 //! This Petri net model is a slightly simplified version of the one presented in the paper
@@ -35,8 +35,10 @@
 use log::debug;
 use std::rc::Rc;
 
+use super::MutexGuardRef;
+
 use crate::data_structures::petri_net_interface::{
-    add_arc_place_transition, add_arc_transition_place, connect_places,
+    add_arc_place_transition, add_arc_transition_place,
 };
 use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef, TransitionRef};
 use crate::naming::condvar::{place_labels, transition_labels, wait_transition_labels};
@@ -48,10 +50,10 @@ use crate::utils::extract_nth_argument_as_place;
 
 #[derive(PartialEq, Eq)]
 pub struct Condvar {
-    lost_signal_possible: PlaceRef,
-    signal_input: PlaceRef,
-    wait_input: PlaceRef,
-    signal_output: PlaceRef,
+    wait_enabled: PlaceRef,
+    notify: PlaceRef,
+    waiting: PlaceRef,
+    waiting_for_lock: PlaceRef,
 }
 
 impl Condvar {
@@ -59,57 +61,63 @@ impl Condvar {
     /// Adds its Petri net model to the net (4 places and 2 transitions).
     pub fn new(index: usize, net: &mut PetriNet) -> Self {
         let (p1, p2, p3, p4) = place_labels(index);
-        let lost_signal_possible = net.add_place(&p1);
-        let signal_input = net.add_place(&p2);
-        let wait_input = net.add_place(&p3);
-        let signal_output = net.add_place(&p4);
+        let wait_enabled = net.add_place(&p1);
+        let notify = net.add_place(&p2);
+        let waiting = net.add_place(&p3);
+        let waiting_for_lock = net.add_place(&p4);
 
-        net.add_token(&lost_signal_possible, 1).expect(
-            "BUG: Adding initial token to `lost_signal_place` should not cause an overflow",
-        );
+        net.add_token(&wait_enabled, 1)
+            .expect("BUG: Adding initial token to `wait_enabled` should not cause an overflow");
 
         let (t1, t2) = transition_labels(index);
-        let lost_signal_transition = net.add_transition(&t1);
-        let signal_transition = net.add_transition(&t2);
+        let lost_signal = net.add_transition(&t1);
+        let notify_received = net.add_transition(&t2);
 
-        add_arc_place_transition(net, &lost_signal_possible, &lost_signal_transition);
-        add_arc_place_transition(net, &signal_input, &lost_signal_transition);
-        add_arc_place_transition(net, &wait_input, &signal_transition);
-        add_arc_place_transition(net, &signal_input, &signal_transition);
+        add_arc_place_transition(net, &wait_enabled, &lost_signal);
+        add_arc_place_transition(net, &notify, &lost_signal);
+        add_arc_place_transition(net, &waiting, &notify_received);
+        add_arc_place_transition(net, &notify, &notify_received);
 
-        add_arc_transition_place(net, &lost_signal_transition, &lost_signal_possible);
-        add_arc_transition_place(net, &signal_transition, &lost_signal_possible);
-        add_arc_transition_place(net, &signal_transition, &signal_output);
+        add_arc_transition_place(net, &lost_signal, &wait_enabled);
+        add_arc_transition_place(net, &notify_received, &wait_enabled);
+        add_arc_transition_place(net, &notify_received, &waiting_for_lock);
 
         Self {
-            lost_signal_possible,
-            signal_input,
-            wait_input,
-            signal_output,
+            wait_enabled,
+            notify,
+            waiting,
+            waiting_for_lock,
         }
     }
 
     /// Links the Petri net model of the condition variable to the representation of
     /// a call to `std::sync::Condvar::wait`.
-    /// Connects the `lost_signal_possible` place to the `wait_start_transition` transition.
-    /// Connects the `wait_start_transition` transition to the `wait_input` place.
-    /// Connects the `signal_output` place to the `wait_end_transition` transition.
+    /// Connects the `wait_enabled` place to the `wait_start_transition` transition.
+    /// Connects the `wait_start_transition` transition to the `waiting` place.
+    /// Connects the `waiting_for_lock` place to the `wait_end_transition` transition.
+    /// Unlocks the mutex when the waiting starts, lock it when the waiting ends.
     pub fn link_to_wait_call(
         &self,
         wait_start_transition: &TransitionRef,
         wait_end_transition: &TransitionRef,
+        mutex_guard_ref: &MutexGuardRef,
         net: &mut PetriNet,
     ) {
-        add_arc_place_transition(net, &self.lost_signal_possible, wait_start_transition);
-        add_arc_transition_place(net, wait_start_transition, &self.wait_input);
-        add_arc_place_transition(net, &self.signal_output, wait_end_transition);
+        add_arc_place_transition(net, &self.wait_enabled, wait_start_transition);
+        add_arc_transition_place(net, wait_start_transition, &self.waiting);
+        add_arc_place_transition(net, &self.waiting_for_lock, wait_end_transition);
+
+        mutex_guard_ref
+            .mutex
+            .add_unlock_arc(wait_start_transition, net);
+        mutex_guard_ref.mutex.add_lock_arc(wait_end_transition, net);
     }
 
     /// Links the Petri net model of the condition variable to the representation of
     /// a call to `std::sync::Condvar::notify_one`.
-    /// Connects the `signal_transition` transition to the `signal_input` place.
-    pub fn link_to_notify_one_call(&self, signal_transition: &TransitionRef, net: &mut PetriNet) {
-        add_arc_transition_place(net, signal_transition, &self.signal_input);
+    /// Connects the `notify_transition` transition to the `notify` place.
+    pub fn link_to_notify_one_call(&self, notify_transition: &TransitionRef, net: &mut PetriNet) {
+        add_arc_transition_place(net, notify_transition, &self.notify);
     }
 }
 
@@ -142,7 +150,7 @@ pub fn call_new<'tcx>(
 /// Non-recursive call for the translation process.
 ///
 /// - Retrieves the condvar linked to the first argument (the self reference).
-/// - Creates an arc from the transition of this function call to the `signal_input`
+/// - Creates an arc from the transition of this function call to the `notify`
 ///   in the Petri net model of the condvar.
 ///
 /// In some cases, the `std::sync::Condvar::notify_one` function contains a cleanup target.
@@ -176,6 +184,7 @@ pub fn call_notify_one<'tcx>(
 /// Non-recursive call for the translation process.
 ///
 /// - Retrieves the mutex guard linked to the second argument.
+/// - Retrieves the condvar linked to the first argument (the self reference).
 /// - Adds the arc for the unlocking of the mutex at the start of the `wait`.
 /// - Adds the arc for the locking of the mutex at the end of the `wait`.
 /// - Links the return place to the mutex guard.
@@ -195,72 +204,45 @@ pub fn call_wait<'tcx>(
     memory: &mut Memory<'tcx>,
 ) {
     let places = places.ignore_cleanup_place();
-    let transition_labels = wait_transition_labels(index);
+    let transition_labels = wait_transition_labels(function_name, index);
 
-    let wait_transitions = translate_call_wait(places, &transition_labels, net);
-
+    // Create the transitions for the call
+    let wait_transitions = match places {
+        Places::Basic {
+            start_place,
+            end_place,
+        }
+        | Places::WithCleanup {
+            start_place,
+            end_place,
+            ..
+        } => {
+            let wait_start_transition = net.add_transition(&transition_labels.0);
+            add_arc_place_transition(net, &start_place, &wait_start_transition);
+            let wait_end_transition = net.add_transition(&transition_labels.1);
+            add_arc_transition_place(net, &wait_end_transition, &end_place);
+            (wait_start_transition, wait_end_transition)
+        }
+    };
     // Retrieve the mutex guard from the local variable passed to the function as an argument.
     let mutex_guard = extract_nth_argument_as_place(args, 1).unwrap_or_else(|| {
         panic!("BUG: `{function_name}` should receive the first argument as a place")
     });
     let mutex_guard_ref = memory.mutex_guard.get_linked_value(&mutex_guard);
 
-    // Unlock the mutex when waiting, lock it when the waiting ends.
-    mutex_guard_ref
-        .mutex
-        .add_unlock_arc(&wait_transitions.0, net);
-    mutex_guard_ref.mutex.add_lock_arc(&wait_transitions.1, net);
-
     // Retrieve the condvar from the local variable passed to the function as an argument.
     let self_ref = extract_nth_argument_as_place(args, 0).unwrap_or_else(|| {
         panic!("BUG: `{function_name}` should receive the self reference as a place")
     });
     let condvar_ref = memory.condvar.get_linked_value(&self_ref);
-    condvar_ref.link_to_wait_call(&wait_transitions.0, &wait_transitions.1, net);
+    condvar_ref.link_to_wait_call(
+        &wait_transitions.0,
+        &wait_transitions.1,
+        mutex_guard_ref,
+        net,
+    );
 
     // The return value contains the mutex guard passed to the function. Link the local variable to it.
     let cloned_ref = Rc::clone(mutex_guard_ref);
     memory.mutex_guard.link_place(destination, cloned_ref);
-}
-
-/// Translates a call to `std::sync::Condvar::wait` using
-/// a representation specific to this function:
-/// - Start place connected to a new "wait start" transition.
-/// - End place connected to a new "wait end" transition.
-///
-/// Returns the pair of transitions that represent the function call.
-pub fn translate_call_wait(
-    places: Places,
-    transition_labels: &(String, String, String),
-    net: &mut PetriNet,
-) -> (TransitionRef, TransitionRef) {
-    match places {
-        Places::Basic {
-            start_place,
-            end_place,
-        } => {
-            let wait_start_transition = net.add_transition(&transition_labels.0);
-            add_arc_place_transition(net, &start_place, &wait_start_transition);
-
-            let wait_end_transition = net.add_transition(&transition_labels.1);
-            add_arc_transition_place(net, &wait_end_transition, &end_place);
-
-            (wait_start_transition, wait_end_transition)
-        }
-        Places::WithCleanup {
-            start_place,
-            end_place,
-            cleanup_place,
-        } => {
-            let wait_start_transition = net.add_transition(&transition_labels.0);
-            add_arc_place_transition(net, &start_place, &wait_start_transition);
-
-            let wait_end_transition = net.add_transition(&transition_labels.1);
-            add_arc_transition_place(net, &wait_end_transition, &end_place);
-
-            connect_places(net, &start_place, &cleanup_place, &transition_labels.2);
-
-            (wait_start_transition, wait_end_transition)
-        }
-    }
 }
