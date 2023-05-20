@@ -6,9 +6,7 @@
 //! If the place has a token, the mutex is unlocked.
 //! If the place does not have a token, the mutex is locked.
 //!
-//! A mutex guard contains a reference to the corresponding mutex
-//! and a flag to keep track of when the value of the variable
-//! inside the mutex has been set.
+//! A mutex guard simply contains a reference to the corresponding mutex.
 
 use log::debug;
 use std::rc::Rc;
@@ -28,7 +26,7 @@ use crate::utils::extract_nth_argument_as_place;
 
 #[derive(PartialEq, Eq)]
 pub struct Mutex {
-    place_ref: PlaceRef,
+    mutex: PlaceRef,
 }
 
 impl Mutex {
@@ -36,24 +34,24 @@ impl Mutex {
     /// Adds a place to the Petri Net.
     pub fn new(index: usize, net: &mut PetriNet) -> Self {
         let label = place_label(index);
-        let place_ref = net.add_place(&label);
-        net.add_token(&place_ref, 1)
+        let mutex = net.add_place(&label);
+        net.add_token(&mutex, 1)
             .expect("BUG: Adding initial token to mutex place should not cause an overflow");
-        Self { place_ref }
+        Self { mutex }
     }
 
     /// Adds a lock arc for this mutex.
     /// Connects the mutex's place to the transition, then the transition will only
     /// fire if the mutex is unlocked.
     pub fn add_lock_arc(&self, lock_transition: &TransitionRef, net: &mut PetriNet) {
-        add_arc_place_transition(net, &self.place_ref, lock_transition);
+        add_arc_place_transition(net, &self.mutex, lock_transition);
     }
 
     /// Adds an unlock arc for this mutex.
     /// Connects the transition to the mutex's place, then the transition will
     /// replenish the token in the mutex when it fires.
     pub fn add_unlock_arc(&self, unlock_transition: &TransitionRef, net: &mut PetriNet) {
-        add_arc_transition_place(net, unlock_transition, &self.place_ref);
+        add_arc_transition_place(net, unlock_transition, &self.mutex);
     }
 }
 
