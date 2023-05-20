@@ -26,3 +26,12 @@ mod wait {
         "./examples/results/condvar/wait/"
     );
 }
+
+mod wait_while {
+    use super::utils;
+
+    utils::generate_tests_for_example_program!(
+        "./examples/programs/condvar/wait_while.rs",
+        "./examples/results/condvar/wait_while/"
+    );
+}
