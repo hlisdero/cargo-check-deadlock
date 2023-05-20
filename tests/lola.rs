@@ -54,12 +54,12 @@ mod self_notify_lost_signal {
     );
 }
 
-// mod two_threads_sharing_condvar {
+// mod wait {
 //     use super::utils;
 //
 //     utils::generate_lola_tests_for_example_program!(
-//         "./examples/programs/condvar/two_threads_sharing_condvar.rs",
-//         "./examples/results/condvar/two_threads_sharing_condvar/",
+//         "./examples/programs/condvar/wait.rs",
+//         "./examples/results/condvar/wait/",
 //         false
 //     );
 // }

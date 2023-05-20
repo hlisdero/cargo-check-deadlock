@@ -186,6 +186,7 @@ pub fn call_notify_one<'tcx>(
 /// was never present in the program, leading to a false model.
 /// In conclusion: Ignore the cleanup place, do not model it. Assume `wait` never unwinds.
 pub fn call_wait<'tcx>(
+    function_name: &str,
     index: usize,
     args: &[rustc_middle::mir::Operand<'tcx>],
     destination: rustc_middle::mir::Place<'tcx>,
@@ -193,7 +194,6 @@ pub fn call_wait<'tcx>(
     net: &mut PetriNet,
     memory: &mut Memory<'tcx>,
 ) {
-    let function_name = "std::sync::Condvar::wait";
     let places = places.ignore_cleanup_place();
     let transition_labels = wait_transition_labels(index);
 

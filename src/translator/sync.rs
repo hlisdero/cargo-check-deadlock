@@ -33,6 +33,7 @@ pub fn is_supported_function(function_name: &str) -> bool {
         "std::sync::Condvar::new"
             | "std::sync::Condvar::notify_one"
             | "std::sync::Condvar::wait"
+            | "std::sync::Condvar::wait_while"
             | "std::sync::Mutex::<T>::lock"
             | "std::sync::Mutex::<T>::new"
             | "std::thread::spawn"
@@ -57,8 +58,8 @@ pub fn call_function<'tcx>(
         "std::sync::Condvar::notify_one" => {
             condvar::call_notify_one(function_name, index, args, places, net, memory);
         }
-        "std::sync::Condvar::wait" => {
-            condvar::call_wait(index, args, destination, places, net, memory);
+        "std::sync::Condvar::wait" | "std::sync::Condvar::wait_while" => {
+            condvar::call_wait(function_name, index, args, destination, places, net, memory);
         }
         "std::sync::Mutex::<T>::lock" => {
             mutex::call_lock(function_name, index, args, destination, places, net, memory);
