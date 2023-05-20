@@ -628,19 +628,9 @@
           <text>std_ops_DerefMut_deref_mut_0_CALL</text>
         </name>
       </transition>
-      <transition id="std_ops_DerefMut_deref_mut_0_CALL_UNWIND">
-        <name>
-          <text>std_ops_DerefMut_deref_mut_0_CALL_UNWIND</text>
-        </name>
-      </transition>
       <transition id="std_ops_DerefMut_deref_mut_1_CALL">
         <name>
           <text>std_ops_DerefMut_deref_mut_1_CALL</text>
-        </name>
-      </transition>
-      <transition id="std_ops_DerefMut_deref_mut_1_CALL_UNWIND">
-        <name>
-          <text>std_ops_DerefMut_deref_mut_1_CALL_UNWIND</text>
         </name>
       </transition>
       <transition id="std_ops_Deref_deref_0_CALL">
@@ -658,11 +648,6 @@
           <text>std_ops_Deref_deref_1_CALL</text>
         </name>
       </transition>
-      <transition id="std_ops_Deref_deref_1_CALL_UNWIND">
-        <name>
-          <text>std_ops_Deref_deref_1_CALL_UNWIND</text>
-        </name>
-      </transition>
       <transition id="std_ops_Deref_deref_2_CALL">
         <name>
           <text>std_ops_Deref_deref_2_CALL</text>
@@ -678,11 +663,6 @@
           <text>std_ops_Deref_deref_3_CALL</text>
         </name>
       </transition>
-      <transition id="std_ops_Deref_deref_3_CALL_UNWIND">
-        <name>
-          <text>std_ops_Deref_deref_3_CALL_UNWIND</text>
-        </name>
-      </transition>
       <transition id="std_ops_Deref_deref_4_CALL">
         <name>
           <text>std_ops_Deref_deref_4_CALL</text>
@@ -696,11 +676,6 @@
       <transition id="std_ops_Deref_deref_5_CALL">
         <name>
           <text>std_ops_Deref_deref_5_CALL</text>
-        </name>
-      </transition>
-      <transition id="std_ops_Deref_deref_5_CALL_UNWIND">
-        <name>
-          <text>std_ops_Deref_deref_5_CALL_UNWIND</text>
         </name>
       </transition>
       <transition id="std_result_Result_unwrap_0_CALL">
@@ -933,14 +908,6 @@
       <arc source="main_BB13" target="std_ops_Deref_deref_1_CALL" id="(main_BB13, std_ops_Deref_deref_1_CALL)">
         <name>
           <text>(main_BB13, std_ops_Deref_deref_1_CALL)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BB13" target="std_ops_Deref_deref_1_CALL_UNWIND" id="(main_BB13, std_ops_Deref_deref_1_CALL_UNWIND)">
-        <name>
-          <text>(main_BB13, std_ops_Deref_deref_1_CALL_UNWIND)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -1362,14 +1329,6 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main__closure_0__BB4" target="std_ops_Deref_deref_3_CALL_UNWIND" id="(main__closure_0__BB4, std_ops_Deref_deref_3_CALL_UNWIND)">
-        <name>
-          <text>(main__closure_0__BB4, std_ops_Deref_deref_3_CALL_UNWIND)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
       <arc source="main__closure_0__BB5" target="main__closure_0__SWITCH_INT_6" id="(main__closure_0__BB5, main__closure_0__SWITCH_INT_6)">
         <name>
           <text>(main__closure_0__BB5, main__closure_0__SWITCH_INT_6)</text>
@@ -1405,14 +1364,6 @@
       <arc source="main__closure_0__BB7" target="std_ops_DerefMut_deref_mut_0_CALL" id="(main__closure_0__BB7, std_ops_DerefMut_deref_mut_0_CALL)">
         <name>
           <text>(main__closure_0__BB7, std_ops_DerefMut_deref_mut_0_CALL)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main__closure_0__BB7" target="std_ops_DerefMut_deref_mut_0_CALL_UNWIND" id="(main__closure_0__BB7, std_ops_DerefMut_deref_mut_0_CALL_UNWIND)">
-        <name>
-          <text>(main__closure_0__BB7, std_ops_DerefMut_deref_mut_0_CALL_UNWIND)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -1538,14 +1489,6 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main__closure_1__BB4" target="std_ops_Deref_deref_5_CALL_UNWIND" id="(main__closure_1__BB4, std_ops_Deref_deref_5_CALL_UNWIND)">
-        <name>
-          <text>(main__closure_1__BB4, std_ops_Deref_deref_5_CALL_UNWIND)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
       <arc source="main__closure_1__BB5" target="main__closure_1__SWITCH_INT_6" id="(main__closure_1__BB5, main__closure_1__SWITCH_INT_6)">
         <name>
           <text>(main__closure_1__BB5, main__closure_1__SWITCH_INT_6)</text>
@@ -1581,14 +1524,6 @@
       <arc source="main__closure_1__BB7" target="std_ops_DerefMut_deref_mut_1_CALL" id="(main__closure_1__BB7, std_ops_DerefMut_deref_mut_1_CALL)">
         <name>
           <text>(main__closure_1__BB7, std_ops_DerefMut_deref_mut_1_CALL)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main__closure_1__BB7" target="std_ops_DerefMut_deref_mut_1_CALL_UNWIND" id="(main__closure_1__BB7, std_ops_DerefMut_deref_mut_1_CALL_UNWIND)">
-        <name>
-          <text>(main__closure_1__BB7, std_ops_DerefMut_deref_mut_1_CALL_UNWIND)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -2194,25 +2129,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_ops_DerefMut_deref_mut_0_CALL_UNWIND" target="main__closure_0__BB12" id="(std_ops_DerefMut_deref_mut_0_CALL_UNWIND, main__closure_0__BB12)">
-        <name>
-          <text>(std_ops_DerefMut_deref_mut_0_CALL_UNWIND, main__closure_0__BB12)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
       <arc source="std_ops_DerefMut_deref_mut_1_CALL" target="main__closure_1__BB8" id="(std_ops_DerefMut_deref_mut_1_CALL, main__closure_1__BB8)">
         <name>
           <text>(std_ops_DerefMut_deref_mut_1_CALL, main__closure_1__BB8)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="std_ops_DerefMut_deref_mut_1_CALL_UNWIND" target="main__closure_1__BB12" id="(std_ops_DerefMut_deref_mut_1_CALL_UNWIND, main__closure_1__BB12)">
-        <name>
-          <text>(std_ops_DerefMut_deref_mut_1_CALL_UNWIND, main__closure_1__BB12)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -2242,14 +2161,6 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_ops_Deref_deref_1_CALL_UNWIND" target="main_BB20" id="(std_ops_Deref_deref_1_CALL_UNWIND, main_BB20)">
-        <name>
-          <text>(std_ops_Deref_deref_1_CALL_UNWIND, main_BB20)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
       <arc source="std_ops_Deref_deref_2_CALL" target="main__closure_0__BB2" id="(std_ops_Deref_deref_2_CALL, main__closure_0__BB2)">
         <name>
           <text>(std_ops_Deref_deref_2_CALL, main__closure_0__BB2)</text>
@@ -2274,14 +2185,6 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_ops_Deref_deref_3_CALL_UNWIND" target="main__closure_0__BB12" id="(std_ops_Deref_deref_3_CALL_UNWIND, main__closure_0__BB12)">
-        <name>
-          <text>(std_ops_Deref_deref_3_CALL_UNWIND, main__closure_0__BB12)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
       <arc source="std_ops_Deref_deref_4_CALL" target="main__closure_1__BB2" id="(std_ops_Deref_deref_4_CALL, main__closure_1__BB2)">
         <name>
           <text>(std_ops_Deref_deref_4_CALL, main__closure_1__BB2)</text>
@@ -2301,14 +2204,6 @@
       <arc source="std_ops_Deref_deref_5_CALL" target="main__closure_1__BB5" id="(std_ops_Deref_deref_5_CALL, main__closure_1__BB5)">
         <name>
           <text>(std_ops_Deref_deref_5_CALL, main__closure_1__BB5)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="std_ops_Deref_deref_5_CALL_UNWIND" target="main__closure_1__BB12" id="(std_ops_Deref_deref_5_CALL_UNWIND, main__closure_1__BB12)">
-        <name>
-          <text>(std_ops_Deref_deref_5_CALL_UNWIND, main__closure_1__BB12)</text>
         </name>
         <inscription>
           <text>1</text>

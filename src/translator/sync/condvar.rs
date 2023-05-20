@@ -38,7 +38,7 @@ use std::rc::Rc;
 use super::MutexGuardRef;
 
 use crate::data_structures::petri_net_interface::{
-    add_arc_place_transition, add_arc_transition_place,
+    add_arc_place_transition, add_arc_transition_place, connect_places,
 };
 use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef, TransitionRef};
 use crate::naming::condvar::{place_labels, transition_labels, wait_transition_labels};
@@ -50,7 +50,7 @@ use crate::utils::extract_nth_argument_as_place;
 
 #[derive(PartialEq, Eq)]
 pub struct Condvar {
-    wait_enabled: PlaceRef,
+    pub wait_enabled: PlaceRef,
     notify: PlaceRef,
     waiting: PlaceRef,
     waiting_for_lock: PlaceRef,
@@ -205,23 +205,12 @@ pub fn call_wait<'tcx>(
     let transition_labels = wait_transition_labels(function_name, index);
 
     // Create the transitions for the call
-    let wait_transitions = match places {
-        Places::Basic {
-            start_place,
-            end_place,
-        }
-        | Places::WithCleanup {
-            start_place,
-            end_place,
-            ..
-        } => {
-            let wait_start = net.add_transition(&transition_labels.0);
-            add_arc_place_transition(net, &start_place, &wait_start);
-            let wait_end = net.add_transition(&transition_labels.1);
-            add_arc_transition_place(net, &wait_end, &end_place);
-            (wait_start, wait_end)
-        }
-    };
+    let (start_place, end_place) = places.get_start_end_place();
+    let wait_start = net.add_transition(&transition_labels.0);
+    add_arc_place_transition(net, &start_place, &wait_start);
+    let wait_end = net.add_transition(&transition_labels.1);
+    add_arc_transition_place(net, &wait_end, &end_place);
+
     // Retrieve the mutex guard from the local variable passed to the function as an argument.
     let mutex_guard = extract_nth_argument_as_place(args, 1).unwrap_or_else(|| {
         panic!("BUG: `{function_name}` should receive the first argument as a place")
@@ -233,12 +222,20 @@ pub fn call_wait<'tcx>(
         panic!("BUG: `{function_name}` should receive the self reference as a place")
     });
     let condvar_ref = memory.condvar.get_linked_value(&self_ref);
-    condvar_ref.link_to_wait_call(
-        &wait_transitions.0,
-        &wait_transitions.1,
-        mutex_guard_ref,
-        net,
-    );
+    // Connect the transitions to the condition variable
+    condvar_ref.link_to_wait_call(&wait_start, &wait_end, mutex_guard_ref, net);
+
+    // Disable the condition variable by connecting it to every transition that set the value of the mutex.
+    let condition =
+        mutex_guard_ref
+            .mutex
+            .connect_set_condition(index, &condvar_ref.wait_enabled, net);
+    if let Some(condition) = condition {
+        // Create the skip transition that short circuits the whole condvar logic
+        let wait_skip = connect_places(net, &start_place, &end_place, &transition_labels.2);
+        // Only allow to skip the wait if the condition is set
+        add_arc_place_transition(net, &condition, &wait_skip);
+    }
 
     // The return value contains the mutex guard passed to the function. Link the local variable to it.
     let cloned_ref = Rc::clone(mutex_guard_ref);

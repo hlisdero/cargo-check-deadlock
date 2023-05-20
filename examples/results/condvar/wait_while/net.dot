@@ -54,7 +54,6 @@ digraph petrinet {
     std_clone_Clone_clone_0_CALL [shape="box" xlabel="" label="std_clone_Clone_clone_0_CALL"];
     std_clone_Clone_clone_0_CALL_UNWIND [shape="box" xlabel="" label="std_clone_Clone_clone_0_CALL_UNWIND"];
     std_ops_DerefMut_deref_mut_0_CALL [shape="box" xlabel="" label="std_ops_DerefMut_deref_mut_0_CALL"];
-    std_ops_DerefMut_deref_mut_0_CALL_UNWIND [shape="box" xlabel="" label="std_ops_DerefMut_deref_mut_0_CALL_UNWIND"];
     std_ops_Deref_deref_0_CALL [shape="box" xlabel="" label="std_ops_Deref_deref_0_CALL"];
     std_ops_Deref_deref_0_CALL_UNWIND [shape="box" xlabel="" label="std_ops_Deref_deref_0_CALL_UNWIND"];
     std_ops_Deref_deref_1_CALL [shape="box" xlabel="" label="std_ops_Deref_deref_1_CALL"];
@@ -114,7 +113,6 @@ digraph petrinet {
     main__closure_0__BB2 -> std_result_Result_unwrap_2_CALL;
     main__closure_0__BB2 -> std_result_Result_unwrap_2_CALL_UNWIND;
     main__closure_0__BB3 -> std_ops_DerefMut_deref_mut_0_CALL;
-    main__closure_0__BB3 -> std_ops_DerefMut_deref_mut_0_CALL_UNWIND;
     main__closure_0__BB4 -> std_sync_Condvar_notify_one_0_CALL;
     main__closure_0__BB5 -> main__closure_0__DROP_5;
     main__closure_0__BB5 -> main__closure_0__DROP_UNWIND_5;
@@ -148,7 +146,6 @@ digraph petrinet {
     std_clone_Clone_clone_0_CALL -> main_BB4;
     std_clone_Clone_clone_0_CALL_UNWIND -> main_BB14;
     std_ops_DerefMut_deref_mut_0_CALL -> main__closure_0__BB4;
-    std_ops_DerefMut_deref_mut_0_CALL_UNWIND -> main__closure_0__BB8;
     std_ops_Deref_deref_0_CALL -> main_BB7;
     std_ops_Deref_deref_0_CALL_UNWIND -> main_BB14;
     std_ops_Deref_deref_1_CALL -> main__closure_0__BB1;

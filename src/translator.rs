@@ -330,6 +330,10 @@ impl<'tcx> Translator<'tcx> {
             self.call_mem_drop(function_name, args, destination, places);
             return;
         }
+        if self.is_deref_of_mutex_guard(function_name, args) {
+            self.call_deref_lock_guard(function_name, args, destination, places);
+            return;
+        }
         if function_name == "std::result::Result::<T, E>::unwrap" {
             self.call_result_unwrap(function_name, args, destination, places);
             return;
@@ -358,6 +362,26 @@ impl<'tcx> Translator<'tcx> {
         }
         // Default case: A function with MIR representation
         self.call_mir_function(function_def_id, function_name, places);
+    }
+
+    /// Checks if the function call is `std::ops::Deref::deref` or `std::ops::DerefMut::deref_mut`
+    /// and the first argument (the self reference) is a mutex guard.
+    fn is_deref_of_mutex_guard(
+        &self,
+        function_name: &str,
+        args: &[rustc_middle::mir::Operand<'tcx>],
+    ) -> bool {
+        if function_name == "std::ops::Deref::deref"
+            || function_name == "std::ops::DerefMut::deref_mut"
+        {
+            let self_ref = extract_nth_argument_as_place(args, 0).unwrap_or_else(|| {
+                panic!("BUG: `{function_name}` should receive a reference as a place")
+            });
+            let function = self.call_stack.peek();
+            function.memory.mutex_guard.is_linked(&self_ref)
+        } else {
+            false
+        }
     }
 
     /// Call to a MIR function. It is the default for user-defined functions in the code.
@@ -479,6 +503,37 @@ impl<'tcx> Translator<'tcx> {
         }
     }
 
+    /// Call to `std::ops::Deref::deref` or `std::ops::DerefMut::deref_mut`.
+    /// Non-recursive call for the translation process.
+    ///
+    /// If a mutex guard is dereferenced mutably, add the transition to set the mutex condition later.
+    ///
+    /// In some cases, the `std::ops::Deref::deref` or `std::ops::DerefMut::deref_mut` functions contain a cleanup target.
+    /// This target is not called in practice but creates trouble for lost signal detection.
+    /// The reason is that any call may fail, which is equivalent to saying that the dereference operation
+    /// was never present in the program, leading to a false lost signal.
+    /// In conclusion: Ignore the cleanup place, do not model it.
+    /// Assume `deref` and `deref_mut` never unwind when dereferencing a.mutex guard OR a variable containing one.
+    fn call_deref_lock_guard(
+        &mut self,
+        function_name: &str,
+        args: &[rustc_middle::mir::Operand<'tcx>],
+        destination: rustc_middle::mir::Place<'tcx>,
+        places: Places,
+    ) {
+        let places = places.ignore_cleanup_place();
+        let transitions = self.call_foreign_function(function_name, args, destination, places);
+        let transition = transitions.default();
+
+        if function_name == "std::ops::DerefMut::deref_mut" {
+            let reference = extract_nth_argument_as_place(args, 0).unwrap_or_else(|| {
+                panic!("BUG: `{function_name}` should receive a reference as a place")
+            });
+            let function = self.call_stack.peek_mut();
+            let mutex_guard_ref = function.memory.mutex_guard.get_linked_value(&reference);
+            mutex_guard_ref.mutex.add_deref_mut_transition(transition);
+            info!("Encountered a mutable dereference of a mutex guard");
+        }
     }
 
     /// Call to `std::result::Result::<T, E>::unwrap`.

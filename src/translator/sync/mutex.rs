@@ -1,7 +1,11 @@
 //! Representation of a mutex and a mutex guard in the Petri net.
 //!
 //! The mutex stores one reference to the place in the Petri net
-//! that models the state of the mutex.
+//! that models the state of the mutex. It also stores a vector
+//! of transitions where the value of the mutex was set.
+//! This enables modelling the condition in a while loop for a condition variable.
+//! Every value assigned after dereferencing a mutex guard associated to the mutex
+//! will be treated as if setting a boolean flag for a condition variable.
 //!
 //! If the place has a token, the mutex is unlocked.
 //! If the place does not have a token, the mutex is locked.
@@ -9,6 +13,7 @@
 //! A mutex guard simply contains a reference to the corresponding mutex.
 
 use log::debug;
+use std::cell::RefCell;
 use std::rc::Rc;
 
 use super::MutexRef;
@@ -18,7 +23,7 @@ use crate::data_structures::petri_net_interface::{
 };
 use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef, TransitionRef};
 use crate::naming::function::foreign_call_transition_labels;
-use crate::naming::mutex::place_label;
+use crate::naming::mutex::{condition_label, place_label};
 use crate::translator::function::Places;
 use crate::translator::mir_function::Memory;
 use crate::translator::special_function::call_foreign_function;
@@ -27,6 +32,7 @@ use crate::utils::extract_nth_argument_as_place;
 #[derive(PartialEq, Eq)]
 pub struct Mutex {
     mutex: PlaceRef,
+    deref_mut: RefCell<Vec<TransitionRef>>,
 }
 
 impl Mutex {
@@ -37,7 +43,11 @@ impl Mutex {
         let mutex = net.add_place(&label);
         net.add_token(&mutex, 1)
             .expect("BUG: Adding initial token to mutex place should not cause an overflow");
-        Self { mutex }
+
+        Self {
+            mutex,
+            deref_mut: RefCell::new(Vec::new()),
+        }
     }
 
     /// Adds a lock arc for this mutex.
@@ -52,6 +62,38 @@ impl Mutex {
     /// replenish the token in the mutex when it fires.
     pub fn add_unlock_arc(&self, unlock_transition: &TransitionRef, net: &mut PetriNet) {
         add_arc_transition_place(net, unlock_transition, &self.mutex);
+    }
+
+    /// Adds a transition of a call to `std::ops::DerefMut::deref_mut`.
+    /// This transition has set a value for a mutex and must be used to disable the condition variable later.
+    pub fn add_deref_mut_transition(&self, transition: TransitionRef) {
+        self.deref_mut.borrow_mut().push(transition);
+    }
+
+    /// Creates a new place that models the value of the condition used for a condition variable.
+    /// Connects the given place through each transition that was added to the mutex to this new condition place.
+    /// This represents setting a value for the condition at every function call saved before.
+    /// Returns the place for the mutex condition.
+    pub fn connect_set_condition(
+        &self,
+        index: usize,
+        place_ref: &PlaceRef,
+        net: &mut PetriNet,
+    ) -> Option<PlaceRef> {
+        if self.deref_mut.borrow().is_empty() {
+            debug!("NO TRANSITIONS TO SET THE CONDITION");
+            return None; // The mutex value was never set in the code
+        }
+        let condition = net.add_place(&condition_label(index));
+        for transition_ref in self.deref_mut.borrow().iter() {
+            debug!(
+                "SET CONDITION WITH TRANSITION {}",
+                transition_ref.to_string()
+            );
+            add_arc_place_transition(net, place_ref, transition_ref);
+            add_arc_transition_place(net, transition_ref, &condition);
+        }
+        Some(condition)
     }
 }
 

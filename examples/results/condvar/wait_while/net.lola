@@ -180,11 +180,6 @@ TRANSITION std_ops_DerefMut_deref_mut_0_CALL
     main__closure_0__BB3 : 1;
   PRODUCE
     main__closure_0__BB4 : 1;
-TRANSITION std_ops_DerefMut_deref_mut_0_CALL_UNWIND
-  CONSUME
-    main__closure_0__BB3 : 1;
-  PRODUCE
-    main__closure_0__BB8 : 1;
 TRANSITION std_ops_Deref_deref_0_CALL
   CONSUME
     main_BB6 : 1;

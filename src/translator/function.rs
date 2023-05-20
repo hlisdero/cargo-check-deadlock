@@ -22,6 +22,7 @@ pub enum Places {
 }
 
 impl Places {
+    // Convert the enum to its most basic form `Basic`.
     pub fn ignore_cleanup_place(self) -> Self {
         match self {
             Self::Basic { .. } => self,
@@ -33,6 +34,21 @@ impl Places {
                 start_place,
                 end_place,
             },
+        }
+    }
+
+    // Returns the start and the end place as a tuple, consuming the enum.
+    pub fn get_start_end_place(self) -> (PlaceRef, PlaceRef) {
+        match self {
+            Self::Basic {
+                start_place,
+                end_place,
+            }
+            | Self::WithCleanup {
+                start_place,
+                end_place,
+                ..
+            } => (start_place, end_place),
         }
     }
 }
