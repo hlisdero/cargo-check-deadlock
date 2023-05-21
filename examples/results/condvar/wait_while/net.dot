@@ -36,8 +36,8 @@ digraph petrinet {
     main__closure_0__BB9 [shape="circle" xlabel="main__closure_0__BB9" label=""];
     CONDVAR_0_LOST_SIGNAL [shape="box" xlabel="" label="CONDVAR_0_LOST_SIGNAL"];
     CONDVAR_0_NOTIFY_RECEIVED [shape="box" xlabel="" label="CONDVAR_0_NOTIFY_RECEIVED"];
+    CONDVAR_0_WAIT_SKIP [shape="box" xlabel="" label="CONDVAR_0_WAIT_SKIP"];
     CONDVAR_0_WAIT_START [shape="box" xlabel="" label="CONDVAR_0_WAIT_START"];
-    CONDVAR__0_WAIT_SKIP [shape="box" xlabel="" label="CONDVAR__0_WAIT_SKIP"];
     main_DROP_11 [shape="box" xlabel="" label="main_DROP_11"];
     main_DROP_12 [shape="box" xlabel="" label="main_DROP_12"];
     main_DROP_14 [shape="box" xlabel="" label="main_DROP_14"];
@@ -78,7 +78,7 @@ digraph petrinet {
     MUTEX_0 -> std_sync_Mutex_T_lock_1_CALL;
     MUTEX_0_CONDITION_NOT_SET -> CONDVAR_0_WAIT_START;
     MUTEX_0_CONDITION_NOT_SET -> std_ops_DerefMut_deref_mut_0_CALL;
-    MUTEX_0_CONDITION_SET -> CONDVAR__0_WAIT_SKIP;
+    MUTEX_0_CONDITION_SET -> CONDVAR_0_WAIT_SKIP;
     PROGRAM_START -> std_sync_Mutex_T_new_0_CALL;
     THREAD_0_START -> std_ops_Deref_deref_1_CALL;
     main_BB1 -> std_sync_Condvar_new_0_CALL;
@@ -99,8 +99,8 @@ digraph petrinet {
     main_BB6 -> std_ops_Deref_deref_0_CALL;
     main_BB7 -> std_sync_Mutex_T_lock_0_CALL;
     main_BB8 -> std_result_Result_unwrap_0_CALL;
+    main_BB9 -> CONDVAR_0_WAIT_SKIP;
     main_BB9 -> CONDVAR_0_WAIT_START;
-    main_BB9 -> CONDVAR__0_WAIT_SKIP;
     main__closure_0__BB1 -> std_sync_Mutex_T_lock_1_CALL;
     main__closure_0__BB10 -> main__closure_0__UNWIND_10;
     main__closure_0__BB2 -> std_result_Result_unwrap_2_CALL;
@@ -115,10 +115,10 @@ digraph petrinet {
     CONDVAR_0_LOST_SIGNAL -> CONDVAR_0_WAIT_ENABLED;
     CONDVAR_0_NOTIFY_RECEIVED -> CONDVAR_0_WAIT_ENABLED;
     CONDVAR_0_NOTIFY_RECEIVED -> main_BB10;
+    CONDVAR_0_WAIT_SKIP -> MUTEX_0_CONDITION_SET;
+    CONDVAR_0_WAIT_SKIP -> main_BB10;
     CONDVAR_0_WAIT_START -> MUTEX_0;
     CONDVAR_0_WAIT_START -> MUTEX_0_CONDITION_NOT_SET;
-    CONDVAR__0_WAIT_SKIP -> MUTEX_0_CONDITION_SET;
-    CONDVAR__0_WAIT_SKIP -> main_BB10;
     main_DROP_11 -> MUTEX_0;
     main_DROP_11 -> main_BB12;
     main_DROP_12 -> main_BB13;

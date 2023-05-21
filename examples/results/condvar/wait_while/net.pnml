@@ -199,14 +199,14 @@
           <text>CONDVAR_0_NOTIFY_RECEIVED</text>
         </name>
       </transition>
+      <transition id="CONDVAR_0_WAIT_SKIP">
+        <name>
+          <text>CONDVAR_0_WAIT_SKIP</text>
+        </name>
+      </transition>
       <transition id="CONDVAR_0_WAIT_START">
         <name>
           <text>CONDVAR_0_WAIT_START</text>
-        </name>
-      </transition>
-      <transition id="CONDVAR__0_WAIT_SKIP">
-        <name>
-          <text>CONDVAR__0_WAIT_SKIP</text>
         </name>
       </transition>
       <transition id="main_DROP_11">
@@ -436,9 +436,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="MUTEX_0_CONDITION_SET" target="CONDVAR__0_WAIT_SKIP" id="(MUTEX_0_CONDITION_SET, CONDVAR__0_WAIT_SKIP)">
+      <arc source="MUTEX_0_CONDITION_SET" target="CONDVAR_0_WAIT_SKIP" id="(MUTEX_0_CONDITION_SET, CONDVAR_0_WAIT_SKIP)">
         <name>
-          <text>(MUTEX_0_CONDITION_SET, CONDVAR__0_WAIT_SKIP)</text>
+          <text>(MUTEX_0_CONDITION_SET, CONDVAR_0_WAIT_SKIP)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -604,17 +604,17 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB9" target="CONDVAR_0_WAIT_START" id="(main_BB9, CONDVAR_0_WAIT_START)">
+      <arc source="main_BB9" target="CONDVAR_0_WAIT_SKIP" id="(main_BB9, CONDVAR_0_WAIT_SKIP)">
         <name>
-          <text>(main_BB9, CONDVAR_0_WAIT_START)</text>
+          <text>(main_BB9, CONDVAR_0_WAIT_SKIP)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB9" target="CONDVAR__0_WAIT_SKIP" id="(main_BB9, CONDVAR__0_WAIT_SKIP)">
+      <arc source="main_BB9" target="CONDVAR_0_WAIT_START" id="(main_BB9, CONDVAR_0_WAIT_START)">
         <name>
-          <text>(main_BB9, CONDVAR__0_WAIT_SKIP)</text>
+          <text>(main_BB9, CONDVAR_0_WAIT_START)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -732,6 +732,22 @@
           <text>1</text>
         </inscription>
       </arc>
+      <arc source="CONDVAR_0_WAIT_SKIP" target="MUTEX_0_CONDITION_SET" id="(CONDVAR_0_WAIT_SKIP, MUTEX_0_CONDITION_SET)">
+        <name>
+          <text>(CONDVAR_0_WAIT_SKIP, MUTEX_0_CONDITION_SET)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="CONDVAR_0_WAIT_SKIP" target="main_BB10" id="(CONDVAR_0_WAIT_SKIP, main_BB10)">
+        <name>
+          <text>(CONDVAR_0_WAIT_SKIP, main_BB10)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
       <arc source="CONDVAR_0_WAIT_START" target="MUTEX_0" id="(CONDVAR_0_WAIT_START, MUTEX_0)">
         <name>
           <text>(CONDVAR_0_WAIT_START, MUTEX_0)</text>
@@ -743,22 +759,6 @@
       <arc source="CONDVAR_0_WAIT_START" target="MUTEX_0_CONDITION_NOT_SET" id="(CONDVAR_0_WAIT_START, MUTEX_0_CONDITION_NOT_SET)">
         <name>
           <text>(CONDVAR_0_WAIT_START, MUTEX_0_CONDITION_NOT_SET)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="CONDVAR__0_WAIT_SKIP" target="MUTEX_0_CONDITION_SET" id="(CONDVAR__0_WAIT_SKIP, MUTEX_0_CONDITION_SET)">
-        <name>
-          <text>(CONDVAR__0_WAIT_SKIP, MUTEX_0_CONDITION_SET)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="CONDVAR__0_WAIT_SKIP" target="main_BB10" id="(CONDVAR__0_WAIT_SKIP, main_BB10)">
-        <name>
-          <text>(CONDVAR__0_WAIT_SKIP, main_BB10)</text>
         </name>
         <inscription>
           <text>1</text>

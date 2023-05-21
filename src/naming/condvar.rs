@@ -34,5 +34,5 @@ pub fn transition_labels(index: usize) -> (String, String, String) {
 /// because the condition was already set.
 #[inline]
 pub fn wait_skip_label(index: usize) -> String {
-    format!("CONDVAR__{index}_WAIT_SKIP")
+    format!("CONDVAR_{index}_WAIT_SKIP")
 }
