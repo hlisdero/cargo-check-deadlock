@@ -1,0 +1,67 @@
+digraph condvar {
+    nodesep=0.7;
+    
+    wait_start [height=0.1 shape="box" xlabel="" label="wait_start"];
+    lost_signal [height=0.1 shape="box" xlabel="" label="lost_signal"];
+    notify_received [height=0.1 shape="box" xlabel="" label="notify_received"];
+
+    wait_enabled [width=0.6 shape="circle" xlabel="wait_enabled" label="•"];
+    notify [width=0.6 shape="circle" xlabel="notify" label=""];
+    // Waiting is actually not needed and the mutex place suffices
+    // It is a ghost node used for formatting the graph
+    waiting [width=0.01 shape="none" xlabel="" label=""];
+
+    input [width=0.6 shape="circle" xlabel="input" label=""];
+    output [width=0.6 shape="circle" xlabel="output" label=""];
+    // Place for the mutex used in the call
+    subgraph cluster_0 {
+        label = "mutex logic";
+        color = red;
+        node [style=filled];
+
+        mutex [width=0.6 shape="circle" xlabel="mutex" label=""];
+    }
+    // The places and transitions to set the condition for the condition variable
+    subgraph cluster_1 {
+        label = "condition and skip logic";
+        color = blue;
+        node [style=filled];
+        
+        condition_not_set [width=0.6 shape="circle" xlabel="condition_not_set" label=""];
+        condition_set [width=0.6 shape="circle" xlabel="condition_set" label=""];
+        wait_skip [height=0.1 shape="box" xlabel="" label="wait_skip"];
+        set_condition [height=0.1 shape="box" xlabel="" label="set_condition"];
+    }
+    
+    // Loop for consuming the token in `notify` when `wait()` has not been called yet.
+    wait_enabled -> lost_signal [weight=2];
+    notify -> lost_signal [weight=2];
+    lost_signal -> wait_enabled [weight=2];
+    // Tokens flow from `wait_start` to `waiting` and then to `notify_received`
+    input -> wait_start [weight=2]; 
+    wait_start -> waiting -> notify_received [style="invis" weight=0.1];
+    notify_received -> output [weight=2];
+    // Start the wait only if the wait is enabled
+    wait_enabled -> wait_start;
+    // Exit the wait only if the notify was received
+    notify -> notify_received;
+    // Regenerate the token in `wait_enabled` when exiting the wait
+    notify_received -> wait_enabled [constraint=false];
+    
+    // Lock and unlock mutex
+    wait_start -> mutex -> notify_received;
+    
+    // Skip wait when the condition is set
+    input -> wait_skip -> output;
+    condition_set -> wait_skip;
+    // Call wait only when the condition is not set
+    condition_not_set -> wait_start;
+    // Set the condition
+    condition_not_set -> set_condition -> condition_set [weight=2];
+    
+    // Order the nodes in 5 different levels
+    {rank = same; wait_enabled; wait_start;}
+    {rank = same; lost_signal; waiting;}
+    {rank = same; notify; notify_received;}
+    {rank = max; output;}
+}
