@@ -10,34 +10,29 @@
 //! See the reference for more information:
 //! <https://doc.rust-lang.org/stable/reference/attributes/codegen.html>
 
-use super::sanitize;
-
 /// Labels of the four places that model every `Condvar`.
 #[inline]
-pub fn place_labels(index: usize) -> (String, String, String, String) {
+pub fn place_labels(index: usize) -> (String, String) {
     (
         format!("CONDVAR_{index}_WAIT_ENABLED"),
         format!("CONDVAR_{index}_NOTIFY"),
-        format!("CONDVAR_{index}_WAITING"),
-        format!("CONDVAR_{index}_WAITING_FOR_LOCK"),
     )
 }
 
 /// Labels of the two transitions that model every `Condvar`.
 #[inline]
-pub fn transition_labels(index: usize) -> (String, String) {
+pub fn transition_labels(index: usize) -> (String, String, String) {
     (
+        format!("CONDVAR_{index}_WAIT_START"),
         format!("CONDVAR_{index}_LOST_SIGNAL"),
         format!("CONDVAR_{index}_NOTIFY_RECEIVED"),
     )
 }
 
-/// Label of the transitions that represent a call to `std::sync::Condvar::wait` or `std::sync::Condvar::wait_while`.
+/// Label of the transition that represents skipping a call
+/// to `std::sync::Condvar::wait` or `std::sync::Condvar::wait_while`
+/// because the condition was already set.
 #[inline]
-pub fn wait_transition_labels(function_name: &str, index: usize) -> (String, String, String) {
-    (
-        format!("{}_{index}_START", sanitize(function_name)),
-        format!("{}_{index}_END", sanitize(function_name)),
-        format!("{}_{index}_SKIP", sanitize(function_name)),
-    )
+pub fn wait_skip_label(index: usize) -> String {
+    format!("CONDVAR__{index}_WAIT_SKIP")
 }

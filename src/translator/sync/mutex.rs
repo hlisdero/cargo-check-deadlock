@@ -19,11 +19,12 @@ use std::rc::Rc;
 use super::MutexRef;
 
 use crate::data_structures::petri_net_interface::{
-    add_arc_place_transition, add_arc_transition_place,
+    add_arc_place_transition, add_arc_transition_place, connect_places,
 };
 use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef, TransitionRef};
+use crate::naming::condvar::wait_skip_label;
 use crate::naming::function::foreign_call_transition_labels;
-use crate::naming::mutex::{condition_label, place_label};
+use crate::naming::mutex::{condition_place_labels, place_label};
 use crate::translator::function::Places;
 use crate::translator::mir_function::Memory;
 use crate::translator::special_function::call_foreign_function;
@@ -70,30 +71,51 @@ impl Mutex {
         self.deref_mut.borrow_mut().push(transition);
     }
 
-    /// Creates a new place that models the value of the condition used for a condition variable.
-    /// Connects the given place through each transition that was added to the mutex to this new condition place.
-    /// This represents setting a value for the condition at every function call saved before.
-    /// Returns the place for the mutex condition.
-    pub fn connect_set_condition(
+    /// Links the mutex to a condition variable.
+    ///
+    /// - Creates two new places `condition_not_set` and `condition_set` that model
+    ///   the value of the condition used for a condition variable.
+    /// - Connects `condition_not_set` through each transition saved before to `condition_set`.
+    ///   This represents setting the condition at every function call discovered so far.
+    /// - Connects `condition_set` and `start_place` to a new `wait_skip` transition.
+    /// - Connects `wait_skip` to `end_place`.
+    /// - Connects `condition_not_set` to the `wait_start` transition.
+    pub fn link_to_condvar(
         &self,
         index: usize,
-        place_ref: &PlaceRef,
+        start_place: &PlaceRef,
+        end_place: &PlaceRef,
+        wait_start: &TransitionRef,
         net: &mut PetriNet,
-    ) -> Option<PlaceRef> {
+    ) {
         if self.deref_mut.borrow().is_empty() {
             debug!("NO TRANSITIONS TO SET THE CONDITION");
-            return None; // The mutex value was never set in the code
+            return; // The mutex value was never set in the code
         }
-        let condition = net.add_place(&condition_label(index));
+        // Create condition places
+        let (p1, p2) = condition_place_labels(index);
+        let condition_not_set = net.add_place(&p1);
+        let condition_set = net.add_place(&p2);
+        net.add_token(&condition_not_set, 1).expect(
+            "BUG: Adding initial token to `condition_not_set` should not cause an overflow",
+        );
+
         for transition_ref in self.deref_mut.borrow().iter() {
             debug!(
                 "SET CONDITION WITH TRANSITION {}",
                 transition_ref.to_string()
             );
-            add_arc_place_transition(net, place_ref, transition_ref);
-            add_arc_transition_place(net, transition_ref, &condition);
+            add_arc_place_transition(net, &condition_not_set, transition_ref);
+            add_arc_transition_place(net, transition_ref, &condition_set);
         }
-        Some(condition)
+        // Only allow the wait if the condition is NOT set. Regenerate the token if wait is called.
+        add_arc_place_transition(net, &condition_not_set, wait_start);
+        add_arc_transition_place(net, wait_start, &condition_not_set);
+        // Create the skip transition that short circuits the condvar logic
+        let wait_skip = connect_places(net, start_place, end_place, &wait_skip_label(index));
+        // Only allow to skip the wait if the condition is set. Regenerate the token if wait is called.
+        add_arc_place_transition(net, &condition_set, &wait_skip);
+        add_arc_transition_place(net, &wait_skip, &condition_set);
     }
 }
 

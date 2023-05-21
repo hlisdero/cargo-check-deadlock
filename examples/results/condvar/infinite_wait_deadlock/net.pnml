@@ -7,16 +7,6 @@
           <text>CONDVAR_0_NOTIFY</text>
         </name>
       </place>
-      <place id="CONDVAR_0_WAITING">
-        <name>
-          <text>CONDVAR_0_WAITING</text>
-        </name>
-      </place>
-      <place id="CONDVAR_0_WAITING_FOR_LOCK">
-        <name>
-          <text>CONDVAR_0_WAITING_FOR_LOCK</text>
-        </name>
-      </place>
       <place id="CONDVAR_0_WAIT_ENABLED">
         <name>
           <text>CONDVAR_0_WAIT_ENABLED</text>
@@ -91,6 +81,11 @@
           <text>CONDVAR_0_NOTIFY_RECEIVED</text>
         </name>
       </transition>
+      <transition id="CONDVAR_0_WAIT_START">
+        <name>
+          <text>CONDVAR_0_WAIT_START</text>
+        </name>
+      </transition>
       <transition id="main_DROP_5">
         <name>
           <text>main_DROP_5</text>
@@ -109,16 +104,6 @@
       <transition id="std_sync_Condvar_new_0_CALL">
         <name>
           <text>std_sync_Condvar_new_0_CALL</text>
-        </name>
-      </transition>
-      <transition id="std_sync_Condvar_wait_0_END">
-        <name>
-          <text>std_sync_Condvar_wait_0_END</text>
-        </name>
-      </transition>
-      <transition id="std_sync_Condvar_wait_0_START">
-        <name>
-          <text>std_sync_Condvar_wait_0_START</text>
         </name>
       </transition>
       <transition id="std_sync_Mutex_T_lock_0_CALL">
@@ -147,22 +132,6 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="CONDVAR_0_WAITING" target="CONDVAR_0_NOTIFY_RECEIVED" id="(CONDVAR_0_WAITING, CONDVAR_0_NOTIFY_RECEIVED)">
-        <name>
-          <text>(CONDVAR_0_WAITING, CONDVAR_0_NOTIFY_RECEIVED)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="CONDVAR_0_WAITING_FOR_LOCK" target="std_sync_Condvar_wait_0_END" id="(CONDVAR_0_WAITING_FOR_LOCK, std_sync_Condvar_wait_0_END)">
-        <name>
-          <text>(CONDVAR_0_WAITING_FOR_LOCK, std_sync_Condvar_wait_0_END)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
       <arc source="CONDVAR_0_WAIT_ENABLED" target="CONDVAR_0_LOST_SIGNAL" id="(CONDVAR_0_WAIT_ENABLED, CONDVAR_0_LOST_SIGNAL)">
         <name>
           <text>(CONDVAR_0_WAIT_ENABLED, CONDVAR_0_LOST_SIGNAL)</text>
@@ -171,17 +140,17 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="CONDVAR_0_WAIT_ENABLED" target="std_sync_Condvar_wait_0_START" id="(CONDVAR_0_WAIT_ENABLED, std_sync_Condvar_wait_0_START)">
+      <arc source="CONDVAR_0_WAIT_ENABLED" target="CONDVAR_0_WAIT_START" id="(CONDVAR_0_WAIT_ENABLED, CONDVAR_0_WAIT_START)">
         <name>
-          <text>(CONDVAR_0_WAIT_ENABLED, std_sync_Condvar_wait_0_START)</text>
+          <text>(CONDVAR_0_WAIT_ENABLED, CONDVAR_0_WAIT_START)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="MUTEX_0" target="std_sync_Condvar_wait_0_END" id="(MUTEX_0, std_sync_Condvar_wait_0_END)">
+      <arc source="MUTEX_0" target="CONDVAR_0_NOTIFY_RECEIVED" id="(MUTEX_0, CONDVAR_0_NOTIFY_RECEIVED)">
         <name>
-          <text>(MUTEX_0, std_sync_Condvar_wait_0_END)</text>
+          <text>(MUTEX_0, CONDVAR_0_NOTIFY_RECEIVED)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -227,9 +196,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB4" target="std_sync_Condvar_wait_0_START" id="(main_BB4, std_sync_Condvar_wait_0_START)">
+      <arc source="main_BB4" target="CONDVAR_0_WAIT_START" id="(main_BB4, CONDVAR_0_WAIT_START)">
         <name>
-          <text>(main_BB4, std_sync_Condvar_wait_0_START)</text>
+          <text>(main_BB4, CONDVAR_0_WAIT_START)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -259,17 +228,25 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="CONDVAR_0_NOTIFY_RECEIVED" target="CONDVAR_0_WAITING_FOR_LOCK" id="(CONDVAR_0_NOTIFY_RECEIVED, CONDVAR_0_WAITING_FOR_LOCK)">
+      <arc source="CONDVAR_0_NOTIFY_RECEIVED" target="CONDVAR_0_WAIT_ENABLED" id="(CONDVAR_0_NOTIFY_RECEIVED, CONDVAR_0_WAIT_ENABLED)">
         <name>
-          <text>(CONDVAR_0_NOTIFY_RECEIVED, CONDVAR_0_WAITING_FOR_LOCK)</text>
+          <text>(CONDVAR_0_NOTIFY_RECEIVED, CONDVAR_0_WAIT_ENABLED)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="CONDVAR_0_NOTIFY_RECEIVED" target="CONDVAR_0_WAIT_ENABLED" id="(CONDVAR_0_NOTIFY_RECEIVED, CONDVAR_0_WAIT_ENABLED)">
+      <arc source="CONDVAR_0_NOTIFY_RECEIVED" target="main_BB5" id="(CONDVAR_0_NOTIFY_RECEIVED, main_BB5)">
         <name>
-          <text>(CONDVAR_0_NOTIFY_RECEIVED, CONDVAR_0_WAIT_ENABLED)</text>
+          <text>(CONDVAR_0_NOTIFY_RECEIVED, main_BB5)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="CONDVAR_0_WAIT_START" target="MUTEX_0" id="(CONDVAR_0_WAIT_START, MUTEX_0)">
+        <name>
+          <text>(CONDVAR_0_WAIT_START, MUTEX_0)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -310,30 +287,6 @@
       <arc source="std_sync_Condvar_new_0_CALL" target="main_BB2" id="(std_sync_Condvar_new_0_CALL, main_BB2)">
         <name>
           <text>(std_sync_Condvar_new_0_CALL, main_BB2)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="std_sync_Condvar_wait_0_END" target="main_BB5" id="(std_sync_Condvar_wait_0_END, main_BB5)">
-        <name>
-          <text>(std_sync_Condvar_wait_0_END, main_BB5)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="std_sync_Condvar_wait_0_START" target="CONDVAR_0_WAITING" id="(std_sync_Condvar_wait_0_START, CONDVAR_0_WAITING)">
-        <name>
-          <text>(std_sync_Condvar_wait_0_START, CONDVAR_0_WAITING)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="std_sync_Condvar_wait_0_START" target="MUTEX_0" id="(std_sync_Condvar_wait_0_START, MUTEX_0)">
-        <name>
-          <text>(std_sync_Condvar_wait_0_START, MUTEX_0)</text>
         </name>
         <inscription>
           <text>1</text>

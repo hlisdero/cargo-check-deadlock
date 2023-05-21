@@ -1,7 +1,5 @@
 digraph petrinet {
     CONDVAR_0_NOTIFY [shape="circle" xlabel="CONDVAR_0_NOTIFY" label=""];
-    CONDVAR_0_WAITING [shape="circle" xlabel="CONDVAR_0_WAITING" label=""];
-    CONDVAR_0_WAITING_FOR_LOCK [shape="circle" xlabel="CONDVAR_0_WAITING_FOR_LOCK" label=""];
     CONDVAR_0_WAIT_ENABLED [shape="circle" xlabel="CONDVAR_0_WAIT_ENABLED" label="•"];
     MUTEX_0 [shape="circle" xlabel="MUTEX_0" label="•"];
     PROGRAM_END [shape="circle" xlabel="PROGRAM_END" label=""];
@@ -19,6 +17,7 @@ digraph petrinet {
     main_BB9 [shape="circle" xlabel="main_BB9" label=""];
     CONDVAR_0_LOST_SIGNAL [shape="box" xlabel="" label="CONDVAR_0_LOST_SIGNAL"];
     CONDVAR_0_NOTIFY_RECEIVED [shape="box" xlabel="" label="CONDVAR_0_NOTIFY_RECEIVED"];
+    CONDVAR_0_WAIT_START [shape="box" xlabel="" label="CONDVAR_0_WAIT_START"];
     main_DROP_6 [shape="box" xlabel="" label="main_DROP_6"];
     main_DROP_9 [shape="box" xlabel="" label="main_DROP_9"];
     main_DROP_UNWIND_6 [shape="box" xlabel="" label="main_DROP_UNWIND_6"];
@@ -29,17 +28,13 @@ digraph petrinet {
     std_result_Result_unwrap_0_CALL [shape="box" xlabel="" label="std_result_Result_unwrap_0_CALL"];
     std_sync_Condvar_new_0_CALL [shape="box" xlabel="" label="std_sync_Condvar_new_0_CALL"];
     std_sync_Condvar_notify_one_0_CALL [shape="box" xlabel="" label="std_sync_Condvar_notify_one_0_CALL"];
-    std_sync_Condvar_wait_0_END [shape="box" xlabel="" label="std_sync_Condvar_wait_0_END"];
-    std_sync_Condvar_wait_0_START [shape="box" xlabel="" label="std_sync_Condvar_wait_0_START"];
     std_sync_Mutex_T_lock_0_CALL [shape="box" xlabel="" label="std_sync_Mutex_T_lock_0_CALL"];
     std_sync_Mutex_T_new_0_CALL [shape="box" xlabel="" label="std_sync_Mutex_T_new_0_CALL"];
     CONDVAR_0_NOTIFY -> CONDVAR_0_LOST_SIGNAL;
     CONDVAR_0_NOTIFY -> CONDVAR_0_NOTIFY_RECEIVED;
-    CONDVAR_0_WAITING -> CONDVAR_0_NOTIFY_RECEIVED;
-    CONDVAR_0_WAITING_FOR_LOCK -> std_sync_Condvar_wait_0_END;
     CONDVAR_0_WAIT_ENABLED -> CONDVAR_0_LOST_SIGNAL;
-    CONDVAR_0_WAIT_ENABLED -> std_sync_Condvar_wait_0_START;
-    MUTEX_0 -> std_sync_Condvar_wait_0_END;
+    CONDVAR_0_WAIT_ENABLED -> CONDVAR_0_WAIT_START;
+    MUTEX_0 -> CONDVAR_0_NOTIFY_RECEIVED;
     MUTEX_0 -> std_sync_Mutex_T_lock_0_CALL;
     PROGRAM_START -> std_sync_Mutex_T_new_0_CALL;
     main_BB1 -> std_sync_Condvar_new_0_CALL;
@@ -48,15 +43,16 @@ digraph petrinet {
     main_BB2 -> std_sync_Mutex_T_lock_0_CALL;
     main_BB3 -> std_result_Result_unwrap_0_CALL;
     main_BB4 -> std_sync_Condvar_notify_one_0_CALL;
-    main_BB5 -> std_sync_Condvar_wait_0_START;
+    main_BB5 -> CONDVAR_0_WAIT_START;
     main_BB6 -> main_DROP_6;
     main_BB6 -> main_DROP_UNWIND_6;
     main_BB7 -> main_RETURN;
     main_BB8 -> main_UNWIND_8;
     main_BB9 -> main_DROP_9;
     CONDVAR_0_LOST_SIGNAL -> CONDVAR_0_WAIT_ENABLED;
-    CONDVAR_0_NOTIFY_RECEIVED -> CONDVAR_0_WAITING_FOR_LOCK;
     CONDVAR_0_NOTIFY_RECEIVED -> CONDVAR_0_WAIT_ENABLED;
+    CONDVAR_0_NOTIFY_RECEIVED -> main_BB6;
+    CONDVAR_0_WAIT_START -> MUTEX_0;
     main_DROP_6 -> MUTEX_0;
     main_DROP_6 -> main_BB7;
     main_DROP_9 -> MUTEX_0;
@@ -71,9 +67,6 @@ digraph petrinet {
     std_sync_Condvar_new_0_CALL -> main_BB2;
     std_sync_Condvar_notify_one_0_CALL -> CONDVAR_0_NOTIFY;
     std_sync_Condvar_notify_one_0_CALL -> main_BB5;
-    std_sync_Condvar_wait_0_END -> main_BB6;
-    std_sync_Condvar_wait_0_START -> CONDVAR_0_WAITING;
-    std_sync_Condvar_wait_0_START -> MUTEX_0;
     std_sync_Mutex_T_lock_0_CALL -> main_BB3;
     std_sync_Mutex_T_new_0_CALL -> main_BB1;
 }

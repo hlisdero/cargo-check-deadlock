@@ -16,9 +16,12 @@ pub fn place_label(index: usize) -> String {
     format!("MUTEX_{index}")
 }
 
-/// Label of the single place that models the condition (the value) inside a `Mutex`
-/// used in conjunction with a condition variable.
+/// Labels of the two places that model the condition (the value)
+/// stored inside a `Mutex` used in conjunction with a condition variable.
 #[inline]
-pub fn condition_label(index: usize) -> String {
-    format!("MUTEX_CONDITION_{index}")
+pub fn condition_place_labels(index: usize) -> (String, String) {
+    (
+        format!("MUTEX_{index}_CONDITION_NOT_SET"),
+        format!("MUTEX_{index}_CONDITION_SET"),
+    )
 }
