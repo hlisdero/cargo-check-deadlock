@@ -8,7 +8,7 @@ pub mod thread;
 use log::debug;
 
 use crate::data_structures::petri_net_interface::PetriNet;
-use crate::translator::function::Places;
+use crate::translator::function::{Places, PostprocessingTask};
 use crate::translator::mir_function::Memory;
 use crate::utils::{check_substring_in_place_type, extract_nth_argument_as_place};
 
@@ -50,25 +50,32 @@ pub fn call_function<'tcx>(
     places: Places,
     net: &mut PetriNet,
     memory: &mut Memory<'tcx>,
-) {
+) -> Option<PostprocessingTask> {
     match function_name {
         "std::sync::Condvar::new" => {
             condvar::call_new(function_name, index, destination, places, net, memory);
+            None
         }
         "std::sync::Condvar::notify_one" => {
             condvar::call_notify_one(function_name, index, args, places, net, memory);
+            None
         }
         "std::sync::Condvar::wait" | "std::sync::Condvar::wait_while" => {
-            condvar::call_wait(function_name, index, args, destination, places, net, memory);
+            let task =
+                condvar::call_wait(function_name, index, args, destination, places, net, memory);
+            Some(task)
         }
         "std::sync::Mutex::<T>::lock" => {
             mutex::call_lock(function_name, index, args, destination, places, net, memory);
+            None
         }
         "std::sync::Mutex::<T>::new" => {
-            mutex::call_new(function_name, index, destination, places, net, memory);
+            let task = mutex::call_new(function_name, index, destination, places, net, memory);
+            Some(task)
         }
         "std::thread::JoinHandle::<T>::join" => {
             thread::call_join(function_name, index, args, places, net, memory);
+            None
         }
         _ => panic!("BUG: Call handler for {function_name} is not defined"),
     }

@@ -31,7 +31,7 @@ use crate::data_structures::petri_net_interface::{
 use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef, TransitionRef};
 use crate::naming::condvar::{place_labels, transition_labels};
 use crate::naming::function::foreign_call_transition_labels;
-use crate::translator::function::Places;
+use crate::translator::function::{Places, PostprocessingTask};
 use crate::translator::mir_function::Memory;
 use crate::translator::special_function::call_foreign_function;
 use crate::utils::extract_nth_argument_as_place;
@@ -185,6 +185,7 @@ pub fn call_notify_one<'tcx>(
 /// - Adds the arc for the unlocking of the mutex at the start of the `wait`.
 /// - Adds the arc for the locking of the mutex at the end of the `wait`.
 /// - Links the return place to the mutex guard.
+/// - Returns a postprocessing task to link the mutex to the condition variable.
 ///
 /// In some cases, the `std::sync::Condvar::wait` function contains a cleanup target.
 /// This target is not called in practice but creates trouble for lost signal detection.
@@ -199,7 +200,7 @@ pub fn call_wait<'tcx>(
     places: Places,
     net: &mut PetriNet,
     memory: &mut Memory<'tcx>,
-) {
+) -> PostprocessingTask {
     // Retrieve the condvar from the local variable passed to the function as an argument.
     let self_ref = extract_nth_argument_as_place(args, 0).unwrap_or_else(|| {
         panic!("BUG: `{function_name}` should receive the self reference as a place")
@@ -216,16 +217,16 @@ pub fn call_wait<'tcx>(
     let (start_place, end_place) = places.get_start_end_place();
     condvar_ref.link_to_wait_call(&start_place, &end_place, mutex_guard_ref, net);
 
-    // Link the mutex to the condvar: This creates the condition and skip logic.
-    mutex_guard_ref.mutex.link_to_condvar(
-        index,
-        &start_place,
-        &end_place,
-        &condvar_ref.wait_start,
-        net,
-    );
-
     // The return value contains the mutex guard passed to the function. Link the local variable to it.
     let cloned_ref = Rc::clone(mutex_guard_ref);
     memory.mutex_guard.link_place(destination, cloned_ref);
+
+    // Create a postprocessing task to link the mutex to the condvar.
+    // This creates the condition and skip logic.
+    PostprocessingTask::link_mutex_to_condvar(
+        index,
+        start_place,
+        end_place,
+        condvar_ref.wait_start.clone(),
+    )
 }

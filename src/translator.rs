@@ -35,6 +35,7 @@ use log::{debug, info};
 use rustc_middle::mir::visit::Visitor;
 use rustc_middle::mir::UnwindAction;
 use std::cell::RefCell;
+use std::collections::BinaryHeap;
 use std::rc::Rc;
 
 use crate::data_structures::hash_map_counter::HashMapCounter;
@@ -44,10 +45,11 @@ use crate::naming::function::{
     foreign_call_transition_labels, indexed_mir_function_cleanup_label, indexed_mir_function_name,
 };
 use crate::naming::{PROGRAM_END, PROGRAM_PANIC, PROGRAM_START};
+use crate::translator::sync::MutexRef;
 use crate::utils::{
     extract_closure, extract_def_id_of_called_function_from_operand, extract_nth_argument_as_place,
 };
-use function::{Places, Transitions};
+use function::{Places, PostprocessingTask, Transitions};
 use mir_function::MirFunction;
 use special_function::{
     call_diverging_function, call_foreign_function, call_panic_function, is_foreign_function,
@@ -64,7 +66,8 @@ pub struct Translator<'tcx> {
     program_panic: PlaceRef,
     call_stack: Stack<MirFunction<'tcx>>,
     function_counter: HashMapCounter,
-    threads: Vec<std::rc::Rc<std::cell::RefCell<Thread>>>,
+    threads: Vec<Rc<RefCell<Thread>>>,
+    postprocessing: BinaryHeap<PostprocessingTask>,
 }
 
 impl<'tcx> Translator<'tcx> {
@@ -90,6 +93,7 @@ impl<'tcx> Translator<'tcx> {
             call_stack: Stack::new(),
             function_counter: HashMapCounter::new(),
             threads: Vec::new(),
+            postprocessing: BinaryHeap::new(),
         }
     }
 
@@ -122,6 +126,8 @@ impl<'tcx> Translator<'tcx> {
         self.translate_top_call_stack();
         info!("Finished translating the main thread");
         self.translate_threads();
+        info!("Running translation postprocessing...");
+        self.translation_postprocessing();
     }
 
     /// Main translation loop for the threads.
@@ -153,6 +159,37 @@ impl<'tcx> Translator<'tcx> {
 
             self.translate_top_call_stack();
             info!("Finished translating thread {}", index);
+        }
+    }
+
+    /// Run the postprocessing tasks.
+    /// These tasks require knowledge of the whole Petri net.
+    /// For example: Adding arcs or places after all threads have been translated.
+    fn translation_postprocessing(&mut self) {
+        let mut mutexes: Vec<MutexRef> = Vec::new();
+        while let Some(task) = self.postprocessing.pop() {
+            match task {
+                PostprocessingTask::LinkMutexToCondvar {
+                    index,
+                    start_place,
+                    end_place,
+                    wait_start,
+                    ..
+                } => {
+                    for mutex_ref in &mutexes {
+                        mutex_ref.link_to_condvar(
+                            index,
+                            &start_place,
+                            &end_place,
+                            &wait_start,
+                            &mut self.net,
+                        );
+                    }
+                }
+                PostprocessingTask::NewMutex { mutex_ref, .. } => {
+                    mutexes.push(mutex_ref);
+                }
+            }
         }
     }
 
@@ -351,8 +388,11 @@ impl<'tcx> Translator<'tcx> {
             let memory = &mut current_function.memory;
             // A reference to the Petri net to add transitions and places
             let net = &mut self.net;
-
-            sync::call_function(function_name, index, args, destination, places, net, memory);
+            if let Some(task) =
+                sync::call_function(function_name, index, args, destination, places, net, memory)
+            {
+                self.postprocessing.push(task);
+            }
             return;
         }
         // Default case for standard and core library calls

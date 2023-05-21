@@ -25,7 +25,7 @@ use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef, Transition
 use crate::naming::condvar::wait_skip_label;
 use crate::naming::function::foreign_call_transition_labels;
 use crate::naming::mutex::{condition_place_labels, place_label};
-use crate::translator::function::Places;
+use crate::translator::function::{Places, PostprocessingTask};
 use crate::translator::mir_function::Memory;
 use crate::translator::special_function::call_foreign_function;
 use crate::utils::extract_nth_argument_as_place;
@@ -182,6 +182,7 @@ pub fn call_lock<'tcx>(
 ///
 /// - Creates a new `Mutex`.
 /// - Links the return place to the `Mutex`.
+/// - Returns a postprocessing task to notify the creation of this mutex.
 pub fn call_new<'tcx>(
     function_name: &str,
     index: usize,
@@ -189,7 +190,7 @@ pub fn call_new<'tcx>(
     places: Places,
     net: &mut PetriNet,
     memory: &mut Memory<'tcx>,
-) {
+) -> PostprocessingTask {
     call_foreign_function(
         places,
         &foreign_call_transition_labels(function_name, index),
@@ -198,8 +199,10 @@ pub fn call_new<'tcx>(
     // Create a new mutex
     let mutex = Rc::new(Mutex::new(index, net));
     // The return value contains a new mutex. Link the local variable to it.
-    memory.mutex.link_place(destination, mutex);
+    memory.mutex.link_place(destination, mutex.clone());
     debug!("NEW MUTEX: {destination:?}");
+    // Notify the translator that a new mutex has been created
+    PostprocessingTask::new_mutex(mutex)
 }
 
 /// Checks whether the variable to be dropped is a mutex guard.
