@@ -64,15 +64,25 @@ mod set_condition_before_wait {
     );
 }
 
-// mod wait {
-//     use super::utils;
-//
-//     utils::generate_lola_tests_for_example_program!(
-//         "./examples/programs/condvar/wait.rs",
-//         "./examples/results/condvar/wait/",
-//         false
-//     );
-// }
+mod wait {
+    use super::utils;
+
+    utils::generate_lola_tests_for_example_program!(
+        "./examples/programs/condvar/wait.rs",
+        "./examples/results/condvar/wait/",
+        false
+    );
+}
+
+mod wait_while {
+    use super::utils;
+
+    utils::generate_lola_tests_for_example_program!(
+        "./examples/programs/condvar/wait_while.rs",
+        "./examples/results/condvar/wait_while/",
+        false
+    );
+}
 
 mod diverging {
     use super::utils;

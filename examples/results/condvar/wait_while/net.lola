@@ -2,6 +2,8 @@ PLACE
     CONDVAR_0_NOTIFY,
     CONDVAR_0_WAIT_ENABLED,
     MUTEX_0,
+    MUTEX_0_CONDITION_NOT_SET,
+    MUTEX_0_CONDITION_SET,
     PROGRAM_END,
     PROGRAM_PANIC,
     PROGRAM_START,
@@ -37,6 +39,8 @@ MARKING
     CONDVAR_0_NOTIFY : 0,
     CONDVAR_0_WAIT_ENABLED : 1,
     MUTEX_0 : 1,
+    MUTEX_0_CONDITION_NOT_SET : 1,
+    MUTEX_0_CONDITION_SET : 0,
     PROGRAM_END : 0,
     PROGRAM_PANIC : 0,
     PROGRAM_START : 1,
@@ -84,9 +88,18 @@ TRANSITION CONDVAR_0_NOTIFY_RECEIVED
 TRANSITION CONDVAR_0_WAIT_START
   CONSUME
     CONDVAR_0_WAIT_ENABLED : 1,
+    MUTEX_0_CONDITION_NOT_SET : 1,
     main_BB9 : 1;
   PRODUCE
-    MUTEX_0 : 1;
+    MUTEX_0 : 1,
+    MUTEX_0_CONDITION_NOT_SET : 1;
+TRANSITION CONDVAR__0_WAIT_SKIP
+  CONSUME
+    MUTEX_0_CONDITION_SET : 1,
+    main_BB9 : 1;
+  PRODUCE
+    MUTEX_0_CONDITION_SET : 1,
+    main_BB10 : 1;
 TRANSITION main_DROP_11
   CONSUME
     main_BB11 : 1;
@@ -179,62 +192,36 @@ TRANSITION std_clone_Clone_clone_0_CALL_UNWIND
     main_BB14 : 1;
 TRANSITION std_ops_DerefMut_deref_mut_0_CALL
   CONSUME
+    MUTEX_0_CONDITION_NOT_SET : 1,
     main__closure_0__BB3 : 1;
   PRODUCE
+    MUTEX_0_CONDITION_SET : 1,
     main__closure_0__BB4 : 1;
 TRANSITION std_ops_Deref_deref_0_CALL
   CONSUME
     main_BB6 : 1;
   PRODUCE
     main_BB7 : 1;
-TRANSITION std_ops_Deref_deref_0_CALL_UNWIND
-  CONSUME
-    main_BB6 : 1;
-  PRODUCE
-    main_BB14 : 1;
 TRANSITION std_ops_Deref_deref_1_CALL
   CONSUME
     THREAD_0_START : 1;
   PRODUCE
     main__closure_0__BB1 : 1;
-TRANSITION std_ops_Deref_deref_1_CALL_UNWIND
-  CONSUME
-    THREAD_0_START : 1;
-  PRODUCE
-    main__closure_0__BB9 : 1;
 TRANSITION std_result_Result_unwrap_0_CALL
   CONSUME
     main_BB8 : 1;
   PRODUCE
     main_BB9 : 1;
-TRANSITION std_result_Result_unwrap_0_CALL_UNWIND
-  CONSUME
-    main_BB8 : 1;
-  PRODUCE
-    MUTEX_0 : 1,
-    main_BB14 : 1;
 TRANSITION std_result_Result_unwrap_1_CALL
   CONSUME
     main_BB10 : 1;
   PRODUCE
     main_BB11 : 1;
-TRANSITION std_result_Result_unwrap_1_CALL_UNWIND
-  CONSUME
-    main_BB10 : 1;
-  PRODUCE
-    MUTEX_0 : 1,
-    main_BB14 : 1;
 TRANSITION std_result_Result_unwrap_2_CALL
   CONSUME
     main__closure_0__BB2 : 1;
   PRODUCE
     main__closure_0__BB3 : 1;
-TRANSITION std_result_Result_unwrap_2_CALL_UNWIND
-  CONSUME
-    main__closure_0__BB2 : 1;
-  PRODUCE
-    MUTEX_0 : 1,
-    main__closure_0__BB9 : 1;
 TRANSITION std_sync_Arc_T_new_0_CALL
   CONSUME
     main_BB2 : 1;

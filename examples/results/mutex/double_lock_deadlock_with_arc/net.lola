@@ -89,21 +89,11 @@ TRANSITION std_ops_Deref_deref_0_CALL
     main_BB2 : 1;
   PRODUCE
     main_BB3 : 1;
-TRANSITION std_ops_Deref_deref_0_CALL_UNWIND
-  CONSUME
-    main_BB2 : 1;
-  PRODUCE
-    main_BB11 : 1;
 TRANSITION std_ops_Deref_deref_1_CALL
   CONSUME
     main_BB4 : 1;
   PRODUCE
     main_BB5 : 1;
-TRANSITION std_ops_Deref_deref_1_CALL_UNWIND
-  CONSUME
-    main_BB4 : 1;
-  PRODUCE
-    main_BB10 : 1;
 TRANSITION std_sync_Arc_T_new_0_CALL
   CONSUME
     main_BB1 : 1;

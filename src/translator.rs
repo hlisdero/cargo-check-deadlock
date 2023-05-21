@@ -367,12 +367,17 @@ impl<'tcx> Translator<'tcx> {
             self.call_mem_drop(function_name, args, destination, places);
             return;
         }
-        if self.is_deref_of_mutex_guard(function_name, args) {
-            self.call_deref_lock_guard(function_name, args, destination, places);
+        if (function_name == "std::ops::Deref::deref"
+            || function_name == "std::ops::DerefMut::deref_mut")
+            && self.is_self_ref_mutex(function_name, args)
+        {
+            self.call_deref_mutex(function_name, args, destination, places);
             return;
         }
-        if function_name == "std::result::Result::<T, E>::unwrap" {
-            self.call_result_unwrap(function_name, args, destination, places);
+        if function_name == "std::result::Result::<T, E>::unwrap"
+            && self.is_self_ref_mutex(function_name, args)
+        {
+            self.call_unwrap_mutex(function_name, args, destination, places);
             return;
         }
         if function_name == "std::thread::spawn" {
@@ -404,24 +409,18 @@ impl<'tcx> Translator<'tcx> {
         self.call_mir_function(function_def_id, function_name, places);
     }
 
-    /// Checks if the function call is `std::ops::Deref::deref` or `std::ops::DerefMut::deref_mut`
-    /// and the first argument (the self reference) is a mutex guard.
-    fn is_deref_of_mutex_guard(
+    /// Checks whether the first argument (the self reference) is a mutex or a mutex guard.
+    fn is_self_ref_mutex(
         &self,
         function_name: &str,
         args: &[rustc_middle::mir::Operand<'tcx>],
     ) -> bool {
-        if function_name == "std::ops::Deref::deref"
-            || function_name == "std::ops::DerefMut::deref_mut"
-        {
-            let self_ref = extract_nth_argument_as_place(args, 0).unwrap_or_else(|| {
-                panic!("BUG: `{function_name}` should receive a reference as a place")
-            });
-            let function = self.call_stack.peek();
-            function.memory.mutex_guard.is_linked(&self_ref)
-        } else {
-            false
-        }
+        let self_ref = extract_nth_argument_as_place(args, 0).unwrap_or_else(|| {
+            panic!("BUG: `{function_name}` should receive a reference as a place")
+        });
+        let function = self.call_stack.peek();
+        function.memory.mutex_guard.is_linked(&self_ref)
+            || function.memory.mutex.is_linked(&self_ref)
     }
 
     /// Call to a MIR function. It is the default for user-defined functions in the code.
@@ -553,8 +552,8 @@ impl<'tcx> Translator<'tcx> {
     /// The reason is that any call may fail, which is equivalent to saying that the dereference operation
     /// was never present in the program, leading to a false lost signal.
     /// In conclusion: Ignore the cleanup place, do not model it.
-    /// Assume `deref` and `deref_mut` never unwind when dereferencing a.mutex guard OR a variable containing one.
-    fn call_deref_lock_guard(
+    /// Assume `deref` and `deref_mut` never unwind when dereferencing a variable linked to a mutex or a mutex guard.
+    fn call_deref_mutex(
         &mut self,
         function_name: &str,
         args: &[rustc_middle::mir::Operand<'tcx>],
@@ -579,29 +578,21 @@ impl<'tcx> Translator<'tcx> {
     /// Call to `std::result::Result::<T, E>::unwrap`.
     /// Non-recursive call for the translation process.
     ///
-    /// There is an important detail regarding how rustc interprets this call in conjunction with mutexes.
-    /// In some cases, the `std::result::Result::<T, E>::unwrap` function applied
-    /// to the return value of `std::sync::Mutex::<T>::lock` does not generate code to drop the mutex guard
-    /// since it considers that the mutex was never locked in the first place.
-    /// Nonetheless, for the purposes of the Petri net model, it is necessary to unlock the mutex in this case.
-    fn call_result_unwrap(
+    /// In some cases, the `std::result::Result::<T, E>::unwrap` contain a cleanup target.
+    /// This target is not called in practice but creates trouble for lost signal detection.
+    /// The reason is that any call may fail, which is equivalent to saying that the lock operation
+    /// was never present in the program, leading to a false lost signal.
+    /// In conclusion: Ignore the cleanup place, do not model it.
+    /// Assume `unwrap` never unwinds when applied to a variable linked to a mutex or a mutex guard.
+    fn call_unwrap_mutex(
         &mut self,
         function_name: &str,
         args: &[rustc_middle::mir::Operand<'tcx>],
         destination: rustc_middle::mir::Place<'tcx>,
         places: Places,
     ) {
-        let transitions = self.call_foreign_function(function_name, args, destination, places);
-
-        if let Transitions::WithCleanup { cleanup, .. } = transitions {
-            let unwrapped_place = extract_nth_argument_as_place(args, 0).unwrap_or_else(|| {
-                panic!("BUG: `{function_name}` should receive the value to be unwrapped as a place")
-            });
-            let function = self.call_stack.peek_mut();
-            let memory = &mut function.memory;
-            let net = &mut self.net;
-            mutex::handle_mutex_guard_drop(unwrapped_place, &cleanup, net, memory);
-        }
+        let places = places.ignore_cleanup_place();
+        self.call_foreign_function(function_name, args, destination, places);
     }
 
     /// Call to `std::thread::spawn`.

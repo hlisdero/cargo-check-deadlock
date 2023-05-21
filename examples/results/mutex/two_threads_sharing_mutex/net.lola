@@ -166,21 +166,11 @@ TRANSITION std_ops_Deref_deref_0_CALL
     main_BB4 : 1;
   PRODUCE
     main_BB5 : 1;
-TRANSITION std_ops_Deref_deref_0_CALL_UNWIND
-  CONSUME
-    main_BB4 : 1;
-  PRODUCE
-    main_BB15 : 1;
 TRANSITION std_ops_Deref_deref_1_CALL
   CONSUME
     THREAD_0_START : 1;
   PRODUCE
     main__closure_0__BB1 : 1;
-TRANSITION std_ops_Deref_deref_1_CALL_UNWIND
-  CONSUME
-    THREAD_0_START : 1;
-  PRODUCE
-    main__closure_0__BB5 : 1;
 TRANSITION std_sync_Arc_T_new_0_CALL
   CONSUME
     main_BB1 : 1;

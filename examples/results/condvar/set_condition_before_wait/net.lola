@@ -249,32 +249,16 @@ TRANSITION std_ops_Deref_deref_0_CALL
     main_BB5 : 1;
   PRODUCE
     main_BB6 : 1;
-TRANSITION std_ops_Deref_deref_0_CALL_UNWIND
-  CONSUME
-    main_BB5 : 1;
-  PRODUCE
-    main_BB20 : 1;
 TRANSITION std_ops_Deref_deref_1_CALL
   CONSUME
     THREAD_0_START : 1;
   PRODUCE
     main__closure_0__BB1 : 1;
-TRANSITION std_ops_Deref_deref_1_CALL_UNWIND
-  CONSUME
-    THREAD_0_START : 1;
-  PRODUCE
-    main__closure_0__BB8 : 1;
 TRANSITION std_result_Result_unwrap_0_CALL
   CONSUME
     main_BB7 : 1;
   PRODUCE
     main_BB8 : 1;
-TRANSITION std_result_Result_unwrap_0_CALL_UNWIND
-  CONSUME
-    main_BB7 : 1;
-  PRODUCE
-    MUTEX_0 : 1,
-    main_BB20 : 1;
 TRANSITION std_result_Result_unwrap_1_CALL
   CONSUME
     main_BB12 : 1;
@@ -290,23 +274,11 @@ TRANSITION std_result_Result_unwrap_2_CALL
     main__closure_0__BB2 : 1;
   PRODUCE
     main__closure_0__BB3 : 1;
-TRANSITION std_result_Result_unwrap_2_CALL_UNWIND
-  CONSUME
-    main__closure_0__BB2 : 1;
-  PRODUCE
-    MUTEX_0 : 1,
-    main__closure_0__BB8 : 1;
 TRANSITION std_result_Result_unwrap_3_CALL
   CONSUME
     main__closure_0__BB4 : 1;
   PRODUCE
     main__closure_0__BB5 : 1;
-TRANSITION std_result_Result_unwrap_3_CALL_UNWIND
-  CONSUME
-    main__closure_0__BB4 : 1;
-  PRODUCE
-    MUTEX_0 : 1,
-    main__closure_0__BB8 : 1;
 TRANSITION std_sync_Arc_T_new_0_CALL
   CONSUME
     main_BB2 : 1;

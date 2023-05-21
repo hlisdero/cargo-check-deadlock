@@ -23,9 +23,7 @@ digraph petrinet {
     std_mem_drop_0_CALL [shape="box" xlabel="" label="std_mem_drop_0_CALL"];
     std_mem_drop_0_CALL_UNWIND [shape="box" xlabel="" label="std_mem_drop_0_CALL_UNWIND"];
     std_ops_Deref_deref_0_CALL [shape="box" xlabel="" label="std_ops_Deref_deref_0_CALL"];
-    std_ops_Deref_deref_0_CALL_UNWIND [shape="box" xlabel="" label="std_ops_Deref_deref_0_CALL_UNWIND"];
     std_ops_Deref_deref_1_CALL [shape="box" xlabel="" label="std_ops_Deref_deref_1_CALL"];
-    std_ops_Deref_deref_1_CALL_UNWIND [shape="box" xlabel="" label="std_ops_Deref_deref_1_CALL_UNWIND"];
     std_sync_Arc_T_new_0_CALL [shape="box" xlabel="" label="std_sync_Arc_T_new_0_CALL"];
     std_sync_Mutex_T_lock_0_CALL [shape="box" xlabel="" label="std_sync_Mutex_T_lock_0_CALL"];
     std_sync_Mutex_T_lock_1_CALL [shape="box" xlabel="" label="std_sync_Mutex_T_lock_1_CALL"];
@@ -37,12 +35,10 @@ digraph petrinet {
     main_BB10 -> main_DROP_10;
     main_BB11 -> main_UNWIND_11;
     main_BB2 -> std_ops_Deref_deref_0_CALL;
-    main_BB2 -> std_ops_Deref_deref_0_CALL_UNWIND;
     main_BB3 -> std_sync_Mutex_T_lock_0_CALL;
     main_BB4 -> std_mem_drop_0_CALL;
     main_BB4 -> std_mem_drop_0_CALL_UNWIND;
     main_BB5 -> std_ops_Deref_deref_1_CALL;
-    main_BB5 -> std_ops_Deref_deref_1_CALL_UNWIND;
     main_BB6 -> std_sync_Mutex_T_lock_1_CALL;
     main_BB7 -> main_DROP_7;
     main_BB7 -> main_DROP_UNWIND_7;
@@ -61,9 +57,7 @@ digraph petrinet {
     std_mem_drop_0_CALL_UNWIND -> MUTEX_0;
     std_mem_drop_0_CALL_UNWIND -> main_BB10;
     std_ops_Deref_deref_0_CALL -> main_BB3;
-    std_ops_Deref_deref_0_CALL_UNWIND -> main_BB10;
     std_ops_Deref_deref_1_CALL -> main_BB6;
-    std_ops_Deref_deref_1_CALL_UNWIND -> main_BB10;
     std_sync_Arc_T_new_0_CALL -> main_BB2;
     std_sync_Mutex_T_lock_0_CALL -> main_BB4;
     std_sync_Mutex_T_lock_1_CALL -> main_BB7;

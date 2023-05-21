@@ -23,6 +23,19 @@
           <text>1</text>
         </initialMarking>
       </place>
+      <place id="MUTEX_0_CONDITION_NOT_SET">
+        <name>
+          <text>MUTEX_0_CONDITION_NOT_SET</text>
+        </name>
+        <initialMarking>
+          <text>1</text>
+        </initialMarking>
+      </place>
+      <place id="MUTEX_0_CONDITION_SET">
+        <name>
+          <text>MUTEX_0_CONDITION_SET</text>
+        </name>
+      </place>
       <place id="PROGRAM_END">
         <name>
           <text>PROGRAM_END</text>
@@ -191,6 +204,11 @@
           <text>CONDVAR_0_WAIT_START</text>
         </name>
       </transition>
+      <transition id="CONDVAR__0_WAIT_SKIP">
+        <name>
+          <text>CONDVAR__0_WAIT_SKIP</text>
+        </name>
+      </transition>
       <transition id="main_DROP_11">
         <name>
           <text>main_DROP_11</text>
@@ -286,19 +304,9 @@
           <text>std_ops_Deref_deref_0_CALL</text>
         </name>
       </transition>
-      <transition id="std_ops_Deref_deref_0_CALL_UNWIND">
-        <name>
-          <text>std_ops_Deref_deref_0_CALL_UNWIND</text>
-        </name>
-      </transition>
       <transition id="std_ops_Deref_deref_1_CALL">
         <name>
           <text>std_ops_Deref_deref_1_CALL</text>
-        </name>
-      </transition>
-      <transition id="std_ops_Deref_deref_1_CALL_UNWIND">
-        <name>
-          <text>std_ops_Deref_deref_1_CALL_UNWIND</text>
         </name>
       </transition>
       <transition id="std_result_Result_unwrap_0_CALL">
@@ -306,29 +314,14 @@
           <text>std_result_Result_unwrap_0_CALL</text>
         </name>
       </transition>
-      <transition id="std_result_Result_unwrap_0_CALL_UNWIND">
-        <name>
-          <text>std_result_Result_unwrap_0_CALL_UNWIND</text>
-        </name>
-      </transition>
       <transition id="std_result_Result_unwrap_1_CALL">
         <name>
           <text>std_result_Result_unwrap_1_CALL</text>
         </name>
       </transition>
-      <transition id="std_result_Result_unwrap_1_CALL_UNWIND">
-        <name>
-          <text>std_result_Result_unwrap_1_CALL_UNWIND</text>
-        </name>
-      </transition>
       <transition id="std_result_Result_unwrap_2_CALL">
         <name>
           <text>std_result_Result_unwrap_2_CALL</text>
-        </name>
-      </transition>
-      <transition id="std_result_Result_unwrap_2_CALL_UNWIND">
-        <name>
-          <text>std_result_Result_unwrap_2_CALL_UNWIND</text>
         </name>
       </transition>
       <transition id="std_sync_Arc_T_new_0_CALL">
@@ -427,6 +420,30 @@
           <text>1</text>
         </inscription>
       </arc>
+      <arc source="MUTEX_0_CONDITION_NOT_SET" target="CONDVAR_0_WAIT_START" id="(MUTEX_0_CONDITION_NOT_SET, CONDVAR_0_WAIT_START)">
+        <name>
+          <text>(MUTEX_0_CONDITION_NOT_SET, CONDVAR_0_WAIT_START)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="MUTEX_0_CONDITION_NOT_SET" target="std_ops_DerefMut_deref_mut_0_CALL" id="(MUTEX_0_CONDITION_NOT_SET, std_ops_DerefMut_deref_mut_0_CALL)">
+        <name>
+          <text>(MUTEX_0_CONDITION_NOT_SET, std_ops_DerefMut_deref_mut_0_CALL)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="MUTEX_0_CONDITION_SET" target="CONDVAR__0_WAIT_SKIP" id="(MUTEX_0_CONDITION_SET, CONDVAR__0_WAIT_SKIP)">
+        <name>
+          <text>(MUTEX_0_CONDITION_SET, CONDVAR__0_WAIT_SKIP)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
       <arc source="PROGRAM_START" target="std_sync_Mutex_T_new_0_CALL" id="(PROGRAM_START, std_sync_Mutex_T_new_0_CALL)">
         <name>
           <text>(PROGRAM_START, std_sync_Mutex_T_new_0_CALL)</text>
@@ -443,14 +460,6 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="THREAD_0_START" target="std_ops_Deref_deref_1_CALL_UNWIND" id="(THREAD_0_START, std_ops_Deref_deref_1_CALL_UNWIND)">
-        <name>
-          <text>(THREAD_0_START, std_ops_Deref_deref_1_CALL_UNWIND)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
       <arc source="main_BB1" target="std_sync_Condvar_new_0_CALL" id="(main_BB1, std_sync_Condvar_new_0_CALL)">
         <name>
           <text>(main_BB1, std_sync_Condvar_new_0_CALL)</text>
@@ -462,14 +471,6 @@
       <arc source="main_BB10" target="std_result_Result_unwrap_1_CALL" id="(main_BB10, std_result_Result_unwrap_1_CALL)">
         <name>
           <text>(main_BB10, std_result_Result_unwrap_1_CALL)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BB10" target="std_result_Result_unwrap_1_CALL_UNWIND" id="(main_BB10, std_result_Result_unwrap_1_CALL_UNWIND)">
-        <name>
-          <text>(main_BB10, std_result_Result_unwrap_1_CALL_UNWIND)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -587,14 +588,6 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB6" target="std_ops_Deref_deref_0_CALL_UNWIND" id="(main_BB6, std_ops_Deref_deref_0_CALL_UNWIND)">
-        <name>
-          <text>(main_BB6, std_ops_Deref_deref_0_CALL_UNWIND)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
       <arc source="main_BB7" target="std_sync_Mutex_T_lock_0_CALL" id="(main_BB7, std_sync_Mutex_T_lock_0_CALL)">
         <name>
           <text>(main_BB7, std_sync_Mutex_T_lock_0_CALL)</text>
@@ -611,17 +604,17 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB8" target="std_result_Result_unwrap_0_CALL_UNWIND" id="(main_BB8, std_result_Result_unwrap_0_CALL_UNWIND)">
+      <arc source="main_BB9" target="CONDVAR_0_WAIT_START" id="(main_BB9, CONDVAR_0_WAIT_START)">
         <name>
-          <text>(main_BB8, std_result_Result_unwrap_0_CALL_UNWIND)</text>
+          <text>(main_BB9, CONDVAR_0_WAIT_START)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB9" target="CONDVAR_0_WAIT_START" id="(main_BB9, CONDVAR_0_WAIT_START)">
+      <arc source="main_BB9" target="CONDVAR__0_WAIT_SKIP" id="(main_BB9, CONDVAR__0_WAIT_SKIP)">
         <name>
-          <text>(main_BB9, CONDVAR_0_WAIT_START)</text>
+          <text>(main_BB9, CONDVAR__0_WAIT_SKIP)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -646,14 +639,6 @@
       <arc source="main__closure_0__BB2" target="std_result_Result_unwrap_2_CALL" id="(main__closure_0__BB2, std_result_Result_unwrap_2_CALL)">
         <name>
           <text>(main__closure_0__BB2, std_result_Result_unwrap_2_CALL)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main__closure_0__BB2" target="std_result_Result_unwrap_2_CALL_UNWIND" id="(main__closure_0__BB2, std_result_Result_unwrap_2_CALL_UNWIND)">
-        <name>
-          <text>(main__closure_0__BB2, std_result_Result_unwrap_2_CALL_UNWIND)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -750,6 +735,30 @@
       <arc source="CONDVAR_0_WAIT_START" target="MUTEX_0" id="(CONDVAR_0_WAIT_START, MUTEX_0)">
         <name>
           <text>(CONDVAR_0_WAIT_START, MUTEX_0)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="CONDVAR_0_WAIT_START" target="MUTEX_0_CONDITION_NOT_SET" id="(CONDVAR_0_WAIT_START, MUTEX_0_CONDITION_NOT_SET)">
+        <name>
+          <text>(CONDVAR_0_WAIT_START, MUTEX_0_CONDITION_NOT_SET)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="CONDVAR__0_WAIT_SKIP" target="MUTEX_0_CONDITION_SET" id="(CONDVAR__0_WAIT_SKIP, MUTEX_0_CONDITION_SET)">
+        <name>
+          <text>(CONDVAR__0_WAIT_SKIP, MUTEX_0_CONDITION_SET)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="CONDVAR__0_WAIT_SKIP" target="main_BB10" id="(CONDVAR__0_WAIT_SKIP, main_BB10)">
+        <name>
+          <text>(CONDVAR__0_WAIT_SKIP, main_BB10)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -931,6 +940,14 @@
           <text>1</text>
         </inscription>
       </arc>
+      <arc source="std_ops_DerefMut_deref_mut_0_CALL" target="MUTEX_0_CONDITION_SET" id="(std_ops_DerefMut_deref_mut_0_CALL, MUTEX_0_CONDITION_SET)">
+        <name>
+          <text>(std_ops_DerefMut_deref_mut_0_CALL, MUTEX_0_CONDITION_SET)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
       <arc source="std_ops_DerefMut_deref_mut_0_CALL" target="main__closure_0__BB4" id="(std_ops_DerefMut_deref_mut_0_CALL, main__closure_0__BB4)">
         <name>
           <text>(std_ops_DerefMut_deref_mut_0_CALL, main__closure_0__BB4)</text>
@@ -947,25 +964,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_ops_Deref_deref_0_CALL_UNWIND" target="main_BB14" id="(std_ops_Deref_deref_0_CALL_UNWIND, main_BB14)">
-        <name>
-          <text>(std_ops_Deref_deref_0_CALL_UNWIND, main_BB14)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
       <arc source="std_ops_Deref_deref_1_CALL" target="main__closure_0__BB1" id="(std_ops_Deref_deref_1_CALL, main__closure_0__BB1)">
         <name>
           <text>(std_ops_Deref_deref_1_CALL, main__closure_0__BB1)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="std_ops_Deref_deref_1_CALL_UNWIND" target="main__closure_0__BB9" id="(std_ops_Deref_deref_1_CALL_UNWIND, main__closure_0__BB9)">
-        <name>
-          <text>(std_ops_Deref_deref_1_CALL_UNWIND, main__closure_0__BB9)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -979,22 +980,6 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_result_Result_unwrap_0_CALL_UNWIND" target="MUTEX_0" id="(std_result_Result_unwrap_0_CALL_UNWIND, MUTEX_0)">
-        <name>
-          <text>(std_result_Result_unwrap_0_CALL_UNWIND, MUTEX_0)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="std_result_Result_unwrap_0_CALL_UNWIND" target="main_BB14" id="(std_result_Result_unwrap_0_CALL_UNWIND, main_BB14)">
-        <name>
-          <text>(std_result_Result_unwrap_0_CALL_UNWIND, main_BB14)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
       <arc source="std_result_Result_unwrap_1_CALL" target="main_BB11" id="(std_result_Result_unwrap_1_CALL, main_BB11)">
         <name>
           <text>(std_result_Result_unwrap_1_CALL, main_BB11)</text>
@@ -1003,41 +988,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_result_Result_unwrap_1_CALL_UNWIND" target="MUTEX_0" id="(std_result_Result_unwrap_1_CALL_UNWIND, MUTEX_0)">
-        <name>
-          <text>(std_result_Result_unwrap_1_CALL_UNWIND, MUTEX_0)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="std_result_Result_unwrap_1_CALL_UNWIND" target="main_BB14" id="(std_result_Result_unwrap_1_CALL_UNWIND, main_BB14)">
-        <name>
-          <text>(std_result_Result_unwrap_1_CALL_UNWIND, main_BB14)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
       <arc source="std_result_Result_unwrap_2_CALL" target="main__closure_0__BB3" id="(std_result_Result_unwrap_2_CALL, main__closure_0__BB3)">
         <name>
           <text>(std_result_Result_unwrap_2_CALL, main__closure_0__BB3)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="std_result_Result_unwrap_2_CALL_UNWIND" target="MUTEX_0" id="(std_result_Result_unwrap_2_CALL_UNWIND, MUTEX_0)">
-        <name>
-          <text>(std_result_Result_unwrap_2_CALL_UNWIND, MUTEX_0)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="std_result_Result_unwrap_2_CALL_UNWIND" target="main__closure_0__BB9" id="(std_result_Result_unwrap_2_CALL_UNWIND, main__closure_0__BB9)">
-        <name>
-          <text>(std_result_Result_unwrap_2_CALL_UNWIND, main__closure_0__BB9)</text>
         </name>
         <inscription>
           <text>1</text>

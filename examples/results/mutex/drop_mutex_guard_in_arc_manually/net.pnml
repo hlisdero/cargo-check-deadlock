@@ -128,19 +128,9 @@
           <text>std_ops_Deref_deref_0_CALL</text>
         </name>
       </transition>
-      <transition id="std_ops_Deref_deref_0_CALL_UNWIND">
-        <name>
-          <text>std_ops_Deref_deref_0_CALL_UNWIND</text>
-        </name>
-      </transition>
       <transition id="std_ops_Deref_deref_1_CALL">
         <name>
           <text>std_ops_Deref_deref_1_CALL</text>
-        </name>
-      </transition>
-      <transition id="std_ops_Deref_deref_1_CALL_UNWIND">
-        <name>
-          <text>std_ops_Deref_deref_1_CALL_UNWIND</text>
         </name>
       </transition>
       <transition id="std_sync_Arc_T_new_0_CALL">
@@ -219,14 +209,6 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB2" target="std_ops_Deref_deref_0_CALL_UNWIND" id="(main_BB2, std_ops_Deref_deref_0_CALL_UNWIND)">
-        <name>
-          <text>(main_BB2, std_ops_Deref_deref_0_CALL_UNWIND)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
       <arc source="main_BB3" target="std_sync_Mutex_T_lock_0_CALL" id="(main_BB3, std_sync_Mutex_T_lock_0_CALL)">
         <name>
           <text>(main_BB3, std_sync_Mutex_T_lock_0_CALL)</text>
@@ -254,14 +236,6 @@
       <arc source="main_BB5" target="std_ops_Deref_deref_1_CALL" id="(main_BB5, std_ops_Deref_deref_1_CALL)">
         <name>
           <text>(main_BB5, std_ops_Deref_deref_1_CALL)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BB5" target="std_ops_Deref_deref_1_CALL_UNWIND" id="(main_BB5, std_ops_Deref_deref_1_CALL_UNWIND)">
-        <name>
-          <text>(main_BB5, std_ops_Deref_deref_1_CALL_UNWIND)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -411,25 +385,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_ops_Deref_deref_0_CALL_UNWIND" target="main_BB10" id="(std_ops_Deref_deref_0_CALL_UNWIND, main_BB10)">
-        <name>
-          <text>(std_ops_Deref_deref_0_CALL_UNWIND, main_BB10)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
       <arc source="std_ops_Deref_deref_1_CALL" target="main_BB6" id="(std_ops_Deref_deref_1_CALL, main_BB6)">
         <name>
           <text>(std_ops_Deref_deref_1_CALL, main_BB6)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="std_ops_Deref_deref_1_CALL_UNWIND" target="main_BB10" id="(std_ops_Deref_deref_1_CALL_UNWIND, main_BB10)">
-        <name>
-          <text>(std_ops_Deref_deref_1_CALL_UNWIND, main_BB10)</text>
         </name>
         <inscription>
           <text>1</text>
