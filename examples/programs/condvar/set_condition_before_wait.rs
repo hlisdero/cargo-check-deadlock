@@ -4,11 +4,10 @@
 //! Its purpose is to showcase the importance of the order in which the statement that
 //! sets the condition for the condition variable and the call to `wait()` appear.
 //!
-//! As the tool scans the Rust code, it translate first the main thread. We would like
+//! As the tool scans the Rust code, it translates first the main thread. We would like
 //! the statement `*started = true` to appear here. Later, the waiting thread is translated.
-//! The call to `wait()` will then have already seen that condition was set.
+//! The call to `wait()` will then have already seen that the condition was set.
 //! This is the simplest version possible for the translator.
-
 use std::sync::{Arc, Condvar, Mutex};
 use std::thread;
 
