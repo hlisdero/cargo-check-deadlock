@@ -1,5 +1,5 @@
 digraph condvar {
-    nodesep=0.7;
+    nodesep=0.6;
     
     wait_start [height=0.1 shape="box" xlabel="" label="wait_start"];
     lost_signal [height=0.1 shape="box" xlabel="" label="lost_signal"];
@@ -54,8 +54,10 @@ digraph condvar {
     // Skip wait when the condition is set
     input -> wait_skip -> output;
     condition_set -> wait_skip;
+    wait_skip -> condition_set;
     // Call wait only when the condition is not set
     condition_not_set -> wait_start;
+    wait_start -> condition_not_set;
     // Set the condition
     condition_not_set -> set_condition -> condition_set [weight=2];
     
