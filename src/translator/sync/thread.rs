@@ -20,7 +20,7 @@
 //! to translate the thread function and defer the translation.
 //! The function executed by the thread is translated to a Petri net just as any other.
 
-use log::info;
+use log::{debug, info};
 
 use crate::data_structures::petri_net_interface::{
     add_arc_place_transition, add_arc_transition_place,
@@ -32,7 +32,7 @@ use crate::translator::function::Places;
 use crate::translator::mir_function::{Entries, Memory};
 use crate::translator::special_function::call_foreign_function;
 use crate::translator::sync::{CondvarRef, MutexGuardRef, MutexRef, ThreadRef};
-use crate::utils::extract_nth_argument_as_place;
+use crate::utils::{check_substring_in_place_type, extract_nth_argument_as_place};
 
 #[derive(PartialEq, Eq)]
 pub struct Thread {
@@ -122,6 +122,15 @@ impl Thread {
         tcx: rustc_middle::ty::TyCtxt<'tcx>,
     ) {
         let body = tcx.optimized_mir(self.thread_function_def_id);
+        debug!(
+            "MOVING {} MUTEX, {} MUTEX GUARD, {} JOIN HANDLE AND {} CONDITION VARIABLE TO THREAD {}",
+            self.mutexes.len(),
+            self.mutex_guards.len(),
+            self.join_handles.len(),
+            self.condvars.len(),
+            self.index,
+        );
+
         for debug_info in &body.var_debug_info {
             let rustc_middle::mir::VarDebugInfoContents::Place(place) = debug_info.value else {
                 // Not interested in the other variants of `VarDebugInfoContents`
@@ -131,16 +140,48 @@ impl Thread {
                 // Not interested in locals other that `_1.X`
                 continue;
             }
-            for mutex_ref in self.mutexes.drain(..) {
+            if check_substring_in_place_type(
+                &place,
+                "std::sync::Mutex<",
+                self.thread_function_def_id,
+                tcx,
+            ) {
+                let mutex_ref = self.mutexes.pop().expect(
+                    "BUG: The thread function receives more mutexes than the ones detected",
+                );
                 memory.mutex.link_place(place, mutex_ref);
             }
-            for mutex_guard_ref in self.mutex_guards.drain(..) {
+            if check_substring_in_place_type(
+                &place,
+                "std::sync::MutexGuard<",
+                self.thread_function_def_id,
+                tcx,
+            ) {
+                let mutex_guard_ref = self.mutex_guards.pop().expect(
+                    "BUG: The thread function receives more mutex guards than the ones detected",
+                );
                 memory.mutex_guard.link_place(place, mutex_guard_ref);
             }
-            for thread_ref in self.join_handles.drain(..) {
+            if check_substring_in_place_type(
+                &place,
+                "std::thread::JoinHandle<",
+                self.thread_function_def_id,
+                tcx,
+            ) {
+                let thread_ref = self.join_handles.pop().expect(
+                    "BUG: The thread function receives more join handles than the ones detected",
+                );
                 memory.join_handle.link_place(place, thread_ref);
             }
-            for condvar_ref in self.condvars.drain(..) {
+            if check_substring_in_place_type(
+                &place,
+                "std::sync::Condvar",
+                self.thread_function_def_id,
+                tcx,
+            ) {
+                let condvar_ref = self.condvars.pop().expect(
+                "BUG: The thread function receives more condition variables than the ones detected",
+            );
                 memory.condvar.link_place(place, condvar_ref);
             }
         }
