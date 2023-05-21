@@ -54,6 +54,16 @@ mod self_notify_lost_signal {
     );
 }
 
+mod set_condition_before_wait {
+    use super::utils;
+
+    utils::generate_lola_tests_for_example_program!(
+        "./examples/programs/condvar/set_condition_before_wait.rs",
+        "./examples/results/condvar/set_condition_before_wait/",
+        false
+    );
+}
+
 // mod wait {
 //     use super::utils;
 //
