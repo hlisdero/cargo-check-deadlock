@@ -6,7 +6,7 @@
 //! <https://rustc-dev-guide.rust-lang.org/rustc-driver-interacting-with-the-ast.html>
 //!
 //! NOTE: For the library code to compile, you will need to first run the following:
-//!   rustup component add rustc-dev llvm-tools-preview
+//! `rustup component add rustc-dev llvm-tools-preview`
 
 // This feature gate is necessary to access the internal crates of the compiler.
 // It has existed for a long time and since the compiler internals will never be stabilized,
