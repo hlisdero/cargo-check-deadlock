@@ -148,13 +148,9 @@ Don't forget to give the project a star! Thanks again!
 
 Distributed under the terms of both the MIT license and the Apache License (Version 2.0). See [LICENSE-MIT](./LICENSE-MIT), [LICENSE-APACHE](./LICENSE-APACHE) for more information.
 
-## Contact
-
-Project Link: [https://github.com/hlisdero/netcrab](https://github.com/hlisdero/netcrab)
-
 ## Acknowledgments
 
-Based on the original work by Tom Meyer found in <https://github.com/Skasselbard/Granite>
+This project extends and reimplements ideas from the original work by Tom Meyer found in <https://github.com/Skasselbard/Granite> as part of the master thesis titled ["A Petri-Net Semantics for Rust"](https://github.com/Skasselbard/Granite/blob/master/doc/MasterThesis/main.pdf).
 
 The [rustc dev guide](https://rustc-dev-guide.rust-lang.org/) was a trusty guide in the journey of understanding the compiler. It is a must-read for every interested contributor!
 
