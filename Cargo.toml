@@ -1,9 +1,9 @@
 [package]
-name = "granite2"
+name = "granite"
 version = "0.1.0"
 description = "Find Deadlocks in Rust code with Petri net model checking"
-repository = "https://github.com/hlisdero/Granite2"
-homepage = "https://github.com/hlisdero/Granite2"
+repository = "https://github.com/hlisdero/granite"
+homepage = "https://github.com/hlisdero/granite"
 authors = ["Horacio Lisdero Scaffino <hlisdero@users.noreply.github.com>"]
 readme = "README.md"
 license = "MIT OR Apache-2.0"

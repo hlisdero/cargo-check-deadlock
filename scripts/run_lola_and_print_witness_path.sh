@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Simple script to run `lola` and print the witness path that shows HOW the deadlock is reached.
-# The witness path output is not captured by `granite2` and we need to resort to this workaround for now.
+# The witness path output is not captured by `granite` and we need to resort to this workaround for now.
 
 if ! command -v lola &>/dev/null; then
   echo "lola could not be found in \$PATH. Looking for the version included in the repository..."

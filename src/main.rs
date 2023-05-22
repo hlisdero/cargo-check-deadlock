@@ -1,6 +1,6 @@
 use clap::Parser;
-use granite2::model_checker::lola;
-use granite2::{OutputFormat, PetriNet};
+use granite::model_checker::lola;
+use granite::{OutputFormat, PetriNet};
 use log::info;
 
 const ERR_SOURCE_FILE_NOT_FOUND: i32 = 1;
@@ -77,7 +77,7 @@ fn main() {
     };
 
     info!("Starting the translation...");
-    let petri_net = match granite2::run(args.path) {
+    let petri_net = match granite::run(args.path) {
         Ok(petri_net) => petri_net,
         Err(err_str) => {
             eprintln!("{err_str}");

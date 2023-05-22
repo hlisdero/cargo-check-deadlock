@@ -3,12 +3,12 @@ use predicates::prelude::*; // Used for writing assertions
 use std::process::Command; // Run programs
 
 /// Asserts that the contents of the given output file correspond to the expected file contents
-/// after running `granite2` on the given source code file.
+/// after running `granite` on the given source code file.
 ///
 /// # Panics
 ///
-/// If the command `granite2` is not found, then the function panics.
-/// If the command `granite2` fails to complete execution sucessfully, then the function panics.
+/// If the command `granite` is not found, then the function panics.
+/// If the command `granite` fails to complete execution sucessfully, then the function panics.
 /// If the output file cannot be opened, then the function panics.
 /// If the output file contents cannot be read, then the function panics.
 #[allow(dead_code)]
@@ -19,7 +19,7 @@ pub fn assert_output_file(
     output_filename: &str,
     expected_contents_filename: &str,
 ) {
-    let mut cmd = Command::cargo_bin("granite2").expect("Command not found");
+    let mut cmd = Command::cargo_bin("granite").expect("Command not found");
 
     // Current workdir is always the project root folder
     cmd.arg(source_code_file)
@@ -41,12 +41,12 @@ pub fn assert_output_file(
 }
 
 /// Asserts that the result of running the model checker  `LoLA` matches the expected result
-/// (program has a deadlock or deadlock-free) after running `granite2` on the given source code file.
+/// (program has a deadlock or deadlock-free) after running `granite` on the given source code file.
 ///
 /// # Panics
 ///
-/// If the command `granite2` is not found, then the function panics.
-/// If the command `granite2` fails to complete execution sucessfully, then the function panics.
+/// If the command `granite` is not found, then the function panics.
+/// If the command `granite` fails to complete execution sucessfully, then the function panics.
 #[allow(dead_code)]
 pub fn assert_lola_result(
     source_code_file: &str,
@@ -54,7 +54,7 @@ pub fn assert_lola_result(
     output_filename: &str,
     output_should_have_deadlock: bool,
 ) {
-    let mut cmd = Command::cargo_bin("granite2").expect("Command not found");
+    let mut cmd = Command::cargo_bin("granite").expect("Command not found");
 
     // Current workdir is always the project root folder
     cmd.arg(source_code_file)

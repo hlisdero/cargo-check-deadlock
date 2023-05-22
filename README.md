@@ -1,4 +1,4 @@
-# granite2
+# granite
 
 ## Translate Rust source code to a Petri net
 
@@ -82,7 +82,7 @@ As time goes on and the compiler internals change, the code will inevitably need
 Write a valid Rust program that compiles correctly, e.g. `rust_program.rs` then run
 
 ```sh
-granite2 <path_to_program>/rust_program.rs --format=lola --format=pnml --format=dot
+granite <path_to_program>/rust_program.rs --format=lola --format=pnml --format=dot
 ```
 
 Three files called `net.lola`, `net.pnml` and `net.dot` should appear in the CWD.
@@ -95,7 +95,7 @@ The program supports the verbosity flags defined in the crate [clap_verbosity_fl
 For example, running the program with the flag `-vvv` prints debug messages that can be useful for pinpointing which line of the MIR representation is not being translated correctly.
 
 ```sh
-granite2 <path_to_program>/rust_program.rs -vvv
+granite <path_to_program>/rust_program.rs -vvv
 ```
 
 ## Visualizing the results
