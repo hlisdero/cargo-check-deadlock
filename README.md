@@ -6,6 +6,8 @@ Translate the MIR representation of the source code to a Petri net which can the
 The project is intended to be used to find deadlocks in Rust code by translating the source code,
 exporting it to the LoLA format, and then using the LoLA model checker to verify the absence of deadlocks.
 
+The tool also supports detecting lost signals. This particular deadlock case arises when a thread calls `notify_one` on a [Condition Variable](https://doc.rust-lang.org/std/sync/struct.Condvar.html) before another thread called `wait`.
+
 ### Supported export formats
 
 - Petri Net Markup Language (PNML) [https://www.pnml.org/](https://www.pnml.org/)
@@ -48,7 +50,7 @@ This proves extremely useful to get feedback on the types, compiler errors, etc.
 
 As time goes on and the compiler internals change, the code will inevitably need changes to work again.
 
-**The current state of the repository compiled without warnings and with all tests passing with** `rustc 1.71.0-nightly (9d871b061 2023-05-21)`
+**The current state of the repository compiles without warnings and with all tests passing with** `rustc 1.71.0-nightly (9d871b061 2023-05-21)`
 
 ### Installation
 
@@ -79,10 +81,10 @@ As time goes on and the compiler internals change, the code will inevitably need
 
 ## Usage
 
-Write a valid Rust program that compiles correctly, e.g. `rust_program.rs` then run
+Write a valid Rust program that compiles correctly, e.g. `rust_program.rs`, then run
 
 ```sh
-granite <path_to_program>/rust_program.rs --format=lola --format=pnml --format=dot
+granite <path_to_program>/rust_program.rs --format=lola --format=pnml --format=dot --deadlock-analysis
 ```
 
 Three files called `net.lola`, `net.pnml` and `net.dot` should appear in the CWD.
@@ -115,7 +117,7 @@ More information and other formats can be found in the [documentation](https://g
 ### Online
 
 To see the MIR representation of the source code, you may use the [Rust Playground](https://play.rust-lang.org/).
-Simply select the option "MIR" instead of "Run" in the dropdown menu.
+Simply select the option "MIR" instead of "Run" in the dropdown menu. Remember to select the nightly version too.
 
 To graph a given DOT result, you may use the [Graphviz Online tool](https://dreampuf.github.io/GraphvizOnline/) by [dreampuf](https://github.com/dreampuf).
 
