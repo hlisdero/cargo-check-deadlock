@@ -122,6 +122,15 @@ Simply select the option "MIR" instead of "Run" in the dropdown menu. Remember t
 
 To graph a given DOT result, you may use the [Graphviz Online tool](https://dreampuf.github.io/GraphvizOnline/) by [dreampuf](https://github.com/dreampuf).
 
+## Model checker
+
+The model checker LoLA can be downloaded [here](https://theo.informatik.uni-rostock.de/theo-forschung/tools/lola/). It must be compiled from the source code.
+
+An alternative mirror with detailed instructions is available on GitHub: <https://github.com/hlisdero/lola>
+
+Support for other model checkers and export formats may be added in the future.
+The export formats are implemented in the Petri net library: <https://github.com/hlisdero/netcrab>
+
 ## Contributing
 
 Contributions are what makes the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
