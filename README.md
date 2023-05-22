@@ -2,11 +2,9 @@
 
 ## Translate Rust source code to a Petri net
 
-Translate the MIR representation of the source code to a Petri net which can then be exported.
-The project is intended to be used to find deadlocks in Rust code by translating the source code,
-exporting it to the LoLA format, and then using the LoLA model checker to verify the absence of deadlocks.
+Translate the [MIR representation](https://rustc-dev-guide.rust-lang.org/mir/index.html) of the source code to a Petri net which can then be exported.
 
-The tool also supports detecting lost signals. This particular deadlock case arises when a thread calls `notify_one` on a [Condition Variable](https://doc.rust-lang.org/std/sync/struct.Condvar.html) before another thread called `wait`.
+The project is intended to be used to find deadlocks in Rust code by translating the source code, exporting it to the LoLA format, and then using the LoLA model checker to verify the absence of deadlocks. The tool also supports detecting lost signals. This particular deadlock case arises when a thread calls `notify_one` on a [Condition Variable](https://doc.rust-lang.org/std/sync/struct.Condvar.html) before another thread called `wait`.
 
 ### Supported export formats
 
@@ -50,14 +48,15 @@ This proves extremely useful to get feedback on the types, compiler errors, etc.
 
 As time goes on and the compiler internals change, the code will inevitably need changes to work again.
 
-**The current state of the repository compiles without warnings and with all tests passing with** `rustc 1.71.0-nightly (9d871b061 2023-05-21)`
+**The current state of the repository compiles without warnings and with all tests passing with**
+`rustc 1.71.0-nightly (9d871b061 2023-05-21)`
 
 ### Installation
 
 1. Clone the repo
 
    ```sh
-   git clone https://github.com/hlisdero/netcrab.git
+   git clone https://github.com/hlisdero/granite.git
    ```
 
 2. Make sure that the sysroot points to a nightly toolchain when running it from the project directory
@@ -88,6 +87,8 @@ granite <path_to_program>/rust_program.rs --format=lola --format=pnml --format=d
 ```
 
 Three files called `net.lola`, `net.pnml` and `net.dot` should appear in the CWD.
+
+To obtain the full list of CLI options, use the `--help` flag.
 
 _Note: For more examples, please refer to the integration tests._
 
