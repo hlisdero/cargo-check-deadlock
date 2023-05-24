@@ -124,3 +124,19 @@ pub fn check_substring_in_place_type<'tcx>(
     let ty_string = place_ty.ty.to_string();
     ty_string.contains(expected_substring)
 }
+
+/// Returns the field number in the first projection of variant `rustc_middle::mir::ProjectionElem::Field`.
+/// This is the index for accessing a tuple or similar aggregated value types.
+/// <https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/enum.ProjectionElem.html>
+///
+/// # Panics
+///
+/// If the place does not contain a field projection, the function panics.
+pub fn get_field_number_in_projection(place: &rustc_middle::mir::Place) -> usize {
+    for projection_elem in place.projection {
+        if let rustc_middle::mir::ProjectionElem::Field(number, _) = projection_elem {
+            return number.as_usize();
+        }
+    }
+    panic!("BUG: A field number was not found in the place {place:?}");
+}

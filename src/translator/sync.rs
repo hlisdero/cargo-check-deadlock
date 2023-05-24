@@ -10,7 +10,9 @@ use log::debug;
 use crate::data_structures::petri_net_interface::PetriNet;
 use crate::translator::function::{Places, PostprocessingTask};
 use crate::translator::mir_function::Memory;
-use crate::utils::{check_substring_in_place_type, extract_nth_argument_as_place};
+use crate::utils::{
+    check_substring_in_place_type, extract_nth_argument_as_place, get_field_number_in_projection,
+};
 
 /// A mutex reference is just a shared pointer to the mutex.
 pub type MutexRef = std::rc::Rc<mutex::Mutex>;
@@ -159,15 +161,7 @@ pub fn link_if_sync_variable<'tcx>(
     if place_linked.projection.is_empty() {
         memory.link_place_to_same_value(*place_to_link, *place_linked);
     } else {
-        // Get the field number, i.e., the index to access the aggregate value
-        let mut field_number = None;
-        for projection_elem in place_linked.projection {
-            if let rustc_middle::mir::ProjectionElem::Field(number, _) = projection_elem {
-                field_number = Some(number.as_usize());
-            }
-        }
-        let field_number =
-            field_number.expect("BUG: A field number was not found for an indirect place");
+        let field_number = get_field_number_in_projection(place_linked);
         // Checks if the place has a `ProjectionElem::Deref`
         if place_linked.has_deref() {
             // Create a new place without the projections
