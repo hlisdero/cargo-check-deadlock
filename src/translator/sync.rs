@@ -170,20 +170,15 @@ pub fn link_if_sync_variable<'tcx>(
         }
         // Get the field number, i.e., the index to access the aggregate value
         let mut field_number = None;
-        // Keep track of the place being dereferenced.
-        let mut has_deref = false;
         for projection_elem in place_linked.projection {
-            if projection_elem == rustc_middle::mir::ProjectionElem::Deref {
-                has_deref = true;
-            }
             if let rustc_middle::mir::ProjectionElem::Field(number, _) = projection_elem {
                 field_number = Some(number.as_usize());
             }
         }
         let field_number =
             field_number.expect("BUG: A field number was not found for an indirect place");
-
-        if has_deref {
+        // Checks if the place has a `ProjectionElem::Deref`
+        if place_linked.has_deref() {
             // Create a new place without the projections
             let mut base_place = *place_linked;
             base_place.projection = rustc_middle::ty::List::empty();
