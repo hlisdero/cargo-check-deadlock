@@ -91,7 +91,7 @@ macro_rules! generate_tests_for_example_program {
     ($program_path:literal, $result_folder_path:literal) => {
         #[test]
         fn generates_correct_dot_output_file() {
-            utils::assert_output_file(
+            super::utils::assert_output_file(
                 $program_path,
                 $result_folder_path,
                 "dot",
@@ -102,7 +102,7 @@ macro_rules! generate_tests_for_example_program {
 
         #[test]
         fn generates_correct_lola_output_file() {
-            utils::assert_output_file(
+            super::utils::assert_output_file(
                 $program_path,
                 $result_folder_path,
                 "lola",
@@ -113,7 +113,7 @@ macro_rules! generate_tests_for_example_program {
 
         #[test]
         fn generates_correct_pnml_output_file() {
-            utils::assert_output_file(
+            super::utils::assert_output_file(
                 $program_path,
                 $result_folder_path,
                 "pnml",
@@ -139,7 +139,7 @@ macro_rules! generate_lola_tests_for_example_program {
     ($program_path:literal, $result_folder_path:literal, $expected_result:expr) => {
         #[test]
         fn generates_correct_lola_result() {
-            utils::assert_lola_result(
+            super::utils::assert_lola_result(
                 $program_path,
                 $result_folder_path,
                 concat!($result_folder_path, "deadlock_test.lola"),
