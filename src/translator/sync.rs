@@ -130,8 +130,8 @@ pub fn handle_aggregate_assignment<'tcx>(
     }
 }
 
-/// Checks if `place_linked` contains a mutex, a mutex guard, a join handle or a condition variable.
-/// If `place_linked` contains a synchronization variable, links it to `place_to_link`.
+/// Checks if `place_to_link` contains a mutex, a mutex guard, a join handle or a condition variable.
+/// If `place_to_link` contains a synchronization variable, links it to `place_linked`.
 ///
 /// Receives a reference to the memory of the caller function to
 /// link the return local variable to the synchronization variable.
@@ -153,45 +153,12 @@ pub fn link_if_sync_variable<'tcx>(
     caller_function_def_id: rustc_hir::def_id::DefId,
     tcx: rustc_middle::ty::TyCtxt<'tcx>,
 ) {
+    if !check_if_sync_variable(place_to_link, caller_function_def_id, tcx) {
+        return;
+    }
     if place_linked.projection.is_empty() {
-        // Checks if `place_linked` contains a mutex, a mutex guard, a join handle or a condition variable.
-        // If `place_linked` is of type of a synchronization variable, links `place_linked` to `place_to_link`.
-        if check_substring_in_place_type(
-            place_linked,
-            "std::sync::MutexGuard<",
-            caller_function_def_id,
-            tcx,
-        ) {
-            memory.link_place_to_same_value(*place_to_link, *place_linked);
-        }
-        if check_substring_in_place_type(
-            place_linked,
-            "std::sync::Mutex<",
-            caller_function_def_id,
-            tcx,
-        ) {
-            memory.link_place_to_same_value(*place_to_link, *place_linked);
-        }
-        if check_substring_in_place_type(
-            place_linked,
-            "std::thread::JoinHandle<",
-            caller_function_def_id,
-            tcx,
-        ) {
-            memory.link_place_to_same_value(*place_to_link, *place_linked);
-        }
-        if check_substring_in_place_type(
-            place_linked,
-            "std::sync::Condvar",
-            caller_function_def_id,
-            tcx,
-        ) {
-            memory.link_place_to_same_value(*place_to_link, *place_linked);
-        }
+        memory.link_place_to_same_value(*place_to_link, *place_linked);
     } else {
-        if !check_if_sync_variable(place_to_link, caller_function_def_id, tcx) {
-            return;
-        }
         // Get the field number, i.e., the index to access the aggregate value
         let mut field_number = None;
         for projection_elem in place_linked.projection {
