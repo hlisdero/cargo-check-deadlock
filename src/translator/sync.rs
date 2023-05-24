@@ -154,16 +154,40 @@ pub fn link_if_sync_variable<'tcx>(
     tcx: rustc_middle::ty::TyCtxt<'tcx>,
 ) {
     if place_linked.projection.is_empty() {
-        // In the normal case the place linked to the sync variable
-        // is simply `place_linked`.
-        generalized_link_place_if_sync_variable(
-            place_to_link,
+        // Checks if `place_linked` contains a mutex, a mutex guard, a join handle or a condition variable.
+        // If `place_linked` is of type of a synchronization variable, links `place_linked` to `place_to_link`.
+        if check_substring_in_place_type(
             place_linked,
-            place_linked,
-            memory,
+            "std::sync::MutexGuard<",
             caller_function_def_id,
             tcx,
-        );
+        ) {
+            memory.link_place_to_same_value(*place_to_link, *place_linked);
+        }
+        if check_substring_in_place_type(
+            place_linked,
+            "std::sync::Mutex<",
+            caller_function_def_id,
+            tcx,
+        ) {
+            memory.link_place_to_same_value(*place_to_link, *place_linked);
+        }
+        if check_substring_in_place_type(
+            place_linked,
+            "std::thread::JoinHandle<",
+            caller_function_def_id,
+            tcx,
+        ) {
+            memory.link_place_to_same_value(*place_to_link, *place_linked);
+        }
+        if check_substring_in_place_type(
+            place_linked,
+            "std::sync::Condvar",
+            caller_function_def_id,
+            tcx,
+        ) {
+            memory.link_place_to_same_value(*place_to_link, *place_linked);
+        }
     } else {
         if !check_if_sync_variable(place_to_link, caller_function_def_id, tcx) {
             return;
@@ -189,53 +213,6 @@ pub fn link_if_sync_variable<'tcx>(
             debug!("ACCESS FIELD {field_number} IN PLACE {place_linked:?}");
             memory.link_field_in_aggregate(*place_to_link, *place_linked, field_number);
         }
-    }
-}
-
-/// Checks if `place_to_check_type` contains a mutex, a mutex guard, a join handle or a condition variable.
-/// If `place_to_check_type` is of type of a synchronization variable, links `place_linked` to `place_to_link`.
-///
-/// This function decouples the place with the type of the sync variable from the place that is linked to the sync
-/// variable. In this sense, it is "generalized" from the naive idea that these two concepts always match.
-fn generalized_link_place_if_sync_variable<'tcx>(
-    place_to_link: &rustc_middle::mir::Place<'tcx>,
-    place_linked: &rustc_middle::mir::Place<'tcx>,
-    place_to_check_type: &rustc_middle::mir::Place<'tcx>,
-    memory: &mut Memory<'tcx>,
-    caller_function_def_id: rustc_hir::def_id::DefId,
-    tcx: rustc_middle::ty::TyCtxt<'tcx>,
-) {
-    if check_substring_in_place_type(
-        place_to_check_type,
-        "std::sync::MutexGuard<",
-        caller_function_def_id,
-        tcx,
-    ) {
-        memory.link_place_to_same_value(*place_to_link, *place_linked);
-    }
-    if check_substring_in_place_type(
-        place_to_check_type,
-        "std::sync::Mutex<",
-        caller_function_def_id,
-        tcx,
-    ) {
-        memory.link_place_to_same_value(*place_to_link, *place_linked);
-    }
-    if check_substring_in_place_type(
-        place_to_check_type,
-        "std::thread::JoinHandle<",
-        caller_function_def_id,
-        tcx,
-    ) {
-        memory.link_place_to_same_value(*place_to_link, *place_linked);
-    }
-    if check_substring_in_place_type(
-        place_to_check_type,
-        "std::sync::Condvar",
-        caller_function_def_id,
-        tcx,
-    ) {
-        memory.link_place_to_same_value(*place_to_link, *place_linked);
     }
 }
 
