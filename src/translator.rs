@@ -610,7 +610,7 @@ impl<'tcx> Translator<'tcx> {
     ///
     /// - Extracts the function `DefId` of the called function.
     /// - Extracts the closure for the thread.
-    /// - Finds the sync variables passed in to the closure.
+    /// - Gets the sync variables passed in to the closure.
     /// - Adds the thread to the `ThreadManager`.
     /// - Links the return place to the `ThreadRef`.
     fn call_thread_spawn(
@@ -634,10 +634,11 @@ impl<'tcx> Translator<'tcx> {
             self.tcx,
         );
 
-        // Extract the closure and find the sync variables passed in to the closure
+        let closure = extract_closure(args);
+        // The sync variables captured by the closure are aggregated together in a single value in memory
+        // Get this vector of values that should be re-mapped in the new thread's memory.
         let memory = &mut current_function.memory;
-        let closure_for_spawn = extract_closure(args);
-        let aggregate = sync::thread::find_sync_variables(closure_for_spawn, memory);
+        let aggregate = closure.map_or_else(Vec::new, |place| memory.copy_aggregate(&place));
 
         // Add a new thread
         let index = self.threads.len();

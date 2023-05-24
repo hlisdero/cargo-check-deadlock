@@ -161,15 +161,3 @@ pub fn call_join<'tcx>(
     thread_ref.borrow_mut().set_join_transition(transition);
     info!("Found join call for thread {}", thread_ref.borrow().index);
 }
-
-/// Finds sync variables captured by the closure for a new thread.
-/// Returns the vector of values that should be re-mapped in the new thread's memory.
-///
-/// If the closure is `None` (no variables were captured, it is a `ZeroSizedType`),
-/// then returns an empty vector.
-pub fn find_sync_variables<'tcx>(
-    closure: Option<rustc_middle::mir::Place<'tcx>>,
-    memory: &mut Memory<'tcx>,
-) -> Vec<Value> {
-    closure.map_or_else(Vec::new, |place| memory.copy_aggregate(&place))
-}
