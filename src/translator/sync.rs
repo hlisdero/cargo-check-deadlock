@@ -81,8 +81,27 @@ pub fn call_function<'tcx>(
     }
 }
 
+/// Checks whether a place contains a sync variable
+/// (mutex, mutex guard, join handle or condition variable)
+pub fn check_if_sync_variable<'tcx>(
+    place: &rustc_middle::mir::Place<'tcx>,
+    caller_function_def_id: rustc_hir::def_id::DefId,
+    tcx: rustc_middle::ty::TyCtxt<'tcx>,
+) -> bool {
+    check_substring_in_place_type(place, "std::sync::MutexGuard<", caller_function_def_id, tcx)
+        || check_substring_in_place_type(place, "std::sync::Mutex<", caller_function_def_id, tcx)
+        || check_substring_in_place_type(
+            place,
+            "std::thread::JoinHandle<",
+            caller_function_def_id,
+            tcx,
+        )
+        || check_substring_in_place_type(place, "std::sync::Condvar", caller_function_def_id, tcx)
+}
+
 /// Handles MIR assignments of the form: `_X = { copy_data: move _Y }`.
-/// If the right-hand side contains a synchronization variable, link it to the left-hand side.
+/// Create a new aggregate value (tuple, array, `std::sync::Arc`, etc.) from the sync variables in the operands.
+/// If the operand in the right hand side contains a sync variable, the function includes it in the aggregate.
 pub fn handle_aggregate_assignment<'tcx>(
     place: &rustc_middle::mir::Place<'tcx>,
     operands: &Vec<rustc_middle::mir::Operand<'tcx>>,
@@ -90,6 +109,8 @@ pub fn handle_aggregate_assignment<'tcx>(
     caller_function_def_id: rustc_hir::def_id::DefId,
     tcx: rustc_middle::ty::TyCtxt<'tcx>,
 ) {
+    let mut places_with_sync_variables: Vec<rustc_middle::mir::Place<'tcx>> = Vec::new();
+
     for operand in operands {
         // Extract the place to be assigned
         let rhs = match operand {
@@ -99,7 +120,13 @@ pub fn handle_aggregate_assignment<'tcx>(
             // Nothing to do if we found a constant as one of the operands.
             rustc_middle::mir::Operand::Constant(_) => continue,
         };
-        link_if_sync_variable(place, rhs, memory, caller_function_def_id, tcx);
+        if check_if_sync_variable(rhs, caller_function_def_id, tcx) {
+            places_with_sync_variables.push(*rhs);
+        }
+    }
+
+    if !places_with_sync_variables.is_empty() {
+        memory.create_aggregate(*place, &places_with_sync_variables);
     }
 }
 
@@ -126,23 +153,7 @@ pub fn link_if_sync_variable<'tcx>(
     caller_function_def_id: rustc_hir::def_id::DefId,
     tcx: rustc_middle::ty::TyCtxt<'tcx>,
 ) {
-    if place_linked.is_indirect() {
-        // Create a new place without the projections
-        let mut base_place = *place_linked;
-        base_place.projection = rustc_middle::ty::List::empty();
-        debug!("SEARCH FOR SYNC VARIABLE IN BASE PLACE: {base_place:?} <- {place_linked:?}");
-
-        // In the indirect case the place linked to the sync variable
-        // is actually the base place of `place_linked`.
-        generalized_link_place_if_sync_variable(
-            place_to_link,
-            &base_place,
-            place_linked,
-            memory,
-            caller_function_def_id,
-            tcx,
-        );
-    } else {
+    if place_linked.projection.is_empty() {
         // In the normal case the place linked to the sync variable
         // is simply `place_linked`.
         generalized_link_place_if_sync_variable(
@@ -153,6 +164,36 @@ pub fn link_if_sync_variable<'tcx>(
             caller_function_def_id,
             tcx,
         );
+    } else {
+        if !check_if_sync_variable(place_to_link, caller_function_def_id, tcx) {
+            return;
+        }
+        // Get the field number, i.e., the index to access the aggregate value
+        let mut field_number = None;
+        // Keep track of the place being dereferenced.
+        let mut has_deref = false;
+        for projection_elem in place_linked.projection {
+            if projection_elem == rustc_middle::mir::ProjectionElem::Deref {
+                has_deref = true;
+            }
+            if let rustc_middle::mir::ProjectionElem::Field(number, _) = projection_elem {
+                field_number = Some(number.as_usize());
+            }
+        }
+        let field_number =
+            field_number.expect("BUG: A field number was not found for an indirect place");
+
+        if has_deref {
+            // Create a new place without the projections
+            let mut base_place = *place_linked;
+            base_place.projection = rustc_middle::ty::List::empty();
+
+            debug!("ACCESS FIELD {field_number} AFTER DEREF IN BASE PLACE {base_place:?}");
+            memory.link_field_in_aggregate(*place_to_link, base_place, field_number);
+        } else {
+            debug!("ACCESS FIELD {field_number} IN PLACE {place_linked:?}");
+            memory.link_field_in_aggregate(*place_to_link, *place_linked, field_number);
+        }
     }
 }
 
@@ -175,9 +216,7 @@ fn generalized_link_place_if_sync_variable<'tcx>(
         caller_function_def_id,
         tcx,
     ) {
-        memory
-            .mutex_guard
-            .link_place_to_same_value(*place_to_link, *place_linked);
+        memory.link_place_to_same_value(*place_to_link, *place_linked);
     }
     if check_substring_in_place_type(
         place_to_check_type,
@@ -185,9 +224,7 @@ fn generalized_link_place_if_sync_variable<'tcx>(
         caller_function_def_id,
         tcx,
     ) {
-        memory
-            .mutex
-            .link_place_to_same_value(*place_to_link, *place_linked);
+        memory.link_place_to_same_value(*place_to_link, *place_linked);
     }
     if check_substring_in_place_type(
         place_to_check_type,
@@ -195,9 +232,7 @@ fn generalized_link_place_if_sync_variable<'tcx>(
         caller_function_def_id,
         tcx,
     ) {
-        memory
-            .join_handle
-            .link_place_to_same_value(*place_to_link, *place_linked);
+        memory.link_place_to_same_value(*place_to_link, *place_linked);
     }
     if check_substring_in_place_type(
         place_to_check_type,
@@ -205,9 +240,7 @@ fn generalized_link_place_if_sync_variable<'tcx>(
         caller_function_def_id,
         tcx,
     ) {
-        memory
-            .condvar
-            .link_place_to_same_value(*place_to_link, *place_linked);
+        memory.link_place_to_same_value(*place_to_link, *place_linked);
     }
 }
 

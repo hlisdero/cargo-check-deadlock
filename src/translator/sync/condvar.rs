@@ -138,7 +138,7 @@ pub fn call_new<'tcx>(
     // Create a new condvar
     let condvar = Rc::new(Condvar::new(index, net));
     // The return value contains a new condition variable. Link the local variable to it.
-    memory.condvar.link_place(destination, condvar);
+    memory.link_condvar(destination, &condvar);
     debug!("NEW CONDVAR: {destination:?}");
 }
 
@@ -172,7 +172,7 @@ pub fn call_notify_one<'tcx>(
     let self_ref = extract_nth_argument_as_place(args, 0).unwrap_or_else(|| {
         panic!("BUG: `{function_name}` should receive the self reference as a place")
     });
-    let condvar_ref = memory.condvar.get_linked_value(&self_ref);
+    let condvar_ref = memory.get_condvar(&self_ref);
     condvar_ref.link_to_notify_one_call(transitions.get_default(), net);
 }
 
@@ -205,28 +205,24 @@ pub fn call_wait<'tcx>(
     let self_ref = extract_nth_argument_as_place(args, 0).unwrap_or_else(|| {
         panic!("BUG: `{function_name}` should receive the self reference as a place")
     });
-    let condvar_ref = memory.condvar.get_linked_value(&self_ref);
+    let condvar_ref = memory.get_condvar(&self_ref);
     // Retrieve the mutex guard from the local variable passed to the function as an argument.
     let mutex_guard = extract_nth_argument_as_place(args, 1).unwrap_or_else(|| {
         panic!("BUG: `{function_name}` should receive the first argument as a place")
     });
-    let mutex_guard_ref = memory.mutex_guard.get_linked_value(&mutex_guard);
+    let mutex_guard_ref = memory.get_mutex_guard(&mutex_guard);
 
     // Connect the start and end place to the condition variable
     let places = places.ignore_cleanup_place();
     let (start_place, end_place) = places.get_start_end_place();
     condvar_ref.link_to_wait_call(&start_place, &end_place, mutex_guard_ref, net);
+    let wait_start = condvar_ref.wait_start.clone();
 
     // The return value contains the mutex guard passed to the function. Link the local variable to it.
     let cloned_ref = Rc::clone(mutex_guard_ref);
-    memory.mutex_guard.link_place(destination, cloned_ref);
+    memory.link_mutex_guard(destination, &cloned_ref);
 
     // Create a postprocessing task to link the mutex to the condvar.
     // This creates the condition and skip logic.
-    PostprocessingTask::link_mutex_to_condvar(
-        index,
-        start_place,
-        end_place,
-        condvar_ref.wait_start.clone(),
-    )
+    PostprocessingTask::link_mutex_to_condvar(index, start_place, end_place, wait_start)
 }

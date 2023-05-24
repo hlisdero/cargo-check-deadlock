@@ -21,7 +21,7 @@ use std::collections::HashMap;
 use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef};
 use basic_block::BasicBlock;
 
-pub use memory::{Entries, Memory};
+pub use memory::{Memory, Value};
 
 pub struct MirFunction<'tcx> {
     /// The ID that uniquely identifies the function in this crate in the HIR representation.
@@ -57,7 +57,7 @@ impl<'tcx> MirFunction<'tcx> {
             end_place,
             active_block: None,
             basic_blocks: HashMap::new(),
-            memory: Memory::new(),
+            memory: Memory::default(),
         }
     }
 

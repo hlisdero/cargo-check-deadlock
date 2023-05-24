@@ -47,7 +47,8 @@ use crate::naming::function::{
 use crate::naming::{PROGRAM_END, PROGRAM_PANIC, PROGRAM_START};
 use crate::translator::sync::MutexRef;
 use crate::utils::{
-    extract_closure, extract_def_id_of_called_function_from_operand, extract_nth_argument_as_place,
+    check_substring_in_place_type, extract_closure, extract_def_id_of_called_function_from_operand,
+    extract_nth_argument_as_place,
 };
 use function::{Places, PostprocessingTask, Transitions};
 use mir_function::MirFunction;
@@ -419,8 +420,17 @@ impl<'tcx> Translator<'tcx> {
             panic!("BUG: `{function_name}` should receive a reference as a place")
         });
         let function = self.call_stack.peek();
-        function.memory.mutex_guard.is_linked(&self_ref)
-            || function.memory.mutex.is_linked(&self_ref)
+        check_substring_in_place_type(
+            &self_ref,
+            "std::sync::MutexGuard<",
+            function.def_id,
+            self.tcx,
+        ) || check_substring_in_place_type(
+            &self_ref,
+            "std::sync::Mutex<",
+            function.def_id,
+            self.tcx,
+        )
     }
 
     /// Call to a MIR function. It is the default for user-defined functions in the code.
@@ -569,7 +579,7 @@ impl<'tcx> Translator<'tcx> {
                 panic!("BUG: `{function_name}` should receive a reference as a place")
             });
             let function = self.call_stack.peek_mut();
-            let mutex_guard_ref = function.memory.mutex_guard.get_linked_value(&reference);
+            let mutex_guard_ref = function.memory.get_mutex_guard(&reference);
             mutex_guard_ref.mutex.add_deref_mut_transition(transition);
             info!("Encountered a mutable dereference of a mutex guard");
         }
@@ -627,17 +637,14 @@ impl<'tcx> Translator<'tcx> {
         // Extract the closure and find the sync variables passed in to the closure
         let memory = &mut current_function.memory;
         let closure_for_spawn = extract_closure(args);
-        let memory_entries = sync::thread::find_sync_variables(closure_for_spawn, memory);
+        let aggregate = sync::thread::find_sync_variables(closure_for_spawn, memory);
 
         // Add a new thread
         let index = self.threads.len();
         let thread = Rc::new(RefCell::new(sync::thread::Thread::new(
             transition,
             thread_function_def_id,
-            memory_entries.0,
-            memory_entries.1,
-            memory_entries.2,
-            memory_entries.3,
+            aggregate,
             index,
         )));
         let thread_ref = Rc::clone(&thread);
@@ -645,7 +652,7 @@ impl<'tcx> Translator<'tcx> {
         info!("Found thread {index} and pushed it to the back of the thread translation queue");
 
         // The return value contains a new join handle. Link the local variable to it.
-        memory.join_handle.link_place(destination, thread_ref);
+        memory.link_join_handle(destination, &thread_ref);
         debug!("NEW JOIN HANDLE: {destination:?}");
     }
 }

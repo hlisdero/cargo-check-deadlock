@@ -29,30 +29,30 @@ use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef, Transition
 use crate::naming::function::foreign_call_transition_labels;
 use crate::naming::thread::{end_place_label, start_place_label};
 use crate::translator::function::Places;
-use crate::translator::mir_function::{Entries, Memory};
+use crate::translator::mir_function::{Memory, Value};
 use crate::translator::special_function::call_foreign_function;
-use crate::translator::sync::{CondvarRef, MutexGuardRef, MutexRef, ThreadRef};
-use crate::utils::{check_substring_in_place_type, extract_nth_argument_as_place};
+use crate::utils::extract_nth_argument_as_place;
 
-#[derive(PartialEq, Eq)]
 pub struct Thread {
     /// The transition from which the thread branches off at the start.
     spawn_transition: TransitionRef,
     /// The definition ID that uniquely identifies the function run by the thread.
     thread_function_def_id: rustc_hir::def_id::DefId,
-    /// The mutexes passed to the thread.
-    mutexes: Entries<MutexRef>,
-    /// The mutex guards passed to the thread.
-    mutex_guards: Entries<MutexGuardRef>,
-    /// The join handles passed to the thread.
-    join_handles: Entries<ThreadRef>,
-    /// The condition variables passed to the thread.
-    condvars: Entries<CondvarRef>,
+    /// The aggregate value containing the sync variables passed to the thread.
+    aggregate: Vec<Value>,
     /// The transition to which the thread joins in at the end.
     join_transition: Option<TransitionRef>,
     /// An index to identify the thread.
     pub index: usize,
 }
+
+impl std::cmp::PartialEq for Thread {
+    fn eq(&self, other: &Self) -> bool {
+        self.index == other.index
+    }
+}
+
+impl std::cmp::Eq for Thread {}
 
 impl Thread {
     /// Creates a new thread without a join transition.
@@ -60,19 +60,13 @@ impl Thread {
     pub const fn new(
         spawn_transition: TransitionRef,
         thread_function_def_id: rustc_hir::def_id::DefId,
-        mutexes: Entries<MutexRef>,
-        mutex_guards: Entries<MutexGuardRef>,
-        join_handles: Entries<ThreadRef>,
-        condvars: Entries<CondvarRef>,
+        aggregate: Vec<Value>,
         index: usize,
     ) -> Self {
         Self {
             spawn_transition,
             thread_function_def_id,
-            mutexes,
-            mutex_guards,
-            join_handles,
-            condvars,
+            aggregate,
             join_transition: None,
             index,
         }
@@ -106,8 +100,7 @@ impl Thread {
         )
     }
 
-    /// Moves the memory entries corresponding to the synchronization variables to the new function's memory.
-    /// Supports moving mutexes and condition variables.
+    /// Moves the aggregated value containing the sync variables to the new function's memory.
     /// Checks the debug info to detect places containing a synchronization variable passed to the new thread.
     /// We are only interested in places of the form `_1.X` since `std::thread::spawn` only receives one argument.
     /// <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/mir/struct.VarDebugInfo.html>
@@ -122,15 +115,6 @@ impl Thread {
         tcx: rustc_middle::ty::TyCtxt<'tcx>,
     ) {
         let body = tcx.optimized_mir(self.thread_function_def_id);
-        debug!(
-            "MOVING {} MUTEX, {} MUTEX GUARD, {} JOIN HANDLE AND {} CONDITION VARIABLE TO THREAD {}",
-            self.mutexes.len(),
-            self.mutex_guards.len(),
-            self.join_handles.len(),
-            self.condvars.len(),
-            self.index,
-        );
-
         for debug_info in &body.var_debug_info {
             let rustc_middle::mir::VarDebugInfoContents::Place(place) = debug_info.value else {
                 // Not interested in the other variants of `VarDebugInfoContents`
@@ -140,50 +124,12 @@ impl Thread {
                 // Not interested in locals other that `_1.X`
                 continue;
             }
-            if check_substring_in_place_type(
-                &place,
-                "std::sync::Mutex<",
-                self.thread_function_def_id,
-                tcx,
-            ) {
-                let mutex_ref = self.mutexes.pop().expect(
-                    "BUG: The thread function receives more mutexes than the ones detected",
-                );
-                memory.mutex.link_place(place, mutex_ref);
-            }
-            if check_substring_in_place_type(
-                &place,
-                "std::sync::MutexGuard<",
-                self.thread_function_def_id,
-                tcx,
-            ) {
-                let mutex_guard_ref = self.mutex_guards.pop().expect(
-                    "BUG: The thread function receives more mutex guards than the ones detected",
-                );
-                memory.mutex_guard.link_place(place, mutex_guard_ref);
-            }
-            if check_substring_in_place_type(
-                &place,
-                "std::thread::JoinHandle<",
-                self.thread_function_def_id,
-                tcx,
-            ) {
-                let thread_ref = self.join_handles.pop().expect(
-                    "BUG: The thread function receives more join handles than the ones detected",
-                );
-                memory.join_handle.link_place(place, thread_ref);
-            }
-            if check_substring_in_place_type(
-                &place,
-                "std::sync::Condvar",
-                self.thread_function_def_id,
-                tcx,
-            ) {
-                let condvar_ref = self.condvars.pop().expect(
-                "BUG: The thread function receives more condition variables than the ones detected",
+            debug!(
+                "MOVED AGGREGATE {place:?} WITH SYNC VARIABLES TO THE THREAD {}",
+                self.index
             );
-                memory.condvar.link_place(place, condvar_ref);
-            }
+
+            memory.link_aggregate(place, std::mem::take(&mut self.aggregate));
         }
     }
 }
@@ -211,33 +157,19 @@ pub fn call_join<'tcx>(
     let self_ref = extract_nth_argument_as_place(args, 0).unwrap_or_else(|| {
         panic!("BUG: `{function_name}` should receive the self reference as a place")
     });
-    let thread_ref = memory.join_handle.get_linked_value(&self_ref);
+    let thread_ref = memory.get_join_handle(&self_ref);
     thread_ref.borrow_mut().set_join_transition(transition);
     info!("Found join call for thread {}", thread_ref.borrow().index);
 }
 
 /// Finds sync variables captured by the closure for a new thread.
-/// Returns the memory entries for each sync variable type that should be re-mapped in the new thread's memory.
+/// Returns the vector of values that should be re-mapped in the new thread's memory.
 ///
 /// If the closure is `None` (no variables were captured, it is a `ZeroSizedType`),
-/// then return empty vectors for the memory entries.
+/// then returns an empty vector.
 pub fn find_sync_variables<'tcx>(
     closure: Option<rustc_middle::mir::Place<'tcx>>,
     memory: &mut Memory<'tcx>,
-) -> (
-    Entries<MutexRef>,
-    Entries<MutexGuardRef>,
-    Entries<ThreadRef>,
-    Entries<CondvarRef>,
-) {
-    closure.map_or_else(
-        || (vec![], vec![], vec![], vec![]),
-        |place| {
-            let mutexes = memory.mutex.find_linked_values(place);
-            let mutex_guards = memory.mutex_guard.find_linked_values(place);
-            let join_handles = memory.join_handle.find_linked_values(place);
-            let condvars = memory.condvar.find_linked_values(place);
-            (mutexes, mutex_guards, join_handles, condvars)
-        },
-    )
+) -> Vec<Value> {
+    closure.map_or_else(Vec::new, |place| memory.copy_aggregate(&place))
 }
