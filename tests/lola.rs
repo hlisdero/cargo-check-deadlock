@@ -44,6 +44,16 @@ mod infinite_wait_deadlock {
     );
 }
 
+mod producer_consumer {
+    use super::utils;
+
+    utils::generate_lola_tests_for_example_program!(
+        "./examples/programs/condvar/producer_consumer.rs",
+        "./examples/results/condvar/producer_consumer/",
+        false
+    );
+}
+
 mod self_notify_lost_signal {
     use super::utils;
 
