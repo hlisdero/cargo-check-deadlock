@@ -31,7 +31,7 @@ use crate::naming::thread::{end_place_label, start_place_label};
 use crate::translator::function::Places;
 use crate::translator::mir_function::{Memory, Value};
 use crate::translator::special_function::call_foreign_function;
-use crate::utils::extract_nth_argument_as_place;
+use crate::utils::{extract_nth_argument_as_place, get_field_number_in_projection};
 
 pub struct Thread {
     /// The transition from which the thread branches off at the start.
@@ -114,6 +114,17 @@ impl Thread {
         memory: &mut Memory<'tcx>,
         tcx: rustc_middle::ty::TyCtxt<'tcx>,
     ) {
+        // Link the aggregate itself, the local _1
+        let base_place = rustc_middle::mir::Place {
+            local: rustc_middle::mir::Local::from_usize(1),
+            projection: rustc_middle::ty::List::empty(),
+        };
+        memory.link_aggregate(base_place, std::mem::take(&mut self.aggregate));
+        debug!(
+            "MOVED AGGREGATE VALUE {base_place:?} WITH SYNC VARIABLES TO THE THREAD {}",
+            self.index
+        );
+
         let body = tcx.optimized_mir(self.thread_function_def_id);
         for debug_info in &body.var_debug_info {
             let rustc_middle::mir::VarDebugInfoContents::Place(place) = debug_info.value else {
@@ -124,12 +135,9 @@ impl Thread {
                 // Not interested in locals other that `_1.X`
                 continue;
             }
-            debug!(
-                "MOVED AGGREGATE {place:?} WITH SYNC VARIABLES TO THE THREAD {}",
-                self.index
-            );
-
-            memory.link_aggregate(place, std::mem::take(&mut self.aggregate));
+            let field_number = get_field_number_in_projection(&place);
+            memory.link_field_in_aggregate(place, base_place, field_number);
+            debug!("LINKED FIELD {place:?} IN AGGREGATE",);
         }
     }
 }
