@@ -129,6 +129,7 @@ pub fn handle_aggregate_assignment<'tcx>(
 
     if !places_with_sync_variables.is_empty() {
         memory.create_aggregate(*place, &places_with_sync_variables);
+        debug!("CREATED AGGREGATE AT {place:?} WITH PLACES {places_with_sync_variables:?}");
     }
 }
 
