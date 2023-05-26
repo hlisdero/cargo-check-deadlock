@@ -7,6 +7,13 @@ mod detached {
     );
 }
 
+mod dining_philosophers {
+    super::utils::generate_tests_for_example_program!(
+        "./examples/programs/thread/dining_philosophers.rs",
+        "./examples/results/thread/dining_philosophers/"
+    );
+}
+
 mod diverging {
     super::utils::generate_tests_for_example_program!(
         "./examples/programs/thread/diverging.rs",
