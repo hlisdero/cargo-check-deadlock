@@ -10,7 +10,7 @@ if command -v lola &>/dev/null; then
 fi
 
 echo "lola could not be found in \$PATH. Looking for the version included in the repository..."
-if [ -f .asserts/lola ]; then
+if [ -f .assets/lola ]; then
   echo "lola found in ./assets"
   .asserts/lola --formula="EF (DEADLOCK AND (PROGRAM_END = 0 AND PROGRAM_PANIC = 0))" --path $1
 else
