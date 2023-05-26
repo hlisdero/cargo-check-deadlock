@@ -25,12 +25,7 @@ PLACE
     main_BB16,
     main_BB17,
     main_BB18,
-    main_BB19,
     main_BB2,
-    main_BB20,
-    main_BB21,
-    main_BB22,
-    main_BB23,
     main_BB3,
     main_BB4,
     main_BB5,
@@ -113,12 +108,7 @@ MARKING
     main_BB16 : 0,
     main_BB17 : 0,
     main_BB18 : 0,
-    main_BB19 : 0,
     main_BB2 : 0,
-    main_BB20 : 0,
-    main_BB21 : 0,
-    main_BB22 : 0,
-    main_BB23 : 0,
     main_BB3 : 0,
     main_BB4 : 0,
     main_BB5 : 0,
@@ -250,84 +240,79 @@ TRANSITION core_fmt_rt_Argument_a_new_display_1_CALL_UNWIND
     main__closure_1__BB12 : 1;
   PRODUCE
     main__closure_1__BB21 : 1;
+TRANSITION main_DROP_10
+  CONSUME
+    main_BB10 : 1;
+  PRODUCE
+    main_BB11 : 1;
 TRANSITION main_DROP_12
   CONSUME
     main_BB12 : 1;
   PRODUCE
-    main_BB13 : 1;
-TRANSITION main_DROP_14
-  CONSUME
-    main_BB14 : 1;
-  PRODUCE
-    main_BB15 : 1;
-TRANSITION main_DROP_16
-  CONSUME
     main_BB16 : 1;
-  PRODUCE
-    main_BB19 : 1;
-TRANSITION main_DROP_18
+TRANSITION main_DROP_13
   CONSUME
-    main_BB18 : 1;
-  PRODUCE
-    main_BB21 : 1;
-TRANSITION main_DROP_20
-  CONSUME
-    main_BB20 : 1;
-  PRODUCE
-    main_BB23 : 1;
-TRANSITION main_DROP_22
-  CONSUME
-    main_BB22 : 1;
+    main_BB13 : 1;
   PRODUCE
     main_BB14 : 1;
+TRANSITION main_DROP_15
+  CONSUME
+    main_BB15 : 1;
+  PRODUCE
+    main_BB18 : 1;
+TRANSITION main_DROP_17
+  CONSUME
+    main_BB17 : 1;
+  PRODUCE
+    main_BB13 : 1;
+TRANSITION main_DROP_8
+  CONSUME
+    main_BB8 : 1;
+  PRODUCE
+    main_BB9 : 1;
+TRANSITION main_DROP_9
+  CONSUME
+    main_BB9 : 1;
+  PRODUCE
+    main_BB10 : 1;
+TRANSITION main_DROP_UNWIND_8
+  CONSUME
+    main_BB8 : 1;
+  PRODUCE
+    main_BB12 : 1;
+TRANSITION main_DROP_UNWIND_9
+  CONSUME
+    main_BB9 : 1;
+  PRODUCE
+    main_BB16 : 1;
 TRANSITION main_RETURN
   CONSUME
-    main_BB13 : 1;
+    main_BB11 : 1;
   PRODUCE
     PROGRAM_END : 1;
-TRANSITION main_SWITCH_INT_14
+TRANSITION main_SWITCH_INT_FROM_BB16_TO_BB15
   CONSUME
-    main_BB23 : 1;
-  PRODUCE
-    main_BB14 : 1;
-TRANSITION main_SWITCH_INT_16
-  CONSUME
-    main_BB17 : 1;
-  PRODUCE
     main_BB16 : 1;
-TRANSITION main_SWITCH_INT_18
+  PRODUCE
+    main_BB15 : 1;
+TRANSITION main_SWITCH_INT_FROM_BB16_TO_BB18
   CONSUME
-    main_BB19 : 1;
+    main_BB16 : 1;
   PRODUCE
     main_BB18 : 1;
-TRANSITION main_SWITCH_INT_19
+TRANSITION main_SWITCH_INT_FROM_BB18_TO_BB13
   CONSUME
+    main_BB18 : 1;
+  PRODUCE
+    main_BB13 : 1;
+TRANSITION main_SWITCH_INT_FROM_BB18_TO_BB17
+  CONSUME
+    main_BB18 : 1;
+  PRODUCE
     main_BB17 : 1;
-  PRODUCE
-    main_BB19 : 1;
-TRANSITION main_SWITCH_INT_20
+TRANSITION main_UNWIND_14
   CONSUME
-    main_BB21 : 1;
-  PRODUCE
-    main_BB20 : 1;
-TRANSITION main_SWITCH_INT_21
-  CONSUME
-    main_BB19 : 1;
-  PRODUCE
-    main_BB21 : 1;
-TRANSITION main_SWITCH_INT_22
-  CONSUME
-    main_BB23 : 1;
-  PRODUCE
-    main_BB22 : 1;
-TRANSITION main_SWITCH_INT_23
-  CONSUME
-    main_BB21 : 1;
-  PRODUCE
-    main_BB23 : 1;
-TRANSITION main_UNWIND_15
-  CONSUME
-    main_BB15 : 1;
+    main_BB14 : 1;
   PRODUCE
     PROGRAM_PANIC : 1;
 TRANSITION main__closure_0__DROP_20
@@ -383,37 +368,37 @@ TRANSITION main__closure_0__RETURN
     main__closure_0__BB22 : 1;
   PRODUCE
     THREAD_0_END : 1;
-TRANSITION main__closure_0__SWITCH_INT_12
+TRANSITION main__closure_0__SWITCH_INT_FROM_BB11_TO_BB12
   CONSUME
     main__closure_0__BB11 : 1;
   PRODUCE
     main__closure_0__BB12 : 1;
-TRANSITION main__closure_0__SWITCH_INT_15
+TRANSITION main__closure_0__SWITCH_INT_FROM_BB11_TO_BB15
   CONSUME
     main__closure_0__BB11 : 1;
   PRODUCE
     main__closure_0__BB15 : 1;
-TRANSITION main__closure_0__SWITCH_INT_23
+TRANSITION main__closure_0__SWITCH_INT_FROM_BB26_TO_BB23
   CONSUME
     main__closure_0__BB26 : 1;
   PRODUCE
     main__closure_0__BB23 : 1;
-TRANSITION main__closure_0__SWITCH_INT_25
+TRANSITION main__closure_0__SWITCH_INT_FROM_BB26_TO_BB25
   CONSUME
     main__closure_0__BB26 : 1;
   PRODUCE
     main__closure_0__BB25 : 1;
-TRANSITION main__closure_0__SWITCH_INT_4
+TRANSITION main__closure_0__SWITCH_INT_FROM_BB3_TO_BB4
   CONSUME
     main__closure_0__BB3 : 1;
   PRODUCE
     main__closure_0__BB4 : 1;
-TRANSITION main__closure_0__SWITCH_INT_5
+TRANSITION main__closure_0__SWITCH_INT_FROM_BB3_TO_BB5
   CONSUME
     main__closure_0__BB3 : 1;
   PRODUCE
     main__closure_0__BB5 : 1;
-TRANSITION main__closure_0__SWITCH_INT_6
+TRANSITION main__closure_0__SWITCH_INT_FROM_BB3_TO_BB6
   CONSUME
     main__closure_0__BB3 : 1;
   PRODUCE
@@ -471,22 +456,22 @@ TRANSITION main__closure_1__GOTO_9
     main__closure_1__BB9 : 1;
   PRODUCE
     main__closure_1__BB5 : 1;
-TRANSITION main__closure_1__SWITCH_INT_10
-  CONSUME
-    main__closure_1__BB6 : 1;
-  PRODUCE
-    main__closure_1__BB10 : 1;
-TRANSITION main__closure_1__SWITCH_INT_18
+TRANSITION main__closure_1__SWITCH_INT_FROM_BB21_TO_BB18
   CONSUME
     main__closure_1__BB21 : 1;
   PRODUCE
     main__closure_1__BB18 : 1;
-TRANSITION main__closure_1__SWITCH_INT_20
+TRANSITION main__closure_1__SWITCH_INT_FROM_BB21_TO_BB20
   CONSUME
     main__closure_1__BB21 : 1;
   PRODUCE
     main__closure_1__BB20 : 1;
-TRANSITION main__closure_1__SWITCH_INT_7
+TRANSITION main__closure_1__SWITCH_INT_FROM_BB6_TO_BB10
+  CONSUME
+    main__closure_1__BB6 : 1;
+  PRODUCE
+    main__closure_1__BB10 : 1;
+TRANSITION main__closure_1__SWITCH_INT_FROM_BB6_TO_BB7
   CONSUME
     main__closure_1__BB6 : 1;
   PRODUCE
@@ -505,7 +490,7 @@ TRANSITION std_clone_Clone_clone_0_CALL_UNWIND
   CONSUME
     main_BB4 : 1;
   PRODUCE
-    main_BB14 : 1;
+    main_BB13 : 1;
 TRANSITION std_clone_Clone_clone_1_CALL
   CONSUME
     main_BB5 : 1;
@@ -515,7 +500,7 @@ TRANSITION std_clone_Clone_clone_1_CALL_UNWIND
   CONSUME
     main_BB5 : 1;
   PRODUCE
-    main_BB23 : 1;
+    main_BB18 : 1;
 TRANSITION std_fmt_Arguments_a_new_v1_0_CALL
   CONSUME
     main__closure_0__BB17 : 1;
@@ -621,40 +606,20 @@ TRANSITION std_ops_Deref_deref_4_CALL
     main__closure_1__BB11 : 1;
 TRANSITION std_result_Result_unwrap_0_CALL
   CONSUME
-    main_BB9 : 1;
-  PRODUCE
-    main_BB10 : 1;
-TRANSITION std_result_Result_unwrap_0_CALL_UNWIND
-  CONSUME
-    main_BB9 : 1;
-  PRODUCE
-    main_BB17 : 1;
-TRANSITION std_result_Result_unwrap_1_CALL
-  CONSUME
-    main_BB11 : 1;
-  PRODUCE
-    main_BB12 : 1;
-TRANSITION std_result_Result_unwrap_1_CALL_UNWIND
-  CONSUME
-    main_BB11 : 1;
-  PRODUCE
-    main_BB17 : 1;
-TRANSITION std_result_Result_unwrap_2_CALL
-  CONSUME
     main__closure_0__BB8 : 1;
   PRODUCE
     main__closure_0__BB9 : 1;
-TRANSITION std_result_Result_unwrap_3_CALL
+TRANSITION std_result_Result_unwrap_1_CALL
   CONSUME
     main__closure_0__BB13 : 1;
   PRODUCE
     main__closure_0__BB14 : 1;
-TRANSITION std_result_Result_unwrap_4_CALL
+TRANSITION std_result_Result_unwrap_2_CALL
   CONSUME
     main__closure_1__BB3 : 1;
   PRODUCE
     main__closure_1__BB4 : 1;
-TRANSITION std_result_Result_unwrap_5_CALL
+TRANSITION std_result_Result_unwrap_3_CALL
   CONSUME
     main__closure_1__BB8 : 1;
   PRODUCE
@@ -703,28 +668,6 @@ TRANSITION std_sync_Mutex_T_new_0_CALL
     PROGRAM_START : 1;
   PRODUCE
     main_BB1 : 1;
-TRANSITION std_thread_JoinHandle_T_join_0_CALL
-  CONSUME
-    THREAD_0_END : 1,
-    main_BB8 : 1;
-  PRODUCE
-    main_BB9 : 1;
-TRANSITION std_thread_JoinHandle_T_join_0_CALL_UNWIND
-  CONSUME
-    main_BB8 : 1;
-  PRODUCE
-    main_BB17 : 1;
-TRANSITION std_thread_JoinHandle_T_join_1_CALL
-  CONSUME
-    THREAD_1_END : 1,
-    main_BB10 : 1;
-  PRODUCE
-    main_BB11 : 1;
-TRANSITION std_thread_JoinHandle_T_join_1_CALL_UNWIND
-  CONSUME
-    main_BB10 : 1;
-  PRODUCE
-    main_BB17 : 1;
 TRANSITION std_thread_spawn_0_CALL
   CONSUME
     main_BB6 : 1;
@@ -735,7 +678,7 @@ TRANSITION std_thread_spawn_0_CALL_UNWIND
   CONSUME
     main_BB6 : 1;
   PRODUCE
-    main_BB21 : 1;
+    main_BB16 : 1;
 TRANSITION std_thread_spawn_1_CALL
   CONSUME
     main_BB7 : 1;
@@ -746,4 +689,4 @@ TRANSITION std_thread_spawn_1_CALL_UNWIND
   CONSUME
     main_BB7 : 1;
   PRODUCE
-    main_BB19 : 1;
+    main_BB12 : 1;
