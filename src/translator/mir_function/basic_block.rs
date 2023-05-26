@@ -50,8 +50,8 @@ impl BasicBlock {
     }
 
     /// Connects the end place of this block to the start place of the `target` basic block.
-    pub fn switch_int(&self, target: &Self, index: usize, net: &mut PetriNet) {
-        let label = switch_int_transition_label(&self.function_name, index);
+    pub fn switch_int(&self, target: &Self, target_index: usize, net: &mut PetriNet) {
+        let label = switch_int_transition_label(&self.function_name, self.index, target_index);
         connect_places(net, &self.place, &target.place, &label);
     }
 

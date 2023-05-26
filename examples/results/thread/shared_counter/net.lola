@@ -197,46 +197,46 @@ TRANSITION main_RETURN
     main_BB19 : 1;
   PRODUCE
     PROGRAM_END : 1;
-TRANSITION main_SWITCH_INT_21
-  CONSUME
-    main_BB30 : 1;
-  PRODUCE
-    main_BB21 : 1;
-TRANSITION main_SWITCH_INT_23
+TRANSITION main_SWITCH_INT_FROM_BB24_TO_BB23
   CONSUME
     main_BB24 : 1;
   PRODUCE
     main_BB23 : 1;
-TRANSITION main_SWITCH_INT_25
-  CONSUME
-    main_BB26 : 1;
-  PRODUCE
-    main_BB25 : 1;
-TRANSITION main_SWITCH_INT_26
+TRANSITION main_SWITCH_INT_FROM_BB24_TO_BB26
   CONSUME
     main_BB24 : 1;
   PRODUCE
     main_BB26 : 1;
-TRANSITION main_SWITCH_INT_27
+TRANSITION main_SWITCH_INT_FROM_BB26_TO_BB25
   CONSUME
-    main_BB28 : 1;
+    main_BB26 : 1;
   PRODUCE
-    main_BB27 : 1;
-TRANSITION main_SWITCH_INT_28
+    main_BB25 : 1;
+TRANSITION main_SWITCH_INT_FROM_BB26_TO_BB28
   CONSUME
     main_BB26 : 1;
   PRODUCE
     main_BB28 : 1;
-TRANSITION main_SWITCH_INT_29
+TRANSITION main_SWITCH_INT_FROM_BB28_TO_BB27
   CONSUME
-    main_BB30 : 1;
+    main_BB28 : 1;
   PRODUCE
-    main_BB29 : 1;
-TRANSITION main_SWITCH_INT_30
+    main_BB27 : 1;
+TRANSITION main_SWITCH_INT_FROM_BB28_TO_BB30
   CONSUME
     main_BB28 : 1;
   PRODUCE
     main_BB30 : 1;
+TRANSITION main_SWITCH_INT_FROM_BB30_TO_BB21
+  CONSUME
+    main_BB30 : 1;
+  PRODUCE
+    main_BB21 : 1;
+TRANSITION main_SWITCH_INT_FROM_BB30_TO_BB29
+  CONSUME
+    main_BB30 : 1;
+  PRODUCE
+    main_BB29 : 1;
 TRANSITION main_UNWIND_22
   CONSUME
     main_BB22 : 1;
@@ -302,12 +302,12 @@ TRANSITION main__closure_0__RETURN
     main__closure_0__BB11 : 1;
   PRODUCE
     THREAD_0_END : 1;
-TRANSITION main__closure_0__SWITCH_INT_6
+TRANSITION main__closure_0__SWITCH_INT_FROM_BB5_TO_BB6
   CONSUME
     main__closure_0__BB5 : 1;
   PRODUCE
     main__closure_0__BB6 : 1;
-TRANSITION main__closure_0__SWITCH_INT_7
+TRANSITION main__closure_0__SWITCH_INT_FROM_BB5_TO_BB7
   CONSUME
     main__closure_0__BB5 : 1;
   PRODUCE
@@ -377,12 +377,12 @@ TRANSITION main__closure_1__RETURN
     main__closure_1__BB11 : 1;
   PRODUCE
     THREAD_1_END : 1;
-TRANSITION main__closure_1__SWITCH_INT_6
+TRANSITION main__closure_1__SWITCH_INT_FROM_BB5_TO_BB6
   CONSUME
     main__closure_1__BB5 : 1;
   PRODUCE
     main__closure_1__BB6 : 1;
-TRANSITION main__closure_1__SWITCH_INT_7
+TRANSITION main__closure_1__SWITCH_INT_FROM_BB5_TO_BB7
   CONSUME
     main__closure_1__BB5 : 1;
   PRODUCE

@@ -274,34 +274,34 @@
           <text>main_RETURN</text>
         </name>
       </transition>
-      <transition id="main_SWITCH_INT_15">
+      <transition id="main_SWITCH_INT_FROM_BB18_TO_BB17">
         <name>
-          <text>main_SWITCH_INT_15</text>
+          <text>main_SWITCH_INT_FROM_BB18_TO_BB17</text>
         </name>
       </transition>
-      <transition id="main_SWITCH_INT_16">
+      <transition id="main_SWITCH_INT_FROM_BB18_TO_BB20">
         <name>
-          <text>main_SWITCH_INT_16</text>
+          <text>main_SWITCH_INT_FROM_BB18_TO_BB20</text>
         </name>
       </transition>
-      <transition id="main_SWITCH_INT_17">
+      <transition id="main_SWITCH_INT_FROM_BB20_TO_BB15">
         <name>
-          <text>main_SWITCH_INT_17</text>
+          <text>main_SWITCH_INT_FROM_BB20_TO_BB15</text>
         </name>
       </transition>
-      <transition id="main_SWITCH_INT_19">
+      <transition id="main_SWITCH_INT_FROM_BB20_TO_BB19">
         <name>
-          <text>main_SWITCH_INT_19</text>
+          <text>main_SWITCH_INT_FROM_BB20_TO_BB19</text>
         </name>
       </transition>
-      <transition id="main_SWITCH_INT_20">
+      <transition id="main_SWITCH_INT_FROM_BB22_TO_BB16">
         <name>
-          <text>main_SWITCH_INT_20</text>
+          <text>main_SWITCH_INT_FROM_BB22_TO_BB16</text>
         </name>
       </transition>
-      <transition id="main_SWITCH_INT_21">
+      <transition id="main_SWITCH_INT_FROM_BB22_TO_BB21">
         <name>
-          <text>main_SWITCH_INT_21</text>
+          <text>main_SWITCH_INT_FROM_BB22_TO_BB21</text>
         </name>
       </transition>
       <transition id="main_UNWIND_16">
@@ -657,17 +657,17 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB18" target="main_SWITCH_INT_17" id="(main_BB18, main_SWITCH_INT_17)">
+      <arc source="main_BB18" target="main_SWITCH_INT_FROM_BB18_TO_BB17" id="(main_BB18, main_SWITCH_INT_FROM_BB18_TO_BB17)">
         <name>
-          <text>(main_BB18, main_SWITCH_INT_17)</text>
+          <text>(main_BB18, main_SWITCH_INT_FROM_BB18_TO_BB17)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB18" target="main_SWITCH_INT_20" id="(main_BB18, main_SWITCH_INT_20)">
+      <arc source="main_BB18" target="main_SWITCH_INT_FROM_BB18_TO_BB20" id="(main_BB18, main_SWITCH_INT_FROM_BB18_TO_BB20)">
         <name>
-          <text>(main_BB18, main_SWITCH_INT_20)</text>
+          <text>(main_BB18, main_SWITCH_INT_FROM_BB18_TO_BB20)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -689,17 +689,17 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB20" target="main_SWITCH_INT_15" id="(main_BB20, main_SWITCH_INT_15)">
+      <arc source="main_BB20" target="main_SWITCH_INT_FROM_BB20_TO_BB15" id="(main_BB20, main_SWITCH_INT_FROM_BB20_TO_BB15)">
         <name>
-          <text>(main_BB20, main_SWITCH_INT_15)</text>
+          <text>(main_BB20, main_SWITCH_INT_FROM_BB20_TO_BB15)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB20" target="main_SWITCH_INT_19" id="(main_BB20, main_SWITCH_INT_19)">
+      <arc source="main_BB20" target="main_SWITCH_INT_FROM_BB20_TO_BB19" id="(main_BB20, main_SWITCH_INT_FROM_BB20_TO_BB19)">
         <name>
-          <text>(main_BB20, main_SWITCH_INT_19)</text>
+          <text>(main_BB20, main_SWITCH_INT_FROM_BB20_TO_BB19)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -713,17 +713,17 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB22" target="main_SWITCH_INT_16" id="(main_BB22, main_SWITCH_INT_16)">
+      <arc source="main_BB22" target="main_SWITCH_INT_FROM_BB22_TO_BB16" id="(main_BB22, main_SWITCH_INT_FROM_BB22_TO_BB16)">
         <name>
-          <text>(main_BB22, main_SWITCH_INT_16)</text>
+          <text>(main_BB22, main_SWITCH_INT_FROM_BB22_TO_BB16)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB22" target="main_SWITCH_INT_21" id="(main_BB22, main_SWITCH_INT_21)">
+      <arc source="main_BB22" target="main_SWITCH_INT_FROM_BB22_TO_BB21" id="(main_BB22, main_SWITCH_INT_FROM_BB22_TO_BB21)">
         <name>
-          <text>(main_BB22, main_SWITCH_INT_21)</text>
+          <text>(main_BB22, main_SWITCH_INT_FROM_BB22_TO_BB21)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -1009,49 +1009,49 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_SWITCH_INT_15" target="main_BB15" id="(main_SWITCH_INT_15, main_BB15)">
+      <arc source="main_SWITCH_INT_FROM_BB18_TO_BB17" target="main_BB17" id="(main_SWITCH_INT_FROM_BB18_TO_BB17, main_BB17)">
         <name>
-          <text>(main_SWITCH_INT_15, main_BB15)</text>
+          <text>(main_SWITCH_INT_FROM_BB18_TO_BB17, main_BB17)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_SWITCH_INT_16" target="main_BB16" id="(main_SWITCH_INT_16, main_BB16)">
+      <arc source="main_SWITCH_INT_FROM_BB18_TO_BB20" target="main_BB20" id="(main_SWITCH_INT_FROM_BB18_TO_BB20, main_BB20)">
         <name>
-          <text>(main_SWITCH_INT_16, main_BB16)</text>
+          <text>(main_SWITCH_INT_FROM_BB18_TO_BB20, main_BB20)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_SWITCH_INT_17" target="main_BB17" id="(main_SWITCH_INT_17, main_BB17)">
+      <arc source="main_SWITCH_INT_FROM_BB20_TO_BB15" target="main_BB15" id="(main_SWITCH_INT_FROM_BB20_TO_BB15, main_BB15)">
         <name>
-          <text>(main_SWITCH_INT_17, main_BB17)</text>
+          <text>(main_SWITCH_INT_FROM_BB20_TO_BB15, main_BB15)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_SWITCH_INT_19" target="main_BB19" id="(main_SWITCH_INT_19, main_BB19)">
+      <arc source="main_SWITCH_INT_FROM_BB20_TO_BB19" target="main_BB19" id="(main_SWITCH_INT_FROM_BB20_TO_BB19, main_BB19)">
         <name>
-          <text>(main_SWITCH_INT_19, main_BB19)</text>
+          <text>(main_SWITCH_INT_FROM_BB20_TO_BB19, main_BB19)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_SWITCH_INT_20" target="main_BB20" id="(main_SWITCH_INT_20, main_BB20)">
+      <arc source="main_SWITCH_INT_FROM_BB22_TO_BB16" target="main_BB16" id="(main_SWITCH_INT_FROM_BB22_TO_BB16, main_BB16)">
         <name>
-          <text>(main_SWITCH_INT_20, main_BB20)</text>
+          <text>(main_SWITCH_INT_FROM_BB22_TO_BB16, main_BB16)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_SWITCH_INT_21" target="main_BB21" id="(main_SWITCH_INT_21, main_BB21)">
+      <arc source="main_SWITCH_INT_FROM_BB22_TO_BB21" target="main_BB21" id="(main_SWITCH_INT_FROM_BB22_TO_BB21, main_BB21)">
         <name>
-          <text>(main_SWITCH_INT_21, main_BB21)</text>
+          <text>(main_SWITCH_INT_FROM_BB22_TO_BB21, main_BB21)</text>
         </name>
         <inscription>
           <text>1</text>

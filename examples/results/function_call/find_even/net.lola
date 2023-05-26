@@ -110,27 +110,27 @@ TRANSITION find_even_0_RETURN
     find_even_0_BB10 : 1;
   PRODUCE
     main_BB4 : 1;
-TRANSITION find_even_0_SWITCH_INT_2
-  CONSUME
-    find_even_0_BB8 : 1;
-  PRODUCE
-    find_even_0_BB2 : 1;
-TRANSITION find_even_0_SWITCH_INT_4
+TRANSITION find_even_0_SWITCH_INT_FROM_BB3_TO_BB4
   CONSUME
     find_even_0_BB3 : 1;
   PRODUCE
     find_even_0_BB4 : 1;
-TRANSITION find_even_0_SWITCH_INT_5
+TRANSITION find_even_0_SWITCH_INT_FROM_BB3_TO_BB5
   CONSUME
     find_even_0_BB3 : 1;
   PRODUCE
     find_even_0_BB5 : 1;
-TRANSITION find_even_0_SWITCH_INT_6
+TRANSITION find_even_0_SWITCH_INT_FROM_BB3_TO_BB6
   CONSUME
     find_even_0_BB3 : 1;
   PRODUCE
     find_even_0_BB6 : 1;
-TRANSITION find_even_0_SWITCH_INT_9
+TRANSITION find_even_0_SWITCH_INT_FROM_BB8_TO_BB2
+  CONSUME
+    find_even_0_BB8 : 1;
+  PRODUCE
+    find_even_0_BB2 : 1;
+TRANSITION find_even_0_SWITCH_INT_FROM_BB8_TO_BB9
   CONSUME
     find_even_0_BB8 : 1;
   PRODUCE
@@ -170,12 +170,12 @@ TRANSITION main_RETURN
     main_BB11 : 1;
   PRODUCE
     PROGRAM_END : 1;
-TRANSITION main_SWITCH_INT_5
+TRANSITION main_SWITCH_INT_FROM_BB4_TO_BB5
   CONSUME
     main_BB4 : 1;
   PRODUCE
     main_BB5 : 1;
-TRANSITION main_SWITCH_INT_8
+TRANSITION main_SWITCH_INT_FROM_BB4_TO_BB8
   CONSUME
     main_BB4 : 1;
   PRODUCE

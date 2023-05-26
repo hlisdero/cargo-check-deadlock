@@ -26,8 +26,15 @@ pub fn goto_transition_label(function_name: &str, index: usize) -> String {
 
 /// Label of the transition that represents a switch int terminator to another `BasicBlock`.
 #[inline]
-pub fn switch_int_transition_label(function_name: &str, index: usize) -> String {
-    format!("{}_SWITCH_INT_{index}", sanitize(function_name))
+pub fn switch_int_transition_label(
+    function_name: &str,
+    from_index: usize,
+    to_index: usize,
+) -> String {
+    format!(
+        "{}_SWITCH_INT_FROM_BB{from_index}_TO_BB{to_index}",
+        sanitize(function_name)
+    )
 }
 
 /// Label of the transition that represents an unwind terminator to the general `PROGRAM_PANIC` place.

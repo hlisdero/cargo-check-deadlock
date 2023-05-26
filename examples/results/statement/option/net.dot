@@ -27,8 +27,8 @@ digraph petrinet {
     main_DROP_12 [shape="box" xlabel="" label="main_DROP_12"];
     main_GOTO_15 [shape="box" xlabel="" label="main_GOTO_15"];
     main_RETURN [shape="box" xlabel="" label="main_RETURN"];
-    main_SWITCH_INT_10 [shape="box" xlabel="" label="main_SWITCH_INT_10"];
-    main_SWITCH_INT_6 [shape="box" xlabel="" label="main_SWITCH_INT_6"];
+    main_SWITCH_INT_FROM_BB5_TO_BB10 [shape="box" xlabel="" label="main_SWITCH_INT_FROM_BB5_TO_BB10"];
+    main_SWITCH_INT_FROM_BB5_TO_BB6 [shape="box" xlabel="" label="main_SWITCH_INT_FROM_BB5_TO_BB6"];
     main_UNWIND_13 [shape="box" xlabel="" label="main_UNWIND_13"];
     std_fmt_Arguments_a_new_v1_0_CALL [shape="box" xlabel="" label="std_fmt_Arguments_a_new_v1_0_CALL"];
     std_fmt_Arguments_a_new_v1_0_CALL_UNWIND [shape="box" xlabel="" label="std_fmt_Arguments_a_new_v1_0_CALL_UNWIND"];
@@ -55,8 +55,8 @@ digraph petrinet {
     main_BB3 -> core_slice__impl_T__get_0_CALL_UNWIND;
     main_BB4 -> std_option_Option_T_is_some_0_CALL;
     main_BB4 -> std_option_Option_T_is_some_0_CALL_UNWIND;
-    main_BB5 -> main_SWITCH_INT_10;
-    main_BB5 -> main_SWITCH_INT_6;
+    main_BB5 -> main_SWITCH_INT_FROM_BB5_TO_BB10;
+    main_BB5 -> main_SWITCH_INT_FROM_BB5_TO_BB6;
     main_BB6 -> std_option_Option_T_unwrap_0_CALL;
     main_BB6 -> std_option_Option_T_unwrap_0_CALL_UNWIND;
     main_BB7 -> core_fmt_rt_Argument_a_new_display_0_CALL;
@@ -75,8 +75,8 @@ digraph petrinet {
     main_DROP_12 -> main_BB13;
     main_GOTO_15 -> main_BB10;
     main_RETURN -> PROGRAM_END;
-    main_SWITCH_INT_10 -> main_BB10;
-    main_SWITCH_INT_6 -> main_BB6;
+    main_SWITCH_INT_FROM_BB5_TO_BB10 -> main_BB10;
+    main_SWITCH_INT_FROM_BB5_TO_BB6 -> main_BB6;
     main_UNWIND_13 -> PROGRAM_PANIC;
     std_fmt_Arguments_a_new_v1_0_CALL -> main_BB9;
     std_fmt_Arguments_a_new_v1_0_CALL_UNWIND -> main_BB12;

@@ -8,20 +8,20 @@ digraph petrinet {
     main_BB4 [shape="circle" xlabel="main_BB4" label=""];
     main_PANIC [shape="box" xlabel="" label="main_PANIC"];
     main_RETURN [shape="box" xlabel="" label="main_RETURN"];
-    main_SWITCH_INT_2 [shape="box" xlabel="" label="main_SWITCH_INT_2"];
-    main_SWITCH_INT_3 [shape="box" xlabel="" label="main_SWITCH_INT_3"];
+    main_SWITCH_INT_FROM_BB1_TO_BB2 [shape="box" xlabel="" label="main_SWITCH_INT_FROM_BB1_TO_BB2"];
+    main_SWITCH_INT_FROM_BB1_TO_BB3 [shape="box" xlabel="" label="main_SWITCH_INT_FROM_BB1_TO_BB3"];
     simple_function_0_RETURN [shape="box" xlabel="" label="simple_function_0_RETURN"];
     simple_function_1_RETURN [shape="box" xlabel="" label="simple_function_1_RETURN"];
     PROGRAM_START -> simple_function_0_RETURN;
-    main_BB1 -> main_SWITCH_INT_2;
-    main_BB1 -> main_SWITCH_INT_3;
+    main_BB1 -> main_SWITCH_INT_FROM_BB1_TO_BB2;
+    main_BB1 -> main_SWITCH_INT_FROM_BB1_TO_BB3;
     main_BB2 -> main_PANIC;
     main_BB3 -> simple_function_1_RETURN;
     main_BB4 -> main_RETURN;
     main_PANIC -> PROGRAM_PANIC;
     main_RETURN -> PROGRAM_END;
-    main_SWITCH_INT_2 -> main_BB2;
-    main_SWITCH_INT_3 -> main_BB3;
+    main_SWITCH_INT_FROM_BB1_TO_BB2 -> main_BB2;
+    main_SWITCH_INT_FROM_BB1_TO_BB3 -> main_BB3;
     simple_function_0_RETURN -> main_BB1;
     simple_function_1_RETURN -> main_BB4;
 }
