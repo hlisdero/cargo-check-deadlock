@@ -212,6 +212,14 @@ mod panic {
     );
 }
 
+mod dating_philosophers {
+    super::utils::generate_lola_tests_for_example_program!(
+        "./examples/programs/thread/dating_philosophers.rs",
+        "./examples/results/thread/dating_philosophers/",
+        true
+    );
+}
+
 mod detached {
     super::utils::generate_lola_tests_for_example_program!(
         "./examples/programs/thread/detached.rs",
