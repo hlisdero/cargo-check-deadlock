@@ -147,6 +147,12 @@ impl Thread {
 ///
 /// - Retrieves the join handle linked to the first argument (the self reference).
 /// - Sets the join transition for the thread.
+///
+/// In some cases, the `std::thread::JoinHandle::<T>::join` function contains a cleanup target.
+/// This target is not called in practice but creates trouble for deadlock detection.
+/// For instance, a thread that never returns will not cause a deadlock
+/// when joining it because the call could take the unwind path.
+/// In conclusion: Ignore the cleanup place, do not model it. Assume `join` never unwinds.
 pub fn call_join<'tcx>(
     function_name: &str,
     index: usize,
@@ -155,6 +161,7 @@ pub fn call_join<'tcx>(
     net: &mut PetriNet,
     memory: &mut Memory<'tcx>,
 ) {
+    let places = places.ignore_cleanup_place();
     let transitions = call_foreign_function(
         places,
         &foreign_call_transition_labels(function_name, index),

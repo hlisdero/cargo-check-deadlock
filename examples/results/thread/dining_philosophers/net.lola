@@ -1976,55 +1976,30 @@ TRANSITION std_thread_JoinHandle_T_join_0_CALL
     main_BB25 : 1;
   PRODUCE
     main_BB26 : 1;
-TRANSITION std_thread_JoinHandle_T_join_0_CALL_UNWIND
-  CONSUME
-    main_BB25 : 1;
-  PRODUCE
-    main_BB52 : 1;
 TRANSITION std_thread_JoinHandle_T_join_1_CALL
   CONSUME
     THREAD_1_END : 1,
     main_BB27 : 1;
   PRODUCE
     main_BB28 : 1;
-TRANSITION std_thread_JoinHandle_T_join_1_CALL_UNWIND
-  CONSUME
-    main_BB27 : 1;
-  PRODUCE
-    main_BB52 : 1;
 TRANSITION std_thread_JoinHandle_T_join_2_CALL
   CONSUME
     THREAD_2_END : 1,
     main_BB29 : 1;
   PRODUCE
     main_BB30 : 1;
-TRANSITION std_thread_JoinHandle_T_join_2_CALL_UNWIND
-  CONSUME
-    main_BB29 : 1;
-  PRODUCE
-    main_BB52 : 1;
 TRANSITION std_thread_JoinHandle_T_join_3_CALL
   CONSUME
     THREAD_3_END : 1,
     main_BB31 : 1;
   PRODUCE
     main_BB32 : 1;
-TRANSITION std_thread_JoinHandle_T_join_3_CALL_UNWIND
-  CONSUME
-    main_BB31 : 1;
-  PRODUCE
-    main_BB52 : 1;
 TRANSITION std_thread_JoinHandle_T_join_4_CALL
   CONSUME
     THREAD_4_END : 1,
     main_BB33 : 1;
   PRODUCE
     main_BB34 : 1;
-TRANSITION std_thread_JoinHandle_T_join_4_CALL_UNWIND
-  CONSUME
-    main_BB33 : 1;
-  PRODUCE
-    main_BB52 : 1;
 TRANSITION std_thread_sleep_0_CALL
   CONSUME
     main__closure_0__BB3 : 1;

@@ -11,7 +11,6 @@ PLACE
     main_BB12,
     main_BB13,
     main_BB14,
-    main_BB15,
     main_BB2,
     main_BB3,
     main_BB4,
@@ -40,7 +39,6 @@ MARKING
     main_BB12 : 0,
     main_BB13 : 0,
     main_BB14 : 0,
-    main_BB15 : 0,
     main_BB2 : 0,
     main_BB3 : 0,
     main_BB4 : 0,
@@ -60,63 +58,45 @@ TRANSITION main_DROP_11
   CONSUME
     main_BB11 : 1;
   PRODUCE
-    MUTEX_0 : 1,
-    main_BB15 : 1;
-TRANSITION main_DROP_12
-  CONSUME
     main_BB12 : 1;
-  PRODUCE
+TRANSITION main_DROP_13
+  CONSUME
     main_BB13 : 1;
-TRANSITION main_DROP_14
-  CONSUME
-    main_BB14 : 1;
   PRODUCE
-    main_BB12 : 1;
-TRANSITION main_DROP_7
-  CONSUME
-    main_BB7 : 1;
-  PRODUCE
-    main_BB8 : 1;
+    main_BB11 : 1;
 TRANSITION main_DROP_8
   CONSUME
     main_BB8 : 1;
   PRODUCE
-    MUTEX_0 : 1,
     main_BB9 : 1;
 TRANSITION main_DROP_9
   CONSUME
     main_BB9 : 1;
   PRODUCE
     main_BB10 : 1;
-TRANSITION main_DROP_UNWIND_7
-  CONSUME
-    main_BB7 : 1;
-  PRODUCE
-    main_BB11 : 1;
 TRANSITION main_DROP_UNWIND_8
   CONSUME
     main_BB8 : 1;
   PRODUCE
-    MUTEX_0 : 1,
-    main_BB15 : 1;
+    main_BB14 : 1;
 TRANSITION main_RETURN
   CONSUME
     main_BB10 : 1;
   PRODUCE
     PROGRAM_END : 1;
-TRANSITION main_SWITCH_INT_FROM_BB15_TO_BB12
+TRANSITION main_SWITCH_INT_FROM_BB14_TO_BB11
   CONSUME
-    main_BB15 : 1;
-  PRODUCE
-    main_BB12 : 1;
-TRANSITION main_SWITCH_INT_FROM_BB15_TO_BB14
-  CONSUME
-    main_BB15 : 1;
-  PRODUCE
     main_BB14 : 1;
-TRANSITION main_UNWIND_13
+  PRODUCE
+    main_BB11 : 1;
+TRANSITION main_SWITCH_INT_FROM_BB14_TO_BB13
   CONSUME
+    main_BB14 : 1;
+  PRODUCE
     main_BB13 : 1;
+TRANSITION main_UNWIND_12
+  CONSUME
+    main_BB12 : 1;
   PRODUCE
     PROGRAM_PANIC : 1;
 TRANSITION main__closure_0__DROP_2
@@ -160,7 +140,19 @@ TRANSITION std_clone_Clone_clone_0_CALL_UNWIND
   CONSUME
     main_BB2 : 1;
   PRODUCE
-    main_BB12 : 1;
+    main_BB11 : 1;
+TRANSITION std_mem_drop_0_CALL
+  CONSUME
+    main_BB6 : 1;
+  PRODUCE
+    MUTEX_0 : 1,
+    main_BB7 : 1;
+TRANSITION std_mem_drop_0_CALL_UNWIND
+  CONSUME
+    main_BB6 : 1;
+  PRODUCE
+    MUTEX_0 : 1,
+    main_BB14 : 1;
 TRANSITION std_ops_Deref_deref_0_CALL
   CONSUME
     main_BB4 : 1;
@@ -196,14 +188,9 @@ TRANSITION std_sync_Mutex_T_new_0_CALL
 TRANSITION std_thread_JoinHandle_T_join_0_CALL
   CONSUME
     THREAD_0_END : 1,
-    main_BB6 : 1;
-  PRODUCE
     main_BB7 : 1;
-TRANSITION std_thread_JoinHandle_T_join_0_CALL_UNWIND
-  CONSUME
-    main_BB6 : 1;
   PRODUCE
-    main_BB11 : 1;
+    main_BB8 : 1;
 TRANSITION std_thread_spawn_0_CALL
   CONSUME
     main_BB3 : 1;
@@ -214,4 +201,4 @@ TRANSITION std_thread_spawn_0_CALL_UNWIND
   CONSUME
     main_BB3 : 1;
   PRODUCE
-    main_BB12 : 1;
+    main_BB11 : 1;

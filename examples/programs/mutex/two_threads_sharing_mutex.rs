@@ -6,6 +6,8 @@ fn main() {
         let _data = copy_data.lock();
     });
 
-    let _data = original_data.lock();
+    let data = original_data.lock();
+    // Drop the lock manually before the join
+    std::mem::drop(data);
     let _join_result = thread_join_handle.join();
 }

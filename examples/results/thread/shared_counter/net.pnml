@@ -728,19 +728,9 @@
           <text>std_thread_JoinHandle_T_join_0_CALL</text>
         </name>
       </transition>
-      <transition id="std_thread_JoinHandle_T_join_0_CALL_UNWIND">
-        <name>
-          <text>std_thread_JoinHandle_T_join_0_CALL_UNWIND</text>
-        </name>
-      </transition>
       <transition id="std_thread_JoinHandle_T_join_1_CALL">
         <name>
           <text>std_thread_JoinHandle_T_join_1_CALL</text>
-        </name>
-      </transition>
-      <transition id="std_thread_JoinHandle_T_join_1_CALL_UNWIND">
-        <name>
-          <text>std_thread_JoinHandle_T_join_1_CALL_UNWIND</text>
         </name>
       </transition>
       <transition id="std_thread_spawn_0_CALL">
@@ -1139,14 +1129,6 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB6" target="std_thread_JoinHandle_T_join_0_CALL_UNWIND" id="(main_BB6, std_thread_JoinHandle_T_join_0_CALL_UNWIND)">
-        <name>
-          <text>(main_BB6, std_thread_JoinHandle_T_join_0_CALL_UNWIND)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
       <arc source="main_BB7" target="std_result_Result_unwrap_0_CALL" id="(main_BB7, std_result_Result_unwrap_0_CALL)">
         <name>
           <text>(main_BB7, std_result_Result_unwrap_0_CALL)</text>
@@ -1166,14 +1148,6 @@
       <arc source="main_BB8" target="std_thread_JoinHandle_T_join_1_CALL" id="(main_BB8, std_thread_JoinHandle_T_join_1_CALL)">
         <name>
           <text>(main_BB8, std_thread_JoinHandle_T_join_1_CALL)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BB8" target="std_thread_JoinHandle_T_join_1_CALL_UNWIND" id="(main_BB8, std_thread_JoinHandle_T_join_1_CALL_UNWIND)">
-        <name>
-          <text>(main_BB8, std_thread_JoinHandle_T_join_1_CALL_UNWIND)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -2211,25 +2185,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_thread_JoinHandle_T_join_0_CALL_UNWIND" target="main_BB24" id="(std_thread_JoinHandle_T_join_0_CALL_UNWIND, main_BB24)">
-        <name>
-          <text>(std_thread_JoinHandle_T_join_0_CALL_UNWIND, main_BB24)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
       <arc source="std_thread_JoinHandle_T_join_1_CALL" target="main_BB9" id="(std_thread_JoinHandle_T_join_1_CALL, main_BB9)">
         <name>
           <text>(std_thread_JoinHandle_T_join_1_CALL, main_BB9)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="std_thread_JoinHandle_T_join_1_CALL_UNWIND" target="main_BB24" id="(std_thread_JoinHandle_T_join_1_CALL_UNWIND, main_BB24)">
-        <name>
-          <text>(std_thread_JoinHandle_T_join_1_CALL_UNWIND, main_BB24)</text>
         </name>
         <inscription>
           <text>1</text>

@@ -143,9 +143,7 @@ digraph petrinet {
     std_sync_Mutex_T_lock_2_CALL [shape="box" xlabel="" label="std_sync_Mutex_T_lock_2_CALL"];
     std_sync_Mutex_T_new_0_CALL [shape="box" xlabel="" label="std_sync_Mutex_T_new_0_CALL"];
     std_thread_JoinHandle_T_join_0_CALL [shape="box" xlabel="" label="std_thread_JoinHandle_T_join_0_CALL"];
-    std_thread_JoinHandle_T_join_0_CALL_UNWIND [shape="box" xlabel="" label="std_thread_JoinHandle_T_join_0_CALL_UNWIND"];
     std_thread_JoinHandle_T_join_1_CALL [shape="box" xlabel="" label="std_thread_JoinHandle_T_join_1_CALL"];
-    std_thread_JoinHandle_T_join_1_CALL_UNWIND [shape="box" xlabel="" label="std_thread_JoinHandle_T_join_1_CALL_UNWIND"];
     std_thread_spawn_0_CALL [shape="box" xlabel="" label="std_thread_spawn_0_CALL"];
     std_thread_spawn_0_CALL_UNWIND [shape="box" xlabel="" label="std_thread_spawn_0_CALL_UNWIND"];
     std_thread_spawn_1_CALL [shape="box" xlabel="" label="std_thread_spawn_1_CALL"];
@@ -197,11 +195,9 @@ digraph petrinet {
     main_BB5 -> std_thread_spawn_1_CALL;
     main_BB5 -> std_thread_spawn_1_CALL_UNWIND;
     main_BB6 -> std_thread_JoinHandle_T_join_0_CALL;
-    main_BB6 -> std_thread_JoinHandle_T_join_0_CALL_UNWIND;
     main_BB7 -> std_result_Result_unwrap_0_CALL;
     main_BB7 -> std_result_Result_unwrap_0_CALL_UNWIND;
     main_BB8 -> std_thread_JoinHandle_T_join_1_CALL;
-    main_BB8 -> std_thread_JoinHandle_T_join_1_CALL_UNWIND;
     main_BB9 -> std_result_Result_unwrap_1_CALL;
     main_BB9 -> std_result_Result_unwrap_1_CALL_UNWIND;
     main__closure_0__BB1 -> std_ops_Deref_deref_2_CALL;
@@ -331,9 +327,7 @@ digraph petrinet {
     std_sync_Mutex_T_lock_2_CALL -> main__closure_1__BB3;
     std_sync_Mutex_T_new_0_CALL -> main_BB1;
     std_thread_JoinHandle_T_join_0_CALL -> main_BB7;
-    std_thread_JoinHandle_T_join_0_CALL_UNWIND -> main_BB24;
     std_thread_JoinHandle_T_join_1_CALL -> main_BB9;
-    std_thread_JoinHandle_T_join_1_CALL_UNWIND -> main_BB24;
     std_thread_spawn_0_CALL -> THREAD_0_START;
     std_thread_spawn_0_CALL -> main_BB5;
     std_thread_spawn_0_CALL_UNWIND -> main_BB28;

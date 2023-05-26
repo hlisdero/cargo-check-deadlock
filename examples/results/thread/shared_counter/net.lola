@@ -541,22 +541,12 @@ TRANSITION std_thread_JoinHandle_T_join_0_CALL
     main_BB6 : 1;
   PRODUCE
     main_BB7 : 1;
-TRANSITION std_thread_JoinHandle_T_join_0_CALL_UNWIND
-  CONSUME
-    main_BB6 : 1;
-  PRODUCE
-    main_BB24 : 1;
 TRANSITION std_thread_JoinHandle_T_join_1_CALL
   CONSUME
     THREAD_1_END : 1,
     main_BB8 : 1;
   PRODUCE
     main_BB9 : 1;
-TRANSITION std_thread_JoinHandle_T_join_1_CALL_UNWIND
-  CONSUME
-    main_BB8 : 1;
-  PRODUCE
-    main_BB24 : 1;
 TRANSITION std_thread_spawn_0_CALL
   CONSUME
     main_BB4 : 1;

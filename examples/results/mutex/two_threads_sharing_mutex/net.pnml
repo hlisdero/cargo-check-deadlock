@@ -68,11 +68,6 @@
           <text>main_BB14</text>
         </name>
       </place>
-      <place id="main_BB15">
-        <name>
-          <text>main_BB15</text>
-        </name>
-      </place>
       <place id="main_BB2">
         <name>
           <text>main_BB2</text>
@@ -148,19 +143,9 @@
           <text>main_DROP_11</text>
         </name>
       </transition>
-      <transition id="main_DROP_12">
+      <transition id="main_DROP_13">
         <name>
-          <text>main_DROP_12</text>
-        </name>
-      </transition>
-      <transition id="main_DROP_14">
-        <name>
-          <text>main_DROP_14</text>
-        </name>
-      </transition>
-      <transition id="main_DROP_7">
-        <name>
-          <text>main_DROP_7</text>
+          <text>main_DROP_13</text>
         </name>
       </transition>
       <transition id="main_DROP_8">
@@ -173,11 +158,6 @@
           <text>main_DROP_9</text>
         </name>
       </transition>
-      <transition id="main_DROP_UNWIND_7">
-        <name>
-          <text>main_DROP_UNWIND_7</text>
-        </name>
-      </transition>
       <transition id="main_DROP_UNWIND_8">
         <name>
           <text>main_DROP_UNWIND_8</text>
@@ -188,19 +168,19 @@
           <text>main_RETURN</text>
         </name>
       </transition>
-      <transition id="main_SWITCH_INT_FROM_BB15_TO_BB12">
+      <transition id="main_SWITCH_INT_FROM_BB14_TO_BB11">
         <name>
-          <text>main_SWITCH_INT_FROM_BB15_TO_BB12</text>
+          <text>main_SWITCH_INT_FROM_BB14_TO_BB11</text>
         </name>
       </transition>
-      <transition id="main_SWITCH_INT_FROM_BB15_TO_BB14">
+      <transition id="main_SWITCH_INT_FROM_BB14_TO_BB13">
         <name>
-          <text>main_SWITCH_INT_FROM_BB15_TO_BB14</text>
+          <text>main_SWITCH_INT_FROM_BB14_TO_BB13</text>
         </name>
       </transition>
-      <transition id="main_UNWIND_13">
+      <transition id="main_UNWIND_12">
         <name>
-          <text>main_UNWIND_13</text>
+          <text>main_UNWIND_12</text>
         </name>
       </transition>
       <transition id="main__closure_0__DROP_2">
@@ -243,6 +223,16 @@
           <text>std_clone_Clone_clone_0_CALL_UNWIND</text>
         </name>
       </transition>
+      <transition id="std_mem_drop_0_CALL">
+        <name>
+          <text>std_mem_drop_0_CALL</text>
+        </name>
+      </transition>
+      <transition id="std_mem_drop_0_CALL_UNWIND">
+        <name>
+          <text>std_mem_drop_0_CALL_UNWIND</text>
+        </name>
+      </transition>
       <transition id="std_ops_Deref_deref_0_CALL">
         <name>
           <text>std_ops_Deref_deref_0_CALL</text>
@@ -276,11 +266,6 @@
       <transition id="std_thread_JoinHandle_T_join_0_CALL">
         <name>
           <text>std_thread_JoinHandle_T_join_0_CALL</text>
-        </name>
-      </transition>
-      <transition id="std_thread_JoinHandle_T_join_0_CALL_UNWIND">
-        <name>
-          <text>std_thread_JoinHandle_T_join_0_CALL_UNWIND</text>
         </name>
       </transition>
       <transition id="std_thread_spawn_0_CALL">
@@ -357,41 +342,33 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB12" target="main_DROP_12" id="(main_BB12, main_DROP_12)">
+      <arc source="main_BB12" target="main_UNWIND_12" id="(main_BB12, main_UNWIND_12)">
         <name>
-          <text>(main_BB12, main_DROP_12)</text>
+          <text>(main_BB12, main_UNWIND_12)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB13" target="main_UNWIND_13" id="(main_BB13, main_UNWIND_13)">
+      <arc source="main_BB13" target="main_DROP_13" id="(main_BB13, main_DROP_13)">
         <name>
-          <text>(main_BB13, main_UNWIND_13)</text>
+          <text>(main_BB13, main_DROP_13)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB14" target="main_DROP_14" id="(main_BB14, main_DROP_14)">
+      <arc source="main_BB14" target="main_SWITCH_INT_FROM_BB14_TO_BB11" id="(main_BB14, main_SWITCH_INT_FROM_BB14_TO_BB11)">
         <name>
-          <text>(main_BB14, main_DROP_14)</text>
+          <text>(main_BB14, main_SWITCH_INT_FROM_BB14_TO_BB11)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB15" target="main_SWITCH_INT_FROM_BB15_TO_BB12" id="(main_BB15, main_SWITCH_INT_FROM_BB15_TO_BB12)">
+      <arc source="main_BB14" target="main_SWITCH_INT_FROM_BB14_TO_BB13" id="(main_BB14, main_SWITCH_INT_FROM_BB14_TO_BB13)">
         <name>
-          <text>(main_BB15, main_SWITCH_INT_FROM_BB15_TO_BB12)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BB15" target="main_SWITCH_INT_FROM_BB15_TO_BB14" id="(main_BB15, main_SWITCH_INT_FROM_BB15_TO_BB14)">
-        <name>
-          <text>(main_BB15, main_SWITCH_INT_FROM_BB15_TO_BB14)</text>
+          <text>(main_BB14, main_SWITCH_INT_FROM_BB14_TO_BB13)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -445,33 +422,25 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB6" target="std_thread_JoinHandle_T_join_0_CALL" id="(main_BB6, std_thread_JoinHandle_T_join_0_CALL)">
+      <arc source="main_BB6" target="std_mem_drop_0_CALL" id="(main_BB6, std_mem_drop_0_CALL)">
         <name>
-          <text>(main_BB6, std_thread_JoinHandle_T_join_0_CALL)</text>
+          <text>(main_BB6, std_mem_drop_0_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB6" target="std_thread_JoinHandle_T_join_0_CALL_UNWIND" id="(main_BB6, std_thread_JoinHandle_T_join_0_CALL_UNWIND)">
+      <arc source="main_BB6" target="std_mem_drop_0_CALL_UNWIND" id="(main_BB6, std_mem_drop_0_CALL_UNWIND)">
         <name>
-          <text>(main_BB6, std_thread_JoinHandle_T_join_0_CALL_UNWIND)</text>
+          <text>(main_BB6, std_mem_drop_0_CALL_UNWIND)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB7" target="main_DROP_7" id="(main_BB7, main_DROP_7)">
+      <arc source="main_BB7" target="std_thread_JoinHandle_T_join_0_CALL" id="(main_BB7, std_thread_JoinHandle_T_join_0_CALL)">
         <name>
-          <text>(main_BB7, main_DROP_7)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BB7" target="main_DROP_UNWIND_7" id="(main_BB7, main_DROP_UNWIND_7)">
-        <name>
-          <text>(main_BB7, main_DROP_UNWIND_7)</text>
+          <text>(main_BB7, std_thread_JoinHandle_T_join_0_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -557,49 +526,17 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_DROP_11" target="MUTEX_0" id="(main_DROP_11, MUTEX_0)">
+      <arc source="main_DROP_11" target="main_BB12" id="(main_DROP_11, main_BB12)">
         <name>
-          <text>(main_DROP_11, MUTEX_0)</text>
+          <text>(main_DROP_11, main_BB12)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_DROP_11" target="main_BB15" id="(main_DROP_11, main_BB15)">
+      <arc source="main_DROP_13" target="main_BB11" id="(main_DROP_13, main_BB11)">
         <name>
-          <text>(main_DROP_11, main_BB15)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_DROP_12" target="main_BB13" id="(main_DROP_12, main_BB13)">
-        <name>
-          <text>(main_DROP_12, main_BB13)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_DROP_14" target="main_BB12" id="(main_DROP_14, main_BB12)">
-        <name>
-          <text>(main_DROP_14, main_BB12)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_DROP_7" target="main_BB8" id="(main_DROP_7, main_BB8)">
-        <name>
-          <text>(main_DROP_7, main_BB8)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_DROP_8" target="MUTEX_0" id="(main_DROP_8, MUTEX_0)">
-        <name>
-          <text>(main_DROP_8, MUTEX_0)</text>
+          <text>(main_DROP_13, main_BB11)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -621,25 +558,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_DROP_UNWIND_7" target="main_BB11" id="(main_DROP_UNWIND_7, main_BB11)">
+      <arc source="main_DROP_UNWIND_8" target="main_BB14" id="(main_DROP_UNWIND_8, main_BB14)">
         <name>
-          <text>(main_DROP_UNWIND_7, main_BB11)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_DROP_UNWIND_8" target="MUTEX_0" id="(main_DROP_UNWIND_8, MUTEX_0)">
-        <name>
-          <text>(main_DROP_UNWIND_8, MUTEX_0)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_DROP_UNWIND_8" target="main_BB15" id="(main_DROP_UNWIND_8, main_BB15)">
-        <name>
-          <text>(main_DROP_UNWIND_8, main_BB15)</text>
+          <text>(main_DROP_UNWIND_8, main_BB14)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -653,25 +574,25 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_SWITCH_INT_FROM_BB15_TO_BB12" target="main_BB12" id="(main_SWITCH_INT_FROM_BB15_TO_BB12, main_BB12)">
+      <arc source="main_SWITCH_INT_FROM_BB14_TO_BB11" target="main_BB11" id="(main_SWITCH_INT_FROM_BB14_TO_BB11, main_BB11)">
         <name>
-          <text>(main_SWITCH_INT_FROM_BB15_TO_BB12, main_BB12)</text>
+          <text>(main_SWITCH_INT_FROM_BB14_TO_BB11, main_BB11)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_SWITCH_INT_FROM_BB15_TO_BB14" target="main_BB14" id="(main_SWITCH_INT_FROM_BB15_TO_BB14, main_BB14)">
+      <arc source="main_SWITCH_INT_FROM_BB14_TO_BB13" target="main_BB13" id="(main_SWITCH_INT_FROM_BB14_TO_BB13, main_BB13)">
         <name>
-          <text>(main_SWITCH_INT_FROM_BB15_TO_BB14, main_BB14)</text>
+          <text>(main_SWITCH_INT_FROM_BB14_TO_BB13, main_BB13)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_UNWIND_13" target="PROGRAM_PANIC" id="(main_UNWIND_13, PROGRAM_PANIC)">
+      <arc source="main_UNWIND_12" target="PROGRAM_PANIC" id="(main_UNWIND_12, PROGRAM_PANIC)">
         <name>
-          <text>(main_UNWIND_13, PROGRAM_PANIC)</text>
+          <text>(main_UNWIND_12, PROGRAM_PANIC)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -749,9 +670,41 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_clone_Clone_clone_0_CALL_UNWIND" target="main_BB12" id="(std_clone_Clone_clone_0_CALL_UNWIND, main_BB12)">
+      <arc source="std_clone_Clone_clone_0_CALL_UNWIND" target="main_BB11" id="(std_clone_Clone_clone_0_CALL_UNWIND, main_BB11)">
         <name>
-          <text>(std_clone_Clone_clone_0_CALL_UNWIND, main_BB12)</text>
+          <text>(std_clone_Clone_clone_0_CALL_UNWIND, main_BB11)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="std_mem_drop_0_CALL" target="MUTEX_0" id="(std_mem_drop_0_CALL, MUTEX_0)">
+        <name>
+          <text>(std_mem_drop_0_CALL, MUTEX_0)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="std_mem_drop_0_CALL" target="main_BB7" id="(std_mem_drop_0_CALL, main_BB7)">
+        <name>
+          <text>(std_mem_drop_0_CALL, main_BB7)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="std_mem_drop_0_CALL_UNWIND" target="MUTEX_0" id="(std_mem_drop_0_CALL_UNWIND, MUTEX_0)">
+        <name>
+          <text>(std_mem_drop_0_CALL_UNWIND, MUTEX_0)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="std_mem_drop_0_CALL_UNWIND" target="main_BB14" id="(std_mem_drop_0_CALL_UNWIND, main_BB14)">
+        <name>
+          <text>(std_mem_drop_0_CALL_UNWIND, main_BB14)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -805,17 +758,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_thread_JoinHandle_T_join_0_CALL" target="main_BB7" id="(std_thread_JoinHandle_T_join_0_CALL, main_BB7)">
+      <arc source="std_thread_JoinHandle_T_join_0_CALL" target="main_BB8" id="(std_thread_JoinHandle_T_join_0_CALL, main_BB8)">
         <name>
-          <text>(std_thread_JoinHandle_T_join_0_CALL, main_BB7)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="std_thread_JoinHandle_T_join_0_CALL_UNWIND" target="main_BB11" id="(std_thread_JoinHandle_T_join_0_CALL_UNWIND, main_BB11)">
-        <name>
-          <text>(std_thread_JoinHandle_T_join_0_CALL_UNWIND, main_BB11)</text>
+          <text>(std_thread_JoinHandle_T_join_0_CALL, main_BB8)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -837,9 +782,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_thread_spawn_0_CALL_UNWIND" target="main_BB12" id="(std_thread_spawn_0_CALL_UNWIND, main_BB12)">
+      <arc source="std_thread_spawn_0_CALL_UNWIND" target="main_BB11" id="(std_thread_spawn_0_CALL_UNWIND, main_BB11)">
         <name>
-          <text>(std_thread_spawn_0_CALL_UNWIND, main_BB12)</text>
+          <text>(std_thread_spawn_0_CALL_UNWIND, main_BB11)</text>
         </name>
         <inscription>
           <text>1</text>

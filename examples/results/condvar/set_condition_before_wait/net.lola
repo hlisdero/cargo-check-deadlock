@@ -318,11 +318,6 @@ TRANSITION std_thread_JoinHandle_T_join_0_CALL
     main_BB11 : 1;
   PRODUCE
     main_BB12 : 1;
-TRANSITION std_thread_JoinHandle_T_join_0_CALL_UNWIND
-  CONSUME
-    main_BB11 : 1;
-  PRODUCE
-    main_BB18 : 1;
 TRANSITION std_thread_spawn_0_CALL
   CONSUME
     main_BB4 : 1;
