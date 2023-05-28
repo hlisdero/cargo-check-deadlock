@@ -97,6 +97,7 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
                 place,
                 target,
                 unwind,
+                replace: _,
             } => {
                 let (transition, cleanup_transition) = match unwind {
                     UnwindAction::Cleanup(cleanup) => {
