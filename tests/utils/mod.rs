@@ -8,7 +8,7 @@ use std::process::Command; // Run programs
 /// # Panics
 ///
 /// If the command `granite` is not found, then the function panics.
-/// If the command `granite` fails to complete execution sucessfully, then the function panics.
+/// If the command `granite` fails to complete execution successfully, then the function panics.
 /// If the output file cannot be opened, then the function panics.
 /// If the output file contents cannot be read, then the function panics.
 #[allow(dead_code)]
@@ -46,7 +46,7 @@ pub fn assert_output_file(
 /// # Panics
 ///
 /// If the command `granite` is not found, then the function panics.
-/// If the command `granite` fails to complete execution sucessfully, then the function panics.
+/// If the command `granite` fails to complete execution successfully, then the function panics.
 #[allow(dead_code)]
 pub fn assert_lola_result(
     source_code_file: &str,
