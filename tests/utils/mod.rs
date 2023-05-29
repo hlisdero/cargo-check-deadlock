@@ -61,7 +61,6 @@ pub fn assert_output_files(source_code_file: &str, output_folder: &str) {
 pub fn assert_lola_result(
     source_code_file: &str,
     output_folder: &str,
-    output_filename: &str,
     output_should_have_deadlock: bool,
 ) {
     let mut cmd = Command::cargo_bin("check-deadlock").expect("Command not found");
@@ -81,7 +80,8 @@ pub fn assert_lola_result(
             "Result: The program is deadlock-free according to the model checker `LoLA`",
         ));
     }
-
+    // Delete the output file
+    let output_filename = PathBuf::from(format!("{output_folder}deadlock_test.lola"));
     std::fs::remove_file(output_filename).expect("Could not delete output file");
 }
 
@@ -120,12 +120,7 @@ macro_rules! generate_lola_tests_for_example_program {
     ($program_path:literal, $result_folder_path:literal, $expected_result:expr) => {
         #[test]
         fn generates_correct_lola_result() {
-            super::utils::assert_lola_result(
-                $program_path,
-                $result_folder_path,
-                concat!($result_folder_path, "deadlock_test.lola"),
-                $expected_result,
-            );
+            super::utils::assert_lola_result($program_path, $result_folder_path, $expected_result);
         }
     };
 }
