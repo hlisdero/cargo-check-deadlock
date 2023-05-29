@@ -26,7 +26,9 @@ pub fn assert_output_file(
         .arg(source_code_file)
         .arg(format!("--output-folder={output_folder}"))
         .arg(format!("--format={format}"))
-        .arg("--filename=test");
+        .arg("--filename=test")
+        .arg("--no-deadlock-analysis");
+
     cmd.assert().success();
 
     let file_contents =
@@ -62,8 +64,7 @@ pub fn assert_lola_result(
         .arg(source_code_file)
         .arg(format!("--output-folder={output_folder}"))
         .arg(format!("--format=lola"))
-        .arg("--filename=deadlock_test")
-        .arg("--deadlock-analysis");
+        .arg("--filename=deadlock_test");
 
     if output_should_have_deadlock {
         cmd.assert().success().stdout(predicate::str::contains(

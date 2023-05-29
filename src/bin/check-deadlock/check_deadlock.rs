@@ -28,9 +28,9 @@ pub struct Args {
     #[arg(long, value_enum)]
     format: Vec<OutputFormat>,
 
-    /// If set, a reachability analysis to find deadlocks is performed.
+    /// If set, the reachability analysis to find deadlocks is skipped.
     #[arg(long)]
-    deadlock_analysis: bool,
+    no_deadlock_analysis: bool,
 
     /// Verbosity flag.
     #[clap(flatten)]
@@ -90,20 +90,20 @@ impl Args {
             return CargoResult::OutputGenerationError(err_str.to_string());
         }
 
-        if self.deadlock_analysis {
-            let mut filepath = self.output_folder.clone();
-            filepath.push(&self.filename);
-            filepath.set_extension(OutputFormat::Lola.to_string());
-
-            let message = if lola::check_deadlock(&filepath) {
-                "Deadlock can be reached according to the model checker `LoLA`"
-            } else {
-                "The program is deadlock-free according to the model checker `LoLA`"
-            };
-            CargoResult::DeadlockAnalysis(message.to_string())
-        } else {
-            CargoResult::SimpleTranslation
+        if self.no_deadlock_analysis {
+            return CargoResult::SimpleTranslation;
         }
+
+        let mut filepath = self.output_folder.clone();
+        filepath.push(&self.filename);
+        filepath.set_extension(OutputFormat::Lola.to_string());
+
+        let message = if lola::check_deadlock(&filepath) {
+            "Deadlock can be reached according to the model checker `LoLA`"
+        } else {
+            "The program is deadlock-free according to the model checker `LoLA`"
+        };
+        CargoResult::DeadlockAnalysis(message.to_string())
     }
 }
 

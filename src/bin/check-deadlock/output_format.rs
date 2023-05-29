@@ -1,10 +1,10 @@
-//! Submodule for the output formats supported by the tool.
 use clap::ValueEnum;
 use log::info;
 
 use cargo_check_deadlock::PetriNet;
 
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, ValueEnum, Debug)]
+/// Possible file formats for the Petri net
 pub enum OutputFormat {
     /// Petri Net Markup Language - <https://www.pnml.org/>
     Pnml,
