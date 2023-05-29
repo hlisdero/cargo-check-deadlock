@@ -16,7 +16,7 @@ clap = { version = "4.1.1", features = ["derive"] }
 clap-verbosity-flag = "2.0.0"
 env_logger = "0.10.0"
 log = "0.4.17"
-netcrab = { git = "https://github.com/hlisdero/netcrab/" }
+netcrab = "1.0.0"
 
 [dev-dependencies]
 assert_cmd = "2.0.8"

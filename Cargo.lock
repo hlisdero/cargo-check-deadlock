@@ -426,8 +426,9 @@ checksum = "2dffe52ecf27772e601905b7522cb4ef790d2cc203488bbd0e2fe85fcb74566d"
 
 [[package]]
 name = "netcrab"
-version = "0.1.0"
-source = "git+https://github.com/hlisdero/netcrab/#5745e0da5d27bd709ef479f45a6d2e75974d3745"
+version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a25b6b40f9c38090097eab633b7b58d6e2c139a77e8e779079ba42d850520f8f"
 dependencies = [
  "uuid",
  "xml-rs",
