@@ -1,10 +1,10 @@
 //! Submodule for the output formats supported by the tool.
-
-use super::PetriNet;
 use clap::ValueEnum;
 use log::info;
 
-#[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, ValueEnum)]
+use granite::PetriNet;
+
+#[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, ValueEnum, Debug)]
 pub enum OutputFormat {
     /// Petri Net Markup Language - <https://www.pnml.org/>
     Pnml,
@@ -22,7 +22,7 @@ impl OutputFormat {
     /// If the file cannot be created, then the function returns an error.
     /// If the Petri net cannot be written to the file, then the function returns an error.
     pub fn create_output_file(
-        &self,
+        self,
         petri_net: &PetriNet,
         filename: &str,
         output_folder: &std::path::Path,

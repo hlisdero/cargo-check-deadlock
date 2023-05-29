@@ -33,13 +33,11 @@ mod compiler_config;
 mod data_structures;
 pub mod model_checker;
 mod naming;
-mod output_format;
 mod sysroot;
 mod translator;
 mod utils;
 
 pub use data_structures::petri_net_interface::PetriNet;
-pub use output_format::OutputFormat;
 
 /// Entry point for the translation of the Rust code to a Petri net.
 ///

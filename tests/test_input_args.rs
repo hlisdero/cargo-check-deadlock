@@ -7,7 +7,9 @@ use std::process::Command; // Run programs
 fn file_does_not_exist() {
     let mut cmd = Command::cargo_bin("granite").expect("Command not found");
 
-    cmd.arg("test/file/doesnt/exist").arg("--format=pnml");
+    cmd.arg("check-deadlock")
+        .arg("test/file/doesnt/exist")
+        .arg("--format=pnml");
     cmd.assert().failure().stderr(predicate::str::contains(
         "Source code file at test/file/doesnt/exist does not exist",
     ));
@@ -21,8 +23,8 @@ fn output_folder_does_not_exist() {
         .expect("Could not write test file contents");
 
     let mut cmd = Command::cargo_bin("granite").expect("Command not found");
-
-    cmd.arg(file.path())
+    cmd.arg("check-deadlock")
+        .arg(file.path())
         .arg("--output-folder=test/folder/doesnt/exist");
     cmd.assert().failure().stderr(predicate::str::contains(
         "Output folder at test/folder/doesnt/exist does not exist",
@@ -37,8 +39,9 @@ fn format_is_not_valid() {
         .expect("Could not write test file contents");
 
     let mut cmd = Command::cargo_bin("granite").expect("Command not found");
-
-    cmd.arg(file.path()).arg("--format=INVALID_FORMAT");
+    cmd.arg("check-deadlock")
+        .arg(file.path())
+        .arg("--format=INVALID_FORMAT");
     cmd.assert().failure().stderr(predicate::str::contains(
         "[possible values: pnml, lola, dot]",
     ));
@@ -53,7 +56,8 @@ fn does_not_generate_output_by_default() {
 
     let mut cmd = Command::cargo_bin("granite").expect("Command not found");
 
-    cmd.arg(file.path())
+    cmd.arg("check-deadlock")
+        .arg(file.path())
         .arg("--filename=does_not_generate_output_by_default");
     cmd.assert()
         .success()

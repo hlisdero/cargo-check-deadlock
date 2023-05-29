@@ -22,7 +22,8 @@ pub fn assert_output_file(
     let mut cmd = Command::cargo_bin("granite").expect("Command not found");
 
     // Current workdir is always the project root folder
-    cmd.arg(source_code_file)
+    cmd.arg("check-deadlock")
+        .arg(source_code_file)
         .arg(format!("--output-folder={output_folder}"))
         .arg(format!("--format={format}"))
         .arg("--filename=test");
@@ -57,7 +58,8 @@ pub fn assert_lola_result(
     let mut cmd = Command::cargo_bin("granite").expect("Command not found");
 
     // Current workdir is always the project root folder
-    cmd.arg(source_code_file)
+    cmd.arg("check-deadlock")
+        .arg(source_code_file)
         .arg(format!("--output-folder={output_folder}"))
         .arg(format!("--format=lola"))
         .arg("--filename=deadlock_test")
