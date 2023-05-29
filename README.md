@@ -122,6 +122,10 @@ For example, running the program with the flag `-vvv` prints debug messages that
 cargo check-deadlock <path_to_program>/rust_program.rs -vvv
 ```
 
+LoLA model checker supports printing a "witness path" that shows a sequence of transition firings leading to a deadlock.
+This is very useful when extending the translator and the Petri net does not match the expected result for a given program.
+A convenient [script](./scripts/run_lola_and_print_witness_path.sh) can be found to print the witness path for a `.lola` file.
+
 ## Visualizing the results
 
 ### Locally
@@ -149,7 +153,10 @@ The model checker LoLA can be downloaded [here](https://theo.informatik.uni-rost
 
 An alternative mirror with detailed instructions is available on GitHub: <https://github.com/hlisdero/lola>
 
+A last option is to copy the precompiled 64-bit executable `./assets/lola` to the `$PATH`. A [script](./scripts/copy_lola_executable_to_cargo_home.sh) for this purpose can be found in the repo.
+
 Support for other model checkers and export formats may be added in the future.
+Adding other backends could be a great way to compare their performance and accuracy.
 The export formats are implemented in the custom Petri net library used in this project: <https://github.com/hlisdero/netcrab>
 
 ## Limitations
