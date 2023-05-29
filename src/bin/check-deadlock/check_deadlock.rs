@@ -5,7 +5,6 @@ use crate::cargo_result::CargoResult;
 use crate::output_format::OutputFormat;
 
 use cargo_check_deadlock::model_checker::lola;
-use cargo_check_deadlock::PetriNet;
 
 /// Convert a Rust source code file into a Petri net and export
 /// the resulting net in one of the supported formats.
@@ -24,9 +23,13 @@ pub struct Args {
     #[arg(long, default_value = ".")]
     output_folder: std::path::PathBuf,
 
-    /// The format for the output. Multiple formats can be specified.
-    #[arg(long, value_enum)]
-    format: Vec<OutputFormat>,
+    /// If set, outputs the Petri net in DOT format.
+    #[arg(long)]
+    dot: bool,
+
+    /// If set, outputs the Petri net in PNML format.
+    #[arg(long)]
+    pnml: bool,
 
     /// If set, the reachability analysis to find deadlocks is skipped.
     #[arg(long)]
@@ -80,13 +83,28 @@ impl Args {
             }
         };
 
-        let result = create_output_files(
-            &petri_net,
-            &self.filename,
-            &self.output_folder,
-            &self.format,
-        );
-        if let Err(err_str) = result {
+        if self.dot {
+            let format = OutputFormat::Dot;
+            if let Err(err_str) =
+                format.create_output_file(&petri_net, &self.filename, &self.output_folder)
+            {
+                return CargoResult::OutputGenerationError(err_str.to_string());
+            }
+        }
+
+        if self.pnml {
+            let format = OutputFormat::Pnml;
+            if let Err(err_str) =
+                format.create_output_file(&petri_net, &self.filename, &self.output_folder)
+            {
+                return CargoResult::OutputGenerationError(err_str.to_string());
+            }
+        }
+        // Always generate the file in LoLA format for the deadlock analysis
+        let format = OutputFormat::Lola;
+        if let Err(err_str) =
+            format.create_output_file(&petri_net, &self.filename, &self.output_folder)
+        {
             return CargoResult::OutputGenerationError(err_str.to_string());
         }
 
@@ -105,16 +123,4 @@ impl Args {
         };
         CargoResult::DeadlockAnalysis(message.to_string())
     }
-}
-
-fn create_output_files(
-    petri_net: &PetriNet,
-    filename: &str,
-    output_folder: &std::path::Path,
-    format: &Vec<OutputFormat>,
-) -> Result<(), std::io::Error> {
-    for format in format {
-        format.create_output_file(petri_net, filename, output_folder)?;
-    }
-    Ok(())
 }

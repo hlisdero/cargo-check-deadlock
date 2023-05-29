@@ -1,9 +1,11 @@
 use assert_cmd::prelude::*; // Add methods on commands
 use predicates::prelude::*; // Used for writing assertions
+use std::path::PathBuf;
 use std::process::Command; // Run programs
 
-/// Asserts that the contents of the given output file correspond to the expected file contents
+/// Asserts that the contents of the output files correspond to the expected file contents
 /// after running `check-deadlock` on the given source code file.
+/// Checks all formats: LoLA, DOT and PNML.
 ///
 /// # Panics
 ///
@@ -12,35 +14,40 @@ use std::process::Command; // Run programs
 /// If the output file cannot be opened, then the function panics.
 /// If the output file contents cannot be read, then the function panics.
 #[allow(dead_code)]
-pub fn assert_output_file(
-    source_code_file: &str,
-    output_folder: &str,
-    format: &str,
-    output_filename: &str,
-    expected_contents_filename: &str,
-) {
+pub fn assert_output_files(source_code_file: &str, output_folder: &str) {
     let mut cmd = Command::cargo_bin("check-deadlock").expect("Command not found");
 
     // Current workdir is always the project root folder
     cmd.arg("check-deadlock")
         .arg(source_code_file)
         .arg(format!("--output-folder={output_folder}"))
-        .arg(format!("--format={format}"))
+        .arg("--dot")
+        .arg("--pnml")
         .arg("--filename=test")
         .arg("--skip-analysis");
 
     cmd.assert().success();
 
-    let file_contents =
-        std::fs::read_to_string(output_filename).expect("Could not read output file to string");
+    for extension in ["lola", "dot", "pnml"] {
+        let output_path = PathBuf::from(format!("{output_folder}test.{extension}"));
+        let expected_output_path = PathBuf::from(format!("{output_folder}net.{extension}"));
 
-    let expected_file_contents = std::fs::read_to_string(expected_contents_filename)
-        .expect("Could not read file with expected contents to string");
+        let file_contents =
+            std::fs::read_to_string(&output_path).expect("Could not read output file to string");
 
-    if file_contents != expected_file_contents {
-        panic!("The contents of {expected_contents_filename} do not match the contents of {output_filename}");
+        let expected_file_contents = std::fs::read_to_string(&expected_output_path)
+            .expect("Could not read file with expected contents to string");
+
+        if file_contents != expected_file_contents {
+            panic!(
+                "The contents of {} do not match the contents of {}",
+                output_path.to_string_lossy(),
+                expected_output_path.to_string_lossy()
+            );
+        }
+
+        std::fs::remove_file(output_path).expect("Could not delete output file");
     }
-    std::fs::remove_file(output_filename).expect("Could not delete output file");
 }
 
 /// Asserts that the result of running the model checker  `LoLA` matches the expected result
@@ -63,7 +70,6 @@ pub fn assert_lola_result(
     cmd.arg("check-deadlock")
         .arg(source_code_file)
         .arg(format!("--output-folder={output_folder}"))
-        .arg(format!("--format=lola"))
         .arg("--filename=deadlock_test");
 
     if output_should_have_deadlock {
@@ -80,7 +86,7 @@ pub fn assert_lola_result(
 }
 
 /// This macro generates the test code for the three supported file formats.
-/// It saves a considerable ammount of boilerplate.
+/// It saves a considerable amount of boilerplate.
 ///
 /// Receives the relative path from the root folder of the repository
 /// to the source code of the program to be tested.
@@ -93,42 +99,14 @@ pub fn assert_lola_result(
 macro_rules! generate_tests_for_example_program {
     ($program_path:literal, $result_folder_path:literal) => {
         #[test]
-        fn generates_correct_dot_output_file() {
-            super::utils::assert_output_file(
-                $program_path,
-                $result_folder_path,
-                "dot",
-                concat!($result_folder_path, "test.dot"),
-                concat!($result_folder_path, "net.dot"),
-            );
-        }
-
-        #[test]
-        fn generates_correct_lola_output_file() {
-            super::utils::assert_output_file(
-                $program_path,
-                $result_folder_path,
-                "lola",
-                concat!($result_folder_path, "test.lola"),
-                concat!($result_folder_path, "net.lola"),
-            );
-        }
-
-        #[test]
-        fn generates_correct_pnml_output_file() {
-            super::utils::assert_output_file(
-                $program_path,
-                $result_folder_path,
-                "pnml",
-                concat!($result_folder_path, "test.pnml"),
-                concat!($result_folder_path, "net.pnml"),
-            );
+        fn generates_correct_output_files() {
+            super::utils::assert_output_files($program_path, $result_folder_path);
         }
     };
 }
 
 /// This macro generates the test code for the three supported file formats.
-/// It saves a considerable ammount of boilerplate.
+/// It saves a considerable amount of boilerplate.
 ///
 /// Receives the relative path from the root folder of the repository
 /// to the source code of the program to be tested.

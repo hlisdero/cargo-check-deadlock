@@ -9,7 +9,7 @@ fn file_does_not_exist() {
 
     cmd.arg("check-deadlock")
         .arg("test/file/doesnt/exist")
-        .arg("--format=pnml");
+        .arg("--pnml");
     cmd.assert().failure().stderr(predicate::str::contains(
         "Source code file at test/file/doesnt/exist does not exist",
     ));
@@ -39,16 +39,14 @@ fn format_is_not_valid() {
         .expect("Could not write test file contents");
 
     let mut cmd = Command::cargo_bin("check-deadlock").expect("Command not found");
-    cmd.arg("check-deadlock")
-        .arg(file.path())
-        .arg("--format=INVALID_FORMAT");
+    cmd.arg("check-deadlock").arg(file.path()).arg("--csv");
     cmd.assert().failure().stderr(predicate::str::contains(
-        "[possible values: pnml, lola, dot]",
+        "unexpected argument '--csv' found",
     ));
 }
 
 #[test]
-fn does_not_generate_output_by_default() {
+fn generates_lola_output_by_default() {
     let file = assert_fs::NamedTempFile::new("valid_file.rs")
         .expect("Could not create temporary file for test");
     file.write_str("fn main() {}")
@@ -64,12 +62,16 @@ fn does_not_generate_output_by_default() {
         .success()
         .stdout(predicate::str::is_empty())
         .stderr(predicate::str::is_empty());
+    // Check that the default output exists
+    if !std::path::Path::new("./does_not_generate_output_by_default.lola").exists() {
+        panic!("Should generate a .lola file by default");
+    }
+    std::fs::remove_file("./does_not_generate_output_by_default.lola")
+        .expect("Could not delete output file");
 
+    // Check that the other formats were not generated
     if std::path::Path::new("./does_not_generate_output_by_default.dot").exists() {
         panic!("Should not generate a .dot file by default");
-    }
-    if std::path::Path::new("./does_not_generate_output_by_default.lola").exists() {
-        panic!("Should not generate a .lola file by default");
     }
     if std::path::Path::new("./does_not_generate_output_by_default.pnml").exists() {
         panic!("Should not generate a .pnml file by default");
