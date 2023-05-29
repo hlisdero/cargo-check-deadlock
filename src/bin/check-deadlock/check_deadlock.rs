@@ -30,7 +30,7 @@ pub struct Args {
 
     /// If set, the reachability analysis to find deadlocks is skipped.
     #[arg(long)]
-    no_deadlock_analysis: bool,
+    skip_analysis: bool,
 
     /// Verbosity flag.
     #[clap(flatten)]
@@ -90,7 +90,7 @@ impl Args {
             return CargoResult::OutputGenerationError(err_str.to_string());
         }
 
-        if self.no_deadlock_analysis {
+        if self.skip_analysis {
             return CargoResult::SimpleTranslation;
         }
 

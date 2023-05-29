@@ -59,7 +59,7 @@ fn does_not_generate_output_by_default() {
     cmd.arg("check-deadlock")
         .arg(file.path())
         .arg("--filename=does_not_generate_output_by_default")
-        .arg("--no-deadlock-analysis");
+        .arg("--skip-analysis");
     cmd.assert()
         .success()
         .stdout(predicate::str::is_empty())

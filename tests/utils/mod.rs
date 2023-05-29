@@ -27,7 +27,7 @@ pub fn assert_output_file(
         .arg(format!("--output-folder={output_folder}"))
         .arg(format!("--format={format}"))
         .arg("--filename=test")
-        .arg("--no-deadlock-analysis");
+        .arg("--skip-analysis");
 
     cmd.assert().success();
 
