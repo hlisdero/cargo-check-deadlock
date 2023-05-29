@@ -59,15 +59,29 @@ use special_function::{
 use sync::mutex;
 use sync::thread::Thread;
 
+/// The central data structure and coordinator for the translation.
 pub struct Translator<'tcx> {
+    /// The global typing context that enables interaction with `rustc` during the translation.
     tcx: rustc_middle::ty::TyCtxt<'tcx>,
+    /// The Petri net model of the program being translated.
     net: PetriNet,
+    /// The place in the Petri net that models the program initial state.
     program_start: PlaceRef,
+    /// The place in the Petri net that models a normal program end state, regardless of exit code.
     program_end: PlaceRef,
+    /// The place in the Petri net that models the `panic!` end state.
     program_panic: PlaceRef,
+    /// The call stack of user-defined functions with a MIR representation.
+    /// Other functions are translated in an abbreviated form.
     call_stack: Stack<MirFunction<'tcx>>,
+    /// A counter that keeps track how many times each function was called so far.
+    /// Functions are identified by their name.
     function_counter: HashMapCounter,
+    /// A vector of threads detected in the code.
+    /// They are translated in order after the main thread.
     threads: Vec<Rc<RefCell<Thread>>>,
+    /// Translation tasks performed after all threads have been translated.
+    /// These tasks usually require to make changes to the final Petri net.
     postprocessing: BinaryHeap<PostprocessingTask>,
 }
 
