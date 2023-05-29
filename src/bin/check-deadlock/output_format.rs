@@ -2,7 +2,7 @@
 use clap::ValueEnum;
 use log::info;
 
-use granite::PetriNet;
+use cargo_check_deadlock::PetriNet;
 
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, ValueEnum, Debug)]
 pub enum OutputFormat {

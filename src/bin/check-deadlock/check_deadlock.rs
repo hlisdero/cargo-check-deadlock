@@ -4,8 +4,8 @@ use log::info;
 use crate::cargo_result::CargoResult;
 use crate::output_format::OutputFormat;
 
-use granite::model_checker::lola;
-use granite::PetriNet;
+use cargo_check_deadlock::model_checker::lola;
+use cargo_check_deadlock::PetriNet;
 
 /// Convert a Rust source code file into a Petri net and export
 /// the resulting net in one of the supported formats.
@@ -73,7 +73,7 @@ impl Args {
         };
 
         info!("Starting the translation...");
-        let petri_net = match granite::run(self.path.clone()) {
+        let petri_net = match cargo_check_deadlock::run(self.path.clone()) {
             Ok(petri_net) => petri_net,
             Err(err_str) => {
                 return CargoResult::TranslationError(err_str.to_string());

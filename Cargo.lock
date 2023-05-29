@@ -124,6 +124,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "cargo-check-deadlock"
+version = "0.1.0"
+dependencies = [
+ "assert_cmd",
+ "assert_fs",
+ "clap",
+ "clap-verbosity-flag",
+ "env_logger",
+ "log",
+ "netcrab",
+ "predicates",
+]
+
+[[package]]
 name = "cc"
 version = "1.0.79"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -305,20 +319,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "granite"
-version = "0.1.0"
-dependencies = [
- "assert_cmd",
- "assert_fs",
- "clap",
- "clap-verbosity-flag",
- "env_logger",
- "log",
- "netcrab",
- "predicates",
-]
-
-[[package]]
 name = "heck"
 version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -450,9 +450,9 @@ dependencies = [
 
 [[package]]
 name = "once_cell"
-version = "1.17.1"
+version = "1.17.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b7e5500299e16ebb147ae15a00a942af264cf3688f47923b8fc2cd5858f23ad3"
+checksum = "9670a07f94779e00908f3e686eab508878ebb390ba6e604d3a284c00e8d0487b"
 
 [[package]]
 name = "ppv-lite86"

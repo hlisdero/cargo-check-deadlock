@@ -5,7 +5,7 @@ use std::process::Command; // Run programs
 
 #[test]
 fn file_does_not_exist() {
-    let mut cmd = Command::cargo_bin("granite").expect("Command not found");
+    let mut cmd = Command::cargo_bin("check-deadlock").expect("Command not found");
 
     cmd.arg("check-deadlock")
         .arg("test/file/doesnt/exist")
@@ -22,7 +22,7 @@ fn output_folder_does_not_exist() {
     file.write_str("fn main {}")
         .expect("Could not write test file contents");
 
-    let mut cmd = Command::cargo_bin("granite").expect("Command not found");
+    let mut cmd = Command::cargo_bin("check-deadlock").expect("Command not found");
     cmd.arg("check-deadlock")
         .arg(file.path())
         .arg("--output-folder=test/folder/doesnt/exist");
@@ -38,7 +38,7 @@ fn format_is_not_valid() {
     file.write_str("fn main() {}")
         .expect("Could not write test file contents");
 
-    let mut cmd = Command::cargo_bin("granite").expect("Command not found");
+    let mut cmd = Command::cargo_bin("check-deadlock").expect("Command not found");
     cmd.arg("check-deadlock")
         .arg(file.path())
         .arg("--format=INVALID_FORMAT");
@@ -54,7 +54,7 @@ fn does_not_generate_output_by_default() {
     file.write_str("fn main() {}")
         .expect("Could not write test file contents");
 
-    let mut cmd = Command::cargo_bin("granite").expect("Command not found");
+    let mut cmd = Command::cargo_bin("check-deadlock").expect("Command not found");
 
     cmd.arg("check-deadlock")
         .arg(file.path())

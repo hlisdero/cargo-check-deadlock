@@ -1,4 +1,4 @@
-# granite
+# cargo-check-deadlock
 
 ## Translate Rust source code to a Petri net
 
@@ -56,7 +56,7 @@ As time goes on and the compiler internals change, the code will inevitably need
 1. Clone the repo
 
    ```sh
-   git clone https://github.com/hlisdero/granite.git
+   git clone https://github.com/hlisdero/cargo-check-deadlock.git
    ```
 
 2. Make sure that the sysroot points to a nightly toolchain when running it from the project directory
@@ -83,7 +83,7 @@ As time goes on and the compiler internals change, the code will inevitably need
 Write a valid Rust program that compiles correctly, e.g. `rust_program.rs`, then run
 
 ```sh
-granite <path_to_program>/rust_program.rs --format=lola --format=pnml --format=dot --deadlock-analysis
+cargo check-deadlock <path_to_program>/rust_program.rs --format=lola --format=pnml --format=dot --deadlock-analysis
 ```
 
 Three files called `net.lola`, `net.pnml` and `net.dot` should appear in the CWD.
@@ -98,7 +98,7 @@ The program supports the verbosity flags defined in the crate [clap_verbosity_fl
 For example, running the program with the flag `-vvv` prints debug messages that can be useful for pinpointing which line of the MIR representation is not being translated correctly.
 
 ```sh
-granite <path_to_program>/rust_program.rs -vvv
+cargo check-deadlock <path_to_program>/rust_program.rs -vvv
 ```
 
 ## Visualizing the results
