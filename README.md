@@ -1,20 +1,33 @@
 # cargo-check-deadlock
 
-## Translate Rust source code to a Petri net
+## Detect deadlocks at compile time in Rust source code
 
-Translate the [MIR representation](https://rustc-dev-guide.rust-lang.org/mir/index.html) of the source code to a Petri net which can then be exported.
+The tool supports detecting deadlocks caused by incorrect use of [mutexes](https://doc.rust-lang.org/std/sync/struct.Mutex.html) (`std::sync::Mutex`) and [condition variables](https://doc.rust-lang.org/std/sync/struct.Condvar.html) (`std::sync::Condvar`).
+It also supports detecting deadlocks caused by calling `join` on a thread that never returns.
 
-The project is intended to be used to find deadlocks in Rust code by translating the source code, exporting it to the LoLA format, and then using the LoLA model checker to verify the absence of deadlocks. The tool also supports detecting lost signals. This particular deadlock case arises when a thread calls `notify_one` on a [Condition Variable](https://doc.rust-lang.org/std/sync/struct.Condvar.html) before another thread called `wait`.
+It does this by translating the [Mid-level Intermediate Representation (MIR) representation](https://rustc-dev-guide.rust-lang.org/mir/index.html) of the Rust source code to a [Petri net](https://en.wikipedia.org/wiki/Petri_net), a mathematical and graphical model.
+The Petri net is then analyzed by the [LoLA](https://theo.informatik.uni-rostock.de/theo-forschung/tools/lola/) model checker to find out if the net can reach a deadlock.
+This approach is an exhaustive check of all possible program states. It is *not* just testing a couple of possible executions, it is also *not* [fuzz testing](https://en.wikipedia.org/wiki/Fuzzing).
+
+For more details about what works and what does not, see [Limitations](#limitations). For more context about this project, see [Context](#context).
 
 ### Supported export formats
 
-- Petri Net Markup Language (PNML) [https://www.pnml.org/](https://www.pnml.org/)
-- LoLA - A Low Level Petri Net Analyzer [https://theo.informatik.uni-rostock.de/theo-forschung/tools/lola/](https://theo.informatik.uni-rostock.de/theo-forschung/tools/lola/)
-- DOT (graph description language) [https://en.wikipedia.org/wiki/DOT\_(graph_description_language)](<https://en.wikipedia.org/wiki/DOT_(graph_description_language)>)
+- Petri Net Markup Language (PNML) [https://www.pnml.org/](https://www.pnml.org/): A standard XML-based format used in many other tools that work with Petri nets.
+- LoLA - A Low-Level Petri Net Analyzer [https://theo.informatik.uni-rostock.de/theo-forschung/tools/lola/](https://theo.informatik.uni-rostock.de/theo-forschung/tools/lola/): This format is needed for the model checker used in this project.
+- DOT (graph description language) [https://en.wikipedia.org/wiki/DOT\_(graph_description_language)](<https://en.wikipedia.org/wiki/DOT_(graph_description_language)>): A straightforward visualization of the resulting Petri net. See the corresponding [section](#visualizing-the-results).
 
-## Getting started
+## Installation from `crates.io`
 
-To get a local copy up and running follow these simple example steps.
+Assuming you already have Rust installed on your system, simply run:
+
+```sh
+cargo install cargo-check-deadlock
+```
+
+## Setting up the environment for development
+
+To get a local copy for development up and running follow these simple example steps.
 
 ### Prerequisites
 
@@ -44,12 +57,12 @@ The toolchain file `rust-toolchain` in the root folder overrides the currently a
 See the `rustup` documentation for more information: <https://rust-lang.github.io/rustup/overrides.html#the-toolchain-file>
 
 The `settings.json` configures VS Code to instruct the [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer) extension to auto-discover the right toolchain.
-This proves extremely useful to get feedback on the types, compiler errors, etc. that result from working with the private crates of `rustc`.
+This proves extremely useful to get feedback on the types, compiler errors, etc. that appear when working with the private crates of `rustc`.
 
 As time goes on and the compiler internals change, the code will inevitably need changes to work again.
 
 **The current state of the repository compiles without warnings and with all tests passing with**
-`rustc 1.71.0-nightly (cca7ee581 2023-05-27)`
+`rustc 1.72.0-nightly (1c53407e8 2023-05-28)`
 
 ### Installation
 
@@ -60,7 +73,7 @@ As time goes on and the compiler internals change, the code will inevitably need
    ```
 
 2. Make sure that the sysroot points to a nightly toolchain when running it from the project directory
-   _The output should be something like_ `$HOME/.rustup/toolchains/nightly-<platform>`
+   *The output should be something like* `$HOME/.rustup/toolchains/nightly-<platform>`
 
    ```sh
    rustc --print=sysroot
@@ -83,14 +96,22 @@ As time goes on and the compiler internals change, the code will inevitably need
 Write a valid Rust program that compiles correctly, e.g. `rust_program.rs`, then run
 
 ```sh
-cargo check-deadlock <path_to_program>/rust_program.rs --format=lola --format=pnml --format=dot --deadlock-analysis
+cargo check-deadlock <path_to_program>/rust_program.rs
 ```
 
-Three files called `net.lola`, `net.pnml` and `net.dot` should appear in the CWD.
+The result is printed on stdout. A file named `net.lola` should appear in the CWD.
+
+If you would like to export to other formats or use a custom filename or output folder, use
+
+```sh
+cargo check-deadlock <path_to_program>/rust_program.rs --dot --pnml --filename=example --output-folder=output/
+```
+
+In this case, files named `example.pnml` and `example.dot` should appear in the `output/` folder.
 
 To obtain the full list of CLI options, use the `--help` flag.
 
-_Note: For more examples, please refer to the integration tests._
+*Note: For more examples, please refer to the integration tests.*
 
 ### Debugging
 
@@ -129,7 +150,27 @@ The model checker LoLA can be downloaded [here](https://theo.informatik.uni-rost
 An alternative mirror with detailed instructions is available on GitHub: <https://github.com/hlisdero/lola>
 
 Support for other model checkers and export formats may be added in the future.
-The export formats are implemented in the Petri net library: <https://github.com/hlisdero/netcrab>
+The export formats are implemented in the custom Petri net library used in this project: <https://github.com/hlisdero/netcrab>
+
+## Limitations
+
+As Rust is a very complex language, supporting all the cases in which a deadlock may arise is impossible to do in practice.
+The goal of this project is to demonstrate that an approach using Petri nets is feasible and could detect errors at compile time, therefore enhancing the safety and reliability of Rust code.
+The most difficult case to detect at the moment is lost signals. This particular deadlock case arises when a thread calls `notify_one` on a condition variable before another thread called `wait`.
+
+It is recommended to check out the [example programs](./examples/programs/) to see which kinds of programs can be translated and analyzed successfully.
+Particularly interesting examples are the [dining philosophers problem](./examples/programs/thread/dining_philosophers.rs) and the [producer-consumer problem](./examples/programs/condvar/producer_consumer.rs).
+
+Currently, the programs that the translator can deal with are fairly limited:
+
+- No `struct`s, `enum`s, or `impl` blocks are supported.
+- Passing synchronization variables between threads is okay but the support for passing them between user-defined functions is missing.
+- Arrays, vectors, and other data structures may cause the translation to fail.
+- [Channels](https://doc.rust-lang.org/std/sync/mpsc/fn.channel.html) are not supported.
+- [RwLock](https://doc.rust-lang.org/std/sync/struct.RwLock.html) is not supported.
+- [Barrier](https://doc.rust-lang.org/std/sync/struct.Barrier.html) is not supported.
+- Async is not supported.
+- Synchronization mechanisms from external libraries such as [tokio](https://crates.io/crates/tokio) or [semaphore](https://crates.io/crates/semaphore) are not supported.
 
 ## Contributing
 
@@ -155,3 +196,8 @@ This project extends and reimplements ideas from the original work by Tom Meyer 
 The [rustc dev guide](https://rustc-dev-guide.rust-lang.org/) was a trusty guide in the journey of understanding the compiler. It is a must-read for every interested contributor!
 
 The [nightly documentation](https://doc.rust-lang.org/stable/nightly-rustc/) was also a valuable resource to figure out the details of MIR and how to translate every function.
+
+## Context
+
+This project is part of Horacio Lisdero's undergraduate thesis titled "Compile-time Deadlock Detection in Rust using Petri Nets" at the [School of Engineering of the University of Buenos Aires](https://fi.uba.ar/).
+The thesis will eventually be publicly available on GitHub and will provide important background topics and implementation details about this project.
