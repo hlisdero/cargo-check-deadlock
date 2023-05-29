@@ -4,18 +4,18 @@ use std::path::PathBuf;
 use std::process::Command; // Run programs
 
 /// Asserts that the contents of the output files correspond to the expected file contents
-/// after running `check-deadlock` on the given source code file.
+/// after running `cargo-check-deadlock` on the given source code file.
 /// Checks all formats: LoLA, DOT and PNML.
 ///
 /// # Panics
 ///
-/// If the command `check-deadlock` is not found, then the function panics.
-/// If the command `check-deadlock` fails to complete execution successfully, then the function panics.
+/// If the command `cargo-check-deadlock` is not found, then the function panics.
+/// If the command `cargo-check-deadlock` fails to complete execution successfully, then the function panics.
 /// If the output file cannot be opened, then the function panics.
 /// If the output file contents cannot be read, then the function panics.
 #[allow(dead_code)]
 pub fn assert_output_files(source_code_file: &str, output_folder: &str) {
-    let mut cmd = Command::cargo_bin("check-deadlock").expect("Command not found");
+    let mut cmd = Command::cargo_bin("cargo-check-deadlock").expect("Command not found");
 
     // Current workdir is always the project root folder
     cmd.arg("check-deadlock")
@@ -51,19 +51,19 @@ pub fn assert_output_files(source_code_file: &str, output_folder: &str) {
 }
 
 /// Asserts that the result of running the model checker  `LoLA` matches the expected result
-/// (program has a deadlock or deadlock-free) after running `check-deadlock` on the given source code file.
+/// (program has a deadlock or deadlock-free) after running `cargo-check-deadlock` on the given source code file.
 ///
 /// # Panics
 ///
-/// If the command `check-deadlock` is not found, then the function panics.
-/// If the command `check-deadlock` fails to complete execution successfully, then the function panics.
+/// If the command `cargo-check-deadlock` is not found, then the function panics.
+/// If the command `cargo-check-deadlock` fails to complete execution successfully, then the function panics.
 #[allow(dead_code)]
 pub fn assert_lola_result(
     source_code_file: &str,
     output_folder: &str,
     output_should_have_deadlock: bool,
 ) {
-    let mut cmd = Command::cargo_bin("check-deadlock").expect("Command not found");
+    let mut cmd = Command::cargo_bin("cargo-check-deadlock").expect("Command not found");
 
     // Current workdir is always the project root folder
     cmd.arg("check-deadlock")
