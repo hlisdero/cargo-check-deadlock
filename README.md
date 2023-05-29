@@ -6,7 +6,7 @@ The tool supports detecting deadlocks caused by incorrect use of [mutexes](https
 It also supports detecting deadlocks caused by calling `join` on a thread that never returns.
 
 It does this by translating the [Mid-level Intermediate Representation (MIR) representation](https://rustc-dev-guide.rust-lang.org/mir/index.html) of the Rust source code to a [Petri net](https://en.wikipedia.org/wiki/Petri_net), a mathematical and graphical model.
-The Petri net is then analyzed by the [LoLA](https://theo.informatik.uni-rostock.de/theo-forschung/tools/lola/) model checker to find out if the net can reach a deadlock.
+The Petri net is then analyzed by the model checker [LoLA](https://theo.informatik.uni-rostock.de/theo-forschung/tools/lola/) to find out if the net can reach a deadlock.
 This approach is an exhaustive check of all possible program states. It is *not* just testing a couple of possible executions, it is also *not* [fuzz testing](https://en.wikipedia.org/wiki/Fuzzing).
 
 For more details about what works and what does not, see [Limitations](#limitations). For more context about this project, see [Context](#context).
@@ -24,6 +24,8 @@ Assuming you already have Rust installed on your system, simply run:
 ```sh
 cargo install cargo-check-deadlock
 ```
+
+You must then install the model checker as explained in the section [Model checker](#model-checker).
 
 ## Setting up the environment for development
 
