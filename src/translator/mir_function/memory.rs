@@ -20,11 +20,25 @@
 //! <https://rustc-dev-guide.rust-lang.org/mir/index.html#mir-data-types>
 
 use log::debug;
+use std::cell::RefCell;
 use std::collections::HashMap;
+use std::rc::Rc;
 
-use crate::translator::sync::{CondvarRef, MutexGuardRef, MutexRef, ThreadRef};
+use crate::translator::sync::{Condvar, Mutex, MutexGuard, Thread};
 
-use Value::{Aggregate, Condvar, JoinHandle, Mutex, MutexGuard};
+/// A mutex reference is just a shared pointer to the mutex.
+pub type MutexRef = std::rc::Rc<Mutex>;
+
+/// A mutex guard reference is just a shared pointer to the mutex guard.
+pub type MutexGuardRef = std::rc::Rc<MutexGuard>;
+
+/// A condvar reference is just a shared pointer to the condition variable.
+pub type CondvarRef = std::rc::Rc<Condvar>;
+
+/// A thread reference is just a shared pointer to a `RefCell` containing the thread.
+/// This enables the Interior Mutability pattern needed to set the join transition later on.
+pub type ThreadRef = std::rc::Rc<std::cell::RefCell<Thread>>;
+
 type Place<'tcx> = rustc_middle::mir::Place<'tcx>;
 
 /// Print a debug message about a place that was linked to the same value twice.
@@ -59,12 +73,14 @@ pub struct Memory<'tcx> {
 impl<'tcx> Memory<'tcx> {
     /// Links a given place to a given mutex.
     /// Prints debug messages if the place was already linked.
-    pub fn link_mutex(&mut self, place: Place<'tcx>, mutex_ref: &MutexRef) {
-        if let Some(old_value) = self.map.insert(place, Mutex(mutex_ref.clone())) {
+    /// Returns a reference to the linked mutex.
+    pub fn link_mutex(&mut self, place: Place<'tcx>, mutex: Mutex) -> &MutexRef {
+        let mutex_ref = Rc::new(mutex);
+        if let Some(old_value) = self.map.get(&place) {
             let type_string = old_value.to_string();
 
-            if let Mutex(old_mutex_ref) = old_value {
-                if *mutex_ref == old_mutex_ref {
+            if let Value::Mutex(old_mutex_ref) = old_value {
+                if mutex_ref == *old_mutex_ref {
                     debug_same_type_same_value!(place, type_string);
                 } else {
                     debug_same_type_different_value!(place, type_string);
@@ -73,16 +89,25 @@ impl<'tcx> Memory<'tcx> {
                 debug_different_type!(place, type_string);
             }
         }
+        let value = Value::Mutex(mutex_ref);
+        self.map.insert(place, value);
+        self.map[&place].unpack_mutex()
     }
 
     /// Links a given place to a given mutex guard.
     /// Prints debug messages if the place was already linked.
-    pub fn link_mutex_guard(&mut self, place: Place<'tcx>, mutex_guard_ref: &MutexGuardRef) {
-        if let Some(old_value) = self.map.insert(place, MutexGuard(mutex_guard_ref.clone())) {
+    /// Returns a reference to the linked mutex guard.
+    pub fn link_mutex_guard(
+        &mut self,
+        place: Place<'tcx>,
+        mutex_guard: MutexGuard,
+    ) -> &MutexGuardRef {
+        let mutex_guard_ref = Rc::new(mutex_guard);
+        if let Some(old_value) = self.map.get(&place) {
             let type_string = old_value.to_string();
 
-            if let MutexGuard(old_mutex_guard_ref) = old_value {
-                if *mutex_guard_ref == old_mutex_guard_ref {
+            if let Value::MutexGuard(old_mutex_guard_ref) = old_value {
+                if mutex_guard_ref == *old_mutex_guard_ref {
                     debug_same_type_same_value!(place, type_string);
                 } else {
                     debug_same_type_different_value!(place, type_string);
@@ -91,16 +116,21 @@ impl<'tcx> Memory<'tcx> {
                 debug_different_type!(place, type_string);
             }
         }
+        let value = Value::MutexGuard(mutex_guard_ref);
+        self.map.insert(place, value);
+        self.map[&place].unpack_mutex_guard()
     }
 
     /// Links a given place to a given join handle.
     /// Prints debug messages if the place was already linked.
-    pub fn link_join_handle(&mut self, place: Place<'tcx>, thread_ref: &ThreadRef) {
-        if let Some(old_value) = self.map.insert(place, JoinHandle(thread_ref.clone())) {
+    /// Returns a reference to the linked join handle.
+    pub fn link_join_handle(&mut self, place: Place<'tcx>, thread: Thread) -> &ThreadRef {
+        let thread_ref = Rc::new(RefCell::new(thread));
+        if let Some(old_value) = self.map.get(&place) {
             let type_string = old_value.to_string();
 
-            if let JoinHandle(old_thread_ref) = old_value {
-                if *thread_ref == old_thread_ref {
+            if let Value::JoinHandle(old_thread_ref) = old_value {
+                if thread_ref == *old_thread_ref {
                     debug_same_type_same_value!(place, type_string);
                 } else {
                     debug_same_type_different_value!(place, type_string);
@@ -109,16 +139,21 @@ impl<'tcx> Memory<'tcx> {
                 debug_different_type!(place, type_string);
             }
         }
+        let value = Value::JoinHandle(thread_ref);
+        self.map.insert(place, value);
+        self.map[&place].unpack_join_handle()
     }
 
     /// Links a given place to a given condition variable.
     /// Prints debug messages if the place was already linked.
-    pub fn link_condvar(&mut self, place: Place<'tcx>, condvar_ref: &CondvarRef) {
-        if let Some(old_value) = self.map.insert(place, Condvar(condvar_ref.clone())) {
+    /// Returns a reference to the linked condition variable.
+    pub fn link_condvar(&mut self, place: Place<'tcx>, condvar: Condvar) -> &CondvarRef {
+        let condvar_ref = Rc::new(condvar);
+        if let Some(old_value) = self.map.get(&place) {
             let type_string = old_value.to_string();
 
-            if let Condvar(old_condvar_ref) = old_value {
-                if *condvar_ref == old_condvar_ref {
+            if let Value::Condvar(old_condvar_ref) = old_value {
+                if condvar_ref == *old_condvar_ref {
                     debug_same_type_same_value!(place, type_string);
                 } else {
                     debug_same_type_different_value!(place, type_string);
@@ -127,6 +162,9 @@ impl<'tcx> Memory<'tcx> {
                 debug_different_type!(place, type_string);
             }
         }
+        let value = Value::Condvar(condvar_ref);
+        self.map.insert(place, value);
+        self.map[&place].unpack_condvar()
     }
 
     /// Links a given place to a given aggregate.
@@ -135,7 +173,7 @@ impl<'tcx> Memory<'tcx> {
     ///
     /// If the place was already linked, then the function panics.
     pub fn link_aggregate(&mut self, place: Place<'tcx>, values: Vec<Value>) {
-        if let Some(old_value) = self.map.insert(place, Aggregate(values)) {
+        if let Some(old_value) = self.map.insert(place, Value::Aggregate(values)) {
             panic!(
                 "BUG: There was a previous {old_value} linked to the place for the aggregate value"
             );
@@ -216,7 +254,7 @@ impl<'tcx> Memory<'tcx> {
 
     /// Checks whether the place is linked to a mutex guard.
     pub fn is_mutex_guard(&self, place: &Place<'tcx>) -> bool {
-        self.map.contains_key(place) && matches!(self.get_linked_value(place), MutexGuard(_))
+        self.map.contains_key(place) && matches!(self.get_linked_value(place), Value::MutexGuard(_))
     }
 
     /// Creates a new aggregate value from the values linked to a vector of places.
@@ -266,15 +304,7 @@ impl<'tcx> Memory<'tcx> {
             })
             .clone();
 
-        match value {
-            Value::Mutex(mutex_ref) => self.link_mutex(place_to_link, &mutex_ref),
-            Value::MutexGuard(mutex_guard_ref) => {
-                self.link_mutex_guard(place_to_link, &mutex_guard_ref);
-            }
-            Value::JoinHandle(thread_ref) => self.link_join_handle(place_to_link, &thread_ref),
-            Value::Condvar(condvar_ref) => self.link_condvar(place_to_link, &condvar_ref),
-            Value::Aggregate(values) => self.link_aggregate(place_to_link, values),
-        }
+        assert!(self.map.insert(place_to_link, value).is_none(), "BUG: Could not link the field of {place_linked:?} with index {index} because {place_to_link:?} was already linked");
     }
 }
 
@@ -292,28 +322,28 @@ pub enum Value {
 impl Value {
     fn unpack_mutex(&self) -> &MutexRef {
         match self {
-            Mutex(mutex_ref) => mutex_ref,
+            Self::Mutex(mutex_ref) => mutex_ref,
             _ => panic!("BUG: The value does not contain a mutex, it contains a {self}."),
         }
     }
 
     fn unpack_mutex_guard(&self) -> &MutexGuardRef {
         match self {
-            MutexGuard(mutex_guard_ref) => mutex_guard_ref,
+            Self::MutexGuard(mutex_guard_ref) => mutex_guard_ref,
             _ => panic!("BUG: The value does not contain a mutex guard, it contains a {self}."),
         }
     }
 
     fn unpack_join_handle(&self) -> &ThreadRef {
         match self {
-            JoinHandle(thread_ref) => thread_ref,
+            Self::JoinHandle(thread_ref) => thread_ref,
             _ => panic!("BUG: The value does not contain a join handle, it contains a {self}."),
         }
     }
 
     fn unpack_condvar(&self) -> &CondvarRef {
         match self {
-            Condvar(condvar_ref) => condvar_ref,
+            Self::Condvar(condvar_ref) => condvar_ref,
             _ => panic!(
                 "BUG: The value does not contain a condition variable, it contains a {self}."
             ),
@@ -322,7 +352,7 @@ impl Value {
 
     fn unpack_aggregate(&self) -> &Vec<Self> {
         match self {
-            Aggregate(values) => values,
+            Self::Aggregate(values) => values,
             _ => {
                 panic!("BUG: The value does not contain an aggregate, it contains a {self}.")
             }

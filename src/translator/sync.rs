@@ -9,23 +9,17 @@ use log::debug;
 
 use crate::data_structures::petri_net_interface::PetriNet;
 use crate::translator::function::{Places, PostprocessingTask};
-use crate::translator::mir_function::Memory;
+use crate::translator::mir_function::memory::Memory;
 use crate::utils::{
     check_substring_in_place_type, extract_nth_argument_as_place, get_field_number_in_projection,
 };
 
-/// A mutex reference is just a shared pointer to the mutex.
-pub type MutexRef = std::rc::Rc<mutex::Mutex>;
-
-/// A mutex guard reference is just a shared pointer to the mutex guard.
-pub type MutexGuardRef = std::rc::Rc<mutex::Guard>;
-
-/// A condvar reference is just a shared pointer to the condition variable.
-pub type CondvarRef = std::rc::Rc<condvar::Condvar>;
-
-/// A thread reference is just a shared pointer to a `RefCell` containing the thread.
-/// This enables the Interior Mutability pattern needed to set the join transition later on.
-pub type ThreadRef = std::rc::Rc<std::cell::RefCell<thread::Thread>>;
+// Re-export the types that the module contains.
+// It does not make assumptions about how they are stored.
+// That is the responsibility of the memory.
+pub use condvar::Condvar;
+pub use mutex::{Guard as MutexGuard, Mutex};
+pub use thread::Thread;
 
 /// Checks whether the function name corresponds to one of the
 /// supported synchronization or multithreading functions.

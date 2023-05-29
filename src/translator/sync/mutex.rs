@@ -14,9 +14,6 @@
 
 use log::debug;
 use std::cell::RefCell;
-use std::rc::Rc;
-
-use super::MutexRef;
 
 use crate::data_structures::petri_net_interface::{
     add_arc_place_transition, add_arc_transition_place, connect_places,
@@ -26,7 +23,7 @@ use crate::naming::condvar::wait_skip_label;
 use crate::naming::function::foreign_call_transition_labels;
 use crate::naming::mutex::{condition_place_labels, place_label};
 use crate::translator::function::{Places, PostprocessingTask};
-use crate::translator::mir_function::Memory;
+use crate::translator::mir_function::memory::{Memory, MutexRef};
 use crate::translator::special_function::call_foreign_function;
 use crate::utils::extract_nth_argument_as_place;
 
@@ -170,10 +167,10 @@ pub fn call_lock<'tcx>(
     mutex_ref.add_lock_arc(lock_transition, net);
 
     // Create a new mutex guard
-    let mutex_guard = Rc::new(Guard::new(Rc::clone(mutex_ref)));
+    let mutex_guard = Guard::new(mutex_ref.clone());
 
     // The return value contains a new mutex guard. Link the local variable to it.
-    memory.link_mutex_guard(destination, &mutex_guard);
+    memory.link_mutex_guard(destination, mutex_guard);
     debug!("NEW MUTEX GUARD {destination:?} DUE TO TRANSITION {lock_transition}");
 }
 
@@ -197,12 +194,12 @@ pub fn call_new<'tcx>(
         net,
     );
     // Create a new mutex
-    let mutex = Rc::new(Mutex::new(index, net));
+    let mutex = Mutex::new(index, net);
     // The return value contains a new mutex. Link the local variable to it.
-    memory.link_mutex(destination, &mutex);
+    let mutex_ref = memory.link_mutex(destination, mutex);
     debug!("NEW MUTEX: {destination:?}");
     // Notify the translator that a new mutex has been created
-    PostprocessingTask::new_mutex(mutex)
+    PostprocessingTask::new_mutex(mutex_ref.clone())
 }
 
 /// Checks whether the variable to be dropped is a mutex guard.

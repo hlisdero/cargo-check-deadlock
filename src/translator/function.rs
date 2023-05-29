@@ -5,7 +5,7 @@
 //! and their respective priorities.
 
 use crate::data_structures::petri_net_interface::{PlaceRef, TransitionRef};
-use crate::translator::sync::MutexRef;
+use crate::translator::MutexRef;
 
 /// An enum containing the Petri net places for a function call.
 pub enum Places {

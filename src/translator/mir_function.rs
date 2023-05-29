@@ -13,15 +13,14 @@
 //! But the terminators may refer to blocks previously seen or new blocks. Each basic block is visited only once.
 
 mod basic_block;
-mod memory;
+pub mod memory;
 mod terminator;
 
 use std::collections::HashMap;
 
 use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef};
 use basic_block::BasicBlock;
-
-pub use memory::{Memory, Value};
+use memory::Memory;
 
 pub struct MirFunction<'tcx> {
     /// The ID that uniquely identifies the function in this crate in the HIR representation.

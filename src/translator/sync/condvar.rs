@@ -21,9 +21,6 @@
 
 use log::debug;
 use std::cell::RefCell;
-use std::rc::Rc;
-
-use super::MutexGuardRef;
 
 use crate::data_structures::petri_net_interface::{
     add_arc_place_transition, add_arc_transition_place,
@@ -32,7 +29,7 @@ use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef, Transition
 use crate::naming::condvar::{place_labels, transition_labels};
 use crate::naming::function::foreign_call_transition_labels;
 use crate::translator::function::{Places, PostprocessingTask};
-use crate::translator::mir_function::Memory;
+use crate::translator::mir_function::memory::{Memory, MutexGuardRef};
 use crate::translator::special_function::call_foreign_function;
 use crate::utils::extract_nth_argument_as_place;
 
@@ -136,9 +133,9 @@ pub fn call_new<'tcx>(
         net,
     );
     // Create a new condvar
-    let condvar = Rc::new(Condvar::new(index, net));
+    let condvar = Condvar::new(index, net);
     // The return value contains a new condition variable. Link the local variable to it.
-    memory.link_condvar(destination, &condvar);
+    memory.link_condvar(destination, condvar);
     debug!("NEW CONDVAR: {destination:?}");
 }
 
@@ -219,8 +216,7 @@ pub fn call_wait<'tcx>(
     let wait_start = condvar_ref.wait_start.clone();
 
     // The return value contains the mutex guard passed to the function. Link the local variable to it.
-    let cloned_ref = Rc::clone(mutex_guard_ref);
-    memory.link_mutex_guard(destination, &cloned_ref);
+    memory.link_place_to_same_value(destination, mutex_guard);
 
     // Create a postprocessing task to link the mutex to the condvar.
     // This creates the condition and skip logic.

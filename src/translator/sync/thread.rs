@@ -29,7 +29,7 @@ use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef, Transition
 use crate::naming::function::foreign_call_transition_labels;
 use crate::naming::thread::{end_place_label, start_place_label};
 use crate::translator::function::Places;
-use crate::translator::mir_function::{Memory, Value};
+use crate::translator::mir_function::memory::{Memory, Value};
 use crate::translator::special_function::call_foreign_function;
 use crate::utils::{extract_nth_argument_as_place, get_field_number_in_projection};
 

@@ -45,12 +45,12 @@ use crate::naming::function::{
     foreign_call_transition_labels, indexed_mir_function_cleanup_label, indexed_mir_function_name,
 };
 use crate::naming::{PROGRAM_END, PROGRAM_PANIC, PROGRAM_START};
-use crate::translator::sync::MutexRef;
 use crate::utils::{
     check_substring_in_place_type, extract_closure, extract_def_id_of_called_function_from_operand,
     extract_nth_argument_as_place,
 };
 use function::{Places, PostprocessingTask, Transitions};
+use mir_function::memory::MutexRef;
 use mir_function::MirFunction;
 use special_function::{
     call_diverging_function, call_foreign_function, call_panic_function, is_foreign_function,
@@ -654,20 +654,17 @@ impl<'tcx> Translator<'tcx> {
         let memory = &mut current_function.memory;
         let aggregate = closure.map_or_else(Vec::new, |place| memory.copy_aggregate(&place));
 
-        // Add a new thread
+        // Create a new thread
         let index = self.threads.len();
-        let thread = Rc::new(RefCell::new(sync::thread::Thread::new(
-            transition,
-            thread_function_def_id,
-            aggregate,
-            index,
-        )));
-        let thread_ref = Rc::clone(&thread);
-        self.threads.push(thread);
-        info!("Found thread {index} and pushed it to the back of the thread translation queue");
+        let thread =
+            sync::thread::Thread::new(transition, thread_function_def_id, aggregate, index);
 
         // The return value contains a new join handle. Link the local variable to it.
-        memory.link_join_handle(destination, &thread_ref);
+        let thread_ref = memory.link_join_handle(destination, thread);
         debug!("NEW JOIN HANDLE: {destination:?}");
+
+        // Add the thread to the translator
+        self.threads.push(thread_ref.clone());
+        info!("Found thread {index} and pushed it to the back of the thread translation queue");
     }
 }
