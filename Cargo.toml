@@ -1,6 +1,6 @@
 [package]
 name = "cargo-check-deadlock"
-version = "0.1.0"
+version = "1.0.0"
 description = "Find Deadlocks in Rust code with Petri net model checking"
 repository = "https://github.com/hlisdero/cargo-check-deadlock"
 homepage = "https://github.com/hlisdero/cargo-check-deadlock"
