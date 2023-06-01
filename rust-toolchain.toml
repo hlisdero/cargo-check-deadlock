@@ -1,0 +1,5 @@
+# Documentation: https://rust-lang.github.io/rustup/overrides.html#the-toolchain-file
+
+[toolchain]
+channel = "nightly"
+components = ["llvm-tools-preview", "rustc-dev", "rust-src"]
