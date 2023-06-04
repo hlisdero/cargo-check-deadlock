@@ -8,7 +8,9 @@
 use crate::data_structures::petri_net_interface::{
     add_arc_place_transition, connect_places, PetriNet, PlaceRef,
 };
-use crate::naming::function::{diverging_call_transition_label, panic_transition_label};
+use crate::naming::function::{
+    diverging_call_transition_label, foreign_call_transition_labels, panic_transition_label,
+};
 use crate::translator::function::{Places, Transitions};
 
 /// Checks whether the function name corresponds to one of the functions
@@ -49,19 +51,22 @@ pub fn is_foreign_function(
 /// Connects the start place and end place through a new transition.
 /// If an optional cleanup place is provided, it connects the start
 /// place and cleanup place through a second new transition.
+/// The labels from the transition are generated from the function name and the index.
 ///
 /// Returns the transition representing the function call.
 pub fn call_foreign_function(
+    function_name: &str,
+    index: usize,
     places: Places,
-    transition_labels: &(String, String),
     net: &mut PetriNet,
 ) -> Transitions {
+    let (default_label, cleanup_label) = foreign_call_transition_labels(function_name, index);
     match places {
         Places::Basic {
             start_place,
             end_place,
         } => {
-            let default = connect_places(net, &start_place, &end_place, &transition_labels.0);
+            let default = connect_places(net, &start_place, &end_place, &default_label);
             Transitions::Basic { default }
         }
         Places::WithCleanup {
@@ -69,8 +74,8 @@ pub fn call_foreign_function(
             end_place,
             cleanup_place,
         } => {
-            let default = connect_places(net, &start_place, &end_place, &transition_labels.0);
-            let cleanup = connect_places(net, &start_place, &cleanup_place, &transition_labels.1);
+            let default = connect_places(net, &start_place, &end_place, &default_label);
+            let cleanup = connect_places(net, &start_place, &cleanup_place, &cleanup_label);
             Transitions::WithCleanup { default, cleanup }
         }
     }

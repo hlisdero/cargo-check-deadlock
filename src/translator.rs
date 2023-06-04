@@ -41,9 +41,7 @@ use std::rc::Rc;
 use crate::data_structures::hash_map_counter::HashMapCounter;
 use crate::data_structures::petri_net_interface::{connect_places, PetriNet, PlaceRef};
 use crate::data_structures::stack::Stack;
-use crate::naming::function::{
-    foreign_call_transition_labels, indexed_mir_function_cleanup_label, indexed_mir_function_name,
-};
+use crate::naming::function::{indexed_mir_function_cleanup_label, indexed_mir_function_name};
 use crate::naming::{PROGRAM_END, PROGRAM_PANIC, PROGRAM_START};
 use crate::utils::{
     check_substring_in_place_type, extract_closure, extract_def_id_of_called_function_from_operand,
@@ -519,11 +517,7 @@ impl<'tcx> Translator<'tcx> {
         places: Places,
     ) -> Transitions {
         let index = self.function_counter.get_count(function_name);
-        let transitions = call_foreign_function(
-            places,
-            &foreign_call_transition_labels(function_name, index),
-            &mut self.net,
-        );
+        let transitions = call_foreign_function(function_name, index, places, &mut self.net);
 
         let current_function = self.call_stack.peek_mut();
         sync::link_return_value_if_sync_variable(

@@ -26,7 +26,6 @@ use crate::data_structures::petri_net_interface::{
     add_arc_place_transition, add_arc_transition_place,
 };
 use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef, TransitionRef};
-use crate::naming::function::foreign_call_transition_labels;
 use crate::naming::thread::{end_place_label, start_place_label};
 use crate::translator::function::Places;
 use crate::translator::mir_function::memory::{Memory, Value};
@@ -162,11 +161,7 @@ pub fn call_join<'tcx>(
     memory: &mut Memory<'tcx>,
 ) {
     let places = places.ignore_cleanup_place();
-    let transitions = call_foreign_function(
-        places,
-        &foreign_call_transition_labels(function_name, index),
-        net,
-    );
+    let transitions = call_foreign_function(function_name, index, places, net);
     let transition = transitions.default();
     // Retrieve the join handle from the local variable passed to the function as an argument.
     let self_ref = extract_nth_argument_as_place(args, 0).unwrap_or_else(|| {

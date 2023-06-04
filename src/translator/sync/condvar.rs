@@ -27,7 +27,6 @@ use crate::data_structures::petri_net_interface::{
 };
 use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef, TransitionRef};
 use crate::naming::condvar::{place_labels, transition_labels};
-use crate::naming::function::foreign_call_transition_labels;
 use crate::translator::function::{Places, PostprocessingTask};
 use crate::translator::mir_function::memory::{Memory, MutexGuardRef};
 use crate::translator::special_function::call_foreign_function;
@@ -127,11 +126,7 @@ pub fn call_new<'tcx>(
     net: &mut PetriNet,
     memory: &mut Memory<'tcx>,
 ) {
-    call_foreign_function(
-        places,
-        &foreign_call_transition_labels(function_name, index),
-        net,
-    );
+    call_foreign_function(function_name, index, places, net);
     // Create a new condvar
     let condvar = Condvar::new(index, net);
     // The return value contains a new condition variable. Link the local variable to it.
@@ -160,11 +155,7 @@ pub fn call_notify_one<'tcx>(
     memory: &mut Memory<'tcx>,
 ) {
     let places = places.ignore_cleanup_place();
-    let transitions = call_foreign_function(
-        places,
-        &foreign_call_transition_labels(function_name, index),
-        net,
-    );
+    let transitions = call_foreign_function(function_name, index, places, net);
     // Retrieve the condvar from the local variable passed to the function as an argument.
     let self_ref = extract_nth_argument_as_place(args, 0).unwrap_or_else(|| {
         panic!("BUG: `{function_name}` should receive the self reference as a place")

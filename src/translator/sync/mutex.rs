@@ -20,7 +20,6 @@ use crate::data_structures::petri_net_interface::{
 };
 use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef, TransitionRef};
 use crate::naming::condvar::wait_skip_label;
-use crate::naming::function::foreign_call_transition_labels;
 use crate::naming::mutex::{condition_place_labels, place_label};
 use crate::translator::function::{Places, PostprocessingTask};
 use crate::translator::mir_function::memory::{Memory, MutexRef};
@@ -152,11 +151,7 @@ pub fn call_lock<'tcx>(
     memory: &mut Memory<'tcx>,
 ) {
     let places = places.ignore_cleanup_place();
-    let transitions = call_foreign_function(
-        places,
-        &foreign_call_transition_labels(function_name, index),
-        net,
-    );
+    let transitions = call_foreign_function(function_name, index, places, net);
     let lock_transition = transitions.get_default();
 
     // Retrieve the mutex from the local variable passed to the function as an argument.
@@ -188,11 +183,7 @@ pub fn call_new<'tcx>(
     net: &mut PetriNet,
     memory: &mut Memory<'tcx>,
 ) -> PostprocessingTask {
-    call_foreign_function(
-        places,
-        &foreign_call_transition_labels(function_name, index),
-        net,
-    );
+    call_foreign_function(function_name, index, places, net);
     // Create a new mutex
     let mutex = Mutex::new(index, net);
     // The return value contains a new mutex. Link the local variable to it.
