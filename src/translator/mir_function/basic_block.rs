@@ -25,7 +25,6 @@ pub struct BasicBlock {
 impl BasicBlock {
     /// Creates a new basic block and adds its representation to the Petri net.
     /// Creates a new start place for the basic block if it is not provided.
-    /// Assumes that the end place is the same as the start place until a statement is added.
     pub fn new(
         function_name: &str,
         index: usize,
