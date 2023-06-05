@@ -1,9 +1,9 @@
 on:
   schedule:
-    # At 8:00am on the 1st, 15th, and 30th.
-    - cron: "0 8 1,15,30 * *"
+    # At 8:00am on the 1st and the 16th.
+    - cron: "0 8 1,16 * *"
 
-name: "Schedule: Compile and test with the latest nightly on the 1st, 15th, and 30th of every month"
+name: "Schedule: Compile and test with the latest nightly on the 1st and the 16th of every month"
 
 jobs:
   test:
