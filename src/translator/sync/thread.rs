@@ -21,6 +21,7 @@
 //! The function executed by the thread is translated to a Petri net just as any other.
 
 use log::{debug, info};
+use std::cell::OnceCell;
 
 use crate::data_structures::petri_net_interface::{
     add_arc_place_transition, add_arc_transition_place,
@@ -40,7 +41,7 @@ pub struct Thread {
     /// The aggregate value containing the sync variables passed to the thread.
     aggregate: Vec<Value>,
     /// The transition to which the thread joins in at the end.
-    join_transition: Option<TransitionRef>,
+    join_transition: OnceCell<TransitionRef>,
     /// An index to identify the thread.
     pub index: usize,
 }
@@ -66,14 +67,18 @@ impl Thread {
             spawn_transition,
             thread_function_def_id,
             aggregate,
-            join_transition: None,
+            join_transition: OnceCell::new(),
             index,
         }
     }
 
     /// Sets the transition that models joining this thread.
-    pub fn set_join_transition(&mut self, join_transition: TransitionRef) {
-        self.join_transition = Some(join_transition);
+    pub fn set_join_transition(&self, join_transition: TransitionRef) {
+        let result = self.join_transition.set(join_transition);
+        assert!(
+            result.is_ok(),
+            "BUG: The join transition of a thread may only be set once"
+        );
     }
 
     /// Prepares the thread for translation.
@@ -88,7 +93,7 @@ impl Thread {
         let thread_end_place = net.add_place(&end_place_label(self.index));
 
         add_arc_transition_place(net, &self.spawn_transition, &thread_start_place);
-        if let Some(join_transition) = &self.join_transition {
+        if let Some(join_transition) = self.join_transition.get() {
             add_arc_place_transition(net, &thread_end_place, join_transition);
         }
 
@@ -109,7 +114,7 @@ impl Thread {
     /// The following line in the MIR output indicates that `_1.0` contains a mutex.
     /// `debug copy_data => (_1.0: std::sync::Arc<std::sync::Mutex<i32>>)`
     pub fn move_sync_variables<'tcx>(
-        &mut self,
+        &self,
         memory: &mut Memory<'tcx>,
         tcx: rustc_middle::ty::TyCtxt<'tcx>,
     ) {
@@ -118,7 +123,7 @@ impl Thread {
             local: rustc_middle::mir::Local::from_usize(1),
             projection: rustc_middle::ty::List::empty(),
         };
-        memory.link_aggregate(base_place, std::mem::take(&mut self.aggregate));
+        memory.link_aggregate(base_place, self.aggregate.clone());
         debug!(
             "MOVED AGGREGATE VALUE {base_place:?} WITH SYNC VARIABLES TO THE THREAD {}",
             self.index
@@ -168,6 +173,6 @@ pub fn call_join<'tcx>(
         panic!("BUG: `{function_name}` should receive the self reference as a place")
     });
     let thread_ref = memory.get_join_handle(&self_ref);
-    thread_ref.borrow_mut().set_join_transition(transition);
-    info!("Found join call for thread {}", thread_ref.borrow().index);
+    thread_ref.set_join_transition(transition);
+    info!("Found join call for thread {}", thread_ref.index);
 }

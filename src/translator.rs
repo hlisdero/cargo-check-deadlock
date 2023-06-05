@@ -34,7 +34,6 @@ mod sync;
 use log::{debug, info};
 use rustc_middle::mir::visit::Visitor;
 use rustc_middle::mir::UnwindAction;
-use std::cell::RefCell;
 use std::collections::BinaryHeap;
 use std::rc::Rc;
 
@@ -77,7 +76,7 @@ pub struct Translator<'tcx> {
     function_counter: HashMapCounter,
     /// A vector of threads detected in the code.
     /// They are translated in order after the main thread.
-    threads: Vec<Rc<RefCell<Thread>>>,
+    threads: Vec<Rc<Thread>>,
     /// Translation tasks performed after all threads have been translated.
     /// These tasks usually require to make changes to the final Petri net.
     postprocessing: BinaryHeap<PostprocessingTask>,
@@ -150,7 +149,6 @@ impl<'tcx> Translator<'tcx> {
     /// since abnormal thread termination does not affect the main thread.
     fn translate_threads(&mut self) {
         for thread in std::mem::take(&mut self.threads) {
-            let mut thread = thread.borrow_mut();
             let index = thread.index;
 
             info!("Starting translating thread {}", index);

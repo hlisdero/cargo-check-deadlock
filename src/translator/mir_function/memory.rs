@@ -20,7 +20,6 @@
 //! <https://rustc-dev-guide.rust-lang.org/mir/index.html#mir-data-types>
 
 use log::debug;
-use std::cell::RefCell;
 use std::collections::HashMap;
 use std::rc::Rc;
 
@@ -35,9 +34,8 @@ pub type MutexGuardRef = std::rc::Rc<MutexGuard>;
 /// A condvar reference is just a shared pointer to the condition variable.
 pub type CondvarRef = std::rc::Rc<Condvar>;
 
-/// A thread reference is just a shared pointer to a `RefCell` containing the thread.
-/// This enables the Interior Mutability pattern needed to set the join transition later on.
-pub type ThreadRef = std::rc::Rc<std::cell::RefCell<Thread>>;
+/// A thread reference is just a shared pointer to the thread.
+pub type ThreadRef = std::rc::Rc<Thread>;
 
 type Place<'tcx> = rustc_middle::mir::Place<'tcx>;
 
@@ -125,7 +123,7 @@ impl<'tcx> Memory<'tcx> {
     /// Prints debug messages if the place was already linked.
     /// Returns a reference to the linked join handle.
     pub fn link_join_handle(&mut self, place: Place<'tcx>, thread: Thread) -> &ThreadRef {
-        let thread_ref = Rc::new(RefCell::new(thread));
+        let thread_ref = Rc::new(thread);
         if let Some(old_value) = self.map.get(&place) {
             let type_string = old_value.to_string();
 
