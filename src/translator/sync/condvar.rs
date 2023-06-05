@@ -20,7 +20,7 @@
 //! and unnecessary intermediate places were removed.
 
 use log::debug;
-use std::cell::RefCell;
+use std::cell::OnceCell;
 
 use crate::data_structures::petri_net_interface::{
     add_arc_place_transition, add_arc_transition_place,
@@ -37,7 +37,7 @@ pub struct Condvar {
     wait_start: TransitionRef,
     notify: PlaceRef,
     notify_received: TransitionRef,
-    already_linked_to_call: RefCell<bool>,
+    already_linked_to_call: OnceCell<()>,
 }
 
 impl Condvar {
@@ -71,7 +71,7 @@ impl Condvar {
             wait_start,
             notify,
             notify_received,
-            already_linked_to_call: RefCell::new(false),
+            already_linked_to_call: OnceCell::new(),
         }
     }
 
@@ -91,7 +91,7 @@ impl Condvar {
         mutex_guard_ref: &MutexGuardRef,
         net: &mut PetriNet,
     ) {
-        if *self.already_linked_to_call.borrow() {
+        if self.already_linked_to_call.get().is_some() {
             unimplemented!("Multiple calls to `wait` or `wait_while` are not supported yet");
         }
         add_arc_place_transition(net, start_place, &self.wait_start);
@@ -102,7 +102,9 @@ impl Condvar {
             .mutex
             .add_lock_arc(&self.notify_received, net);
         // Mark the condvar as already linked to call
-        *self.already_linked_to_call.borrow_mut() = true;
+        self.already_linked_to_call.set(()).expect(
+            "BUG: The condvar was already linked to a wait call before calling `link_to_wait_call`",
+        );
     }
 
     /// Links the Petri net model of the condition variable to the representation of
