@@ -34,7 +34,7 @@ mod sync;
 use log::{debug, info};
 use rustc_middle::mir::visit::Visitor;
 use rustc_middle::mir::UnwindAction;
-use std::collections::BinaryHeap;
+use std::collections::{BinaryHeap, VecDeque};
 use std::rc::Rc;
 
 use crate::data_structures::hash_map_counter::HashMapCounter;
@@ -76,7 +76,7 @@ pub struct Translator<'tcx> {
     function_counter: HashMapCounter,
     /// A vector of threads detected in the code.
     /// They are translated in order after the main thread.
-    threads: Vec<Rc<Thread>>,
+    threads: VecDeque<Rc<Thread>>,
     /// Translation tasks performed after all threads have been translated.
     /// These tasks usually require to make changes to the final Petri net.
     postprocessing: BinaryHeap<PostprocessingTask>,
@@ -104,7 +104,7 @@ impl<'tcx> Translator<'tcx> {
             program_panic,
             call_stack: Stack::new(),
             function_counter: HashMapCounter::new(),
-            threads: Vec::new(),
+            threads: VecDeque::new(),
             postprocessing: BinaryHeap::new(),
         }
     }
@@ -148,7 +148,7 @@ impl<'tcx> Translator<'tcx> {
     /// Replaces the program panic place with the thread's end place
     /// since abnormal thread termination does not affect the main thread.
     fn translate_threads(&mut self) {
-        for thread in std::mem::take(&mut self.threads) {
+        while let Some(thread) = self.threads.pop_front() {
             let index = thread.index;
 
             info!("Starting translating thread {}", index);
@@ -656,7 +656,7 @@ impl<'tcx> Translator<'tcx> {
         debug!("NEW JOIN HANDLE: {destination:?}");
 
         // Add the thread to the translator
-        self.threads.push(thread_ref.clone());
+        self.threads.push_back(thread_ref.clone());
         info!("Found thread {index} and pushed it to the back of the thread translation queue");
     }
 }
