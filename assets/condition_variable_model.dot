@@ -11,7 +11,7 @@ digraph condvar {
     // It is a ghost node used for formatting the graph
     waiting [width=0.01 shape="none" xlabel="" label=""];
 
-    input [width=0.6 shape="circle" xlabel="input" label=""];
+    input [width=0.6 shape="circle" xlabel="input" label="•"];
     output [width=0.6 shape="circle" xlabel="output" label=""];
     // Place for the mutex used in the call
     subgraph cluster_0 {
@@ -27,7 +27,7 @@ digraph condvar {
         color = blue;
         node [style=filled];
         
-        condition_not_set [width=0.6 shape="circle" xlabel="condition_not_set" label=""];
+        condition_not_set [width=0.6 shape="circle" xlabel="condition_not_set" label="•"];
         condition_set [width=0.6 shape="circle" xlabel="condition_set" label=""];
         wait_skip [height=0.1 shape="box" xlabel="" label="wait_skip"];
         set_condition [height=0.1 shape="box" xlabel="" label="set_condition"];

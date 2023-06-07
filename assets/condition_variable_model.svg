@@ -44,6 +44,7 @@
 <g id="node10" class="node">
 <title>condition_not_set</title>
 <ellipse fill="#d3d3d3" stroke="#000000" cx="121.8268" cy="-342.3" rx="21.5" ry="21.5"/>
+<text text-anchor="middle" x="121.8268" y="-338.1" font-family="Times,serif" font-size="14.00" fill="#000000">•</text>
 <text text-anchor="middle" x="50.1634" y="-325" font-family="Times,serif" font-size="14.00" fill="#000000">condition_not_set</text>
 </g>
 <!-- wait_start&#45;&gt;condition_not_set -->
@@ -130,6 +131,7 @@
 <g id="node7" class="node">
 <title>input</title>
 <ellipse fill="none" stroke="#000000" cx="425.8268" cy="-342.3" rx="21.5" ry="21.5"/>
+<text text-anchor="middle" x="425.8268" y="-338.1" font-family="Times,serif" font-size="14.00" fill="#000000">•</text>
 <text text-anchor="middle" x="389.9362" y="-368" font-family="Times,serif" font-size="14.00" fill="#000000">input</text>
 </g>
 <!-- input&#45;&gt;wait_start -->
