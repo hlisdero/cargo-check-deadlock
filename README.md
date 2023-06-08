@@ -149,6 +149,8 @@ Simply select the option "MIR" instead of "Run" in the dropdown menu. Remember t
 
 To graph a given DOT result, you may use the [Graphviz Online tool](https://dreampuf.github.io/GraphvizOnline/) by [dreampuf](https://github.com/dreampuf).
 
+Alternatively, you may use [Edotor](https://edotor.net/) or [Sketchviz](https://sketchviz.com/new).
+
 ## Model checker
 
 The model checker LoLA can be downloaded [here](https://theo.informatik.uni-rostock.de/theo-forschung/tools/lola/). It must be compiled from the source code.
@@ -208,5 +210,8 @@ The [nightly documentation](https://doc.rust-lang.org/stable/nightly-rustc/) was
 
 ## Context
 
-This project is part of Horacio Lisdero's undergraduate thesis titled "Compile-time Deadlock Detection in Rust using Petri Nets" at the [School of Engineering of the University of Buenos Aires](https://fi.uba.ar/).
-The thesis will eventually be publicly available on GitHub and will provide important background topics and implementation details about this project.
+This project is part of Horacio Lisdero Scaffino's undergraduate thesis titled "Compile-time Deadlock Detection in Rust using Petri Nets" at the [School of Engineering of the University of Buenos Aires](https://fi.uba.ar/).
+
+The thesis is publicly available on GitHub: <https://github.com/hlisdero/thesis>
+
+It provides important background topics and implementation details about this project.
