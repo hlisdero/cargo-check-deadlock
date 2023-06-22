@@ -127,8 +127,8 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
                 destination,
                 target,
                 unwind,
-                from_hir_call: _,
                 fn_span: _,
+                call_source: _,
             } => {
                 self.call_function(func, args, destination, target, unwind);
             }

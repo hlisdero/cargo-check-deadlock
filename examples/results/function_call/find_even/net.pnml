@@ -270,6 +270,11 @@
           <text>main_SWITCH_INT_FROM_BB4_TO_BB8</text>
         </name>
       </transition>
+      <transition id="main_UNREACHABLE_1">
+        <name>
+          <text>main_UNREACHABLE_1</text>
+        </name>
+      </transition>
       <transition id="main_UNWIND_13">
         <name>
           <text>main_UNWIND_13</text>
@@ -455,6 +460,14 @@
       <arc source="main_BB1" target="main_ASSERT_1" id="(main_BB1, main_ASSERT_1)">
         <name>
           <text>(main_BB1, main_ASSERT_1)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main_BB1" target="main_UNREACHABLE_1" id="(main_BB1, main_UNREACHABLE_1)">
+        <name>
+          <text>(main_BB1, main_UNREACHABLE_1)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -831,6 +844,14 @@
       <arc source="main_SWITCH_INT_FROM_BB4_TO_BB8" target="main_BB8" id="(main_SWITCH_INT_FROM_BB4_TO_BB8, main_BB8)">
         <name>
           <text>(main_SWITCH_INT_FROM_BB4_TO_BB8, main_BB8)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main_UNREACHABLE_1" target="PROGRAM_END" id="(main_UNREACHABLE_1, PROGRAM_END)">
+        <name>
+          <text>(main_UNREACHABLE_1, PROGRAM_END)</text>
         </name>
         <inscription>
           <text>1</text>

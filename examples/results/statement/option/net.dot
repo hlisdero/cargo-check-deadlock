@@ -29,6 +29,7 @@ digraph petrinet {
     main_RETURN [shape="box" xlabel="" label="main_RETURN"];
     main_SWITCH_INT_FROM_BB5_TO_BB10 [shape="box" xlabel="" label="main_SWITCH_INT_FROM_BB5_TO_BB10"];
     main_SWITCH_INT_FROM_BB5_TO_BB6 [shape="box" xlabel="" label="main_SWITCH_INT_FROM_BB5_TO_BB6"];
+    main_UNREACHABLE_1 [shape="box" xlabel="" label="main_UNREACHABLE_1"];
     main_UNWIND_13 [shape="box" xlabel="" label="main_UNWIND_13"];
     std_fmt_Arguments_a_new_v1_0_CALL [shape="box" xlabel="" label="std_fmt_Arguments_a_new_v1_0_CALL"];
     std_fmt_Arguments_a_new_v1_0_CALL_UNWIND [shape="box" xlabel="" label="std_fmt_Arguments_a_new_v1_0_CALL_UNWIND"];
@@ -43,6 +44,7 @@ digraph petrinet {
     std_slice__impl_T__into_vec_0_CALL [shape="box" xlabel="" label="std_slice__impl_T__into_vec_0_CALL"];
     PROGRAM_START -> alloc_alloc_exchange_malloc_0_CALL;
     main_BB1 -> main_ASSERT_1;
+    main_BB1 -> main_UNREACHABLE_1;
     main_BB10 -> main_DROP_10;
     main_BB11 -> main_RETURN;
     main_BB12 -> main_DROP_12;
@@ -77,6 +79,7 @@ digraph petrinet {
     main_RETURN -> PROGRAM_END;
     main_SWITCH_INT_FROM_BB5_TO_BB10 -> main_BB10;
     main_SWITCH_INT_FROM_BB5_TO_BB6 -> main_BB6;
+    main_UNREACHABLE_1 -> PROGRAM_END;
     main_UNWIND_13 -> PROGRAM_PANIC;
     std_fmt_Arguments_a_new_v1_0_CALL -> main_BB9;
     std_fmt_Arguments_a_new_v1_0_CALL_UNWIND -> main_BB12;
