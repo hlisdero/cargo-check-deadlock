@@ -22,7 +22,7 @@ name = "cargo-check-deadlock"
 path = "src/bin/check-deadlock/main.rs"
 
 [dependencies]
-clap = { version = "4.3.5", features = ["derive"] }
+clap = { version = "4.3.21", features = ["derive"] }
 clap-verbosity-flag = "2.0.1"
 env_logger = "0.10.0"
 log = "0.4.19"
