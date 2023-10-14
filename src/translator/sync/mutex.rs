@@ -201,7 +201,7 @@ pub fn handle_mutex_guard_drop<'tcx>(
     place: rustc_middle::mir::Place<'tcx>,
     unlock_transition: &TransitionRef,
     net: &mut PetriNet,
-    memory: &mut Memory<'tcx>,
+    memory: &Memory<'tcx>,
 ) {
     if memory.is_mutex_guard(&place) {
         let mutex_guard_ref = memory.get_mutex_guard(&place);

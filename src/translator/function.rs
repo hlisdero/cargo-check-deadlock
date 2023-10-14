@@ -105,7 +105,7 @@ pub enum PostprocessingTask {
 
 impl std::cmp::PartialOrd for PostprocessingTask {
     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-        Some(self.get_priority().cmp(&other.get_priority()))
+        Some(self.cmp(other))
     }
 }
 

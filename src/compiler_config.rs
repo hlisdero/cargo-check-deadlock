@@ -26,6 +26,7 @@ pub fn prepare_rustc_config(
         input: config::Input::File(source_code_filepath),
         output_dir: None,
         output_file: None,
+        ice_file: None,
         file_loader: None,
         locale_resources: &[],
         lint_caps: rustc_hash::FxHashMap::default(),

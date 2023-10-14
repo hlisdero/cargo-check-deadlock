@@ -163,7 +163,7 @@ pub fn call_join<'tcx>(
     args: &[rustc_middle::mir::Operand<'tcx>],
     places: Places,
     net: &mut PetriNet,
-    memory: &mut Memory<'tcx>,
+    memory: &Memory<'tcx>,
 ) {
     let places = places.ignore_cleanup_place();
     let transitions = call_foreign_function(function_name, index, places, net);
