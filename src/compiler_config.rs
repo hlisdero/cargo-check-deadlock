@@ -35,5 +35,6 @@ pub fn prepare_rustc_config(
         override_queries: None,
         make_codegen_backend: None,
         registry: registry::Registry::new(rustc_error_codes::DIAGNOSTICS),
+        expanded_args: Vec::new(),
     }
 }

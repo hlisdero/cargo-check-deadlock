@@ -90,16 +90,15 @@ pub fn extract_closure<'tcx>(
         rustc_middle::mir::Operand::Constant(boxed_const) => {
             let unboxed_const = **boxed_const;
             assert!(unboxed_const.user_ty.is_none(), "BUG: The closure passed to `std::thread::spawn` should not be of type `Operand::Constant` with user-defined type");
-            let constant_kind = unboxed_const.literal;
-            match constant_kind {
-                rustc_middle::mir::ConstantKind::Ty(_) => {
+            match unboxed_const.const_ {
+                rustc_middle::mir::Const::Ty(_) => {
                     panic!("BUG: The closure passed to `std::thread::spawn` should not be a constant containing a type");
                 }
-                rustc_middle::mir::ConstantKind::Unevaluated(_, _) => {
+                rustc_middle::mir::Const::Unevaluated(_, _) => {
                     panic!("BUG: The closure passed to `std::thread::spawn` should not be a unevaluated constant");
                 }
-                rustc_middle::mir::ConstantKind::Val(value, _ty) => {
-                    if value == rustc_const_eval::interpret::ConstValue::ZeroSized {
+                rustc_middle::mir::Const::Val(value, _ty) => {
+                    if value == rustc_middle::mir::ConstValue::ZeroSized {
                         return None;
                     }
                     panic!("BUG: The closure passed to `std::thread::spawn` should not be a constant whose value is not a zero-sized type");
