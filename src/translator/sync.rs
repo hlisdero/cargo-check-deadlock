@@ -192,7 +192,7 @@ pub fn link_return_value_if_sync_variable<'tcx>(
     tcx: rustc_middle::ty::TyCtxt<'tcx>,
 ) {
     let Some(first_argument) = extract_nth_argument_as_place(args, 0) else {
-         // Nothing to check: Either the first argument is not present or it is a constant.
+        // Nothing to check: Either the first argument is not present or it is a constant.
         return;
     };
     link_if_sync_variable(

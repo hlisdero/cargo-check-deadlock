@@ -26,7 +26,7 @@ pub fn get_from_rustc() -> Result<PathBuf, &'static str> {
         .arg("--print=sysroot")
         .current_dir(".")
         .output()
-        else {
+    else {
         return Err("Could not run rustc to get the sysroot: Make sure you can run `rustc --print=sysroot` in a terminal");
     };
     // Convert the stdout to a str.
