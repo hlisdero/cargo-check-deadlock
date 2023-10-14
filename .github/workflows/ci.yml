@@ -8,12 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: nightly
-          override: true
-          components: rust-src, rustc-dev, llvm-tools-preview
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
       - uses: actions-rs/cargo@v1
         with:
           command: check
@@ -23,12 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: nightly
-          override: true
-          components: rust-src, rustc-dev, llvm-tools-preview
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
       - uses: actions-rs/cargo@v1
         with:
           command: test
@@ -38,10 +28,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
-          toolchain: nightly
-          override: true
           components: rustfmt
       - uses: actions-rs/cargo@v1
         with:
@@ -53,12 +41,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
-          profile: minimal
-          toolchain: nightly
-          override: true
-          components: clippy, rust-src, rustc-dev, llvm-tools-preview
+          components: clippy
       - uses: actions-rs/cargo@v1
         with:
           command: clippy
