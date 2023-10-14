@@ -8,8 +8,8 @@
 
 use rustc_middle::mir::visit::Visitor;
 use rustc_middle::mir::TerminatorKind::{
-    Assert, Call, Drop, FalseEdge, FalseUnwind, GeneratorDrop, Goto, InlineAsm, Resume, Return,
-    SwitchInt, Terminate, Unreachable, Yield,
+    Assert, Call, Drop, FalseEdge, FalseUnwind, GeneratorDrop, Goto, InlineAsm, Return, SwitchInt,
+    Unreachable, UnwindResume, UnwindTerminate, Yield,
 };
 use rustc_middle::mir::UnwindAction;
 
@@ -84,7 +84,7 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
                 // <rustc_middle::mir::terminator::SwitchTargets>
                 function.switch_int(targets.all_targets().to_vec(), &mut self.net);
             }
-            Resume | Terminate => {
+            UnwindResume | UnwindTerminate(..) => {
                 function.unwind(&self.program_panic, &mut self.net);
             }
             Return => {
@@ -105,7 +105,7 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
                     }
                     // Do NOT model the `Terminate` case.
                     // It is not relevant for deadlock detection and makes the Petri nets unnecessarily bigger.
-                    UnwindAction::Continue | UnwindAction::Terminate => {
+                    UnwindAction::Continue | UnwindAction::Terminate(..) => {
                         function.drop(target, None, &mut self.net)
                     }
                     UnwindAction::Unreachable => {
@@ -145,7 +145,7 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
                     }
                     // Do NOT model the `Terminate` case.
                     // It is not relevant for deadlock detection and makes the Petri nets unnecessarily bigger.
-                    UnwindAction::Continue | UnwindAction::Terminate => {
+                    UnwindAction::Continue | UnwindAction::Terminate(..) => {
                         function.assert(target, None, &mut self.net);
                     }
                     UnwindAction::Unreachable => {

@@ -153,7 +153,7 @@ pub fn link_if_sync_variable<'tcx>(
     if !check_if_sync_variable(place_to_link, caller_function_def_id, tcx) {
         return;
     }
-    if place_linked.has_deref() {
+    if place_linked.is_indirect() {
         // Checks if the place has a `ProjectionElem::Deref`
         let field_number = get_field_number_in_projection(place_linked);
         // Create a new place without the projections

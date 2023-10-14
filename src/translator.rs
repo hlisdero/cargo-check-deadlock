@@ -287,7 +287,7 @@ impl<'tcx> Translator<'tcx> {
                     cleanup_place,
                 }
             }
-            (Some(return_block), UnwindAction::Terminate) => {
+            (Some(return_block), UnwindAction::Terminate(..)) => {
                 // Specific foreign function calls that terminate the program (abort).
                 let end_place =
                     current_function.get_end_place_for_function_call(return_block, &mut self.net);
@@ -298,7 +298,7 @@ impl<'tcx> Translator<'tcx> {
                     cleanup_place: self.program_panic.clone(),
                 }
             }
-            (None, UnwindAction::Terminate) => {
+            (None, UnwindAction::Terminate(..)) => {
                 // Foreign function calls that simply terminate the program.
                 Places::Basic {
                     start_place,
