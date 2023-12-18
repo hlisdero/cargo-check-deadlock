@@ -37,7 +37,7 @@ pub struct Thread {
     /// The transition from which the thread branches off at the start.
     spawn_transition: TransitionRef,
     /// The definition ID that uniquely identifies the function run by the thread.
-    thread_function_def_id: rustc_hir::def_id::DefId,
+    def_id: rustc_hir::def_id::DefId,
     /// The aggregate value containing the sync variables passed to the thread.
     aggregate: Vec<Value>,
     /// The transition to which the thread joins in at the end.
@@ -65,7 +65,7 @@ impl Thread {
     ) -> Self {
         Self {
             spawn_transition,
-            thread_function_def_id,
+            def_id: thread_function_def_id,
             aggregate,
             join_transition: OnceCell::new(),
             index,
@@ -97,11 +97,7 @@ impl Thread {
             add_arc_place_transition(net, &thread_end_place, join_transition);
         }
 
-        (
-            self.thread_function_def_id,
-            thread_start_place,
-            thread_end_place,
-        )
+        (self.def_id, thread_start_place, thread_end_place)
     }
 
     /// Moves the aggregated value containing the sync variables to the new function's memory.
@@ -129,7 +125,7 @@ impl Thread {
             self.index
         );
 
-        let body = tcx.optimized_mir(self.thread_function_def_id);
+        let body = tcx.optimized_mir(self.def_id);
         for debug_info in &body.var_debug_info {
             let rustc_middle::mir::VarDebugInfoContents::Place(place) = debug_info.value else {
                 // Not interested in the other variants of `VarDebugInfoContents`

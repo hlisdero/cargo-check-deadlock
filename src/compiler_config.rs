@@ -10,22 +10,22 @@
 //! <https://rustc-dev-guide.rust-lang.org/rustc-driver.html>
 
 use rustc_errors::registry;
-use rustc_session::config::{self, CheckCfg};
 
 pub fn prepare_rustc_config(
     sysroot: std::path::PathBuf,
     source_code_filepath: std::path::PathBuf,
 ) -> rustc_interface::Config {
     rustc_interface::Config {
-        opts: config::Options {
+        opts: rustc_session::config::Options {
             maybe_sysroot: Some(sysroot),
-            ..config::Options::default()
+            ..rustc_session::config::Options::default()
         },
-        crate_cfg: rustc_hash::FxHashSet::default(),
-        crate_check_cfg: CheckCfg::default(),
-        input: config::Input::File(source_code_filepath),
+        crate_cfg: Vec::new(),
+        crate_check_cfg: Vec::new(),
+        input: rustc_session::config::Input::File(source_code_filepath),
         output_dir: None,
         output_file: None,
+        hash_untracked_state: None,
         ice_file: None,
         file_loader: None,
         locale_resources: &[],
@@ -35,6 +35,7 @@ pub fn prepare_rustc_config(
         override_queries: None,
         make_codegen_backend: None,
         registry: registry::Registry::new(rustc_error_codes::DIAGNOSTICS),
+        using_internal_features: std::sync::Arc::new(core::sync::atomic::AtomicBool::new(true)),
         expanded_args: Vec::new(),
     }
 }

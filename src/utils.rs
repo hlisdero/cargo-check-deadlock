@@ -80,7 +80,7 @@ pub fn extract_closure<'tcx>(
     args: &[rustc_middle::mir::Operand<'tcx>],
 ) -> Option<rustc_middle::mir::Place<'tcx>> {
     let operand = args
-        .get(0)
+        .first()
         .expect("BUG: `std::thread::spawn` should receive at least one argument");
 
     match operand {

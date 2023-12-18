@@ -631,7 +631,7 @@ impl<'tcx> Translator<'tcx> {
 
         // Extract the definition ID of the thread function
         let current_function = self.call_stack.peek_mut();
-        let function_to_be_run = args.get(0).unwrap_or_else(|| {
+        let function_to_be_run = args.first().unwrap_or_else(|| {
             panic!("BUG: `{function_name}` should receive the function to be run")
         });
         let thread_function_def_id = extract_def_id_of_called_function_from_operand(

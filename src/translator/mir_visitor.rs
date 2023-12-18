@@ -8,7 +8,7 @@
 
 use rustc_middle::mir::visit::Visitor;
 use rustc_middle::mir::TerminatorKind::{
-    Assert, Call, Drop, FalseEdge, FalseUnwind, GeneratorDrop, Goto, InlineAsm, Return, SwitchInt,
+    Assert, Call, CoroutineDrop, Drop, FalseEdge, FalseUnwind, Goto, InlineAsm, Return, SwitchInt,
     Unreachable, UnwindResume, UnwindTerminate, Yield,
 };
 use rustc_middle::mir::UnwindAction;
@@ -157,8 +157,8 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
             Yield { .. } => {
                 unimplemented!("TerminatorKind::Yield not implemented yet")
             }
-            GeneratorDrop => {
-                unimplemented!("TerminatorKind::GeneratorDrop not implemented yet")
+            CoroutineDrop => {
+                unimplemented!("TerminatorKind::CoroutineDrop not implemented yet")
             }
             FalseEdge { .. } => {
                 unimplemented!("TerminatorKind::FalseEdge not implemented yet")
