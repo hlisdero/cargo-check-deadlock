@@ -54,10 +54,11 @@ pub fn extract_def_id_of_called_function_from_operand<'tcx>(
 /// or the argument is a constant (which does not have a `Place` representation),
 /// then the function returns `None`.
 pub fn extract_nth_argument_as_place<'tcx>(
-    args: &[rustc_middle::mir::Operand<'tcx>],
+    args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand<'tcx>>],
     index: usize,
 ) -> Option<rustc_middle::mir::Place<'tcx>> {
-    let operand = args.get(index)?;
+    let spanned = args.get(index)?;
+    let operand = &spanned.node;
     match operand {
         rustc_middle::mir::Operand::Move(place) | rustc_middle::mir::Operand::Copy(place) => {
             Some(*place)
@@ -77,11 +78,12 @@ pub fn extract_nth_argument_as_place<'tcx>(
 /// If the operand was passed a constant with user-defined type,
 /// a type constant (i.e. `T`) or an unevaluated constant, then the functions panics.
 pub fn extract_closure<'tcx>(
-    args: &[rustc_middle::mir::Operand<'tcx>],
+    args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand<'tcx>>],
 ) -> Option<rustc_middle::mir::Place<'tcx>> {
-    let operand = args
+    let spanned = args
         .first()
         .expect("BUG: `std::thread::spawn` should receive at least one argument");
+    let operand = &spanned.node;
 
     match operand {
         rustc_middle::mir::Operand::Move(place) | rustc_middle::mir::Operand::Copy(place) => {

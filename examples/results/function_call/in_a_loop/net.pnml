@@ -80,9 +80,9 @@
           <text>main_SWITCH_INT_FROM_BB3_TO_BB6</text>
         </name>
       </transition>
-      <transition id="main_UNREACHABLE_5">
+      <transition id="main_UNREACHABLE_6">
         <name>
-          <text>main_UNREACHABLE_5</text>
+          <text>main_UNREACHABLE_6</text>
         </name>
       </transition>
       <transition id="std_iter_IntoIterator_into_iter_0_CALL">
@@ -151,17 +151,17 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB5" target="main_UNREACHABLE_5" id="(main_BB5, main_UNREACHABLE_5)">
+      <arc source="main_BB5" target="main_RETURN" id="(main_BB5, main_RETURN)">
         <name>
-          <text>(main_BB5, main_UNREACHABLE_5)</text>
+          <text>(main_BB5, main_RETURN)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB6" target="main_RETURN" id="(main_BB6, main_RETURN)">
+      <arc source="main_BB6" target="main_UNREACHABLE_6" id="(main_BB6, main_UNREACHABLE_6)">
         <name>
-          <text>(main_BB6, main_RETURN)</text>
+          <text>(main_BB6, main_UNREACHABLE_6)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -215,9 +215,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_UNREACHABLE_5" target="PROGRAM_END" id="(main_UNREACHABLE_5, PROGRAM_END)">
+      <arc source="main_UNREACHABLE_6" target="PROGRAM_END" id="(main_UNREACHABLE_6, PROGRAM_END)">
         <name>
-          <text>(main_UNREACHABLE_5, PROGRAM_END)</text>
+          <text>(main_UNREACHABLE_6, PROGRAM_END)</text>
         </name>
         <inscription>
           <text>1</text>

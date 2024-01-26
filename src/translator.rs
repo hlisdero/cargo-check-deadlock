@@ -251,7 +251,7 @@ impl<'tcx> Translator<'tcx> {
     fn call_function(
         &mut self,
         func: &rustc_middle::mir::Operand<'tcx>,
-        args: &[rustc_middle::mir::Operand<'tcx>],
+        args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand<'tcx>>],
         destination: rustc_middle::mir::Place<'tcx>,
         target: Option<rustc_middle::mir::BasicBlock>,
         unwind: UnwindAction,
@@ -369,7 +369,7 @@ impl<'tcx> Translator<'tcx> {
         &mut self,
         function_def_id: rustc_hir::def_id::DefId,
         function_name: &str,
-        args: &[rustc_middle::mir::Operand<'tcx>],
+        args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand<'tcx>>],
         destination: rustc_middle::mir::Place<'tcx>,
         places: Places,
     ) {
@@ -424,7 +424,7 @@ impl<'tcx> Translator<'tcx> {
     fn is_self_ref_mutex(
         &self,
         function_name: &str,
-        args: &[rustc_middle::mir::Operand<'tcx>],
+        args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand<'tcx>>],
     ) -> bool {
         let self_ref = extract_nth_argument_as_place(args, 0).unwrap_or_else(|| {
             panic!("BUG: `{function_name}` should receive a reference as a place")
@@ -510,7 +510,7 @@ impl<'tcx> Translator<'tcx> {
     fn call_foreign_function(
         &mut self,
         function_name: &str,
-        args: &[rustc_middle::mir::Operand<'tcx>],
+        args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand<'tcx>>],
         destination: rustc_middle::mir::Place<'tcx>,
         places: Places,
     ) -> Transitions {
@@ -534,7 +534,7 @@ impl<'tcx> Translator<'tcx> {
     fn call_mem_drop(
         &mut self,
         function_name: &str,
-        args: &[rustc_middle::mir::Operand<'tcx>],
+        args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand<'tcx>>],
         destination: rustc_middle::mir::Place<'tcx>,
         places: Places,
     ) {
@@ -572,7 +572,7 @@ impl<'tcx> Translator<'tcx> {
     fn call_deref_mutex(
         &mut self,
         function_name: &str,
-        args: &[rustc_middle::mir::Operand<'tcx>],
+        args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand<'tcx>>],
         destination: rustc_middle::mir::Place<'tcx>,
         places: Places,
     ) {
@@ -603,7 +603,7 @@ impl<'tcx> Translator<'tcx> {
     fn call_unwrap_mutex(
         &mut self,
         function_name: &str,
-        args: &[rustc_middle::mir::Operand<'tcx>],
+        args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand<'tcx>>],
         destination: rustc_middle::mir::Place<'tcx>,
         places: Places,
     ) {
@@ -622,7 +622,7 @@ impl<'tcx> Translator<'tcx> {
     fn call_thread_spawn(
         &mut self,
         function_name: &str,
-        args: &[rustc_middle::mir::Operand<'tcx>],
+        args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand<'tcx>>],
         destination: rustc_middle::mir::Place<'tcx>,
         places: Places,
     ) {
@@ -635,7 +635,7 @@ impl<'tcx> Translator<'tcx> {
             panic!("BUG: `{function_name}` should receive the function to be run")
         });
         let thread_function_def_id = extract_def_id_of_called_function_from_operand(
-            function_to_be_run,
+            &function_to_be_run.node,
             current_function.def_id,
             self.tcx,
         );

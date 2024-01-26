@@ -156,7 +156,7 @@ impl Thread {
 pub fn call_join<'tcx>(
     function_name: &str,
     index: usize,
-    args: &[rustc_middle::mir::Operand<'tcx>],
+    args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand<'tcx>>],
     places: Places,
     net: &mut PetriNet,
     memory: &Memory<'tcx>,

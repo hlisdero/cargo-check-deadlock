@@ -32,7 +32,7 @@ TRANSITION main_GOTO_1
     main_BB2 : 1;
 TRANSITION main_RETURN
   CONSUME
-    main_BB6 : 1;
+    main_BB5 : 1;
   PRODUCE
     PROGRAM_END : 1;
 TRANSITION main_SWITCH_INT_FROM_BB3_TO_BB4
@@ -50,9 +50,9 @@ TRANSITION main_SWITCH_INT_FROM_BB3_TO_BB6
     main_BB3 : 1;
   PRODUCE
     main_BB6 : 1;
-TRANSITION main_UNREACHABLE_5
+TRANSITION main_UNREACHABLE_6
   CONSUME
-    main_BB5 : 1;
+    main_BB6 : 1;
   PRODUCE
     PROGRAM_END : 1;
 TRANSITION std_iter_IntoIterator_into_iter_0_CALL

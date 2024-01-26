@@ -151,7 +151,7 @@ pub fn call_new<'tcx>(
 pub fn call_notify_one<'tcx>(
     function_name: &str,
     index: usize,
-    args: &[rustc_middle::mir::Operand<'tcx>],
+    args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand<'tcx>>],
     places: Places,
     net: &mut PetriNet,
     memory: &Memory<'tcx>,
@@ -185,7 +185,7 @@ pub fn call_notify_one<'tcx>(
 pub fn call_wait<'tcx>(
     function_name: &str,
     index: usize,
-    args: &[rustc_middle::mir::Operand<'tcx>],
+    args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand<'tcx>>],
     destination: rustc_middle::mir::Place<'tcx>,
     places: Places,
     net: &mut PetriNet,

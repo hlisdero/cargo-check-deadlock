@@ -79,12 +79,12 @@ TRANSITION find_even_0_ASSERT_4
   CONSUME
     find_even_0_BB4 : 1;
   PRODUCE
-    find_even_0_BB7 : 1;
-TRANSITION find_even_0_ASSERT_7
+    find_even_0_BB6 : 1;
+TRANSITION find_even_0_ASSERT_6
   CONSUME
-    find_even_0_BB7 : 1;
+    find_even_0_BB6 : 1;
   PRODUCE
-    find_even_0_BB8 : 1;
+    find_even_0_BB7 : 1;
 TRANSITION find_even_0_CALL_UNWIND
   CONSUME
     main_BB3 : 1;
@@ -95,21 +95,26 @@ TRANSITION find_even_0_GOTO_1
     find_even_0_BB1 : 1;
   PRODUCE
     find_even_0_BB2 : 1;
-TRANSITION find_even_0_GOTO_6
+TRANSITION find_even_0_GOTO_5
   CONSUME
-    find_even_0_BB6 : 1;
+    find_even_0_BB5 : 1;
   PRODUCE
-    find_even_0_BB10 : 1;
-TRANSITION find_even_0_GOTO_9
+    find_even_0_BB9 : 1;
+TRANSITION find_even_0_GOTO_8
+  CONSUME
+    find_even_0_BB8 : 1;
+  PRODUCE
+    find_even_0_BB9 : 1;
+TRANSITION find_even_0_RETURN
   CONSUME
     find_even_0_BB9 : 1;
   PRODUCE
-    find_even_0_BB10 : 1;
-TRANSITION find_even_0_RETURN
-  CONSUME
-    find_even_0_BB10 : 1;
-  PRODUCE
     main_BB4 : 1;
+TRANSITION find_even_0_SWITCH_INT_FROM_BB3_TO_BB10
+  CONSUME
+    find_even_0_BB3 : 1;
+  PRODUCE
+    find_even_0_BB10 : 1;
 TRANSITION find_even_0_SWITCH_INT_FROM_BB3_TO_BB4
   CONSUME
     find_even_0_BB3 : 1;
@@ -120,24 +125,19 @@ TRANSITION find_even_0_SWITCH_INT_FROM_BB3_TO_BB5
     find_even_0_BB3 : 1;
   PRODUCE
     find_even_0_BB5 : 1;
-TRANSITION find_even_0_SWITCH_INT_FROM_BB3_TO_BB6
+TRANSITION find_even_0_SWITCH_INT_FROM_BB7_TO_BB2
   CONSUME
-    find_even_0_BB3 : 1;
-  PRODUCE
-    find_even_0_BB6 : 1;
-TRANSITION find_even_0_SWITCH_INT_FROM_BB8_TO_BB2
-  CONSUME
-    find_even_0_BB8 : 1;
+    find_even_0_BB7 : 1;
   PRODUCE
     find_even_0_BB2 : 1;
-TRANSITION find_even_0_SWITCH_INT_FROM_BB8_TO_BB9
+TRANSITION find_even_0_SWITCH_INT_FROM_BB7_TO_BB8
   CONSUME
-    find_even_0_BB8 : 1;
+    find_even_0_BB7 : 1;
   PRODUCE
-    find_even_0_BB9 : 1;
-TRANSITION find_even_0_UNREACHABLE_5
+    find_even_0_BB8 : 1;
+TRANSITION find_even_0_UNREACHABLE_10
   CONSUME
-    find_even_0_BB5 : 1;
+    find_even_0_BB10 : 1;
   PRODUCE
     PROGRAM_END : 1;
 TRANSITION main_ASSERT_1

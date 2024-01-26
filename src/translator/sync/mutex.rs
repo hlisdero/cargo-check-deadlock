@@ -144,7 +144,7 @@ impl Guard {
 pub fn call_lock<'tcx>(
     function_name: &str,
     index: usize,
-    args: &[rustc_middle::mir::Operand<'tcx>],
+    args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand<'tcx>>],
     destination: rustc_middle::mir::Place<'tcx>,
     places: Places,
     net: &mut PetriNet,

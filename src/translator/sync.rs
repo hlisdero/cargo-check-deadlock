@@ -41,7 +41,7 @@ pub fn is_supported_function(function_name: &str) -> bool {
 pub fn call_function<'tcx>(
     function_name: &str,
     index: usize,
-    args: &[rustc_middle::mir::Operand<'tcx>],
+    args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand<'tcx>>],
     destination: rustc_middle::mir::Place<'tcx>,
     places: Places,
     net: &mut PetriNet,
@@ -185,7 +185,7 @@ pub fn link_if_sync_variable<'tcx>(
 /// Receives a reference to the memory of the caller function to
 /// link the return local variable to the synchronization variable.
 pub fn link_return_value_if_sync_variable<'tcx>(
-    args: &[rustc_middle::mir::Operand<'tcx>],
+    args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand<'tcx>>],
     return_value: rustc_middle::mir::Place<'tcx>,
     memory: &mut Memory<'tcx>,
     caller_function_def_id: rustc_hir::def_id::DefId,
