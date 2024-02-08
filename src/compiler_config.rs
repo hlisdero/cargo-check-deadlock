@@ -34,7 +34,7 @@ pub fn prepare_rustc_config(
         register_lints: None,
         override_queries: None,
         make_codegen_backend: None,
-        registry: registry::Registry::new(rustc_error_codes::DIAGNOSTICS),
+        registry: registry::Registry::new(rustc_errors::codes::DIAGNOSTICS),
         using_internal_features: std::sync::Arc::new(core::sync::atomic::AtomicBool::new(true)),
         expanded_args: Vec::new(),
     }
