@@ -114,7 +114,7 @@ dependencies = [
 
 [[package]]
 name = "cargo-check-deadlock"
-version = "1.0.7"
+version = "1.0.8"
 dependencies = [
  "assert_cmd",
  "assert_fs",
