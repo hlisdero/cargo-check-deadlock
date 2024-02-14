@@ -285,16 +285,6 @@
           <text>main_DROP_40</text>
         </name>
       </transition>
-      <transition id="main_GOTO_20">
-        <name>
-          <text>main_GOTO_20</text>
-        </name>
-      </transition>
-      <transition id="main_GOTO_22">
-        <name>
-          <text>main_GOTO_22</text>
-        </name>
-      </transition>
       <transition id="main_GOTO_24">
         <name>
           <text>main_GOTO_24</text>
@@ -305,39 +295,49 @@
           <text>main_GOTO_26</text>
         </name>
       </transition>
+      <transition id="main_GOTO_28">
+        <name>
+          <text>main_GOTO_28</text>
+        </name>
+      </transition>
+      <transition id="main_GOTO_30">
+        <name>
+          <text>main_GOTO_30</text>
+        </name>
+      </transition>
       <transition id="main_RETURN">
         <name>
           <text>main_RETURN</text>
         </name>
       </transition>
-      <transition id="main_SWITCH_INT_FROM_BB28_TO_BB26">
+      <transition id="main_SWITCH_INT_FROM_BB25_TO_BB23">
         <name>
-          <text>main_SWITCH_INT_FROM_BB28_TO_BB26</text>
+          <text>main_SWITCH_INT_FROM_BB25_TO_BB23</text>
         </name>
       </transition>
-      <transition id="main_SWITCH_INT_FROM_BB28_TO_BB27">
+      <transition id="main_SWITCH_INT_FROM_BB25_TO_BB24">
         <name>
-          <text>main_SWITCH_INT_FROM_BB28_TO_BB27</text>
+          <text>main_SWITCH_INT_FROM_BB25_TO_BB24</text>
         </name>
       </transition>
-      <transition id="main_SWITCH_INT_FROM_BB29_TO_BB24">
+      <transition id="main_SWITCH_INT_FROM_BB27_TO_BB22">
         <name>
-          <text>main_SWITCH_INT_FROM_BB29_TO_BB24</text>
+          <text>main_SWITCH_INT_FROM_BB27_TO_BB22</text>
         </name>
       </transition>
-      <transition id="main_SWITCH_INT_FROM_BB29_TO_BB25">
+      <transition id="main_SWITCH_INT_FROM_BB27_TO_BB26">
         <name>
-          <text>main_SWITCH_INT_FROM_BB29_TO_BB25</text>
+          <text>main_SWITCH_INT_FROM_BB27_TO_BB26</text>
         </name>
       </transition>
-      <transition id="main_SWITCH_INT_FROM_BB30_TO_BB22">
+      <transition id="main_SWITCH_INT_FROM_BB29_TO_BB21">
         <name>
-          <text>main_SWITCH_INT_FROM_BB30_TO_BB22</text>
+          <text>main_SWITCH_INT_FROM_BB29_TO_BB21</text>
         </name>
       </transition>
-      <transition id="main_SWITCH_INT_FROM_BB30_TO_BB23">
+      <transition id="main_SWITCH_INT_FROM_BB29_TO_BB28">
         <name>
-          <text>main_SWITCH_INT_FROM_BB30_TO_BB23</text>
+          <text>main_SWITCH_INT_FROM_BB29_TO_BB28</text>
         </name>
       </transition>
       <transition id="main_SWITCH_INT_FROM_BB31_TO_BB20">
@@ -345,9 +345,9 @@
           <text>main_SWITCH_INT_FROM_BB31_TO_BB20</text>
         </name>
       </transition>
-      <transition id="main_SWITCH_INT_FROM_BB31_TO_BB21">
+      <transition id="main_SWITCH_INT_FROM_BB31_TO_BB30">
         <name>
-          <text>main_SWITCH_INT_FROM_BB31_TO_BB21</text>
+          <text>main_SWITCH_INT_FROM_BB31_TO_BB30</text>
         </name>
       </transition>
       <transition id="main_SWITCH_INT_FROM_BB3_TO_BB4">
@@ -777,49 +777,65 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB20" target="main_GOTO_20" id="(main_BB20, main_GOTO_20)">
+      <arc source="main_BB20" target="std_cmp_PartialEq_eq_1_CALL" id="(main_BB20, std_cmp_PartialEq_eq_1_CALL)">
         <name>
-          <text>(main_BB20, main_GOTO_20)</text>
+          <text>(main_BB20, std_cmp_PartialEq_eq_1_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB21" target="std_cmp_PartialEq_eq_1_CALL" id="(main_BB21, std_cmp_PartialEq_eq_1_CALL)">
+      <arc source="main_BB20" target="std_cmp_PartialEq_eq_1_CALL_UNWIND" id="(main_BB20, std_cmp_PartialEq_eq_1_CALL_UNWIND)">
         <name>
-          <text>(main_BB21, std_cmp_PartialEq_eq_1_CALL)</text>
+          <text>(main_BB20, std_cmp_PartialEq_eq_1_CALL_UNWIND)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB21" target="std_cmp_PartialEq_eq_1_CALL_UNWIND" id="(main_BB21, std_cmp_PartialEq_eq_1_CALL_UNWIND)">
+      <arc source="main_BB21" target="std_cmp_PartialEq_eq_2_CALL" id="(main_BB21, std_cmp_PartialEq_eq_2_CALL)">
         <name>
-          <text>(main_BB21, std_cmp_PartialEq_eq_1_CALL_UNWIND)</text>
+          <text>(main_BB21, std_cmp_PartialEq_eq_2_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB22" target="main_GOTO_22" id="(main_BB22, main_GOTO_22)">
+      <arc source="main_BB21" target="std_cmp_PartialEq_eq_2_CALL_UNWIND" id="(main_BB21, std_cmp_PartialEq_eq_2_CALL_UNWIND)">
         <name>
-          <text>(main_BB22, main_GOTO_22)</text>
+          <text>(main_BB21, std_cmp_PartialEq_eq_2_CALL_UNWIND)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB23" target="std_cmp_PartialEq_eq_2_CALL" id="(main_BB23, std_cmp_PartialEq_eq_2_CALL)">
+      <arc source="main_BB22" target="std_cmp_PartialEq_eq_3_CALL" id="(main_BB22, std_cmp_PartialEq_eq_3_CALL)">
         <name>
-          <text>(main_BB23, std_cmp_PartialEq_eq_2_CALL)</text>
+          <text>(main_BB22, std_cmp_PartialEq_eq_3_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB23" target="std_cmp_PartialEq_eq_2_CALL_UNWIND" id="(main_BB23, std_cmp_PartialEq_eq_2_CALL_UNWIND)">
+      <arc source="main_BB22" target="std_cmp_PartialEq_eq_3_CALL_UNWIND" id="(main_BB22, std_cmp_PartialEq_eq_3_CALL_UNWIND)">
         <name>
-          <text>(main_BB23, std_cmp_PartialEq_eq_2_CALL_UNWIND)</text>
+          <text>(main_BB22, std_cmp_PartialEq_eq_3_CALL_UNWIND)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main_BB23" target="core_fmt_rt_Argument_a_new_display_1_CALL" id="(main_BB23, core_fmt_rt_Argument_a_new_display_1_CALL)">
+        <name>
+          <text>(main_BB23, core_fmt_rt_Argument_a_new_display_1_CALL)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main_BB23" target="core_fmt_rt_Argument_a_new_display_1_CALL_UNWIND" id="(main_BB23, core_fmt_rt_Argument_a_new_display_1_CALL_UNWIND)">
+        <name>
+          <text>(main_BB23, core_fmt_rt_Argument_a_new_display_1_CALL_UNWIND)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -833,17 +849,17 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB25" target="std_cmp_PartialEq_eq_3_CALL" id="(main_BB25, std_cmp_PartialEq_eq_3_CALL)">
+      <arc source="main_BB25" target="main_SWITCH_INT_FROM_BB25_TO_BB23" id="(main_BB25, main_SWITCH_INT_FROM_BB25_TO_BB23)">
         <name>
-          <text>(main_BB25, std_cmp_PartialEq_eq_3_CALL)</text>
+          <text>(main_BB25, main_SWITCH_INT_FROM_BB25_TO_BB23)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB25" target="std_cmp_PartialEq_eq_3_CALL_UNWIND" id="(main_BB25, std_cmp_PartialEq_eq_3_CALL_UNWIND)">
+      <arc source="main_BB25" target="main_SWITCH_INT_FROM_BB25_TO_BB24" id="(main_BB25, main_SWITCH_INT_FROM_BB25_TO_BB24)">
         <name>
-          <text>(main_BB25, std_cmp_PartialEq_eq_3_CALL_UNWIND)</text>
+          <text>(main_BB25, main_SWITCH_INT_FROM_BB25_TO_BB24)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -857,49 +873,41 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB27" target="core_fmt_rt_Argument_a_new_display_1_CALL" id="(main_BB27, core_fmt_rt_Argument_a_new_display_1_CALL)">
+      <arc source="main_BB27" target="main_SWITCH_INT_FROM_BB27_TO_BB22" id="(main_BB27, main_SWITCH_INT_FROM_BB27_TO_BB22)">
         <name>
-          <text>(main_BB27, core_fmt_rt_Argument_a_new_display_1_CALL)</text>
+          <text>(main_BB27, main_SWITCH_INT_FROM_BB27_TO_BB22)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB27" target="core_fmt_rt_Argument_a_new_display_1_CALL_UNWIND" id="(main_BB27, core_fmt_rt_Argument_a_new_display_1_CALL_UNWIND)">
+      <arc source="main_BB27" target="main_SWITCH_INT_FROM_BB27_TO_BB26" id="(main_BB27, main_SWITCH_INT_FROM_BB27_TO_BB26)">
         <name>
-          <text>(main_BB27, core_fmt_rt_Argument_a_new_display_1_CALL_UNWIND)</text>
+          <text>(main_BB27, main_SWITCH_INT_FROM_BB27_TO_BB26)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB28" target="main_SWITCH_INT_FROM_BB28_TO_BB26" id="(main_BB28, main_SWITCH_INT_FROM_BB28_TO_BB26)">
+      <arc source="main_BB28" target="main_GOTO_28" id="(main_BB28, main_GOTO_28)">
         <name>
-          <text>(main_BB28, main_SWITCH_INT_FROM_BB28_TO_BB26)</text>
+          <text>(main_BB28, main_GOTO_28)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB28" target="main_SWITCH_INT_FROM_BB28_TO_BB27" id="(main_BB28, main_SWITCH_INT_FROM_BB28_TO_BB27)">
+      <arc source="main_BB29" target="main_SWITCH_INT_FROM_BB29_TO_BB21" id="(main_BB29, main_SWITCH_INT_FROM_BB29_TO_BB21)">
         <name>
-          <text>(main_BB28, main_SWITCH_INT_FROM_BB28_TO_BB27)</text>
+          <text>(main_BB29, main_SWITCH_INT_FROM_BB29_TO_BB21)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB29" target="main_SWITCH_INT_FROM_BB29_TO_BB24" id="(main_BB29, main_SWITCH_INT_FROM_BB29_TO_BB24)">
+      <arc source="main_BB29" target="main_SWITCH_INT_FROM_BB29_TO_BB28" id="(main_BB29, main_SWITCH_INT_FROM_BB29_TO_BB28)">
         <name>
-          <text>(main_BB29, main_SWITCH_INT_FROM_BB29_TO_BB24)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BB29" target="main_SWITCH_INT_FROM_BB29_TO_BB25" id="(main_BB29, main_SWITCH_INT_FROM_BB29_TO_BB25)">
-        <name>
-          <text>(main_BB29, main_SWITCH_INT_FROM_BB29_TO_BB25)</text>
+          <text>(main_BB29, main_SWITCH_INT_FROM_BB29_TO_BB28)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -921,17 +929,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB30" target="main_SWITCH_INT_FROM_BB30_TO_BB22" id="(main_BB30, main_SWITCH_INT_FROM_BB30_TO_BB22)">
+      <arc source="main_BB30" target="main_GOTO_30" id="(main_BB30, main_GOTO_30)">
         <name>
-          <text>(main_BB30, main_SWITCH_INT_FROM_BB30_TO_BB22)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_BB30" target="main_SWITCH_INT_FROM_BB30_TO_BB23" id="(main_BB30, main_SWITCH_INT_FROM_BB30_TO_BB23)">
-        <name>
-          <text>(main_BB30, main_SWITCH_INT_FROM_BB30_TO_BB23)</text>
+          <text>(main_BB30, main_GOTO_30)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -945,9 +945,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB31" target="main_SWITCH_INT_FROM_BB31_TO_BB21" id="(main_BB31, main_SWITCH_INT_FROM_BB31_TO_BB21)">
+      <arc source="main_BB31" target="main_SWITCH_INT_FROM_BB31_TO_BB30" id="(main_BB31, main_SWITCH_INT_FROM_BB31_TO_BB30)">
         <name>
-          <text>(main_BB31, main_SWITCH_INT_FROM_BB31_TO_BB21)</text>
+          <text>(main_BB31, main_SWITCH_INT_FROM_BB31_TO_BB30)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -1257,22 +1257,6 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_GOTO_20" target="main_BB35" id="(main_GOTO_20, main_BB35)">
-        <name>
-          <text>(main_GOTO_20, main_BB35)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="main_GOTO_22" target="main_BB35" id="(main_GOTO_22, main_BB35)">
-        <name>
-          <text>(main_GOTO_22, main_BB35)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
       <arc source="main_GOTO_24" target="main_BB35" id="(main_GOTO_24, main_BB35)">
         <name>
           <text>(main_GOTO_24, main_BB35)</text>
@@ -1289,6 +1273,22 @@
           <text>1</text>
         </inscription>
       </arc>
+      <arc source="main_GOTO_28" target="main_BB35" id="(main_GOTO_28, main_BB35)">
+        <name>
+          <text>(main_GOTO_28, main_BB35)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main_GOTO_30" target="main_BB35" id="(main_GOTO_30, main_BB35)">
+        <name>
+          <text>(main_GOTO_30, main_BB35)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
       <arc source="main_RETURN" target="PROGRAM_END" id="(main_RETURN, PROGRAM_END)">
         <name>
           <text>(main_RETURN, PROGRAM_END)</text>
@@ -1297,49 +1297,49 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_SWITCH_INT_FROM_BB28_TO_BB26" target="main_BB26" id="(main_SWITCH_INT_FROM_BB28_TO_BB26, main_BB26)">
+      <arc source="main_SWITCH_INT_FROM_BB25_TO_BB23" target="main_BB23" id="(main_SWITCH_INT_FROM_BB25_TO_BB23, main_BB23)">
         <name>
-          <text>(main_SWITCH_INT_FROM_BB28_TO_BB26, main_BB26)</text>
+          <text>(main_SWITCH_INT_FROM_BB25_TO_BB23, main_BB23)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_SWITCH_INT_FROM_BB28_TO_BB27" target="main_BB27" id="(main_SWITCH_INT_FROM_BB28_TO_BB27, main_BB27)">
+      <arc source="main_SWITCH_INT_FROM_BB25_TO_BB24" target="main_BB24" id="(main_SWITCH_INT_FROM_BB25_TO_BB24, main_BB24)">
         <name>
-          <text>(main_SWITCH_INT_FROM_BB28_TO_BB27, main_BB27)</text>
+          <text>(main_SWITCH_INT_FROM_BB25_TO_BB24, main_BB24)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_SWITCH_INT_FROM_BB29_TO_BB24" target="main_BB24" id="(main_SWITCH_INT_FROM_BB29_TO_BB24, main_BB24)">
+      <arc source="main_SWITCH_INT_FROM_BB27_TO_BB22" target="main_BB22" id="(main_SWITCH_INT_FROM_BB27_TO_BB22, main_BB22)">
         <name>
-          <text>(main_SWITCH_INT_FROM_BB29_TO_BB24, main_BB24)</text>
+          <text>(main_SWITCH_INT_FROM_BB27_TO_BB22, main_BB22)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_SWITCH_INT_FROM_BB29_TO_BB25" target="main_BB25" id="(main_SWITCH_INT_FROM_BB29_TO_BB25, main_BB25)">
+      <arc source="main_SWITCH_INT_FROM_BB27_TO_BB26" target="main_BB26" id="(main_SWITCH_INT_FROM_BB27_TO_BB26, main_BB26)">
         <name>
-          <text>(main_SWITCH_INT_FROM_BB29_TO_BB25, main_BB25)</text>
+          <text>(main_SWITCH_INT_FROM_BB27_TO_BB26, main_BB26)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_SWITCH_INT_FROM_BB30_TO_BB22" target="main_BB22" id="(main_SWITCH_INT_FROM_BB30_TO_BB22, main_BB22)">
+      <arc source="main_SWITCH_INT_FROM_BB29_TO_BB21" target="main_BB21" id="(main_SWITCH_INT_FROM_BB29_TO_BB21, main_BB21)">
         <name>
-          <text>(main_SWITCH_INT_FROM_BB30_TO_BB22, main_BB22)</text>
+          <text>(main_SWITCH_INT_FROM_BB29_TO_BB21, main_BB21)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_SWITCH_INT_FROM_BB30_TO_BB23" target="main_BB23" id="(main_SWITCH_INT_FROM_BB30_TO_BB23, main_BB23)">
+      <arc source="main_SWITCH_INT_FROM_BB29_TO_BB28" target="main_BB28" id="(main_SWITCH_INT_FROM_BB29_TO_BB28, main_BB28)">
         <name>
-          <text>(main_SWITCH_INT_FROM_BB30_TO_BB23, main_BB23)</text>
+          <text>(main_SWITCH_INT_FROM_BB29_TO_BB28, main_BB28)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -1353,9 +1353,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_SWITCH_INT_FROM_BB31_TO_BB21" target="main_BB21" id="(main_SWITCH_INT_FROM_BB31_TO_BB21, main_BB21)">
+      <arc source="main_SWITCH_INT_FROM_BB31_TO_BB30" target="main_BB30" id="(main_SWITCH_INT_FROM_BB31_TO_BB30, main_BB30)">
         <name>
-          <text>(main_SWITCH_INT_FROM_BB31_TO_BB21, main_BB21)</text>
+          <text>(main_SWITCH_INT_FROM_BB31_TO_BB30, main_BB30)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -1401,9 +1401,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_cmp_PartialEq_eq_1_CALL" target="main_BB30" id="(std_cmp_PartialEq_eq_1_CALL, main_BB30)">
+      <arc source="std_cmp_PartialEq_eq_1_CALL" target="main_BB29" id="(std_cmp_PartialEq_eq_1_CALL, main_BB29)">
         <name>
-          <text>(std_cmp_PartialEq_eq_1_CALL, main_BB30)</text>
+          <text>(std_cmp_PartialEq_eq_1_CALL, main_BB29)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -1417,9 +1417,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_cmp_PartialEq_eq_2_CALL" target="main_BB29" id="(std_cmp_PartialEq_eq_2_CALL, main_BB29)">
+      <arc source="std_cmp_PartialEq_eq_2_CALL" target="main_BB27" id="(std_cmp_PartialEq_eq_2_CALL, main_BB27)">
         <name>
-          <text>(std_cmp_PartialEq_eq_2_CALL, main_BB29)</text>
+          <text>(std_cmp_PartialEq_eq_2_CALL, main_BB27)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -1433,9 +1433,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_cmp_PartialEq_eq_3_CALL" target="main_BB28" id="(std_cmp_PartialEq_eq_3_CALL, main_BB28)">
+      <arc source="std_cmp_PartialEq_eq_3_CALL" target="main_BB25" id="(std_cmp_PartialEq_eq_3_CALL, main_BB25)">
         <name>
-          <text>(std_cmp_PartialEq_eq_3_CALL, main_BB28)</text>
+          <text>(std_cmp_PartialEq_eq_3_CALL, main_BB25)</text>
         </name>
         <inscription>
           <text>1</text>

@@ -102,12 +102,12 @@ TRANSITION core_fmt_rt_Argument_a_new_display_0_CALL_UNWIND
     main_BB40 : 1;
 TRANSITION core_fmt_rt_Argument_a_new_display_1_CALL
   CONSUME
-    main_BB27 : 1;
+    main_BB23 : 1;
   PRODUCE
     main_BB32 : 1;
 TRANSITION core_fmt_rt_Argument_a_new_display_1_CALL_UNWIND
   CONSUME
-    main_BB27 : 1;
+    main_BB23 : 1;
   PRODUCE
     main_BB40 : 1;
 TRANSITION core_fmt_rt_Argument_a_new_display_2_CALL
@@ -150,16 +150,6 @@ TRANSITION main_DROP_40
     main_BB40 : 1;
   PRODUCE
     main_BB41 : 1;
-TRANSITION main_GOTO_20
-  CONSUME
-    main_BB20 : 1;
-  PRODUCE
-    main_BB35 : 1;
-TRANSITION main_GOTO_22
-  CONSUME
-    main_BB22 : 1;
-  PRODUCE
-    main_BB35 : 1;
 TRANSITION main_GOTO_24
   CONSUME
     main_BB24 : 1;
@@ -170,51 +160,61 @@ TRANSITION main_GOTO_26
     main_BB26 : 1;
   PRODUCE
     main_BB35 : 1;
+TRANSITION main_GOTO_28
+  CONSUME
+    main_BB28 : 1;
+  PRODUCE
+    main_BB35 : 1;
+TRANSITION main_GOTO_30
+  CONSUME
+    main_BB30 : 1;
+  PRODUCE
+    main_BB35 : 1;
 TRANSITION main_RETURN
   CONSUME
     main_BB39 : 1;
   PRODUCE
     PROGRAM_END : 1;
-TRANSITION main_SWITCH_INT_FROM_BB28_TO_BB26
+TRANSITION main_SWITCH_INT_FROM_BB25_TO_BB23
   CONSUME
-    main_BB28 : 1;
-  PRODUCE
-    main_BB26 : 1;
-TRANSITION main_SWITCH_INT_FROM_BB28_TO_BB27
-  CONSUME
-    main_BB28 : 1;
-  PRODUCE
-    main_BB27 : 1;
-TRANSITION main_SWITCH_INT_FROM_BB29_TO_BB24
-  CONSUME
-    main_BB29 : 1;
-  PRODUCE
-    main_BB24 : 1;
-TRANSITION main_SWITCH_INT_FROM_BB29_TO_BB25
-  CONSUME
-    main_BB29 : 1;
-  PRODUCE
     main_BB25 : 1;
-TRANSITION main_SWITCH_INT_FROM_BB30_TO_BB22
-  CONSUME
-    main_BB30 : 1;
-  PRODUCE
-    main_BB22 : 1;
-TRANSITION main_SWITCH_INT_FROM_BB30_TO_BB23
-  CONSUME
-    main_BB30 : 1;
   PRODUCE
     main_BB23 : 1;
+TRANSITION main_SWITCH_INT_FROM_BB25_TO_BB24
+  CONSUME
+    main_BB25 : 1;
+  PRODUCE
+    main_BB24 : 1;
+TRANSITION main_SWITCH_INT_FROM_BB27_TO_BB22
+  CONSUME
+    main_BB27 : 1;
+  PRODUCE
+    main_BB22 : 1;
+TRANSITION main_SWITCH_INT_FROM_BB27_TO_BB26
+  CONSUME
+    main_BB27 : 1;
+  PRODUCE
+    main_BB26 : 1;
+TRANSITION main_SWITCH_INT_FROM_BB29_TO_BB21
+  CONSUME
+    main_BB29 : 1;
+  PRODUCE
+    main_BB21 : 1;
+TRANSITION main_SWITCH_INT_FROM_BB29_TO_BB28
+  CONSUME
+    main_BB29 : 1;
+  PRODUCE
+    main_BB28 : 1;
 TRANSITION main_SWITCH_INT_FROM_BB31_TO_BB20
   CONSUME
     main_BB31 : 1;
   PRODUCE
     main_BB20 : 1;
-TRANSITION main_SWITCH_INT_FROM_BB31_TO_BB21
+TRANSITION main_SWITCH_INT_FROM_BB31_TO_BB30
   CONSUME
     main_BB31 : 1;
   PRODUCE
-    main_BB21 : 1;
+    main_BB30 : 1;
 TRANSITION main_SWITCH_INT_FROM_BB3_TO_BB4
   CONSUME
     main_BB3 : 1;
@@ -242,32 +242,32 @@ TRANSITION std_cmp_PartialEq_eq_0_CALL_UNWIND
     main_BB40 : 1;
 TRANSITION std_cmp_PartialEq_eq_1_CALL
   CONSUME
-    main_BB21 : 1;
+    main_BB20 : 1;
   PRODUCE
-    main_BB30 : 1;
+    main_BB29 : 1;
 TRANSITION std_cmp_PartialEq_eq_1_CALL_UNWIND
   CONSUME
-    main_BB21 : 1;
+    main_BB20 : 1;
   PRODUCE
     main_BB40 : 1;
 TRANSITION std_cmp_PartialEq_eq_2_CALL
   CONSUME
-    main_BB23 : 1;
+    main_BB21 : 1;
   PRODUCE
-    main_BB29 : 1;
+    main_BB27 : 1;
 TRANSITION std_cmp_PartialEq_eq_2_CALL_UNWIND
   CONSUME
-    main_BB23 : 1;
+    main_BB21 : 1;
   PRODUCE
     main_BB40 : 1;
 TRANSITION std_cmp_PartialEq_eq_3_CALL
   CONSUME
-    main_BB25 : 1;
+    main_BB22 : 1;
   PRODUCE
-    main_BB28 : 1;
+    main_BB25 : 1;
 TRANSITION std_cmp_PartialEq_eq_3_CALL_UNWIND
   CONSUME
-    main_BB25 : 1;
+    main_BB22 : 1;
   PRODUCE
     main_BB40 : 1;
 TRANSITION std_env_args_0_CALL
