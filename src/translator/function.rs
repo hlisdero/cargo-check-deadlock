@@ -117,7 +117,7 @@ impl std::cmp::Ord for PostprocessingTask {
 
 impl PostprocessingTask {
     /// Creates a new instance of `PostprocessingTask::LinkMutexToCondvar`.
-    pub fn link_mutex_to_condvar(
+    pub const fn link_mutex_to_condvar(
         index: usize,
         start_place: PlaceRef,
         end_place: PlaceRef,
@@ -133,7 +133,7 @@ impl PostprocessingTask {
     }
 
     /// Creates a new instance of `PostprocessingTask::NewMutex`.
-    pub fn new_mutex(mutex_ref: MutexRef) -> Self {
+    pub const fn new_mutex(mutex_ref: MutexRef) -> Self {
         Self::NewMutex {
             priority: 2,
             mutex_ref,
