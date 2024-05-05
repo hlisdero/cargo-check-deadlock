@@ -8,7 +8,7 @@ use cargo_check_deadlock::PetriNet;
 pub enum OutputFormat {
     /// Petri Net Markup Language - <https://www.pnml.org/>
     Pnml,
-    /// LoLA - A Low Level Petri Net Analyzer - <https://theo.informatik.uni-rostock.de/theo-forschung/tools/lola/>
+    /// `LoLA` - A Low Level Petri Net Analyzer - <https://theo.informatik.uni-rostock.de/theo-forschung/tools/lola/>
     Lola,
     /// DOT (graph description language) - <https://graphviz.org/>
     Dot,
