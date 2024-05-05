@@ -242,7 +242,7 @@ impl<'tcx> Memory<'tcx> {
     /// # Panics
     ///
     /// If the place is not linked to a value, then the function panics.
-    pub fn copy_aggregate(&mut self, place: &Place<'tcx>) -> Vec<Value> {
+    pub fn copy_aggregate(&self, place: &Place<'tcx>) -> Vec<Value> {
         self.map
             .get(place)
             .unwrap_or_else(|| panic!("BUG: The place {place:?} should be linked to an aggregate"))

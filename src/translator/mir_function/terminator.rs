@@ -41,7 +41,7 @@ impl<'tcx> MirFunction<'tcx> {
     /// # Panics
     ///
     /// If there is no active basic block set, then the function panics.
-    pub fn unwind(&mut self, unwind_place: &PlaceRef, net: &mut PetriNet) -> TransitionRef {
+    pub fn unwind(&self, unwind_place: &PlaceRef, net: &mut PetriNet) -> TransitionRef {
         let active_block = self.get_active_block();
         active_block.unwind(unwind_place, net)
     }
@@ -98,7 +98,7 @@ impl<'tcx> MirFunction<'tcx> {
 
     /// Connects the active basic block to the end place of the function.
     /// This corresponds to the return statement that exits from this function.
-    pub fn return_statement(&mut self, net: &mut PetriNet) {
+    pub fn return_statement(&self, net: &mut PetriNet) {
         let start_place = self.prepare_start_place_for_return_statement();
         let label = return_transition_label(&self.name);
         connect_places(net, &start_place, &self.end_place, &label);
@@ -112,7 +112,7 @@ impl<'tcx> MirFunction<'tcx> {
     /// # Panics
     ///
     /// If there is no active basic block set, then the function panics.
-    pub fn unreachable(&mut self, end_place: &PlaceRef, net: &mut PetriNet) {
+    pub fn unreachable(&self, end_place: &PlaceRef, net: &mut PetriNet) {
         let active_block = self.get_active_block();
         active_block.unreachable(end_place, net);
     }
