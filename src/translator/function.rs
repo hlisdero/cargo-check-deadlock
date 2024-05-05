@@ -141,7 +141,7 @@ impl PostprocessingTask {
     }
 
     /// Returns the priority for any of the enum variants.
-    fn get_priority(&self) -> u8 {
+    const fn get_priority(&self) -> u8 {
         match self {
             Self::LinkMutexToCondvar { priority, .. } | Self::NewMutex { priority, .. } => {
                 *priority
