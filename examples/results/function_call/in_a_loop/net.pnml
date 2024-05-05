@@ -80,9 +80,9 @@
           <text>main_SWITCH_INT_FROM_BB3_TO_BB6</text>
         </name>
       </transition>
-      <transition id="main_UNREACHABLE_6">
+      <transition id="main_UNREACHABLE_4">
         <name>
-          <text>main_UNREACHABLE_6</text>
+          <text>main_UNREACHABLE_4</text>
         </name>
       </transition>
       <transition id="std_iter_IntoIterator_into_iter_0_CALL">
@@ -143,25 +143,25 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB4" target="call_0_RETURN" id="(main_BB4, call_0_RETURN)">
+      <arc source="main_BB4" target="main_UNREACHABLE_4" id="(main_BB4, main_UNREACHABLE_4)">
         <name>
-          <text>(main_BB4, call_0_RETURN)</text>
+          <text>(main_BB4, main_UNREACHABLE_4)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB5" target="main_RETURN" id="(main_BB5, main_RETURN)">
+      <arc source="main_BB5" target="call_0_RETURN" id="(main_BB5, call_0_RETURN)">
         <name>
-          <text>(main_BB5, main_RETURN)</text>
+          <text>(main_BB5, call_0_RETURN)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB6" target="main_UNREACHABLE_6" id="(main_BB6, main_UNREACHABLE_6)">
+      <arc source="main_BB6" target="main_RETURN" id="(main_BB6, main_RETURN)">
         <name>
-          <text>(main_BB6, main_UNREACHABLE_6)</text>
+          <text>(main_BB6, main_RETURN)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -215,9 +215,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_UNREACHABLE_6" target="PROGRAM_END" id="(main_UNREACHABLE_6, PROGRAM_END)">
+      <arc source="main_UNREACHABLE_4" target="PROGRAM_END" id="(main_UNREACHABLE_4, PROGRAM_END)">
         <name>
-          <text>(main_UNREACHABLE_6, PROGRAM_END)</text>
+          <text>(main_UNREACHABLE_4, PROGRAM_END)</text>
         </name>
         <inscription>
           <text>1</text>

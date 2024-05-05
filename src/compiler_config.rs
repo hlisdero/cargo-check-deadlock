@@ -30,7 +30,7 @@ pub fn prepare_rustc_config(
         file_loader: None,
         locale_resources: &[],
         lint_caps: rustc_hash::FxHashMap::default(),
-        parse_sess_created: None,
+        psess_created: None,
         register_lints: None,
         override_queries: None,
         make_codegen_backend: None,
