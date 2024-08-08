@@ -30,7 +30,7 @@ netcrab = "1.0.0"
 
 [dev-dependencies]
 assert_cmd = "2.0.15"
-assert_fs = "1.1.1"
+assert_fs = "1.1.2"
 predicates = "3.1.2"
 
 [package.metadata.rust-analyzer]
