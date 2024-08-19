@@ -9,7 +9,7 @@
 use rustc_middle::mir::visit::Visitor;
 use rustc_middle::mir::TerminatorKind::{
     Assert, Call, CoroutineDrop, Drop, FalseEdge, FalseUnwind, Goto, InlineAsm, Return, SwitchInt,
-    Unreachable, UnwindResume, UnwindTerminate, Yield,
+    TailCall, Unreachable, UnwindResume, UnwindTerminate, Yield,
 };
 use rustc_middle::mir::UnwindAction;
 
@@ -168,6 +168,13 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
             }
             InlineAsm { .. } => {
                 unimplemented!("TerminatorKind::InlineAsm not implemented yet")
+            }
+            TailCall {
+                func: _,
+                args: _,
+                fn_span: _,
+            } => {
+                unimplemented!("TerminatorKind::TailCall not implemented yet")
             }
         }
 
