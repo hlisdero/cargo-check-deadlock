@@ -7,15 +7,16 @@ homepage = "https://github.com/hlisdero/cargo-check-deadlock"
 authors = ["Horacio Lisdero Scaffino <hlisdero@users.noreply.github.com>"]
 readme = "README.md"
 license = "MIT OR Apache-2.0"
-keywords = ["petri-net", "deadlock-detection", "rustc-plugin", "model-checker", "lost-signals"]
+keywords = [
+  "petri-net",
+  "deadlock-detection",
+  "rustc-plugin",
+  "model-checker",
+  "lost-signals",
+]
 categories = ["command-line-utilities"]
 edition = "2021"
-exclude = [
-    ".github/**",
-    ".vscode/**",
-    "assets/**",
-    "scripts/**"
-]
+exclude = [".github/**", ".vscode/**", "assets/**", "scripts/**"]
 
 [[bin]]
 name = "cargo-check-deadlock"
