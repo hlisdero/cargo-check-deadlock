@@ -30,7 +30,7 @@ pub fn extract_def_id_of_called_function_from_operand<'tcx>(
         rustc_middle::mir::Operand::Constant(constant) => constant.ty(),
     };
     match function_type.kind() {
-        rustc_middle::ty::TyKind::FnPtr(_) => {
+        rustc_middle::ty::TyKind::FnPtr(_, _) => {
             unimplemented!(
                 "TyKind::FnPtr not implemented yet. Function pointers are present in the MIR"
             );

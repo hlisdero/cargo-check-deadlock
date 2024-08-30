@@ -1,3 +1,9 @@
+// This feature gate is necessary to access the internal crates of the compiler.
+// It has existed for a long time and since the compiler internals will never be stabilized,
+// the situation will probably stay like this.
+// <https://doc.rust-lang.org/unstable-book/language-features/rustc-private.html>
+#![feature(rustc_private)]
+
 mod cargo_result;
 mod check_deadlock;
 mod cli;
