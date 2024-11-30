@@ -28,7 +28,7 @@ pub fn prepare_rustc_config(
         hash_untracked_state: None,
         ice_file: None,
         file_loader: None,
-        locale_resources: &[],
+        locale_resources: Vec::new(),
         lint_caps: rustc_hash::FxHashMap::default(),
         psess_created: None,
         register_lints: None,
