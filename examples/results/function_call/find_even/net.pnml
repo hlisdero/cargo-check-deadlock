@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <pnml xmlns="http://www.pnml.org/version-2009/grammar/pnml">
   <net id="net0" type="http://www.pnml.org/version-2009/grammar/ptnet">
     <page id="page0">
@@ -160,14 +160,14 @@
           <text>alloc_alloc_exchange_malloc_0_CALL</text>
         </name>
       </transition>
-      <transition id="core_fmt_rt_Argument_a_new_display_0_CALL">
+      <transition id="core_fmt_rt_Argument__&apos;___new_display_0_CALL">
         <name>
-          <text>core_fmt_rt_Argument_a_new_display_0_CALL</text>
+          <text>core_fmt_rt_Argument__'___new_display_0_CALL</text>
         </name>
       </transition>
-      <transition id="core_fmt_rt_Argument_a_new_display_0_CALL_UNWIND">
+      <transition id="core_fmt_rt_Argument__&apos;___new_display_0_CALL_UNWIND">
         <name>
-          <text>core_fmt_rt_Argument_a_new_display_0_CALL_UNWIND</text>
+          <text>core_fmt_rt_Argument__'___new_display_0_CALL_UNWIND</text>
         </name>
       </transition>
       <transition id="find_even_0_ASSERT_5">
@@ -608,17 +608,17 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB5" target="core_fmt_rt_Argument_a_new_display_0_CALL" id="(main_BB5, core_fmt_rt_Argument_a_new_display_0_CALL)">
+      <arc source="main_BB5" target="core_fmt_rt_Argument__&apos;___new_display_0_CALL" id="(main_BB5, core_fmt_rt_Argument__&apos;___new_display_0_CALL)">
         <name>
-          <text>(main_BB5, core_fmt_rt_Argument_a_new_display_0_CALL)</text>
+          <text>(main_BB5, core_fmt_rt_Argument__'___new_display_0_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB5" target="core_fmt_rt_Argument_a_new_display_0_CALL_UNWIND" id="(main_BB5, core_fmt_rt_Argument_a_new_display_0_CALL_UNWIND)">
+      <arc source="main_BB5" target="core_fmt_rt_Argument__&apos;___new_display_0_CALL_UNWIND" id="(main_BB5, core_fmt_rt_Argument__&apos;___new_display_0_CALL_UNWIND)">
         <name>
-          <text>(main_BB5, core_fmt_rt_Argument_a_new_display_0_CALL_UNWIND)</text>
+          <text>(main_BB5, core_fmt_rt_Argument__'___new_display_0_CALL_UNWIND)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -696,17 +696,17 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="core_fmt_rt_Argument_a_new_display_0_CALL" target="main_BB6" id="(core_fmt_rt_Argument_a_new_display_0_CALL, main_BB6)">
+      <arc source="core_fmt_rt_Argument__&apos;___new_display_0_CALL" target="main_BB6" id="(core_fmt_rt_Argument__&apos;___new_display_0_CALL, main_BB6)">
         <name>
-          <text>(core_fmt_rt_Argument_a_new_display_0_CALL, main_BB6)</text>
+          <text>(core_fmt_rt_Argument__'___new_display_0_CALL, main_BB6)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="core_fmt_rt_Argument_a_new_display_0_CALL_UNWIND" target="main_BB12" id="(core_fmt_rt_Argument_a_new_display_0_CALL_UNWIND, main_BB12)">
+      <arc source="core_fmt_rt_Argument__&apos;___new_display_0_CALL_UNWIND" target="main_BB12" id="(core_fmt_rt_Argument__&apos;___new_display_0_CALL_UNWIND, main_BB12)">
         <name>
-          <text>(core_fmt_rt_Argument_a_new_display_0_CALL_UNWIND, main_BB12)</text>
+          <text>(core_fmt_rt_Argument__'___new_display_0_CALL_UNWIND, main_BB12)</text>
         </name>
         <inscription>
           <text>1</text>

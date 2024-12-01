@@ -134,12 +134,12 @@ MARKING
     main__closure_1__BB8 : 0,
     main__closure_1__BB9 : 0;
 
-TRANSITION core_fmt_rt_Argument_a_new_display_0_CALL
+TRANSITION core_fmt_rt_Argument__'___new_display_0_CALL
   CONSUME
     main_BB14 : 1;
   PRODUCE
     main_BB15 : 1;
-TRANSITION core_fmt_rt_Argument_a_new_display_0_CALL_UNWIND
+TRANSITION core_fmt_rt_Argument__'___new_display_0_CALL_UNWIND
   CONSUME
     main_BB14 : 1;
   PRODUCE

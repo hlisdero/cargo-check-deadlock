@@ -8,7 +8,7 @@ use crate::data_structures::petri_net_interface::{
 };
 use crate::naming::function::return_transition_label;
 
-impl<'tcx> MirFunction<'tcx> {
+impl MirFunction<'_> {
     /// Connects the active basic block to the target basic block.
     ///
     /// # Panics

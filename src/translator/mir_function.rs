@@ -40,7 +40,7 @@ pub struct MirFunction<'tcx> {
     pub memory: Memory<'tcx>,
 }
 
-impl<'tcx> MirFunction<'tcx> {
+impl MirFunction<'_> {
     /// Creates a new function.
     /// Uses the `rustc_middle::ty::TyCtxt` to get the MIR body and the name of the function.
     pub fn new(
