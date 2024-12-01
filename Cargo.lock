@@ -122,7 +122,7 @@ checksum = "1fd0f2584146f6f2ef48085050886acf353beff7305ebd1ae69500e27c67f64b"
 
 [[package]]
 name = "cargo-check-deadlock"
-version = "1.0.12"
+version = "1.0.13"
 dependencies = [
  "assert_cmd",
  "assert_fs",
@@ -152,9 +152,9 @@ dependencies = [
 
 [[package]]
 name = "clap-verbosity-flag"
-version = "3.0.0"
+version = "3.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "42dcf89bb9d98abb02e9a4a8ef1cce429e547a803460a8245c399860985d5281"
+checksum = "54381ae56ad222eea3f529c692879e9c65e07945ae48d3dc4d1cb18dbec8cf44"
 dependencies = [
  "clap",
  "log",
