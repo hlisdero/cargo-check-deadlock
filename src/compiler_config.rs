@@ -10,6 +10,9 @@
 //! <https://rustc-dev-guide.rust-lang.org/rustc-driver.html>
 
 use rustc_errors::registry;
+use std::sync::atomic::AtomicBool;
+
+pub static USING_INTERNAL_FEATURES: AtomicBool = AtomicBool::new(false);
 
 pub fn prepare_rustc_config(
     sysroot: std::path::PathBuf,
@@ -35,7 +38,7 @@ pub fn prepare_rustc_config(
         override_queries: None,
         make_codegen_backend: None,
         registry: registry::Registry::new(rustc_errors::codes::DIAGNOSTICS),
-        using_internal_features: std::sync::Arc::new(core::sync::atomic::AtomicBool::new(true)),
+        using_internal_features: &USING_INTERNAL_FEATURES,
         expanded_args: Vec::new(),
     }
 }

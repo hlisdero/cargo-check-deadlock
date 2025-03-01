@@ -167,7 +167,7 @@ impl MirFunction<'_> {
     pub fn activate_block(&mut self, block: rustc_middle::mir::BasicBlock, net: &mut PetriNet) {
         if !self.basic_blocks.contains_key(&block) {
             self.add_basic_block(block, net);
-        };
+        }
         self.active_block = Some(block);
     }
 

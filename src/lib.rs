@@ -40,7 +40,7 @@ mod utils;
 pub use data_structures::petri_net_interface::PetriNet;
 
 /// Entry point for the translation of the Rust code to a Petri net.
-/// 
+///
 /// Adapted from the [example in the rustc repo](https://github.com/rust-lang/rustc-dev-guide/blob/master/examples/rustc-interface-example.rs)
 ///
 /// # Errors

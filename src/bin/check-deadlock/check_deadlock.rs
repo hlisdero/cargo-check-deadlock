@@ -59,7 +59,7 @@ impl Args {
                 &self.path.to_string_lossy()
             );
             return CargoResult::SourceFileNotFound(err_str);
-        };
+        }
 
         // Double check that the output folder exists before starting the compiler
         // to generate an error message as soon as possible.
@@ -73,7 +73,7 @@ impl Args {
                 &self.output_folder.to_string_lossy()
             );
             return CargoResult::OutputFolderNotFound(err_str);
-        };
+        }
 
         info!("Starting the translation...");
         let petri_net = match cargo_check_deadlock::run(self.path.clone()) {
