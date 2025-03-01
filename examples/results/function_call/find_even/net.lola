@@ -21,6 +21,7 @@ PLACE
     main_BB15,
     main_BB16,
     main_BB17,
+    main_BB18,
     main_BB2,
     main_BB3,
     main_BB4,
@@ -53,6 +54,7 @@ MARKING
     main_BB15 : 0,
     main_BB16 : 0,
     main_BB17 : 0,
+    main_BB18 : 0,
     main_BB2 : 0,
     main_BB3 : 0,
     main_BB4 : 0,
@@ -147,6 +149,11 @@ TRANSITION main_ASSERT_1
     main_BB1 : 1;
   PRODUCE
     main_BB14 : 1;
+TRANSITION main_ASSERT_14
+  CONSUME
+    main_BB14 : 1;
+  PRODUCE
+    main_BB15 : 1;
 TRANSITION main_DROP_10
   CONSUME
     main_BB10 : 1;
@@ -157,14 +164,14 @@ TRANSITION main_DROP_12
     main_BB12 : 1;
   PRODUCE
     main_BB13 : 1;
-TRANSITION main_GOTO_16
-  CONSUME
-    main_BB16 : 1;
-  PRODUCE
-    main_BB10 : 1;
 TRANSITION main_GOTO_17
   CONSUME
     main_BB17 : 1;
+  PRODUCE
+    main_BB10 : 1;
+TRANSITION main_GOTO_18
+  CONSUME
+    main_BB18 : 1;
   PRODUCE
     main_BB10 : 1;
 TRANSITION main_RETURN
@@ -172,11 +179,11 @@ TRANSITION main_RETURN
     main_BB11 : 1;
   PRODUCE
     PROGRAM_END : 1;
-TRANSITION main_SWITCH_INT_FROM_BB4_TO_BB15
+TRANSITION main_SWITCH_INT_FROM_BB4_TO_BB16
   CONSUME
     main_BB4 : 1;
   PRODUCE
-    main_BB15 : 1;
+    main_BB16 : 1;
 TRANSITION main_SWITCH_INT_FROM_BB4_TO_BB5
   CONSUME
     main_BB4 : 1;
@@ -192,9 +199,14 @@ TRANSITION main_UNREACHABLE_1
     main_BB1 : 1;
   PRODUCE
     PROGRAM_END : 1;
-TRANSITION main_UNREACHABLE_15
+TRANSITION main_UNREACHABLE_14
   CONSUME
-    main_BB15 : 1;
+    main_BB14 : 1;
+  PRODUCE
+    PROGRAM_END : 1;
+TRANSITION main_UNREACHABLE_16
+  CONSUME
+    main_BB16 : 1;
   PRODUCE
     PROGRAM_END : 1;
 TRANSITION main_UNWIND_13
@@ -226,7 +238,7 @@ TRANSITION std_io__print_0_CALL
   CONSUME
     main_BB7 : 1;
   PRODUCE
-    main_BB16 : 1;
+    main_BB17 : 1;
 TRANSITION std_io__print_0_CALL_UNWIND
   CONSUME
     main_BB7 : 1;
@@ -236,7 +248,7 @@ TRANSITION std_io__print_1_CALL
   CONSUME
     main_BB9 : 1;
   PRODUCE
-    main_BB17 : 1;
+    main_BB18 : 1;
 TRANSITION std_io__print_1_CALL_UNWIND
   CONSUME
     main_BB9 : 1;
@@ -264,6 +276,6 @@ TRANSITION std_ops_Deref_deref_0_CALL_UNWIND
     main_BB12 : 1;
 TRANSITION std_slice__impl_T__into_vec_0_CALL
   CONSUME
-    main_BB14 : 1;
+    main_BB15 : 1;
   PRODUCE
     main_BB2 : 1;

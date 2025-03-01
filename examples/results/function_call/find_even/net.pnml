@@ -115,6 +115,11 @@
           <text>main_BB17</text>
         </name>
       </place>
+      <place id="main_BB18">
+        <name>
+          <text>main_BB18</text>
+        </name>
+      </place>
       <place id="main_BB2">
         <name>
           <text>main_BB2</text>
@@ -240,6 +245,11 @@
           <text>main_ASSERT_1</text>
         </name>
       </transition>
+      <transition id="main_ASSERT_14">
+        <name>
+          <text>main_ASSERT_14</text>
+        </name>
+      </transition>
       <transition id="main_DROP_10">
         <name>
           <text>main_DROP_10</text>
@@ -250,14 +260,14 @@
           <text>main_DROP_12</text>
         </name>
       </transition>
-      <transition id="main_GOTO_16">
-        <name>
-          <text>main_GOTO_16</text>
-        </name>
-      </transition>
       <transition id="main_GOTO_17">
         <name>
           <text>main_GOTO_17</text>
+        </name>
+      </transition>
+      <transition id="main_GOTO_18">
+        <name>
+          <text>main_GOTO_18</text>
         </name>
       </transition>
       <transition id="main_RETURN">
@@ -265,9 +275,9 @@
           <text>main_RETURN</text>
         </name>
       </transition>
-      <transition id="main_SWITCH_INT_FROM_BB4_TO_BB15">
+      <transition id="main_SWITCH_INT_FROM_BB4_TO_BB16">
         <name>
-          <text>main_SWITCH_INT_FROM_BB4_TO_BB15</text>
+          <text>main_SWITCH_INT_FROM_BB4_TO_BB16</text>
         </name>
       </transition>
       <transition id="main_SWITCH_INT_FROM_BB4_TO_BB5">
@@ -285,9 +295,14 @@
           <text>main_UNREACHABLE_1</text>
         </name>
       </transition>
-      <transition id="main_UNREACHABLE_15">
+      <transition id="main_UNREACHABLE_14">
         <name>
-          <text>main_UNREACHABLE_15</text>
+          <text>main_UNREACHABLE_14</text>
+        </name>
+      </transition>
+      <transition id="main_UNREACHABLE_16">
+        <name>
+          <text>main_UNREACHABLE_16</text>
         </name>
       </transition>
       <transition id="main_UNWIND_13">
@@ -520,25 +535,33 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB14" target="std_slice__impl_T__into_vec_0_CALL" id="(main_BB14, std_slice__impl_T__into_vec_0_CALL)">
+      <arc source="main_BB14" target="main_ASSERT_14" id="(main_BB14, main_ASSERT_14)">
         <name>
-          <text>(main_BB14, std_slice__impl_T__into_vec_0_CALL)</text>
+          <text>(main_BB14, main_ASSERT_14)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB15" target="main_UNREACHABLE_15" id="(main_BB15, main_UNREACHABLE_15)">
+      <arc source="main_BB14" target="main_UNREACHABLE_14" id="(main_BB14, main_UNREACHABLE_14)">
         <name>
-          <text>(main_BB15, main_UNREACHABLE_15)</text>
+          <text>(main_BB14, main_UNREACHABLE_14)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB16" target="main_GOTO_16" id="(main_BB16, main_GOTO_16)">
+      <arc source="main_BB15" target="std_slice__impl_T__into_vec_0_CALL" id="(main_BB15, std_slice__impl_T__into_vec_0_CALL)">
         <name>
-          <text>(main_BB16, main_GOTO_16)</text>
+          <text>(main_BB15, std_slice__impl_T__into_vec_0_CALL)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main_BB16" target="main_UNREACHABLE_16" id="(main_BB16, main_UNREACHABLE_16)">
+        <name>
+          <text>(main_BB16, main_UNREACHABLE_16)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -547,6 +570,14 @@
       <arc source="main_BB17" target="main_GOTO_17" id="(main_BB17, main_GOTO_17)">
         <name>
           <text>(main_BB17, main_GOTO_17)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main_BB18" target="main_GOTO_18" id="(main_BB18, main_GOTO_18)">
+        <name>
+          <text>(main_BB18, main_GOTO_18)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -584,9 +615,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB4" target="main_SWITCH_INT_FROM_BB4_TO_BB15" id="(main_BB4, main_SWITCH_INT_FROM_BB4_TO_BB15)">
+      <arc source="main_BB4" target="main_SWITCH_INT_FROM_BB4_TO_BB16" id="(main_BB4, main_SWITCH_INT_FROM_BB4_TO_BB16)">
         <name>
-          <text>(main_BB4, main_SWITCH_INT_FROM_BB4_TO_BB15)</text>
+          <text>(main_BB4, main_SWITCH_INT_FROM_BB4_TO_BB16)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -824,6 +855,14 @@
           <text>1</text>
         </inscription>
       </arc>
+      <arc source="main_ASSERT_14" target="main_BB15" id="(main_ASSERT_14, main_BB15)">
+        <name>
+          <text>(main_ASSERT_14, main_BB15)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
       <arc source="main_DROP_10" target="main_BB11" id="(main_DROP_10, main_BB11)">
         <name>
           <text>(main_DROP_10, main_BB11)</text>
@@ -840,17 +879,17 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_GOTO_16" target="main_BB10" id="(main_GOTO_16, main_BB10)">
+      <arc source="main_GOTO_17" target="main_BB10" id="(main_GOTO_17, main_BB10)">
         <name>
-          <text>(main_GOTO_16, main_BB10)</text>
+          <text>(main_GOTO_17, main_BB10)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_GOTO_17" target="main_BB10" id="(main_GOTO_17, main_BB10)">
+      <arc source="main_GOTO_18" target="main_BB10" id="(main_GOTO_18, main_BB10)">
         <name>
-          <text>(main_GOTO_17, main_BB10)</text>
+          <text>(main_GOTO_18, main_BB10)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -864,9 +903,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_SWITCH_INT_FROM_BB4_TO_BB15" target="main_BB15" id="(main_SWITCH_INT_FROM_BB4_TO_BB15, main_BB15)">
+      <arc source="main_SWITCH_INT_FROM_BB4_TO_BB16" target="main_BB16" id="(main_SWITCH_INT_FROM_BB4_TO_BB16, main_BB16)">
         <name>
-          <text>(main_SWITCH_INT_FROM_BB4_TO_BB15, main_BB15)</text>
+          <text>(main_SWITCH_INT_FROM_BB4_TO_BB16, main_BB16)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -896,9 +935,17 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_UNREACHABLE_15" target="PROGRAM_END" id="(main_UNREACHABLE_15, PROGRAM_END)">
+      <arc source="main_UNREACHABLE_14" target="PROGRAM_END" id="(main_UNREACHABLE_14, PROGRAM_END)">
         <name>
-          <text>(main_UNREACHABLE_15, PROGRAM_END)</text>
+          <text>(main_UNREACHABLE_14, PROGRAM_END)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main_UNREACHABLE_16" target="PROGRAM_END" id="(main_UNREACHABLE_16, PROGRAM_END)">
+        <name>
+          <text>(main_UNREACHABLE_16, PROGRAM_END)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -944,9 +991,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_io__print_0_CALL" target="main_BB16" id="(std_io__print_0_CALL, main_BB16)">
+      <arc source="std_io__print_0_CALL" target="main_BB17" id="(std_io__print_0_CALL, main_BB17)">
         <name>
-          <text>(std_io__print_0_CALL, main_BB16)</text>
+          <text>(std_io__print_0_CALL, main_BB17)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -960,9 +1007,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="std_io__print_1_CALL" target="main_BB17" id="(std_io__print_1_CALL, main_BB17)">
+      <arc source="std_io__print_1_CALL" target="main_BB18" id="(std_io__print_1_CALL, main_BB18)">
         <name>
-          <text>(std_io__print_1_CALL, main_BB17)</text>
+          <text>(std_io__print_1_CALL, main_BB18)</text>
         </name>
         <inscription>
           <text>1</text>

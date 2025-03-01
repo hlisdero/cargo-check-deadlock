@@ -9,6 +9,7 @@ PLACE
     main_BB13,
     main_BB14,
     main_BB15,
+    main_BB16,
     main_BB2,
     main_BB3,
     main_BB4,
@@ -29,6 +30,7 @@ MARKING
     main_BB13 : 0,
     main_BB14 : 0,
     main_BB15 : 0,
+    main_BB16 : 0,
     main_BB2 : 0,
     main_BB3 : 0,
     main_BB4 : 0,
@@ -68,6 +70,11 @@ TRANSITION main_ASSERT_1
     main_BB1 : 1;
   PRODUCE
     main_BB14 : 1;
+TRANSITION main_ASSERT_14
+  CONSUME
+    main_BB14 : 1;
+  PRODUCE
+    main_BB15 : 1;
 TRANSITION main_DROP_10
   CONSUME
     main_BB10 : 1;
@@ -78,9 +85,9 @@ TRANSITION main_DROP_12
     main_BB12 : 1;
   PRODUCE
     main_BB13 : 1;
-TRANSITION main_GOTO_15
+TRANSITION main_GOTO_16
   CONSUME
-    main_BB15 : 1;
+    main_BB16 : 1;
   PRODUCE
     main_BB10 : 1;
 TRANSITION main_RETURN
@@ -103,6 +110,11 @@ TRANSITION main_UNREACHABLE_1
     main_BB1 : 1;
   PRODUCE
     PROGRAM_END : 1;
+TRANSITION main_UNREACHABLE_14
+  CONSUME
+    main_BB14 : 1;
+  PRODUCE
+    PROGRAM_END : 1;
 TRANSITION main_UNWIND_13
   CONSUME
     main_BB13 : 1;
@@ -122,7 +134,7 @@ TRANSITION std_io__print_0_CALL
   CONSUME
     main_BB9 : 1;
   PRODUCE
-    main_BB15 : 1;
+    main_BB16 : 1;
 TRANSITION std_io__print_0_CALL_UNWIND
   CONSUME
     main_BB9 : 1;
@@ -160,6 +172,6 @@ TRANSITION std_option_Option_T_unwrap_0_CALL_UNWIND
     main_BB12 : 1;
 TRANSITION std_slice__impl_T__into_vec_0_CALL
   CONSUME
-    main_BB14 : 1;
+    main_BB15 : 1;
   PRODUCE
     main_BB2 : 1;
