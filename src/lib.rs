@@ -40,6 +40,8 @@ mod utils;
 pub use data_structures::petri_net_interface::PetriNet;
 
 /// Entry point for the translation of the Rust code to a Petri net.
+/// 
+/// Adapted from the [example in the rustc repo](https://github.com/rust-lang/rustc-dev-guide/blob/master/examples/rustc-interface-example.rs)
 ///
 /// # Errors
 ///
@@ -48,7 +50,6 @@ pub use data_structures::petri_net_interface::PetriNet;
 ///
 /// # Panics
 ///
-/// If the global typing context `rustc_middle::ty::TyCtxt` cannot be found, then the function panics.
 /// If the translation failed due to a bug, then the function panics.
 pub fn run(source_code_filepath: std::path::PathBuf) -> Result<PetriNet, &'static str> {
     let sysroot = sysroot::get_from_rustc()?;
@@ -56,20 +57,13 @@ pub fn run(source_code_filepath: std::path::PathBuf) -> Result<PetriNet, &'stati
     let mut translation_result: Result<PetriNet, &'static str> = Err("Translation did not run");
 
     rustc_interface::run_compiler(config, |compiler| {
-        compiler.enter(|queries| {
-            // Get the global typing context (tcx: TyCtxt), which is the central data structure in the compiler.
-            // <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/ty/struct.TyCtxt.html>
-            let mut query = queries
-                .global_ctxt()
-                .expect("BUG: Unable to get the global typing context needed for the `Translator`");
-
-            // Run the translator as a query to the compiler.
-            // <https://rustc-dev-guide.rust-lang.org/rustc-driver.html>
-            query.enter(|tcx| {
-                let mut translator = translator::Translator::new(tcx);
-                translator.run();
-                translation_result = Ok(translator.get_result());
-            });
+        // Parse the program and print the syntax tree.
+        let krate = rustc_interface::passes::parse(&compiler.sess);
+        // Analyze the program and inspect the types of definitions.
+        rustc_interface::create_and_enter_global_ctxt(compiler, krate, |tcx| {
+            let mut translator = translator::Translator::new(tcx);
+            translator.run();
+            translation_result = Ok(translator.get_result());
         });
     });
 
