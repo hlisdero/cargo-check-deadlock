@@ -40,5 +40,6 @@ pub fn prepare_rustc_config(
         registry: registry::Registry::new(rustc_errors::codes::DIAGNOSTICS),
         using_internal_features: &USING_INTERNAL_FEATURES,
         expanded_args: Vec::new(),
+        extra_symbols: Vec::new(),
     }
 }
