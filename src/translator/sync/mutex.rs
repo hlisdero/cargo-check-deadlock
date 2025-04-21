@@ -97,10 +97,7 @@ impl Mutex {
         );
 
         for transition_ref in self.deref_mut.borrow().iter() {
-            debug!(
-                "SET CONDITION WITH TRANSITION {}",
-                transition_ref.to_string()
-            );
+            debug!("SET CONDITION WITH TRANSITION {transition_ref}");
             add_arc_place_transition(net, &condition_not_set, transition_ref);
             add_arc_transition_place(net, transition_ref, &condition_set);
         }

@@ -20,7 +20,7 @@ pub fn prepare_rustc_config(
 ) -> rustc_interface::Config {
     rustc_interface::Config {
         opts: rustc_session::config::Options {
-            maybe_sysroot: Some(sysroot),
+            sysroot,
             ..rustc_session::config::Options::default()
         },
         crate_cfg: Vec::new(),

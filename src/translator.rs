@@ -151,7 +151,7 @@ impl<'tcx> Translator<'tcx> {
         while let Some(thread) = self.threads.pop_front() {
             let index = thread.index;
 
-            info!("Starting translating thread {}", index);
+            info!("Starting translating thread {index}");
             let (thread_function_def_id, thread_start_place, thread_end_place) =
                 thread.prepare_for_translation(&mut self.net);
             // Replace the panic place so that unwind transitions and similar point to the thread's end place.
@@ -169,7 +169,7 @@ impl<'tcx> Translator<'tcx> {
             thread.move_sync_variables(&mut new_function.memory, self.tcx);
 
             self.translate_top_call_stack();
-            info!("Finished translating thread {}", index);
+            info!("Finished translating thread {index}");
         }
     }
 
