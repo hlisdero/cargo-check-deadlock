@@ -65,6 +65,7 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
         self.super_assign(place, rvalue, location);
     }
 
+    #[allow(clippy::too_many_lines)]
     fn visit_terminator(
         &mut self,
         terminator: &rustc_middle::mir::Terminator<'tcx>,
@@ -98,6 +99,8 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
                 target,
                 unwind,
                 replace: _,
+                drop: _,
+                async_fut: _
             } => {
                 let (transition, cleanup_transition) = match unwind {
                     UnwindAction::Cleanup(cleanup) => {

@@ -4,13 +4,13 @@ digraph petrinet {
     PROGRAM_START [shape="circle" xlabel="PROGRAM_START" label="•"];
     main_BB1 [shape="circle" xlabel="main_BB1" label=""];
     main_BB2 [shape="circle" xlabel="main_BB2" label=""];
+    core_fmt_rt__impl_std_fmt_Argumentsa__new_const_0_CALL [shape="box" xlabel="" label="core_fmt_rt__impl_std_fmt_Argumentsa__new_const_0_CALL"];
     main_RETURN [shape="box" xlabel="" label="main_RETURN"];
-    std_fmt_Arguments_a_new_const_0_CALL [shape="box" xlabel="" label="std_fmt_Arguments_a_new_const_0_CALL"];
     std_io__print_0_CALL [shape="box" xlabel="" label="std_io__print_0_CALL"];
-    PROGRAM_START -> std_fmt_Arguments_a_new_const_0_CALL;
+    PROGRAM_START -> core_fmt_rt__impl_std_fmt_Argumentsa__new_const_0_CALL;
     main_BB1 -> std_io__print_0_CALL;
     main_BB2 -> main_RETURN;
+    core_fmt_rt__impl_std_fmt_Argumentsa__new_const_0_CALL -> main_BB1;
     main_RETURN -> PROGRAM_END;
-    std_fmt_Arguments_a_new_const_0_CALL -> main_BB1;
     std_io__print_0_CALL -> main_BB2;
 }

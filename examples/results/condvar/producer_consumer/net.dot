@@ -92,6 +92,10 @@ digraph petrinet {
     core_fmt_rt_Argument__'___new_display_0_CALL_UNWIND [shape="box" xlabel="" label="core_fmt_rt_Argument__'___new_display_0_CALL_UNWIND"];
     core_fmt_rt_Argument__'___new_display_1_CALL [shape="box" xlabel="" label="core_fmt_rt_Argument__'___new_display_1_CALL"];
     core_fmt_rt_Argument__'___new_display_1_CALL_UNWIND [shape="box" xlabel="" label="core_fmt_rt_Argument__'___new_display_1_CALL_UNWIND"];
+    core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_0_CALL [shape="box" xlabel="" label="core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_0_CALL"];
+    core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_0_CALL_UNWIND [shape="box" xlabel="" label="core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_0_CALL_UNWIND"];
+    core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_1_CALL [shape="box" xlabel="" label="core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_1_CALL"];
+    core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_1_CALL_UNWIND [shape="box" xlabel="" label="core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_1_CALL_UNWIND"];
     main_DROP_10 [shape="box" xlabel="" label="main_DROP_10"];
     main_DROP_12 [shape="box" xlabel="" label="main_DROP_12"];
     main_DROP_13 [shape="box" xlabel="" label="main_DROP_13"];
@@ -143,10 +147,6 @@ digraph petrinet {
     std_clone_Clone_clone_0_CALL_UNWIND [shape="box" xlabel="" label="std_clone_Clone_clone_0_CALL_UNWIND"];
     std_clone_Clone_clone_1_CALL [shape="box" xlabel="" label="std_clone_Clone_clone_1_CALL"];
     std_clone_Clone_clone_1_CALL_UNWIND [shape="box" xlabel="" label="std_clone_Clone_clone_1_CALL_UNWIND"];
-    std_fmt_Arguments_a_new_v1_0_CALL [shape="box" xlabel="" label="std_fmt_Arguments_a_new_v1_0_CALL"];
-    std_fmt_Arguments_a_new_v1_0_CALL_UNWIND [shape="box" xlabel="" label="std_fmt_Arguments_a_new_v1_0_CALL_UNWIND"];
-    std_fmt_Arguments_a_new_v1_1_CALL [shape="box" xlabel="" label="std_fmt_Arguments_a_new_v1_1_CALL"];
-    std_fmt_Arguments_a_new_v1_1_CALL_UNWIND [shape="box" xlabel="" label="std_fmt_Arguments_a_new_v1_1_CALL_UNWIND"];
     std_io__print_0_CALL [shape="box" xlabel="" label="std_io__print_0_CALL"];
     std_io__print_0_CALL_UNWIND [shape="box" xlabel="" label="std_io__print_0_CALL_UNWIND"];
     std_io__print_1_CALL [shape="box" xlabel="" label="std_io__print_1_CALL"];
@@ -239,8 +239,8 @@ digraph petrinet {
     main__closure_0__BB15 -> std_ops_DerefMut_deref_mut_0_CALL;
     main__closure_0__BB16 -> core_fmt_rt_Argument__'___new_display_0_CALL;
     main__closure_0__BB16 -> core_fmt_rt_Argument__'___new_display_0_CALL_UNWIND;
-    main__closure_0__BB17 -> std_fmt_Arguments_a_new_v1_0_CALL;
-    main__closure_0__BB17 -> std_fmt_Arguments_a_new_v1_0_CALL_UNWIND;
+    main__closure_0__BB17 -> core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_0_CALL;
+    main__closure_0__BB17 -> core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_0_CALL_UNWIND;
     main__closure_0__BB18 -> std_io__print_0_CALL;
     main__closure_0__BB18 -> std_io__print_0_CALL_UNWIND;
     main__closure_0__BB19 -> std_sync_Condvar_notify_one_0_CALL;
@@ -269,8 +269,8 @@ digraph petrinet {
     main__closure_1__BB11 -> std_ops_DerefMut_deref_mut_1_CALL;
     main__closure_1__BB12 -> core_fmt_rt_Argument__'___new_display_1_CALL;
     main__closure_1__BB12 -> core_fmt_rt_Argument__'___new_display_1_CALL_UNWIND;
-    main__closure_1__BB13 -> std_fmt_Arguments_a_new_v1_1_CALL;
-    main__closure_1__BB13 -> std_fmt_Arguments_a_new_v1_1_CALL_UNWIND;
+    main__closure_1__BB13 -> core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_1_CALL;
+    main__closure_1__BB13 -> core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_1_CALL_UNWIND;
     main__closure_1__BB14 -> std_io__print_1_CALL;
     main__closure_1__BB14 -> std_io__print_1_CALL_UNWIND;
     main__closure_1__BB15 -> std_sync_Condvar_notify_one_1_CALL;
@@ -310,6 +310,10 @@ digraph petrinet {
     core_fmt_rt_Argument__'___new_display_0_CALL_UNWIND -> main__closure_0__BB26;
     core_fmt_rt_Argument__'___new_display_1_CALL -> main__closure_1__BB13;
     core_fmt_rt_Argument__'___new_display_1_CALL_UNWIND -> main__closure_1__BB21;
+    core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_0_CALL -> main__closure_0__BB18;
+    core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_0_CALL_UNWIND -> main__closure_0__BB26;
+    core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_1_CALL -> main__closure_1__BB14;
+    core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_1_CALL_UNWIND -> main__closure_1__BB21;
     main_DROP_10 -> main_BB11;
     main_DROP_12 -> main_BB16;
     main_DROP_13 -> main_BB14;
@@ -367,10 +371,6 @@ digraph petrinet {
     std_clone_Clone_clone_0_CALL_UNWIND -> main_BB13;
     std_clone_Clone_clone_1_CALL -> main_BB6;
     std_clone_Clone_clone_1_CALL_UNWIND -> main_BB18;
-    std_fmt_Arguments_a_new_v1_0_CALL -> main__closure_0__BB18;
-    std_fmt_Arguments_a_new_v1_0_CALL_UNWIND -> main__closure_0__BB26;
-    std_fmt_Arguments_a_new_v1_1_CALL -> main__closure_1__BB14;
-    std_fmt_Arguments_a_new_v1_1_CALL_UNWIND -> main__closure_1__BB21;
     std_io__print_0_CALL -> main__closure_0__BB19;
     std_io__print_0_CALL_UNWIND -> main__closure_0__BB26;
     std_io__print_1_CALL -> main__closure_1__BB15;

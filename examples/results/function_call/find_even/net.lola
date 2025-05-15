@@ -79,6 +79,26 @@ TRANSITION core_fmt_rt_Argument__'___new_display_0_CALL_UNWIND
     main_BB5 : 1;
   PRODUCE
     main_BB12 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_const_0_CALL
+  CONSUME
+    main_BB8 : 1;
+  PRODUCE
+    main_BB9 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_const_0_CALL_UNWIND
+  CONSUME
+    main_BB8 : 1;
+  PRODUCE
+    main_BB12 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_0_CALL
+  CONSUME
+    main_BB6 : 1;
+  PRODUCE
+    main_BB7 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_0_CALL_UNWIND
+  CONSUME
+    main_BB6 : 1;
+  PRODUCE
+    main_BB12 : 1;
 TRANSITION find_even_0_ASSERT_5
   CONSUME
     find_even_0_BB5 : 1;
@@ -214,26 +234,6 @@ TRANSITION main_UNWIND_13
     main_BB13 : 1;
   PRODUCE
     PROGRAM_PANIC : 1;
-TRANSITION std_fmt_Arguments_a_new_const_0_CALL
-  CONSUME
-    main_BB8 : 1;
-  PRODUCE
-    main_BB9 : 1;
-TRANSITION std_fmt_Arguments_a_new_const_0_CALL_UNWIND
-  CONSUME
-    main_BB8 : 1;
-  PRODUCE
-    main_BB12 : 1;
-TRANSITION std_fmt_Arguments_a_new_v1_0_CALL
-  CONSUME
-    main_BB6 : 1;
-  PRODUCE
-    main_BB7 : 1;
-TRANSITION std_fmt_Arguments_a_new_v1_0_CALL_UNWIND
-  CONSUME
-    main_BB6 : 1;
-  PRODUCE
-    main_BB12 : 1;
 TRANSITION std_io__print_0_CALL
   CONSUME
     main_BB7 : 1;

@@ -560,6 +560,256 @@ TRANSITION core_fmt_rt_Argument__'___new_display_9_CALL_UNWIND
     main__closure_4__BB13 : 1;
   PRODUCE
     main__closure_4__BB26 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_const_0_CALL
+  CONSUME
+    THREAD_0_START : 1;
+  PRODUCE
+    main__closure_0__BB1 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_const_0_CALL_UNWIND
+  CONSUME
+    THREAD_0_START : 1;
+  PRODUCE
+    main__closure_0__BB28 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_const_10_CALL
+  CONSUME
+    main__closure_3__BB16 : 1;
+  PRODUCE
+    main__closure_3__BB17 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_const_10_CALL_UNWIND
+  CONSUME
+    main__closure_3__BB16 : 1;
+  PRODUCE
+    main__closure_3__BB26 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_const_11_CALL
+  CONSUME
+    main__closure_3__BB20 : 1;
+  PRODUCE
+    main__closure_3__BB21 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_const_11_CALL_UNWIND
+  CONSUME
+    main__closure_3__BB20 : 1;
+  PRODUCE
+    main__closure_3__BB26 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_const_12_CALL
+  CONSUME
+    THREAD_4_START : 1;
+  PRODUCE
+    main__closure_4__BB1 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_const_12_CALL_UNWIND
+  CONSUME
+    THREAD_4_START : 1;
+  PRODUCE
+    main__closure_4__BB28 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_const_13_CALL
+  CONSUME
+    main__closure_4__BB16 : 1;
+  PRODUCE
+    main__closure_4__BB17 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_const_13_CALL_UNWIND
+  CONSUME
+    main__closure_4__BB16 : 1;
+  PRODUCE
+    main__closure_4__BB26 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_const_14_CALL
+  CONSUME
+    main__closure_4__BB20 : 1;
+  PRODUCE
+    main__closure_4__BB21 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_const_14_CALL_UNWIND
+  CONSUME
+    main__closure_4__BB20 : 1;
+  PRODUCE
+    main__closure_4__BB26 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_const_1_CALL
+  CONSUME
+    main__closure_0__BB16 : 1;
+  PRODUCE
+    main__closure_0__BB17 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_const_1_CALL_UNWIND
+  CONSUME
+    main__closure_0__BB16 : 1;
+  PRODUCE
+    main__closure_0__BB26 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_const_2_CALL
+  CONSUME
+    main__closure_0__BB20 : 1;
+  PRODUCE
+    main__closure_0__BB21 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_const_2_CALL_UNWIND
+  CONSUME
+    main__closure_0__BB20 : 1;
+  PRODUCE
+    main__closure_0__BB26 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_const_3_CALL
+  CONSUME
+    THREAD_1_START : 1;
+  PRODUCE
+    main__closure_1__BB1 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_const_3_CALL_UNWIND
+  CONSUME
+    THREAD_1_START : 1;
+  PRODUCE
+    main__closure_1__BB28 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_const_4_CALL
+  CONSUME
+    main__closure_1__BB16 : 1;
+  PRODUCE
+    main__closure_1__BB17 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_const_4_CALL_UNWIND
+  CONSUME
+    main__closure_1__BB16 : 1;
+  PRODUCE
+    main__closure_1__BB26 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_const_5_CALL
+  CONSUME
+    main__closure_1__BB20 : 1;
+  PRODUCE
+    main__closure_1__BB21 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_const_5_CALL_UNWIND
+  CONSUME
+    main__closure_1__BB20 : 1;
+  PRODUCE
+    main__closure_1__BB26 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_const_6_CALL
+  CONSUME
+    THREAD_2_START : 1;
+  PRODUCE
+    main__closure_2__BB1 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_const_6_CALL_UNWIND
+  CONSUME
+    THREAD_2_START : 1;
+  PRODUCE
+    main__closure_2__BB28 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_const_7_CALL
+  CONSUME
+    main__closure_2__BB16 : 1;
+  PRODUCE
+    main__closure_2__BB17 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_const_7_CALL_UNWIND
+  CONSUME
+    main__closure_2__BB16 : 1;
+  PRODUCE
+    main__closure_2__BB26 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_const_8_CALL
+  CONSUME
+    main__closure_2__BB20 : 1;
+  PRODUCE
+    main__closure_2__BB21 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_const_8_CALL_UNWIND
+  CONSUME
+    main__closure_2__BB20 : 1;
+  PRODUCE
+    main__closure_2__BB26 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_const_9_CALL
+  CONSUME
+    THREAD_3_START : 1;
+  PRODUCE
+    main__closure_3__BB1 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_const_9_CALL_UNWIND
+  CONSUME
+    THREAD_3_START : 1;
+  PRODUCE
+    main__closure_3__BB28 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_0_CALL
+  CONSUME
+    main__closure_0__BB8 : 1;
+  PRODUCE
+    main__closure_0__BB9 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_0_CALL_UNWIND
+  CONSUME
+    main__closure_0__BB8 : 1;
+  PRODUCE
+    main__closure_0__BB27 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_1_CALL
+  CONSUME
+    main__closure_0__BB14 : 1;
+  PRODUCE
+    main__closure_0__BB15 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_1_CALL_UNWIND
+  CONSUME
+    main__closure_0__BB14 : 1;
+  PRODUCE
+    main__closure_0__BB26 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_2_CALL
+  CONSUME
+    main__closure_1__BB8 : 1;
+  PRODUCE
+    main__closure_1__BB9 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_2_CALL_UNWIND
+  CONSUME
+    main__closure_1__BB8 : 1;
+  PRODUCE
+    main__closure_1__BB27 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_3_CALL
+  CONSUME
+    main__closure_1__BB14 : 1;
+  PRODUCE
+    main__closure_1__BB15 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_3_CALL_UNWIND
+  CONSUME
+    main__closure_1__BB14 : 1;
+  PRODUCE
+    main__closure_1__BB26 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_4_CALL
+  CONSUME
+    main__closure_2__BB8 : 1;
+  PRODUCE
+    main__closure_2__BB9 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_4_CALL_UNWIND
+  CONSUME
+    main__closure_2__BB8 : 1;
+  PRODUCE
+    main__closure_2__BB27 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_5_CALL
+  CONSUME
+    main__closure_2__BB14 : 1;
+  PRODUCE
+    main__closure_2__BB15 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_5_CALL_UNWIND
+  CONSUME
+    main__closure_2__BB14 : 1;
+  PRODUCE
+    main__closure_2__BB26 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_6_CALL
+  CONSUME
+    main__closure_3__BB8 : 1;
+  PRODUCE
+    main__closure_3__BB9 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_6_CALL_UNWIND
+  CONSUME
+    main__closure_3__BB8 : 1;
+  PRODUCE
+    main__closure_3__BB27 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_7_CALL
+  CONSUME
+    main__closure_3__BB14 : 1;
+  PRODUCE
+    main__closure_3__BB15 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_7_CALL_UNWIND
+  CONSUME
+    main__closure_3__BB14 : 1;
+  PRODUCE
+    main__closure_3__BB26 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_8_CALL
+  CONSUME
+    main__closure_4__BB8 : 1;
+  PRODUCE
+    main__closure_4__BB9 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_8_CALL_UNWIND
+  CONSUME
+    main__closure_4__BB8 : 1;
+  PRODUCE
+    main__closure_4__BB27 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_9_CALL
+  CONSUME
+    main__closure_4__BB14 : 1;
+  PRODUCE
+    main__closure_4__BB15 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_9_CALL_UNWIND
+  CONSUME
+    main__closure_4__BB14 : 1;
+  PRODUCE
+    main__closure_4__BB26 : 1;
 TRANSITION main_DROP_35
   CONSUME
     main_BB35 : 1;
@@ -1170,256 +1420,6 @@ TRANSITION std_clone_Clone_clone_9_CALL_UNWIND
     main_BB23 : 1;
   PRODUCE
     main_BB54 : 1;
-TRANSITION std_fmt_Arguments_a_new_const_0_CALL
-  CONSUME
-    THREAD_0_START : 1;
-  PRODUCE
-    main__closure_0__BB1 : 1;
-TRANSITION std_fmt_Arguments_a_new_const_0_CALL_UNWIND
-  CONSUME
-    THREAD_0_START : 1;
-  PRODUCE
-    main__closure_0__BB28 : 1;
-TRANSITION std_fmt_Arguments_a_new_const_10_CALL
-  CONSUME
-    main__closure_3__BB16 : 1;
-  PRODUCE
-    main__closure_3__BB17 : 1;
-TRANSITION std_fmt_Arguments_a_new_const_10_CALL_UNWIND
-  CONSUME
-    main__closure_3__BB16 : 1;
-  PRODUCE
-    main__closure_3__BB26 : 1;
-TRANSITION std_fmt_Arguments_a_new_const_11_CALL
-  CONSUME
-    main__closure_3__BB20 : 1;
-  PRODUCE
-    main__closure_3__BB21 : 1;
-TRANSITION std_fmt_Arguments_a_new_const_11_CALL_UNWIND
-  CONSUME
-    main__closure_3__BB20 : 1;
-  PRODUCE
-    main__closure_3__BB26 : 1;
-TRANSITION std_fmt_Arguments_a_new_const_12_CALL
-  CONSUME
-    THREAD_4_START : 1;
-  PRODUCE
-    main__closure_4__BB1 : 1;
-TRANSITION std_fmt_Arguments_a_new_const_12_CALL_UNWIND
-  CONSUME
-    THREAD_4_START : 1;
-  PRODUCE
-    main__closure_4__BB28 : 1;
-TRANSITION std_fmt_Arguments_a_new_const_13_CALL
-  CONSUME
-    main__closure_4__BB16 : 1;
-  PRODUCE
-    main__closure_4__BB17 : 1;
-TRANSITION std_fmt_Arguments_a_new_const_13_CALL_UNWIND
-  CONSUME
-    main__closure_4__BB16 : 1;
-  PRODUCE
-    main__closure_4__BB26 : 1;
-TRANSITION std_fmt_Arguments_a_new_const_14_CALL
-  CONSUME
-    main__closure_4__BB20 : 1;
-  PRODUCE
-    main__closure_4__BB21 : 1;
-TRANSITION std_fmt_Arguments_a_new_const_14_CALL_UNWIND
-  CONSUME
-    main__closure_4__BB20 : 1;
-  PRODUCE
-    main__closure_4__BB26 : 1;
-TRANSITION std_fmt_Arguments_a_new_const_1_CALL
-  CONSUME
-    main__closure_0__BB16 : 1;
-  PRODUCE
-    main__closure_0__BB17 : 1;
-TRANSITION std_fmt_Arguments_a_new_const_1_CALL_UNWIND
-  CONSUME
-    main__closure_0__BB16 : 1;
-  PRODUCE
-    main__closure_0__BB26 : 1;
-TRANSITION std_fmt_Arguments_a_new_const_2_CALL
-  CONSUME
-    main__closure_0__BB20 : 1;
-  PRODUCE
-    main__closure_0__BB21 : 1;
-TRANSITION std_fmt_Arguments_a_new_const_2_CALL_UNWIND
-  CONSUME
-    main__closure_0__BB20 : 1;
-  PRODUCE
-    main__closure_0__BB26 : 1;
-TRANSITION std_fmt_Arguments_a_new_const_3_CALL
-  CONSUME
-    THREAD_1_START : 1;
-  PRODUCE
-    main__closure_1__BB1 : 1;
-TRANSITION std_fmt_Arguments_a_new_const_3_CALL_UNWIND
-  CONSUME
-    THREAD_1_START : 1;
-  PRODUCE
-    main__closure_1__BB28 : 1;
-TRANSITION std_fmt_Arguments_a_new_const_4_CALL
-  CONSUME
-    main__closure_1__BB16 : 1;
-  PRODUCE
-    main__closure_1__BB17 : 1;
-TRANSITION std_fmt_Arguments_a_new_const_4_CALL_UNWIND
-  CONSUME
-    main__closure_1__BB16 : 1;
-  PRODUCE
-    main__closure_1__BB26 : 1;
-TRANSITION std_fmt_Arguments_a_new_const_5_CALL
-  CONSUME
-    main__closure_1__BB20 : 1;
-  PRODUCE
-    main__closure_1__BB21 : 1;
-TRANSITION std_fmt_Arguments_a_new_const_5_CALL_UNWIND
-  CONSUME
-    main__closure_1__BB20 : 1;
-  PRODUCE
-    main__closure_1__BB26 : 1;
-TRANSITION std_fmt_Arguments_a_new_const_6_CALL
-  CONSUME
-    THREAD_2_START : 1;
-  PRODUCE
-    main__closure_2__BB1 : 1;
-TRANSITION std_fmt_Arguments_a_new_const_6_CALL_UNWIND
-  CONSUME
-    THREAD_2_START : 1;
-  PRODUCE
-    main__closure_2__BB28 : 1;
-TRANSITION std_fmt_Arguments_a_new_const_7_CALL
-  CONSUME
-    main__closure_2__BB16 : 1;
-  PRODUCE
-    main__closure_2__BB17 : 1;
-TRANSITION std_fmt_Arguments_a_new_const_7_CALL_UNWIND
-  CONSUME
-    main__closure_2__BB16 : 1;
-  PRODUCE
-    main__closure_2__BB26 : 1;
-TRANSITION std_fmt_Arguments_a_new_const_8_CALL
-  CONSUME
-    main__closure_2__BB20 : 1;
-  PRODUCE
-    main__closure_2__BB21 : 1;
-TRANSITION std_fmt_Arguments_a_new_const_8_CALL_UNWIND
-  CONSUME
-    main__closure_2__BB20 : 1;
-  PRODUCE
-    main__closure_2__BB26 : 1;
-TRANSITION std_fmt_Arguments_a_new_const_9_CALL
-  CONSUME
-    THREAD_3_START : 1;
-  PRODUCE
-    main__closure_3__BB1 : 1;
-TRANSITION std_fmt_Arguments_a_new_const_9_CALL_UNWIND
-  CONSUME
-    THREAD_3_START : 1;
-  PRODUCE
-    main__closure_3__BB28 : 1;
-TRANSITION std_fmt_Arguments_a_new_v1_0_CALL
-  CONSUME
-    main__closure_0__BB8 : 1;
-  PRODUCE
-    main__closure_0__BB9 : 1;
-TRANSITION std_fmt_Arguments_a_new_v1_0_CALL_UNWIND
-  CONSUME
-    main__closure_0__BB8 : 1;
-  PRODUCE
-    main__closure_0__BB27 : 1;
-TRANSITION std_fmt_Arguments_a_new_v1_1_CALL
-  CONSUME
-    main__closure_0__BB14 : 1;
-  PRODUCE
-    main__closure_0__BB15 : 1;
-TRANSITION std_fmt_Arguments_a_new_v1_1_CALL_UNWIND
-  CONSUME
-    main__closure_0__BB14 : 1;
-  PRODUCE
-    main__closure_0__BB26 : 1;
-TRANSITION std_fmt_Arguments_a_new_v1_2_CALL
-  CONSUME
-    main__closure_1__BB8 : 1;
-  PRODUCE
-    main__closure_1__BB9 : 1;
-TRANSITION std_fmt_Arguments_a_new_v1_2_CALL_UNWIND
-  CONSUME
-    main__closure_1__BB8 : 1;
-  PRODUCE
-    main__closure_1__BB27 : 1;
-TRANSITION std_fmt_Arguments_a_new_v1_3_CALL
-  CONSUME
-    main__closure_1__BB14 : 1;
-  PRODUCE
-    main__closure_1__BB15 : 1;
-TRANSITION std_fmt_Arguments_a_new_v1_3_CALL_UNWIND
-  CONSUME
-    main__closure_1__BB14 : 1;
-  PRODUCE
-    main__closure_1__BB26 : 1;
-TRANSITION std_fmt_Arguments_a_new_v1_4_CALL
-  CONSUME
-    main__closure_2__BB8 : 1;
-  PRODUCE
-    main__closure_2__BB9 : 1;
-TRANSITION std_fmt_Arguments_a_new_v1_4_CALL_UNWIND
-  CONSUME
-    main__closure_2__BB8 : 1;
-  PRODUCE
-    main__closure_2__BB27 : 1;
-TRANSITION std_fmt_Arguments_a_new_v1_5_CALL
-  CONSUME
-    main__closure_2__BB14 : 1;
-  PRODUCE
-    main__closure_2__BB15 : 1;
-TRANSITION std_fmt_Arguments_a_new_v1_5_CALL_UNWIND
-  CONSUME
-    main__closure_2__BB14 : 1;
-  PRODUCE
-    main__closure_2__BB26 : 1;
-TRANSITION std_fmt_Arguments_a_new_v1_6_CALL
-  CONSUME
-    main__closure_3__BB8 : 1;
-  PRODUCE
-    main__closure_3__BB9 : 1;
-TRANSITION std_fmt_Arguments_a_new_v1_6_CALL_UNWIND
-  CONSUME
-    main__closure_3__BB8 : 1;
-  PRODUCE
-    main__closure_3__BB27 : 1;
-TRANSITION std_fmt_Arguments_a_new_v1_7_CALL
-  CONSUME
-    main__closure_3__BB14 : 1;
-  PRODUCE
-    main__closure_3__BB15 : 1;
-TRANSITION std_fmt_Arguments_a_new_v1_7_CALL_UNWIND
-  CONSUME
-    main__closure_3__BB14 : 1;
-  PRODUCE
-    main__closure_3__BB26 : 1;
-TRANSITION std_fmt_Arguments_a_new_v1_8_CALL
-  CONSUME
-    main__closure_4__BB8 : 1;
-  PRODUCE
-    main__closure_4__BB9 : 1;
-TRANSITION std_fmt_Arguments_a_new_v1_8_CALL_UNWIND
-  CONSUME
-    main__closure_4__BB8 : 1;
-  PRODUCE
-    main__closure_4__BB27 : 1;
-TRANSITION std_fmt_Arguments_a_new_v1_9_CALL
-  CONSUME
-    main__closure_4__BB14 : 1;
-  PRODUCE
-    main__closure_4__BB15 : 1;
-TRANSITION std_fmt_Arguments_a_new_v1_9_CALL_UNWIND
-  CONSUME
-    main__closure_4__BB14 : 1;
-  PRODUCE
-    main__closure_4__BB26 : 1;
 TRANSITION std_io__print_0_CALL
   CONSUME
     main__closure_0__BB1 : 1;

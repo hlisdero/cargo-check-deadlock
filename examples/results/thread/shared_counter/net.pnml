@@ -348,6 +348,16 @@
           <text>core_fmt_rt_Argument__'___new_display_0_CALL_UNWIND</text>
         </name>
       </transition>
+      <transition id="core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_0_CALL">
+        <name>
+          <text>core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_0_CALL</text>
+        </name>
+      </transition>
+      <transition id="core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_0_CALL_UNWIND">
+        <name>
+          <text>core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_0_CALL_UNWIND</text>
+        </name>
+      </transition>
       <transition id="main_DROP_17">
         <name>
           <text>main_DROP_17</text>
@@ -601,16 +611,6 @@
       <transition id="std_clone_Clone_clone_1_CALL_UNWIND">
         <name>
           <text>std_clone_Clone_clone_1_CALL_UNWIND</text>
-        </name>
-      </transition>
-      <transition id="std_fmt_Arguments_a_new_v1_0_CALL">
-        <name>
-          <text>std_fmt_Arguments_a_new_v1_0_CALL</text>
-        </name>
-      </transition>
-      <transition id="std_fmt_Arguments_a_new_v1_0_CALL_UNWIND">
-        <name>
-          <text>std_fmt_Arguments_a_new_v1_0_CALL_UNWIND</text>
         </name>
       </transition>
       <transition id="std_io__print_0_CALL">
@@ -873,17 +873,17 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB15" target="std_fmt_Arguments_a_new_v1_0_CALL" id="(main_BB15, std_fmt_Arguments_a_new_v1_0_CALL)">
+      <arc source="main_BB15" target="core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_0_CALL" id="(main_BB15, core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_0_CALL)">
         <name>
-          <text>(main_BB15, std_fmt_Arguments_a_new_v1_0_CALL)</text>
+          <text>(main_BB15, core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_0_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB15" target="std_fmt_Arguments_a_new_v1_0_CALL_UNWIND" id="(main_BB15, std_fmt_Arguments_a_new_v1_0_CALL_UNWIND)">
+      <arc source="main_BB15" target="core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_0_CALL_UNWIND" id="(main_BB15, core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_0_CALL_UNWIND)">
         <name>
-          <text>(main_BB15, std_fmt_Arguments_a_new_v1_0_CALL_UNWIND)</text>
+          <text>(main_BB15, core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_0_CALL_UNWIND)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -1473,6 +1473,22 @@
           <text>1</text>
         </inscription>
       </arc>
+      <arc source="core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_0_CALL" target="main_BB16" id="(core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_0_CALL, main_BB16)">
+        <name>
+          <text>(core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_0_CALL, main_BB16)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_0_CALL_UNWIND" target="main_BB20" id="(core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_0_CALL_UNWIND, main_BB20)">
+        <name>
+          <text>(core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_0_CALL_UNWIND, main_BB20)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
       <arc source="main_DROP_17" target="MUTEX_0" id="(main_DROP_17, MUTEX_0)">
         <name>
           <text>(main_DROP_17, MUTEX_0)</text>
@@ -1980,22 +1996,6 @@
       <arc source="std_clone_Clone_clone_1_CALL_UNWIND" target="main_BB30" id="(std_clone_Clone_clone_1_CALL_UNWIND, main_BB30)">
         <name>
           <text>(std_clone_Clone_clone_1_CALL_UNWIND, main_BB30)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="std_fmt_Arguments_a_new_v1_0_CALL" target="main_BB16" id="(std_fmt_Arguments_a_new_v1_0_CALL, main_BB16)">
-        <name>
-          <text>(std_fmt_Arguments_a_new_v1_0_CALL, main_BB16)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="std_fmt_Arguments_a_new_v1_0_CALL_UNWIND" target="main_BB20" id="(std_fmt_Arguments_a_new_v1_0_CALL_UNWIND, main_BB20)">
-        <name>
-          <text>(std_fmt_Arguments_a_new_v1_0_CALL_UNWIND, main_BB20)</text>
         </name>
         <inscription>
           <text>1</text>
