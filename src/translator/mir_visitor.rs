@@ -100,7 +100,7 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
                 unwind,
                 replace: _,
                 drop: _,
-                async_fut: _
+                async_fut: _,
             } => {
                 let (transition, cleanup_transition) = match unwind {
                     UnwindAction::Cleanup(cleanup) => {
