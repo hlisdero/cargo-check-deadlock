@@ -18,6 +18,7 @@ pub fn prepare_rustc_config(
     sysroot: std::path::PathBuf,
     source_code_filepath: std::path::PathBuf,
 ) -> rustc_interface::Config {
+    let sysroot = rustc_session::config::Sysroot::new(Some(sysroot));
     rustc_interface::Config {
         opts: rustc_session::config::Options {
             sysroot,
