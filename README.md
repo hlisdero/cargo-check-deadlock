@@ -153,7 +153,7 @@ Alternatively, you may use [Edotor](https://edotor.net/) or [Sketchviz](https://
 
 ## Model checker
 
-The model checker LoLA can be downloaded [here](https://theo.informatik.uni-rostock.de/theo-forschung/tools/lola/). It must be compiled from the source code.
+The model checker LoLA can be downloaded [from the official website](https://theo.informatik.uni-rostock.de/theo-forschung/tools/lola/). It must be compiled from the source code.
 
 An alternative mirror with detailed instructions is available on GitHub: <https://github.com/hlisdero/lola>
 
