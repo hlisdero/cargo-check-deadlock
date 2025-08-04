@@ -26,7 +26,8 @@ use std::collections::HashMap;
 use std::rc::Rc;
 
 use crate::translator::sync::{Condvar, Mutex, MutexGuard, Thread};
-pub use value::{CondvarRef, MutexRef, MutexGuardRef, ThreadRef, Value};
+use value::Single;
+pub use value::{CondvarRef, MutexGuardRef, MutexRef, ThreadRef, Value};
 
 type Place<'tcx> = rustc_middle::mir::Place<'tcx>;
 
@@ -67,18 +68,15 @@ impl<'tcx> Memory<'tcx> {
         let mutex_ref = Rc::new(mutex);
         if let Some(old_value) = self.map.get(&place) {
             let type_string = old_value.to_string();
+            let old_mutex_ref = old_value.unpack_mutex();
 
-            if let Value::Mutex(old_mutex_ref) = old_value {
-                if mutex_ref == *old_mutex_ref {
-                    debug_same_type_same_value!(place, type_string);
-                } else {
-                    debug_same_type_different_value!(place, type_string);
-                }
+            if mutex_ref == *old_mutex_ref {
+                debug_same_type_same_value!(place, type_string);
             } else {
-                debug_different_type!(place, type_string);
+                debug_same_type_different_value!(place, type_string);
             }
         }
-        let value = Value::Mutex(mutex_ref);
+        let value = Value::Single(Single::Mutex(mutex_ref));
         self.map.insert(place, value);
         self.map[&place].unpack_mutex()
     }
@@ -94,18 +92,15 @@ impl<'tcx> Memory<'tcx> {
         let mutex_guard_ref = Rc::new(mutex_guard);
         if let Some(old_value) = self.map.get(&place) {
             let type_string = old_value.to_string();
+            let old_mutex_guard_ref = old_value.unpack_mutex_guard();
 
-            if let Value::MutexGuard(old_mutex_guard_ref) = old_value {
-                if mutex_guard_ref == *old_mutex_guard_ref {
-                    debug_same_type_same_value!(place, type_string);
-                } else {
-                    debug_same_type_different_value!(place, type_string);
-                }
+            if mutex_guard_ref == *old_mutex_guard_ref {
+                debug_same_type_same_value!(place, type_string);
             } else {
-                debug_different_type!(place, type_string);
+                debug_same_type_different_value!(place, type_string);
             }
         }
-        let value = Value::MutexGuard(mutex_guard_ref);
+        let value = Value::Single(Single::MutexGuard(mutex_guard_ref));
         self.map.insert(place, value);
         self.map[&place].unpack_mutex_guard()
     }
@@ -117,18 +112,15 @@ impl<'tcx> Memory<'tcx> {
         let thread_ref = Rc::new(thread);
         if let Some(old_value) = self.map.get(&place) {
             let type_string = old_value.to_string();
+            let old_thread_ref = old_value.unpack_join_handle();
 
-            if let Value::JoinHandle(old_thread_ref) = old_value {
-                if thread_ref == *old_thread_ref {
-                    debug_same_type_same_value!(place, type_string);
-                } else {
-                    debug_same_type_different_value!(place, type_string);
-                }
+            if thread_ref == *old_thread_ref {
+                debug_same_type_same_value!(place, type_string);
             } else {
-                debug_different_type!(place, type_string);
+                debug_same_type_different_value!(place, type_string);
             }
         }
-        let value = Value::JoinHandle(thread_ref);
+        let value = Value::Single(Single::JoinHandle(thread_ref));
         self.map.insert(place, value);
         self.map[&place].unpack_join_handle()
     }
@@ -140,18 +132,15 @@ impl<'tcx> Memory<'tcx> {
         let condvar_ref = Rc::new(condvar);
         if let Some(old_value) = self.map.get(&place) {
             let type_string = old_value.to_string();
+            let old_condvar_ref = old_value.unpack_condvar();
 
-            if let Value::Condvar(old_condvar_ref) = old_value {
-                if condvar_ref == *old_condvar_ref {
-                    debug_same_type_same_value!(place, type_string);
-                } else {
-                    debug_same_type_different_value!(place, type_string);
-                }
+            if condvar_ref == *old_condvar_ref {
+                debug_same_type_same_value!(place, type_string);
             } else {
-                debug_different_type!(place, type_string);
+                debug_same_type_different_value!(place, type_string);
             }
         }
-        let value = Value::Condvar(condvar_ref);
+        let value = Value::Single(Single::Condvar(condvar_ref));
         self.map.insert(place, value);
         self.map[&place].unpack_condvar()
     }
@@ -243,22 +232,37 @@ impl<'tcx> Memory<'tcx> {
 
     /// Checks whether the place is linked to a mutex guard.
     pub fn is_mutex_guard(&self, place: &Place<'tcx>) -> bool {
-        self.map.contains_key(place) && matches!(self.get_linked_value(place), Value::MutexGuard(_))
+        self.map.contains_key(place)
+            && matches!(
+                self.get_linked_value(place),
+                Value::Single(Single::MutexGuard(_))
+            )
     }
 
-    /// Creates a new aggregate value from the values linked to a vector of places.
+    /// Creates a new aggregate value from the places with sync variables to aggregate.
+    /// It maps `Some(place)` to the corresponding linked value.
+    /// It maps `None` to a `Other` type of value.
     /// Links the new aggregate value to the given place.
     ///
     /// # Panics
     ///
     /// If there is a value linked to the place for the aggregate, then the function panics.
-    pub fn create_aggregate(&mut self, place: Place<'tcx>, places_to_aggregate: &[Place<'tcx>]) {
-        let mut values: Vec<Value> = Vec::new();
-
-        for place in places_to_aggregate {
-            let value = self.get_linked_value(place);
-            values.push(value.clone());
-        }
+    pub fn create_aggregate(
+        &mut self,
+        place: Place<'tcx>,
+        places_of_aggregate_fields: &[Option<Place<'tcx>>],
+    ) {
+        let values: Vec<Value> = places_of_aggregate_fields
+            .iter()
+            .map(|place| {
+                place
+                    .as_ref()
+                    .map_or(Value::Single(Single::Other), |place| {
+                        let value = self.get_linked_value(place);
+                        value.clone()
+                    })
+            })
+            .collect();
 
         self.link_aggregate(place, values);
     }

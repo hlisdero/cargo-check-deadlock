@@ -110,20 +110,18 @@ pub fn extract_closure<'tcx>(
     }
 }
 
-/// Checks whether a given substring appears in the type of a place.
+/// Get the type string for a given place.
 /// Uses the method `Place::ty` to get the type of the `place`.
 /// It finds the type of the place through the local declarations of the caller function where it is declared.
 /// <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/mir/struct.Place.html#method.ty>
-pub fn check_substring_in_place_type<'tcx>(
+pub fn get_type_string<'tcx>(
     place: &rustc_middle::mir::Place<'tcx>,
-    expected_substring: &str,
     caller_function_def_id: rustc_hir::def_id::DefId,
     tcx: rustc_middle::ty::TyCtxt<'tcx>,
-) -> bool {
+) -> String {
     let body = tcx.optimized_mir(caller_function_def_id);
     let place_ty = place.ty(body, tcx);
-    let ty_string = place_ty.ty.to_string();
-    ty_string.contains(expected_substring)
+    place_ty.ty.to_string()
 }
 
 /// Returns the field number in the first projection of variant `rustc_middle::mir::ProjectionElem::Field`.

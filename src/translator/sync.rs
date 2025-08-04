@@ -10,9 +10,7 @@ use log::debug;
 use crate::data_structures::petri_net_interface::PetriNet;
 use crate::translator::function::{Places, PostprocessingTask};
 use crate::translator::mir_function::memory::Memory;
-use crate::utils::{
-    check_substring_in_place_type, extract_nth_argument_as_place, get_field_number_in_projection,
-};
+use crate::utils::{extract_nth_argument_as_place, get_type_string, get_field_number_in_projection};
 
 // Re-export the types that the module contains.
 // It does not make assumptions about how they are stored.
@@ -32,7 +30,6 @@ pub fn is_supported_function(function_name: &str) -> bool {
             | "std::sync::Condvar::wait_while"
             | "std::sync::Mutex::<T>::lock"
             | "std::sync::Mutex::<T>::new"
-            | "std::thread::spawn"
             | "std::thread::JoinHandle::<T>::join"
     )
 }
@@ -77,6 +74,17 @@ pub fn call_function<'tcx>(
     }
 }
 
+/// Checks whether a place contains a mutex variable (mutex or mutex guard)
+pub fn check_if_mutex_variable<'tcx>(
+    place: &rustc_middle::mir::Place<'tcx>,
+    caller_function_def_id: rustc_hir::def_id::DefId,
+    tcx: rustc_middle::ty::TyCtxt<'tcx>,
+) -> bool {
+    let ty_string = get_type_string(place, caller_function_def_id, tcx);
+
+    ty_string.contains("std::sync::Mutex<") || ty_string.contains("std::sync::MutexGuard<")
+}
+
 /// Checks whether a place contains a sync variable
 /// (mutex, mutex guard, join handle or condition variable)
 pub fn check_if_sync_variable<'tcx>(
@@ -84,20 +92,50 @@ pub fn check_if_sync_variable<'tcx>(
     caller_function_def_id: rustc_hir::def_id::DefId,
     tcx: rustc_middle::ty::TyCtxt<'tcx>,
 ) -> bool {
-    check_substring_in_place_type(place, "std::sync::MutexGuard<", caller_function_def_id, tcx)
-        || check_substring_in_place_type(place, "std::sync::Mutex<", caller_function_def_id, tcx)
-        || check_substring_in_place_type(
-            place,
-            "std::thread::JoinHandle<",
-            caller_function_def_id,
-            tcx,
-        )
-        || check_substring_in_place_type(place, "std::sync::Condvar", caller_function_def_id, tcx)
+    let ty_string = get_type_string(place, caller_function_def_id, tcx);
+
+    ty_string.contains("std::sync::Mutex<")
+        || ty_string.contains("std::sync::MutexGuard<")
+        || ty_string.contains("std::thread::JoinHandle<")
+        || ty_string.contains("std::sync::Condvar")
+}
+
+/// Checks whether the LHS place contains the same type of sync variable as the RHS place
+/// or an aggregate which contains the same sync variable inside.
+/// 
+/// Examples:
+/// 
+/// - lhs = Arc<Mutex<i32>>, rhs = Mutex<i32> -> true
+/// - lhs = Mutex<i32>, rhs = Arc<Mutex<i32>> -> true
+/// - lhs = Condvar, rhs = Mutex<i32> -> false
+/// - lhs = Mutex<i32>, rhs = Condvar -> false
+pub fn check_aggregate_of_same_sync_variable<'tcx>(
+    lhs: &rustc_middle::mir::Place<'tcx>,
+    rhs: &rustc_middle::mir::Place<'tcx>,
+    caller_function_def_id: rustc_hir::def_id::DefId,
+    tcx: rustc_middle::ty::TyCtxt<'tcx>,
+) -> bool {
+    let lhs_ty = get_type_string(lhs, caller_function_def_id, tcx);
+    let rhs_ty = get_type_string(rhs, caller_function_def_id, tcx);
+
+    // Strip references because we do not care about them. For example, the following should return true
+    // lhs = std::sync::Arc<std::sync::Mutex<i32>>, rhs = &std::sync::Arc<std::sync::Mutex<i32>>
+    let lhs_ty = lhs_ty.strip_prefix("&").unwrap_or(&lhs_ty);
+    let rhs_ty = rhs_ty.strip_prefix("&").unwrap_or(&rhs_ty);
+
+    debug!("COMPARING: {lhs:?} WITH TYPE {lhs_ty}, {rhs:?} WITH TYPE {rhs_ty}");
+    check_if_sync_variable(rhs, caller_function_def_id, tcx) && (lhs_ty.contains(rhs_ty) || rhs_ty.contains(lhs_ty))
 }
 
 /// Handles MIR assignments of the form: `_X = { copy_data: move _Y }`.
-/// Create a new aggregate value (tuple, array, `std::sync::Arc`, etc.) from the sync variables in the operands.
-/// If the operand in the right hand side contains a sync variable, the function includes it in the aggregate.
+/// Create a new aggregate value (tuple, array, `std::sync::Arc`, etc.) from the places in the operands.
+///
+/// The function maps the places in the operands to a vector that contains:
+/// - Every place with a sync variable
+/// - A `None` for non-sync variables values
+/// - It respects the order in which the places appear (i.e. the order of the fields in the aggregate)
+///
+/// It passes it on to the function memory to create the corresponding aggregate
 pub fn handle_aggregate_assignment<'tcx>(
     place: &rustc_middle::mir::Place<'tcx>,
     operands: &Vec<rustc_middle::mir::Operand<'tcx>>,
@@ -105,7 +143,7 @@ pub fn handle_aggregate_assignment<'tcx>(
     caller_function_def_id: rustc_hir::def_id::DefId,
     tcx: rustc_middle::ty::TyCtxt<'tcx>,
 ) {
-    let mut places_with_sync_variables: Vec<rustc_middle::mir::Place<'tcx>> = Vec::new();
+    let mut aggregate_fields: Vec<Option<rustc_middle::mir::Place<'tcx>>> = Vec::new();
 
     for operand in operands {
         // Extract the place to be assigned
@@ -117,13 +155,15 @@ pub fn handle_aggregate_assignment<'tcx>(
             rustc_middle::mir::Operand::Constant(_) => continue,
         };
         if check_if_sync_variable(rhs, caller_function_def_id, tcx) {
-            places_with_sync_variables.push(*rhs);
+            aggregate_fields.push(Some(*rhs));
+        } else {
+            aggregate_fields.push(None);
         }
     }
 
-    if !places_with_sync_variables.is_empty() {
-        memory.create_aggregate(*place, &places_with_sync_variables);
-        debug!("CREATED AGGREGATE AT {place:?} WITH PLACES {places_with_sync_variables:?}");
+    if !aggregate_fields.is_empty() {
+        memory.create_aggregate(*place, &aggregate_fields);
+        debug!("CREATED AGGREGATE AT {place:?} WITH PLACES {aggregate_fields:?}");
     }
 }
 
@@ -195,11 +235,8 @@ pub fn link_return_value_if_sync_variable<'tcx>(
         // Nothing to check: Either the first argument is not present or it is a constant.
         return;
     };
-    link_if_sync_variable(
-        &return_value,
-        &first_argument,
-        memory,
-        caller_function_def_id,
-        tcx,
-    );
+    if !check_aggregate_of_same_sync_variable(&return_value, &first_argument, caller_function_def_id, tcx) {
+        return;
+    }
+    memory.link_place_to_same_value(return_value, first_argument);
 }

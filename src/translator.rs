@@ -43,8 +43,7 @@ use crate::data_structures::stack::Stack;
 use crate::naming::function::{indexed_mir_function_cleanup_label, indexed_mir_function_name};
 use crate::naming::{PROGRAM_END, PROGRAM_PANIC, PROGRAM_START};
 use crate::utils::{
-    check_substring_in_place_type, extract_closure, extract_def_id_of_called_function_from_operand,
-    extract_nth_argument_as_place,
+    extract_closure, extract_def_id_of_called_function_from_operand, extract_nth_argument_as_place,
 };
 use function::{Places, PostprocessingTask, Transitions};
 use mir_function::memory::MutexRef;
@@ -53,8 +52,8 @@ use special_function::{
     call_diverging_function, call_foreign_function, call_panic_function, is_foreign_function,
     is_panic_function,
 };
-use sync::mutex;
 use sync::thread::Thread;
+use sync::{check_if_mutex_variable, mutex};
 
 /// The central data structure and coordinator for the translation.
 pub struct Translator<'tcx> {
@@ -430,17 +429,7 @@ impl<'tcx> Translator<'tcx> {
             panic!("BUG: `{function_name}` should receive a reference as a place")
         });
         let function = self.call_stack.peek();
-        check_substring_in_place_type(
-            &self_ref,
-            "std::sync::MutexGuard<",
-            function.def_id,
-            self.tcx,
-        ) || check_substring_in_place_type(
-            &self_ref,
-            "std::sync::Mutex<",
-            function.def_id,
-            self.tcx,
-        )
+        check_if_mutex_variable(&self_ref, function.def_id, self.tcx)
     }
 
     /// Call to a MIR function. It is the default for user-defined functions in the code.
