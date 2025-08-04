@@ -14,6 +14,12 @@ mod mutex {
     );
 
     super::utils::generate_tests_for_example_program!(
+        double_lock_deadlock_with_struct,
+        "./examples/programs/mutex/double_lock_deadlock_with_struct.rs",
+        "./examples/results/mutex/double_lock_deadlock_with_struct/"
+    );
+
+    super::utils::generate_tests_for_example_program!(
         double_lock_deadlock,
         "./examples/programs/mutex/double_lock_deadlock.rs",
         "./examples/results/mutex/double_lock_deadlock/"
@@ -50,6 +56,13 @@ mod lola {
         double_lock_deadlock_with_arc,
         "./examples/programs/mutex/double_lock_deadlock_with_arc.rs",
         "./examples/results/mutex/double_lock_deadlock_with_arc/",
+        true
+    );
+
+    super::utils::generate_lola_tests_for_example_program!(
+        double_lock_deadlock_with_struct,
+        "./examples/programs/mutex/double_lock_deadlock_with_struct.rs",
+        "./examples/results/mutex/double_lock_deadlock_with_struct/",
         true
     );
 
