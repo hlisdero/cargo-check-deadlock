@@ -129,6 +129,30 @@ pub fn check_aggregate_of_same_type<'tcx>(
     lhs_ty.contains(rhs_ty) || rhs_ty.contains(lhs_ty)
 }
 
+/// Checks if the two places should be linked to the same value.
+/// This defines the main heuristic / rule for when to link:
+///
+/// - The types are similar, i.e. one is an aggregate of the other or viceversa
+/// - The place linked appears in the memory of the current function
+fn should_link_to_same_value<'tcx>(
+    place_to_link: &rustc_middle::mir::Place<'tcx>,
+    place_linked: &rustc_middle::mir::Place<'tcx>,
+    memory: &Memory<'tcx>,
+    caller_function_def_id: rustc_hir::def_id::DefId,
+    tcx: rustc_middle::ty::TyCtxt<'tcx>,
+) -> bool {
+    let is_linked = memory.has_linked_value(place_linked);
+    if !is_linked {
+        return false;
+    }
+    let has_same_type =
+        check_aggregate_of_same_type(place_to_link, place_linked, caller_function_def_id, tcx);
+    if !has_same_type {
+        return false;
+    }
+    true // has same type and the place is linked
+}
+
 /// Handles MIR assignments of the form: `_X = { copy_data: move _Y }`.
 /// Create a new aggregate value (tuple, array, `std::sync::Arc`, etc.) from the places in the operands.
 ///
@@ -202,9 +226,26 @@ pub fn link_if_sync_variable<'tcx>(
         let mut base_place = *place_linked;
         base_place.projection = rustc_middle::ty::List::empty();
 
-        debug!("ACCESS FIELD {field_number} AFTER DEREF IN BASE PLACE {base_place:?}");
-        memory.link_field_in_aggregate(*place_to_link, base_place, field_number);
-    } else {
+        if should_link_to_same_value(
+            place_to_link,
+            &base_place,
+            memory,
+            caller_function_def_id,
+            tcx,
+        ) {
+            debug!("ACCESS FIELD {field_number} AFTER DEREF IN BASE PLACE {base_place:?}");
+            memory.link_field_in_aggregate(*place_to_link, base_place, field_number);
+        }
+        return;
+    }
+
+    if should_link_to_same_value(
+        place_to_link,
+        place_linked,
+        memory,
+        caller_function_def_id,
+        tcx,
+    ) {
         memory.link_place_to_same_value(*place_to_link, *place_linked);
     }
 }
@@ -237,15 +278,14 @@ pub fn link_return_value_if_sync_variable<'tcx>(
         // Nothing to check: Either the first argument is not present or it is a constant.
         return;
     };
-    if !memory.has_linked_value(&first_argument)
-        || !check_aggregate_of_same_type(
-            &return_value,
-            &first_argument,
-            caller_function_def_id,
-            tcx,
-        )
-    {
-        return;
+
+    if should_link_to_same_value(
+        &return_value,
+        &first_argument,
+        memory,
+        caller_function_def_id,
+        tcx,
+    ) {
+        memory.link_place_to_same_value(return_value, first_argument);
     }
-    memory.link_place_to_same_value(return_value, first_argument);
 }
