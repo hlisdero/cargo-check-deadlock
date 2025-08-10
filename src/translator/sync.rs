@@ -10,7 +10,9 @@ use log::debug;
 use crate::data_structures::petri_net_interface::PetriNet;
 use crate::translator::function::{Places, PostprocessingTask};
 use crate::translator::mir_function::memory::Memory;
-use crate::utils::{extract_nth_argument_as_place, get_type_string, get_field_number_in_projection};
+use crate::utils::{
+    extract_nth_argument_as_place, get_field_number_in_projection, get_type_string,
+};
 
 // Re-export the types that the module contains.
 // It does not make assumptions about how they are stored.
@@ -100,16 +102,16 @@ pub fn check_if_sync_variable<'tcx>(
         || ty_string.contains("std::sync::Condvar")
 }
 
-/// Checks whether the LHS place contains the same type of sync variable as the RHS place
-/// or an aggregate which contains the same sync variable inside.
-/// 
+/// Checks whether the LHS place contains the same type as the RHS place
+/// or an aggregate which contains the same type inside.
+///
 /// Examples:
-/// 
-/// - lhs = Arc<Mutex<i32>>, rhs = Mutex<i32> -> true
-/// - lhs = Mutex<i32>, rhs = Arc<Mutex<i32>> -> true
-/// - lhs = Condvar, rhs = Mutex<i32> -> false
-/// - lhs = Mutex<i32>, rhs = Condvar -> false
-pub fn check_aggregate_of_same_sync_variable<'tcx>(
+///
+/// - lhs = `Arc<ExampleData>`, rhs = `ExampleData` -> true
+/// - lhs = `ExampleData`, rhs = `Arc<ExampleData>` -> true
+/// - lhs = `Condvar`, rhs = `Mutex<i32>` -> false
+/// - lhs = `Mutex<i32`, rhs = `Condvar` -> false
+pub fn check_aggregate_of_same_type<'tcx>(
     lhs: &rustc_middle::mir::Place<'tcx>,
     rhs: &rustc_middle::mir::Place<'tcx>,
     caller_function_def_id: rustc_hir::def_id::DefId,
@@ -124,7 +126,7 @@ pub fn check_aggregate_of_same_sync_variable<'tcx>(
     let rhs_ty = rhs_ty.strip_prefix("&").unwrap_or(&rhs_ty);
 
     debug!("COMPARING: {lhs:?} WITH TYPE {lhs_ty}, {rhs:?} WITH TYPE {rhs_ty}");
-    check_if_sync_variable(rhs, caller_function_def_id, tcx) && (lhs_ty.contains(rhs_ty) || rhs_ty.contains(lhs_ty))
+    lhs_ty.contains(rhs_ty) || rhs_ty.contains(lhs_ty)
 }
 
 /// Handles MIR assignments of the form: `_X = { copy_data: move _Y }`.
@@ -235,7 +237,14 @@ pub fn link_return_value_if_sync_variable<'tcx>(
         // Nothing to check: Either the first argument is not present or it is a constant.
         return;
     };
-    if !check_aggregate_of_same_sync_variable(&return_value, &first_argument, caller_function_def_id, tcx) {
+    if !memory.has_linked_value(&first_argument)
+        || !check_aggregate_of_same_type(
+            &return_value,
+            &first_argument,
+            caller_function_def_id,
+            tcx,
+        )
+    {
         return;
     }
     memory.link_place_to_same_value(return_value, first_argument);

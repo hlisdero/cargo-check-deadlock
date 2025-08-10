@@ -28,30 +28,52 @@ impl Value {
     pub fn unpack_mutex(&self) -> &MutexRef {
         match self {
             Self::Single(Single::Mutex(mutex_ref)) => mutex_ref,
-            _ => panic!("BUG: The value does not contain a mutex, it contains: {self}."),
+            Self::Single(_) => {
+                panic!("BUG: The value does not contain a mutex, it contains: {self}.")
+            }
+            Self::Aggregate(values) => find_mutex_ref(values).map_or_else(
+                || panic!("BUG: No mutex could be found in {self}."),
+                |mutex_ref| mutex_ref,
+            ),
         }
     }
 
     pub fn unpack_mutex_guard(&self) -> &MutexGuardRef {
         match self {
             Self::Single(Single::MutexGuard(mutex_guard_ref)) => mutex_guard_ref,
-            _ => panic!("BUG: The value does not contain a mutex guard, it contains: {self}."),
+            Self::Single(_) => {
+                panic!("BUG: The value does not contain a mutex guard, it contains: {self}.")
+            }
+            Self::Aggregate(values) => find_mutex_guard_ref(values).map_or_else(
+                || panic!("BUG: No mutex guard could be found in {self}."),
+                |mutex_guard_ref| mutex_guard_ref,
+            ),
         }
     }
 
     pub fn unpack_join_handle(&self) -> &ThreadRef {
         match self {
             Self::Single(Single::JoinHandle(thread_ref)) => thread_ref,
-            _ => panic!("BUG: The value does not contain a join handle, it contains: {self}."),
+            Self::Single(_) => {
+                panic!("BUG: The value does not contain a join handle, it contains: {self}.")
+            }
+            Self::Aggregate(values) => find_join_handle_ref(values).map_or_else(
+                || panic!("BUG: No join handle could be found in {self}."),
+                |join_handle_ref| join_handle_ref,
+            ),
         }
     }
 
     pub fn unpack_condvar(&self) -> &CondvarRef {
         match self {
             Self::Single(Single::Condvar(condvar_ref)) => condvar_ref,
-            _ => {
+            Self::Single(_) => {
                 panic!("BUG: The value does not contain a condition variable, it contains: {self}.")
             }
+            Self::Aggregate(values) => find_condvar_ref(values).map_or_else(
+                || panic!("BUG: No condition variable could be found in {self}."),
+                |condvar_ref| condvar_ref,
+            ),
         }
     }
 
@@ -105,6 +127,36 @@ pub enum Single {
     Other,
 }
 
+impl Single {
+    pub const fn unpack_mutex(&self) -> Option<&MutexRef> {
+        match self {
+            Self::Mutex(ref mutex_ref) => Some(mutex_ref),
+            _ => None,
+        }
+    }
+
+    pub const fn unpack_mutex_guard(&self) -> Option<&MutexGuardRef> {
+        match self {
+            Self::MutexGuard(ref mutex_guard_ref) => Some(mutex_guard_ref),
+            _ => None,
+        }
+    }
+
+    pub const fn unpack_join_handle(&self) -> Option<&ThreadRef> {
+        match self {
+            Self::JoinHandle(ref thread_ref) => Some(thread_ref),
+            _ => None,
+        }
+    }
+
+    pub const fn unpack_condvar(&self) -> Option<&CondvarRef> {
+        match self {
+            Self::Condvar(ref condvar_ref) => Some(condvar_ref),
+            _ => None,
+        }
+    }
+}
+
 impl std::fmt::Display for Single {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
@@ -127,4 +179,80 @@ impl std::fmt::Debug for Single {
             Self::Other => write!(f, "OTHER, NOT A SYNC PRIMITIVE"),
         }
     }
+}
+
+pub fn find_mutex_ref(values: &Vec<Value>) -> Option<&MutexRef> {
+    for value in values {
+        match value {
+            Value::Single(single) => {
+                let result = single.unpack_mutex();
+                if result.is_some() {
+                    return result;
+                }
+            }
+            Value::Aggregate(inner_values) => {
+                if let Some(mutex_ref) = find_mutex_ref(inner_values) {
+                    return Some(mutex_ref);
+                }
+            }
+        }
+    }
+    None
+}
+
+pub fn find_mutex_guard_ref(values: &Vec<Value>) -> Option<&MutexGuardRef> {
+    for value in values {
+        match value {
+            Value::Single(single) => {
+                let result = single.unpack_mutex_guard();
+                if result.is_some() {
+                    return result;
+                }
+            }
+            Value::Aggregate(inner_values) => {
+                if let Some(mutex_guard_ref) = find_mutex_guard_ref(inner_values) {
+                    return Some(mutex_guard_ref);
+                }
+            }
+        }
+    }
+    None
+}
+
+pub fn find_join_handle_ref(values: &Vec<Value>) -> Option<&ThreadRef> {
+    for value in values {
+        match value {
+            Value::Single(single) => {
+                let result = single.unpack_join_handle();
+                if result.is_some() {
+                    return result;
+                }
+            }
+            Value::Aggregate(inner_values) => {
+                if let Some(join_handle_ref) = find_join_handle_ref(inner_values) {
+                    return Some(join_handle_ref);
+                }
+            }
+        }
+    }
+    None
+}
+
+pub fn find_condvar_ref(values: &Vec<Value>) -> Option<&CondvarRef> {
+    for value in values {
+        match value {
+            Value::Single(single) => {
+                let result = single.unpack_condvar();
+                if result.is_some() {
+                    return result;
+                }
+            }
+            Value::Aggregate(inner_values) => {
+                if let Some(condvar_ref) = find_condvar_ref(inner_values) {
+                    return Some(condvar_ref);
+                }
+            }
+        }
+    }
+    None
 }

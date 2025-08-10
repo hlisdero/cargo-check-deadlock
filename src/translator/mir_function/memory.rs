@@ -185,6 +185,12 @@ impl<'tcx> Memory<'tcx> {
         debug!("SAME VALUE: {place_to_link:?} = {place_linked:?}",);
     }
 
+    // Checks if the place is linked to a value, i.e, it contains a sync variable
+    // or an aggregate that contains a sync variable.
+    pub fn has_linked_value(&self, place: &Place<'tcx>) -> bool {
+        self.map.contains_key(place)
+    }
+
     /// Returns an immutable reference to the value linked to the given place.
     ///
     /// # Panics
