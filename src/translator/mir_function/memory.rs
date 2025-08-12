@@ -19,10 +19,11 @@
 //! More info:
 //! <https://rustc-dev-guide.rust-lang.org/mir/index.html#mir-data-types>
 
+mod mir_locals_vec;
 mod value;
 
 use log::debug;
-use std::ops::{Index, IndexMut};
+use mir_locals_vec::MirLocalsVec;
 use std::rc::Rc;
 
 use crate::translator::sync::{Condvar, Mutex, MutexGuard, Thread};
@@ -33,56 +34,18 @@ type FieldNumber = usize;
 
 type Place<'tcx> = rustc_middle::mir::Place<'tcx>;
 
+#[derive(Default)]
 pub struct Memory {
-    /// The actual store of the values, indexed by the `Local` number, e.g `_1`, `_10`, etc.
-    data: Vec<Value>,
-}
-
-impl Default for Memory {
-    fn default() -> Self {
-        Self {
-            data: vec![Value::None; Self::INITIAL_SIZE],
-        }
-    }
-}
-
-impl Index<Local> for Memory {
-    type Output = Value;
-
-    fn index(&self, index: Local) -> &Self::Output {
-        &self.data[index]
-    }
-}
-
-impl IndexMut<Local> for Memory {
-    fn index_mut(&mut self, index: Local) -> &mut Self::Output {
-        if index >= self.data.len() {
-            // Use a replication factor of 1.5 since 2 seemed too big. This could be tweaked if needed.
-            self.data.resize(index + index / 2, Value::None);
-        }
-        &mut self.data[index]
-    }
+    data: MirLocalsVec,
 }
 
 impl std::fmt::Debug for Memory {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        // Write the header for the table
-        writeln!(f, "{:-<30}", "")?; // Separator line
-        writeln!(f, "{:<10} {:<20}", "Index", "Value")?;
-        writeln!(f, "{:-<30}", "")?; // Separator line
-
-        // Iterate over the data and format each entry
-        for (index, value) in self.data.iter().enumerate() {
-            writeln!(f, "{:<10} {:?}", format!("_{}", index), value)?;
-        }
-
-        Ok(())
+        writeln!(f, "{:?}", self.data)
     }
 }
 
 impl<'tcx> Memory {
-    const INITIAL_SIZE: usize = 10;
-
     /// Converts the place into a `Local` and a vector of `FieldNumber`.
     /// Ignores the other variants of projection elements.
     fn extract_local_and_field_number(place: &Place<'tcx>) -> (Local, Vec<FieldNumber>) {
@@ -115,20 +78,20 @@ impl<'tcx> Memory {
     pub fn link(&mut self, place: Place<'tcx>, value: Value) -> &Value {
         let (local, field_numbers) = Self::extract_local_and_field_number(&place);
 
-        match &mut self[local] {
+        match &mut self.data[local] {
             Value::None => {
-                self[local] = value;
+                self.data[local] = value;
                 &self.data[local]
             }
             Value::Single(_) => {
-                if self[local] == value {
+                if self.data[local] == value {
                     // In some cases the MIR shows two separate assignments that
                     // lead to the same linking. Nothing to do in this case.
-                    debug!("PLACE {place:?} LINKED TO SAME {:?}", self[local]);
+                    debug!("PLACE {place:?} LINKED TO SAME {:?}", self.data[local]);
                     &self.data[local]
                 } else {
                     // The type of the local never changes, this is a hard error.
-                    panic!("PLACE {place:?} WAS LINKED TO A {:?}", self[local]);
+                    panic!("PLACE {place:?} WAS LINKED TO A {:?}", self.data[local]);
                 }
             }
             Value::Aggregate(old_values) => {
@@ -224,7 +187,7 @@ impl<'tcx> Memory {
             return false;
         }
 
-        match &self[local] {
+        match &self.data[local] {
             Value::None => false,
             Value::Single(_) => true,
             Value::Aggregate(values) => Self::find_value(values, &field_numbers),
@@ -278,7 +241,7 @@ impl<'tcx> Memory {
             "BUG: The place {place:?} is out of bound with respect to the memory data"
         );
 
-        match &self[local] {
+        match &self.data[local] {
             Value::None => {
                 panic!("BUG: The place {place:?} should be linked to a value")
             }
