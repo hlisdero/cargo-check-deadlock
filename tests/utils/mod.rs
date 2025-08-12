@@ -97,9 +97,9 @@ pub fn assert_lola_result(
 /// <https://doc.rust-lang.org/rust-by-example/macros/dry.html>
 #[allow(unused_macros)]
 macro_rules! generate_tests_for_example_program {
-    ($program_path:literal, $result_folder_path:literal) => {
+    ($fn_name:ident, $program_path:literal, $result_folder_path:literal) => {
         #[test]
-        fn generates_correct_output_files() {
+        fn $fn_name() {
             super::utils::assert_output_files($program_path, $result_folder_path);
         }
     };
@@ -117,9 +117,9 @@ macro_rules! generate_tests_for_example_program {
 /// <https://doc.rust-lang.org/rust-by-example/macros/dry.html>
 #[allow(unused_macros)]
 macro_rules! generate_lola_tests_for_example_program {
-    ($program_path:literal, $result_folder_path:literal, $expected_result:expr) => {
+    ($fn_name:ident, $program_path:literal, $result_folder_path:literal, $expected_result:expr) => {
         #[test]
-        fn generates_correct_lola_result() {
+        fn $fn_name() {
             super::utils::assert_lola_result($program_path, $result_folder_path, $expected_result);
         }
     };

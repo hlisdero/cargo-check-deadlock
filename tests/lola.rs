@@ -6,6 +6,7 @@ mod utils;
 
 mod calculator {
     super::utils::generate_lola_tests_for_example_program!(
+        calculator,
         "./examples/programs/basic/calculator.rs",
         "./examples/results/basic/calculator/",
         false
@@ -14,6 +15,7 @@ mod calculator {
 
 mod greet {
     super::utils::generate_lola_tests_for_example_program!(
+        greet,
         "./examples/programs/basic/greet.rs",
         "./examples/results/basic/greet/",
         false
@@ -22,6 +24,7 @@ mod greet {
 
 mod hello_world {
     super::utils::generate_lola_tests_for_example_program!(
+        hello_world,
         "./examples/programs/basic/hello_world.rs",
         "./examples/results/basic/hello_world/",
         false
@@ -30,6 +33,7 @@ mod hello_world {
 
 mod infinite_wait_deadlock {
     super::utils::generate_lola_tests_for_example_program!(
+        infinite_wait_deadlock,
         "./examples/programs/condvar/infinite_wait_deadlock.rs",
         "./examples/results/condvar/infinite_wait_deadlock/",
         true
@@ -38,6 +42,7 @@ mod infinite_wait_deadlock {
 
 mod producer_consumer {
     super::utils::generate_lola_tests_for_example_program!(
+        producer_consumer,
         "./examples/programs/condvar/producer_consumer.rs",
         "./examples/results/condvar/producer_consumer/",
         false
@@ -46,6 +51,7 @@ mod producer_consumer {
 
 mod self_notify_lost_signal {
     super::utils::generate_lola_tests_for_example_program!(
+        self_notify_lost_signal,
         "./examples/programs/condvar/self_notify_lost_signal.rs",
         "./examples/results/condvar/self_notify_lost_signal/",
         true
@@ -54,6 +60,7 @@ mod self_notify_lost_signal {
 
 mod set_condition_before_wait {
     super::utils::generate_lola_tests_for_example_program!(
+        set_condition_before_wait,
         "./examples/programs/condvar/set_condition_before_wait.rs",
         "./examples/results/condvar/set_condition_before_wait/",
         false
@@ -62,6 +69,7 @@ mod set_condition_before_wait {
 
 mod wait {
     super::utils::generate_lola_tests_for_example_program!(
+        wait,
         "./examples/programs/condvar/wait.rs",
         "./examples/results/condvar/wait/",
         false
@@ -70,6 +78,7 @@ mod wait {
 
 mod wait_while {
     super::utils::generate_lola_tests_for_example_program!(
+        wait_while,
         "./examples/programs/condvar/wait_while.rs",
         "./examples/results/condvar/wait_while/",
         false
@@ -78,6 +87,7 @@ mod wait_while {
 
 mod diverging {
     super::utils::generate_lola_tests_for_example_program!(
+        diverging,
         "./examples/programs/function_call/diverging.rs",
         "./examples/results/function_call/diverging/",
         true
@@ -86,6 +96,7 @@ mod diverging {
 
 mod find_even {
     super::utils::generate_lola_tests_for_example_program!(
+        find_even,
         "./examples/programs/function_call/find_even.rs",
         "./examples/results/function_call/find_even/",
         false
@@ -94,6 +105,7 @@ mod find_even {
 
 mod empty_function {
     super::utils::generate_lola_tests_for_example_program!(
+        empty_function,
         "./examples/programs/function_call/empty_function.rs",
         "./examples/results/function_call/empty_function/",
         false
@@ -102,6 +114,7 @@ mod empty_function {
 
 mod in_a_loop {
     super::utils::generate_lola_tests_for_example_program!(
+        in_a_loop,
         "./examples/programs/function_call/in_a_loop.rs",
         "./examples/results/function_call/in_a_loop/",
         false
@@ -110,6 +123,7 @@ mod in_a_loop {
 
 mod two_calls_same_function {
     super::utils::generate_lola_tests_for_example_program!(
+        two_calls_same_function,
         "./examples/programs/function_call/two_calls_same_function.rs",
         "./examples/results/function_call/two_calls_same_function/",
         false
@@ -118,6 +132,7 @@ mod two_calls_same_function {
 
 mod double_lock_deadlock_in_function {
     super::utils::generate_lola_tests_for_example_program!(
+        double_lock_deadlock_in_function,
         "./examples/programs/mutex/double_lock_deadlock_in_function.rs",
         "./examples/results/mutex/double_lock_deadlock_in_function/",
         true
@@ -126,6 +141,7 @@ mod double_lock_deadlock_in_function {
 
 mod double_lock_deadlock_with_arc {
     super::utils::generate_lola_tests_for_example_program!(
+        double_lock_deadlock_with_arc,
         "./examples/programs/mutex/double_lock_deadlock_with_arc.rs",
         "./examples/results/mutex/double_lock_deadlock_with_arc/",
         true
@@ -134,6 +150,7 @@ mod double_lock_deadlock_with_arc {
 
 mod double_lock_deadlock {
     super::utils::generate_lola_tests_for_example_program!(
+        double_lock_deadlock,
         "./examples/programs/mutex/double_lock_deadlock.rs",
         "./examples/results/mutex/double_lock_deadlock/",
         true
@@ -142,6 +159,7 @@ mod double_lock_deadlock {
 
 mod drop_mutex_guard_in_arc_manually {
     super::utils::generate_lola_tests_for_example_program!(
+        drop_mutex_guard_in_arc_manually,
         "./examples/programs/mutex/drop_mutex_guard_in_arc_manually.rs",
         "./examples/results/mutex/drop_mutex_guard_in_arc_manually/",
         false
@@ -150,6 +168,7 @@ mod drop_mutex_guard_in_arc_manually {
 
 mod drop_mutex_guard_manually {
     super::utils::generate_lola_tests_for_example_program!(
+        drop_mutex_guard_manually,
         "./examples/programs/mutex/drop_mutex_guard_manually.rs",
         "./examples/results/mutex/drop_mutex_guard_manually/",
         false
@@ -158,6 +177,7 @@ mod drop_mutex_guard_manually {
 
 mod two_threads_sharing_mutex {
     super::utils::generate_lola_tests_for_example_program!(
+        two_threads_sharing_mutex,
         "./examples/programs/mutex/two_threads_sharing_mutex.rs",
         "./examples/results/mutex/two_threads_sharing_mutex/",
         false
@@ -166,6 +186,7 @@ mod two_threads_sharing_mutex {
 
 mod abort {
     super::utils::generate_lola_tests_for_example_program!(
+        abort,
         "./examples/programs/statement/abort.rs",
         "./examples/results/statement/abort/",
         true
@@ -174,6 +195,7 @@ mod abort {
 
 mod empty_main {
     super::utils::generate_lola_tests_for_example_program!(
+        empty_main,
         "./examples/programs/statement/empty_main.rs",
         "./examples/results/statement/empty_main/",
         false
@@ -182,6 +204,7 @@ mod empty_main {
 
 mod infinite_loop {
     super::utils::generate_lola_tests_for_example_program!(
+        infinite_loop,
         "./examples/programs/statement/infinite_loop.rs",
         "./examples/results/statement/infinite_loop/",
         false
@@ -190,6 +213,7 @@ mod infinite_loop {
 
 mod match_stmt {
     super::utils::generate_lola_tests_for_example_program!(
+        match_stmt,
         "./examples/programs/statement/match.rs",
         "./examples/results/statement/match/",
         false
@@ -198,6 +222,7 @@ mod match_stmt {
 
 mod option {
     super::utils::generate_lola_tests_for_example_program!(
+        option,
         "./examples/programs/statement/option.rs",
         "./examples/results/statement/option/",
         false
@@ -206,6 +231,7 @@ mod option {
 
 mod panic {
     super::utils::generate_lola_tests_for_example_program!(
+        panic,
         "./examples/programs/statement/panic.rs",
         "./examples/results/statement/panic/",
         false
@@ -214,6 +240,7 @@ mod panic {
 
 mod dating_philosophers {
     super::utils::generate_lola_tests_for_example_program!(
+        dating_philosophers,
         "./examples/programs/thread/dating_philosophers.rs",
         "./examples/results/thread/dating_philosophers/",
         true
@@ -222,6 +249,7 @@ mod dating_philosophers {
 
 mod detached {
     super::utils::generate_lola_tests_for_example_program!(
+        detached,
         "./examples/programs/thread/detached.rs",
         "./examples/results/thread/detached/",
         false
@@ -230,6 +258,7 @@ mod detached {
 
 mod dining_philosophers {
     super::utils::generate_lola_tests_for_example_program!(
+        dining_philosophers,
         "./examples/programs/thread/dining_philosophers.rs",
         "./examples/results/thread/dining_philosophers/",
         true
@@ -238,6 +267,7 @@ mod dining_philosophers {
 
 mod diverging_thread {
     super::utils::generate_lola_tests_for_example_program!(
+        diverging,
         "./examples/programs/thread/diverging.rs",
         "./examples/results/thread/diverging/",
         false
@@ -246,6 +276,7 @@ mod diverging_thread {
 
 mod shared_counter {
     super::utils::generate_lola_tests_for_example_program!(
+        shared_counter,
         "./examples/programs/thread/shared_counter.rs",
         "./examples/results/thread/shared_counter/",
         false
@@ -254,6 +285,7 @@ mod shared_counter {
 
 mod spawn_with_empty_closure {
     super::utils::generate_lola_tests_for_example_program!(
+        spawn_with_empty_closure,
         "./examples/programs/thread/spawn_with_empty_closure.rs",
         "./examples/results/thread/spawn_with_empty_closure/",
         false
