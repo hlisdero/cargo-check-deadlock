@@ -154,7 +154,10 @@ impl<'tcx> Memory {
     pub fn link_mutex(&mut self, place: Place<'tcx>, mutex: Mutex) -> &MutexRef {
         let mutex_ref: Rc<Mutex> = Rc::new(mutex);
         let value = Value::Single(Single::Mutex(mutex_ref));
-        self.link(place, value).unpack_mutex()
+        match self.link(place, value) {
+            Value::Single(Single::Mutex(mutex_ref)) => mutex_ref,
+            value => panic!("BUG: Stored a mutex but got {value:?} back")
+        }
     }
 
     /// Links a given place to a given mutex guard.
@@ -167,7 +170,10 @@ impl<'tcx> Memory {
     ) -> &MutexGuardRef {
         let mutex_guard_ref = Rc::new(mutex_guard);
         let value = Value::Single(Single::MutexGuard(mutex_guard_ref));
-        self.link(place, value).unpack_mutex_guard()
+        match self.link(place, value) {
+            Value::Single(Single::MutexGuard(mutex_guard_ref)) => mutex_guard_ref,
+            value => panic!("BUG: Stored a mutex guard but got {value:?} back")
+        }
     }
 
     /// Links a given place to a given join handle.
@@ -176,7 +182,10 @@ impl<'tcx> Memory {
     pub fn link_join_handle(&mut self, place: Place<'tcx>, thread: Thread) -> &ThreadRef {
         let thread_ref = Rc::new(thread);
         let value = Value::Single(Single::JoinHandle(thread_ref));
-        self.link(place, value).unpack_join_handle()
+        match self.link(place, value) {
+            Value::Single(Single::JoinHandle(thread_ref)) => thread_ref,
+            value => panic!("BUG: Stored a join handle but got {value:?} back")
+        }
     }
 
     /// Links a given place to a given condition variable.
@@ -185,7 +194,10 @@ impl<'tcx> Memory {
     pub fn link_condvar(&mut self, place: Place<'tcx>, condvar: Condvar) -> &CondvarRef {
         let condvar_ref = Rc::new(condvar);
         let value = Value::Single(Single::Condvar(condvar_ref));
-        self.link(place, value).unpack_condvar()
+        match self.link(place, value) {
+            Value::Single(Single::Condvar(condvar_ref)) => condvar_ref,
+            value => panic!("BUG: Stored a condition variable but got {value:?} back")
+        }
     }
 
     /// Links two places to the same value.
