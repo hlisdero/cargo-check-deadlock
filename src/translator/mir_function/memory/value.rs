@@ -20,6 +20,7 @@ pub type ThreadRef = std::rc::Rc<Thread>;
 /// A place will be mapped to one of these.
 #[derive(Eq, PartialEq, Clone)]
 pub enum Value {
+    None,
     Single(Single),
     Aggregate(Vec<Value>),
 }
@@ -35,6 +36,7 @@ impl std::fmt::Display for Value {
                     .collect();
                 write!(f, "aggregate [{}]", formatted_values.join(", "))
             }
+            Self::None => write!(f, "other, not a sync primitive"),
         }
     }
 }
@@ -48,6 +50,7 @@ impl std::fmt::Debug for Value {
                     values.iter().map(|value| format!("{value:?}")).collect();
                 write!(f, "AGGREGATE [{}]", formatted_values.join(", "))
             }
+            Self::None => write!(f, "OTHER, NOT A SYNC PRIMITIVE"),
         }
     }
 }
@@ -59,7 +62,6 @@ pub enum Single {
     MutexGuard(MutexGuardRef),
     JoinHandle(ThreadRef),
     Condvar(CondvarRef),
-    Other,
 }
 
 impl Single {
@@ -99,7 +101,6 @@ impl std::fmt::Display for Single {
             Self::MutexGuard(_) => write!(f, "mutex guard"),
             Self::JoinHandle(_) => write!(f, "join handle"),
             Self::Condvar(_) => write!(f, "condition variable"),
-            Self::Other => write!(f, "other, not a sync primitive"),
         }
     }
 }
@@ -111,7 +112,6 @@ impl std::fmt::Debug for Single {
             Self::MutexGuard(_) => write!(f, "MUTEX GUARD"),
             Self::JoinHandle(_) => write!(f, "JOIN HANDLE"),
             Self::Condvar(_) => write!(f, "CONDITION VARIABLE"),
-            Self::Other => write!(f, "OTHER, NOT A SYNC PRIMITIVE"),
         }
     }
 }

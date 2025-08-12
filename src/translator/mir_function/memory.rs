@@ -41,7 +41,7 @@ pub struct Memory {
 impl Default for Memory {
     fn default() -> Self {
         Self {
-            data: vec![Value::Single(Single::Other); Self::INITIAL_SIZE],
+            data: vec![Value::None; Self::INITIAL_SIZE],
         }
     }
 }
@@ -58,8 +58,7 @@ impl IndexMut<Local> for Memory {
     fn index_mut(&mut self, index: Local) -> &mut Self::Output {
         if index >= self.data.len() {
             // Use a replication factor of 1.5 since 2 seemed too big. This could be tweaked if needed.
-            self.data
-                .resize(index + index / 2, Value::Single(Single::Other));
+            self.data.resize(index + index / 2, Value::None);
         }
         &mut self.data[index]
     }
@@ -117,7 +116,7 @@ impl<'tcx> Memory {
         let (local, field_numbers) = Self::extract_local_and_field_number(&place);
 
         match &mut self[local] {
-            Value::Single(Single::Other) => {
+            Value::None => {
                 self[local] = value;
                 &self.data[local]
             }
@@ -156,7 +155,7 @@ impl<'tcx> Memory {
         let value = Value::Single(Single::Mutex(mutex_ref));
         match self.link(place, value) {
             Value::Single(Single::Mutex(mutex_ref)) => mutex_ref,
-            value => panic!("BUG: Stored a mutex but got {value:?} back")
+            value => panic!("BUG: Stored a mutex but got {value:?} back"),
         }
     }
 
@@ -172,7 +171,7 @@ impl<'tcx> Memory {
         let value = Value::Single(Single::MutexGuard(mutex_guard_ref));
         match self.link(place, value) {
             Value::Single(Single::MutexGuard(mutex_guard_ref)) => mutex_guard_ref,
-            value => panic!("BUG: Stored a mutex guard but got {value:?} back")
+            value => panic!("BUG: Stored a mutex guard but got {value:?} back"),
         }
     }
 
@@ -184,7 +183,7 @@ impl<'tcx> Memory {
         let value = Value::Single(Single::JoinHandle(thread_ref));
         match self.link(place, value) {
             Value::Single(Single::JoinHandle(thread_ref)) => thread_ref,
-            value => panic!("BUG: Stored a join handle but got {value:?} back")
+            value => panic!("BUG: Stored a join handle but got {value:?} back"),
         }
     }
 
@@ -196,7 +195,7 @@ impl<'tcx> Memory {
         let value = Value::Single(Single::Condvar(condvar_ref));
         match self.link(place, value) {
             Value::Single(Single::Condvar(condvar_ref)) => condvar_ref,
-            value => panic!("BUG: Stored a condition variable but got {value:?} back")
+            value => panic!("BUG: Stored a condition variable but got {value:?} back"),
         }
     }
 
@@ -226,7 +225,7 @@ impl<'tcx> Memory {
         }
 
         match &self[local] {
-            Value::Single(Single::Other) => false,
+            Value::None => false,
             Value::Single(_) => true,
             Value::Aggregate(values) => Self::find_value(values, &field_numbers),
         }
@@ -248,7 +247,7 @@ impl<'tcx> Memory {
 
             match current_values.get(next_index) {
                 None => return false,
-                Some(Value::Single(_)) => {
+                Some(Value::Single(_) | Value::None) => {
                     if index != last_index {
                         return false; // Reached a single value but there are more field indexes pending
                     }
@@ -280,7 +279,7 @@ impl<'tcx> Memory {
         );
 
         match &self[local] {
-            Value::Single(Single::Other) => {
+            Value::None => {
                 panic!("BUG: The place {place:?} should be linked to a value")
             }
             value @ Value::Aggregate(values) => {
@@ -315,7 +314,7 @@ impl<'tcx> Memory {
                         return value;
                     }
                     match value {
-                        Value::Single(_) => panic!("BUG: Encountered a single value where an aggregate was expected"),
+                        Value::Single(_) | Value::None => panic!("BUG: Encountered a single value where an aggregate was expected"),
                         Value::Aggregate(next_values) => {
                             current_values = next_values;
                             index += 1;
@@ -331,9 +330,9 @@ impl<'tcx> Memory {
     pub fn get_mutex(&self, place: &Place<'tcx>) -> &MutexRef {
         match self.get_linked_value(place) {
             Value::Single(single) => single.unpack_mutex().unwrap(),
-            Value::Aggregate(values) => panic!(
-                "BUG: The value does not contain a mutex, it contains an Aggregate {values:?}."
-            ),
+            value @ (Value::Aggregate(_) | Value::None) => {
+                panic!("BUG: The value does not contain a mutex, it contains: {value:?}.")
+            }
         }
     }
 
@@ -341,7 +340,9 @@ impl<'tcx> Memory {
     pub fn get_mutex_guard(&self, place: &Place<'tcx>) -> &MutexGuardRef {
         match self.get_linked_value(place) {
             Value::Single(single) => single.unpack_mutex_guard().unwrap(),
-            Value::Aggregate(values) => panic!("BUG: The value does not contain a mutex guard, it contains an Aggregate {values:?}.")
+            value @ (Value::Aggregate(_) | Value::None) => {
+                panic!("BUG: The value does not contain a mutex guard, it contains: {value:?}.")
+            }
         }
     }
 
@@ -349,7 +350,9 @@ impl<'tcx> Memory {
     pub fn get_join_handle(&self, place: &Place<'tcx>) -> &ThreadRef {
         match self.get_linked_value(place) {
             Value::Single(single) => single.unpack_join_handle().unwrap(),
-            Value::Aggregate(values) => panic!("BUG: The value does not contain a join handle, it contains an Aggregate {values:?}.")
+            value @ (Value::Aggregate(_) | Value::None) => {
+                panic!("BUG: The value does not contain a join handle, it contains: {value:?}.")
+            }
         }
     }
 
@@ -357,7 +360,9 @@ impl<'tcx> Memory {
     pub fn get_condvar(&self, place: &Place<'tcx>) -> &CondvarRef {
         match self.get_linked_value(place) {
             Value::Single(single) => single.unpack_condvar().unwrap(),
-            Value::Aggregate(values) => panic!("BUG: The value does not contain a condition variable, it contains an Aggregate {values:?}.")
+            value @ (Value::Aggregate(_) | Value::None) => panic!(
+                "BUG: The value does not contain a condition variable, it contains: {value:?}."
+            ),
         }
     }
 
@@ -371,7 +376,7 @@ impl<'tcx> Memory {
         let value = self.get_linked_value(place);
 
         match value {
-            Value::Single(_) => {
+            Value::Single(_) | Value::None => {
                 panic!("BUG: The place {place:?} should be linked to an aggregate")
             }
             value @ Value::Aggregate(_) => value.clone(),
@@ -403,12 +408,10 @@ impl<'tcx> Memory {
         let values: Vec<Value> = places_of_aggregate_fields
             .iter()
             .map(|place| {
-                place
-                    .as_ref()
-                    .map_or(Value::Single(Single::Other), |place| {
-                        let value = self.get_linked_value(place);
-                        value.clone()
-                    })
+                place.as_ref().map_or(Value::None, |place| {
+                    let value = self.get_linked_value(place);
+                    value.clone()
+                })
             })
             .collect();
 
