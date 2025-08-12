@@ -76,15 +76,6 @@ impl Value {
             ),
         }
     }
-
-    pub fn unpack_aggregate(&self) -> &Vec<Self> {
-        match self {
-            Self::Single(_) => {
-                panic!("BUG: The value does not contain an aggregate, it contains: {self}.")
-            }
-            Self::Aggregate(values) => values,
-        }
-    }
 }
 
 impl std::fmt::Display for Value {
@@ -107,11 +98,9 @@ impl std::fmt::Debug for Value {
         match self {
             Self::Single(single_value) => write!(f, "{single_value:?}"),
             Self::Aggregate(values) => {
-                let formatted_values: Vec<String> = values
-                    .iter()
-                    .map(std::string::ToString::to_string)
-                    .collect();
-                write!(f, "AGGREGATE [{:?}]", formatted_values.join(", "))
+                let formatted_values: Vec<String> =
+                    values.iter().map(|value| format!("{value:?}")).collect();
+                write!(f, "AGGREGATE [{}]", formatted_values.join(", "))
             }
         }
     }

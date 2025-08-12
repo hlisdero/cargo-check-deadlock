@@ -1,7 +1,8 @@
 //! Representation of the local memory of the function.
 //!
-//! It implements a mapping between
-//! memory places (`rustc_middle::mir::Place`) and a variant of `Value`.
+//! It implements a mapping between locals and a variant of `Value`.
+//! For ease of use, it receives memory places (`rustc_middle::mir::Place`)
+//! which it can unpack transparently and deal with fields accordingly.
 //!
 //! It is used to keep track of the sync variables
 //! (mutexes, mutex guards, join handles and condition variables)
@@ -12,9 +13,8 @@
 //! When the sync variable gets assigned,
 //! mark the new value as also containing the sync variable.
 //! When the sync variables are packed into a tuple or an `std::sync::Arc`,
-//! create an aggregate and pass it to new threads.
-//! The aggregated value can be accessed
-//! and its fields mapped to the memory of the new function.
+//! then the value is of variant `Aggregate`.
+//! Aggregates support containing other aggregates inside (nesting).
 //!
 //! More info:
 //! <https://rustc-dev-guide.rust-lang.org/mir/index.html#mir-data-types>
@@ -22,63 +22,139 @@
 mod value;
 
 use log::debug;
-use std::collections::HashMap;
+use std::ops::{Index, IndexMut};
 use std::rc::Rc;
 
 use crate::translator::sync::{Condvar, Mutex, MutexGuard, Thread};
-use value::Single;
-pub use value::{CondvarRef, MutexGuardRef, MutexRef, ThreadRef, Value};
+pub use value::{CondvarRef, MutexGuardRef, MutexRef, Single, ThreadRef, Value};
+
+type Local = usize;
+type FieldNumber = usize;
 
 type Place<'tcx> = rustc_middle::mir::Place<'tcx>;
 
-/// Print a debug message about a place that was linked to the same value twice.
-macro_rules! debug_same_type_same_value {
-    ($place:expr, $old_value:expr) => {
-        debug!("PLACE {:?} LINKED AGAIN TO SAME {:?}", $place, $old_value);
-    };
+pub struct Memory {
+    /// The actual store of the values, indexed by the `Local` number, e.g `_1`, `_10`, etc.
+    data: Vec<Value>,
 }
 
-/// Print a debug message about a place that was linked to a different value of the same type.
-macro_rules! debug_same_type_different_value {
-    ($place:expr, $old_value:expr) => {
-        debug!(
-            "PLACE {:?} WAS LINKED TO A DIFFERENT {:?}",
-            $place, $old_value
-        );
-    };
+impl Default for Memory {
+    fn default() -> Self {
+        Self {
+            data: vec![Value::Single(Single::Other); Self::INITIAL_SIZE],
+        }
+    }
 }
 
-/// Print a debug message about a place that was linked to a value of a different type.
-macro_rules! debug_different_type {
-    ($place:expr, $old_value:expr) => {
-        debug!("PLACE {:?} WAS LINKED TO A {:?}", $place, $old_value);
-    };
+impl Index<Local> for Memory {
+    type Output = Value;
+
+    fn index(&self, index: Local) -> &Self::Output {
+        &self.data[index]
+    }
 }
 
-#[derive(Default)]
-pub struct Memory<'tcx> {
-    map: HashMap<Place<'tcx>, Value>,
+impl IndexMut<Local> for Memory {
+    fn index_mut(&mut self, index: Local) -> &mut Self::Output {
+        if index >= self.data.len() {
+            // Use a replication factor of 1.5 since 2 seemed too big. This could be tweaked if needed.
+            self.data
+                .resize(index + index / 2, Value::Single(Single::Other));
+        }
+        &mut self.data[index]
+    }
 }
 
-impl<'tcx> Memory<'tcx> {
+impl std::fmt::Debug for Memory {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        // Write the header for the table
+        writeln!(f, "{:-<30}", "")?; // Separator line
+        writeln!(f, "{:<10} {:<20}", "Index", "Value")?;
+        writeln!(f, "{:-<30}", "")?; // Separator line
+
+        // Iterate over the data and format each entry
+        for (index, value) in self.data.iter().enumerate() {
+            writeln!(f, "{:<10} {:?}", format!("_{}", index), value)?;
+        }
+
+        Ok(())
+    }
+}
+
+impl<'tcx> Memory {
+    const INITIAL_SIZE: usize = 10;
+
+    /// Converts the place into a `Local` and a vector of `FieldNumber`.
+    /// Ignores the other variants of projection elements.
+    fn extract_local_and_field_number(place: &Place<'tcx>) -> (Local, Vec<FieldNumber>) {
+        let field_numbers: Vec<usize> = place
+            .projection
+            .iter()
+            .filter_map(|projection_elem| {
+                if let rustc_middle::mir::ProjectionElem::Field(number, _) = projection_elem {
+                    debug!(
+                        "PLACE {place:?} HAS A FIELD WITH NUMBER {:?}",
+                        number.as_usize()
+                    );
+                    Some(number.as_usize())
+                } else {
+                    None
+                }
+            })
+            .collect();
+
+        (place.local.into(), field_numbers)
+    }
+
+    /// Links any `Value` to the `Local` contained in the place.
+    /// Supports field numbers but only one level.
+    /// Returns a reference to the linked value.
+    ///
+    /// # Panics
+    ///
+    /// If the place contains more than 2 levels of field indirection, then the function panics
+    pub fn link(&mut self, place: Place<'tcx>, value: Value) -> &Value {
+        let (local, field_numbers) = Self::extract_local_and_field_number(&place);
+
+        match &mut self[local] {
+            Value::Single(Single::Other) => {
+                self[local] = value;
+                &self.data[local]
+            }
+            Value::Single(_) => {
+                if self[local] == value {
+                    // In some cases the MIR shows two separate assignments that
+                    // lead to the same linking. Nothing to do in this case.
+                    debug!("PLACE {place:?} LINKED TO SAME {:?}", self[local]);
+                    &self.data[local]
+                } else {
+                    // The type of the local never changes, this is a hard error.
+                    panic!("PLACE {place:?} WAS LINKED TO A {:?}", self[local]);
+                }
+            }
+            Value::Aggregate(old_values) => {
+                assert!(
+                    !field_numbers.is_empty(),
+                    "BUG: {place:?} was linked to an Aggregate {old_values:?}"
+                );
+                assert!(
+                    field_numbers.len() <= 1,
+                    "BUG: Value can only be linked with one level of field indirection, found {}",
+                    field_numbers.len()
+                );
+                old_values[field_numbers[0]] = value;
+                &self.data[local]
+            }
+        }
+    }
+
     /// Links a given place to a given mutex.
     /// Prints debug messages if the place was already linked.
     /// Returns a reference to the linked mutex.
     pub fn link_mutex(&mut self, place: Place<'tcx>, mutex: Mutex) -> &MutexRef {
-        let mutex_ref = Rc::new(mutex);
-        if let Some(old_value) = self.map.get(&place) {
-            let type_string = old_value.to_string();
-            let old_mutex_ref = old_value.unpack_mutex();
-
-            if mutex_ref == *old_mutex_ref {
-                debug_same_type_same_value!(place, type_string);
-            } else {
-                debug_same_type_different_value!(place, type_string);
-            }
-        }
+        let mutex_ref: Rc<Mutex> = Rc::new(mutex);
         let value = Value::Single(Single::Mutex(mutex_ref));
-        self.map.insert(place, value);
-        self.map[&place].unpack_mutex()
+        self.link(place, value).unpack_mutex()
     }
 
     /// Links a given place to a given mutex guard.
@@ -90,19 +166,8 @@ impl<'tcx> Memory<'tcx> {
         mutex_guard: MutexGuard,
     ) -> &MutexGuardRef {
         let mutex_guard_ref = Rc::new(mutex_guard);
-        if let Some(old_value) = self.map.get(&place) {
-            let type_string = old_value.to_string();
-            let old_mutex_guard_ref = old_value.unpack_mutex_guard();
-
-            if mutex_guard_ref == *old_mutex_guard_ref {
-                debug_same_type_same_value!(place, type_string);
-            } else {
-                debug_same_type_different_value!(place, type_string);
-            }
-        }
         let value = Value::Single(Single::MutexGuard(mutex_guard_ref));
-        self.map.insert(place, value);
-        self.map[&place].unpack_mutex_guard()
+        self.link(place, value).unpack_mutex_guard()
     }
 
     /// Links a given place to a given join handle.
@@ -110,19 +175,8 @@ impl<'tcx> Memory<'tcx> {
     /// Returns a reference to the linked join handle.
     pub fn link_join_handle(&mut self, place: Place<'tcx>, thread: Thread) -> &ThreadRef {
         let thread_ref = Rc::new(thread);
-        if let Some(old_value) = self.map.get(&place) {
-            let type_string = old_value.to_string();
-            let old_thread_ref = old_value.unpack_join_handle();
-
-            if thread_ref == *old_thread_ref {
-                debug_same_type_same_value!(place, type_string);
-            } else {
-                debug_same_type_different_value!(place, type_string);
-            }
-        }
         let value = Value::Single(Single::JoinHandle(thread_ref));
-        self.map.insert(place, value);
-        self.map[&place].unpack_join_handle()
+        self.link(place, value).unpack_join_handle()
     }
 
     /// Links a given place to a given condition variable.
@@ -130,32 +184,8 @@ impl<'tcx> Memory<'tcx> {
     /// Returns a reference to the linked condition variable.
     pub fn link_condvar(&mut self, place: Place<'tcx>, condvar: Condvar) -> &CondvarRef {
         let condvar_ref = Rc::new(condvar);
-        if let Some(old_value) = self.map.get(&place) {
-            let type_string = old_value.to_string();
-            let old_condvar_ref = old_value.unpack_condvar();
-
-            if condvar_ref == *old_condvar_ref {
-                debug_same_type_same_value!(place, type_string);
-            } else {
-                debug_same_type_different_value!(place, type_string);
-            }
-        }
         let value = Value::Single(Single::Condvar(condvar_ref));
-        self.map.insert(place, value);
-        self.map[&place].unpack_condvar()
-    }
-
-    /// Links a given place to a given aggregate.
-    ///
-    /// # Panics
-    ///
-    /// If the place was already linked, then the function panics.
-    pub fn link_aggregate(&mut self, place: Place<'tcx>, values: Vec<Value>) {
-        if let Some(old_value) = self.map.insert(place, Value::Aggregate(values)) {
-            panic!(
-                "BUG: There was a previous {old_value} linked to the place for the aggregate value"
-            );
-        }
+        self.link(place, value).unpack_condvar()
     }
 
     /// Links two places to the same value.
@@ -170,79 +200,179 @@ impl<'tcx> Memory<'tcx> {
         place_to_link: Place<'tcx>,
         place_linked: Place<'tcx>,
     ) {
-        let value = self.map.get(&place_linked).unwrap_or_else(|| {
-            panic!("BUG: The place {place_linked:?} should be linked to a value")
-        });
-        let cloned_value = std::clone::Clone::clone(value);
-
-        if let Some(old_value) = self.map.insert(place_to_link, value.clone()) {
-            if old_value == cloned_value {
-                debug_same_type_different_value!(place_to_link, old_value);
-            } else {
-                debug_different_type!(place_to_link, old_value);
-            }
-        }
+        let value = self.get_linked_value(&place_linked);
+        self.link(place_to_link, value.clone());
         debug!("SAME VALUE: {place_to_link:?} = {place_linked:?}",);
     }
 
     // Checks if the place is linked to a value, i.e, it contains a sync variable
     // or an aggregate that contains a sync variable.
     pub fn has_linked_value(&self, place: &Place<'tcx>) -> bool {
-        self.map.contains_key(place)
+        let (local, field_numbers) = Self::extract_local_and_field_number(place);
+        if local >= self.data.len() {
+            return false;
+        }
+
+        match &self[local] {
+            Value::Single(Single::Other) => false,
+            Value::Single(_) => true,
+            Value::Aggregate(values) => Self::find_value(values, &field_numbers),
+        }
+    }
+
+    /// Looks for a `Single` value stored in the local and the field numbers.
+    /// Supports any level of field indirection, e.g. `_2 = _1.0.1.2.3`
+    /// If it finds it, returns true. Otherwise false.
+    fn find_value(values: &[Value], field_numbers: &[FieldNumber]) -> bool {
+        if field_numbers.is_empty() {
+            return true; // An aggregate was found, nothing more to do
+        }
+        let mut index = 0;
+        let last_index = field_numbers.len() - 1;
+        let mut current_values = values;
+
+        while index <= last_index {
+            let next_index = field_numbers[index];
+
+            match current_values.get(next_index) {
+                None => return false,
+                Some(Value::Single(_)) => {
+                    if index != last_index {
+                        return false; // Reached a single value but there are more field indexes pending
+                    }
+                    return true;
+                }
+                Some(Value::Aggregate(next_values)) => {
+                    if index == last_index {
+                        return true;
+                    }
+                    current_values = next_values;
+                    index += 1;
+                }
+            }
+        }
+        false
     }
 
     /// Returns an immutable reference to the value linked to the given place.
+    /// If the place contains fields, it accesses the aggregates until it finds the value.
     ///
     /// # Panics
     ///
     /// If the place is not linked to a value, then the function panics.
     fn get_linked_value(&self, place: &Place<'tcx>) -> &Value {
-        self.map
-            .get(place)
-            .unwrap_or_else(|| panic!("BUG: The place {place:?} should be linked to a value"))
+        let (local, field_numbers) = Self::extract_local_and_field_number(place);
+        assert!(
+            local < self.data.len(),
+            "BUG: The place {place:?} is out of bound with respect to the memory data"
+        );
+
+        match &self[local] {
+            Value::Single(Single::Other) => {
+                panic!("BUG: The place {place:?} should be linked to a value")
+            }
+            value @ Value::Aggregate(values) => {
+                if field_numbers.is_empty() {
+                    value
+                } else {
+                    Self::get_value(values, &field_numbers)
+                }
+            }
+            value @ Value::Single(_) => value,
+        }
+    }
+
+    /// Get to the `Single` value stored in the local and the field numbers.
+    /// Supports any level of field indirection, e.g. `_2 = _1.0.1.2.3`
+    ///
+    /// # Panics
+    ///
+    /// If a single value cannot be found, then the function panics.
+    fn get_value<'value>(values: &'value [Value], field_numbers: &[FieldNumber]) -> &'value Value {
+        let mut index = 0;
+        let last_index = field_numbers.len() - 1;
+        let mut current_values = values;
+
+        while index <= last_index {
+            let next_index = field_numbers[index];
+
+            match current_values.get(next_index) {
+                None => panic!("BUG: A single value in {current_values:?} with field number {next_index} cannot be found"),
+                Some(value) => {
+                    if index == last_index {
+                        return value;
+                    }
+                    match value {
+                        Value::Single(_) => panic!("BUG: Encountered a single value where an aggregate was expected"),
+                        Value::Aggregate(next_values) => {
+                            current_values = next_values;
+                            index += 1;
+                        }
+                    }
+                },
+            }
+        }
+        panic!("BUG: A single value could not be found after traversing all field numbers");
     }
 
     /// Returns a reference to the mutex linked to the given place.
     pub fn get_mutex(&self, place: &Place<'tcx>) -> &MutexRef {
-        self.get_linked_value(place).unpack_mutex()
+        match self.get_linked_value(place) {
+            Value::Single(single) => single.unpack_mutex().unwrap(),
+            Value::Aggregate(values) => panic!(
+                "BUG: The value does not contain a mutex, it contains an Aggregate {values:?}."
+            ),
+        }
     }
 
     /// Returns a reference to the mutex guard linked to the given place.
     pub fn get_mutex_guard(&self, place: &Place<'tcx>) -> &MutexGuardRef {
-        self.get_linked_value(place).unpack_mutex_guard()
+        match self.get_linked_value(place) {
+            Value::Single(single) => single.unpack_mutex_guard().unwrap(),
+            Value::Aggregate(values) => panic!("BUG: The value does not contain a mutex guard, it contains an Aggregate {values:?}.")
+        }
     }
 
     /// Returns a reference to the join handle linked to the given place.
     pub fn get_join_handle(&self, place: &Place<'tcx>) -> &ThreadRef {
-        self.get_linked_value(place).unpack_join_handle()
+        match self.get_linked_value(place) {
+            Value::Single(single) => single.unpack_join_handle().unwrap(),
+            Value::Aggregate(values) => panic!("BUG: The value does not contain a join handle, it contains an Aggregate {values:?}.")
+        }
     }
 
     /// Returns a reference to the condition variable linked to the given place.
     pub fn get_condvar(&self, place: &Place<'tcx>) -> &CondvarRef {
-        self.get_linked_value(place).unpack_condvar()
+        match self.get_linked_value(place) {
+            Value::Single(single) => single.unpack_condvar().unwrap(),
+            Value::Aggregate(values) => panic!("BUG: The value does not contain a condition variable, it contains an Aggregate {values:?}.")
+        }
     }
 
-    /// Returns the vector of values contained inside the aggregate linked to the given place.
-    /// The vector is copied for the caller since the value may be used later by this function.
+    /// Returns the aggregate linked to the given place.
     ///
     /// # Panics
     ///
     /// If the place is not linked to a value, then the function panics.
-    pub fn copy_aggregate(&self, place: &Place<'tcx>) -> Vec<Value> {
-        self.map
-            .get(place)
-            .unwrap_or_else(|| panic!("BUG: The place {place:?} should be linked to an aggregate"))
-            .unpack_aggregate()
-            .clone()
+    /// If the place is not linked to an aggregate, then the function panics.
+    pub fn get_copy_aggregate(&self, place: &Place<'tcx>) -> Value {
+        let value = self.get_linked_value(place);
+
+        match value {
+            Value::Single(_) => {
+                panic!("BUG: The place {place:?} should be linked to an aggregate")
+            }
+            value @ Value::Aggregate(_) => value.clone(),
+        }
     }
 
     /// Checks whether the place is linked to a mutex guard.
     pub fn is_mutex_guard(&self, place: &Place<'tcx>) -> bool {
-        self.map.contains_key(place)
-            && matches!(
-                self.get_linked_value(place),
-                Value::Single(Single::MutexGuard(_))
-            )
+        if !self.has_linked_value(place) {
+            return false;
+        }
+        let value = self.get_linked_value(place);
+        matches!(value, Value::Single(Single::MutexGuard(_)))
     }
 
     /// Creates a new aggregate value from the places with sync variables to aggregate.
@@ -270,39 +400,7 @@ impl<'tcx> Memory<'tcx> {
             })
             .collect();
 
-        self.link_aggregate(place, values);
-    }
-
-    /// Links the field of an aggregate to a given place.
-    /// This is equivalent to moving out the value from the aggregate
-    /// and linking it to the place.
-    ///
-    /// # Panics
-    ///
-    /// If the place if not linked to an aggregate, then the function panics.
-    /// If the index is out of bounds, then the function panics.
-    pub fn link_field_in_aggregate(
-        &mut self,
-        place_to_link: Place<'tcx>,
-        place_linked: Place<'tcx>,
-        index: usize,
-    ) {
-        let values = self
-            .map
-            .get_mut(&place_linked)
-            .unwrap_or_else(|| {
-                panic!("BUG: The place {place_linked:?} should be linked to a value")
-            })
-            .unpack_aggregate();
-        let value = values
-            .get(index)
-            .unwrap_or_else(|| {
-                panic!(
-                    "BUG: The place {place_linked:?} does not contain a field with index {index}"
-                )
-            })
-            .clone();
-
-        assert!(self.map.insert(place_to_link, value).is_none(), "BUG: Could not link the field of {place_linked:?} with index {index} because {place_to_link:?} was already linked");
+        self.link(place, Value::Aggregate(values.clone()));
+        debug!("CREATED AGGREGATE AT {place:?} WITH VALUES {values:?}");
     }
 }

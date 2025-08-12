@@ -145,7 +145,7 @@ pub fn call_lock<'tcx>(
     destination: rustc_middle::mir::Place<'tcx>,
     places: Places,
     net: &mut PetriNet,
-    memory: &mut Memory<'tcx>,
+    memory: &mut Memory,
 ) {
     let places = places.ignore_cleanup_place();
     let transitions = call_foreign_function(function_name, index, places, net);
@@ -172,13 +172,13 @@ pub fn call_lock<'tcx>(
 /// - Creates a new `Mutex`.
 /// - Links the return place to the `Mutex`.
 /// - Returns a postprocessing task to notify the creation of this mutex.
-pub fn call_new<'tcx>(
+pub fn call_new(
     function_name: &str,
     index: usize,
-    destination: rustc_middle::mir::Place<'tcx>,
+    destination: rustc_middle::mir::Place,
     places: Places,
     net: &mut PetriNet,
-    memory: &mut Memory<'tcx>,
+    memory: &mut Memory,
 ) -> PostprocessingTask {
     call_foreign_function(function_name, index, places, net);
     // Create a new mutex
@@ -194,11 +194,11 @@ pub fn call_new<'tcx>(
 /// If that is the case, adds an unlock arc for the mutex corresponding to the mutex guard.
 /// The unlock arc is added for the usual transition as well as the cleanup transition.
 /// Otherwise do nothing.
-pub fn handle_mutex_guard_drop<'tcx>(
-    place: rustc_middle::mir::Place<'tcx>,
+pub fn handle_mutex_guard_drop(
+    place: rustc_middle::mir::Place,
     unlock_transition: &TransitionRef,
     net: &mut PetriNet,
-    memory: &Memory<'tcx>,
+    memory: &Memory,
 ) {
     if memory.is_mutex_guard(&place) {
         let mutex_guard_ref = memory.get_mutex_guard(&place);

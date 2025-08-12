@@ -31,7 +31,7 @@ use crate::naming::thread::{end_place_label, start_place_label};
 use crate::translator::function::Places;
 use crate::translator::mir_function::memory::{Memory, Value};
 use crate::translator::special_function::call_foreign_function;
-use crate::utils::{extract_nth_argument_as_place, get_field_number_in_projection};
+use crate::utils::extract_nth_argument_as_place;
 
 pub struct Thread {
     /// The transition from which the thread branches off at the start.
@@ -39,7 +39,7 @@ pub struct Thread {
     /// The definition ID that uniquely identifies the function run by the thread.
     def_id: rustc_hir::def_id::DefId,
     /// The aggregate value containing the sync variables passed to the thread.
-    aggregate: Vec<Value>,
+    aggregate: Value,
     /// The transition to which the thread joins in at the end.
     join_transition: OnceCell<TransitionRef>,
     /// An index to identify the thread.
@@ -60,7 +60,7 @@ impl Thread {
     pub const fn new(
         spawn_transition: TransitionRef,
         thread_function_def_id: rustc_hir::def_id::DefId,
-        aggregate: Vec<Value>,
+        aggregate: Value,
         index: usize,
     ) -> Self {
         Self {
@@ -100,8 +100,7 @@ impl Thread {
         (self.def_id, thread_start_place, thread_end_place)
     }
 
-    /// Moves the aggregated value containing the sync variables to the new function's memory.
-    /// Checks the debug info to detect places containing a synchronization variable passed to the new thread.
+    /// Moves the aggregated value containing the sync variables to the new function's memory in local `_1`.
     /// We are only interested in places of the form `_1.X` since `std::thread::spawn` only receives one argument.
     /// <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/mir/struct.VarDebugInfo.html>
     ///
@@ -109,36 +108,17 @@ impl Thread {
     ///
     /// The following line in the MIR output indicates that `_1.0` contains a mutex.
     /// `debug copy_data => (_1.0: std::sync::Arc<std::sync::Mutex<i32>>)`
-    pub fn move_sync_variables<'tcx>(
-        &self,
-        memory: &mut Memory<'tcx>,
-        tcx: rustc_middle::ty::TyCtxt<'tcx>,
-    ) {
-        // Link the aggregate itself, the local _1
-        let base_place = rustc_middle::mir::Place {
+    pub fn move_sync_variables(&self, memory: &mut Memory) {
+        let place: rustc_middle::mir::Place<'_> = rustc_middle::mir::Place {
             local: rustc_middle::mir::Local::from_usize(1),
             projection: rustc_middle::ty::List::empty(),
         };
-        memory.link_aggregate(base_place, self.aggregate.clone());
+        memory.link(place, self.aggregate.clone());
         debug!(
-            "MOVED AGGREGATE VALUE {base_place:?} WITH SYNC VARIABLES TO THE THREAD {}",
-            self.index
+            "MOVED AGGREGATE VALUE {place:?} WITH SYNC VARIABLES {:?} TO THE THREAD {}",
+            self.aggregate, self.index
         );
-
-        let body = tcx.optimized_mir(self.def_id);
-        for debug_info in &body.var_debug_info {
-            let rustc_middle::mir::VarDebugInfoContents::Place(place) = debug_info.value else {
-                // Not interested in the other variants of `VarDebugInfoContents`
-                continue;
-            };
-            if place.local != rustc_middle::mir::Local::from(1u32) {
-                // Not interested in locals other that `_1.X`
-                continue;
-            }
-            let field_number = get_field_number_in_projection(&place);
-            memory.link_field_in_aggregate(place, base_place, field_number);
-            debug!("LINKED FIELD {place:?} IN AGGREGATE",);
-        }
+        debug!("{memory:?}");
     }
 }
 
@@ -153,13 +133,13 @@ impl Thread {
 /// For instance, a thread that never returns will not cause a deadlock
 /// when joining it because the call could take the unwind path.
 /// In conclusion: Ignore the cleanup place, do not model it. Assume `join` never unwinds.
-pub fn call_join<'tcx>(
+pub fn call_join(
     function_name: &str,
     index: usize,
-    args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand<'tcx>>],
+    args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand>],
     places: Places,
     net: &mut PetriNet,
-    memory: &Memory<'tcx>,
+    memory: &Memory,
 ) {
     let places = places.ignore_cleanup_place();
     let transitions = call_foreign_function(function_name, index, places, net);

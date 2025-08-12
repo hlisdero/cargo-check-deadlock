@@ -120,13 +120,13 @@ impl Condvar {
 ///
 /// - Creates a new `Condvar`.
 /// - Links the return place to the `Condvar`.
-pub fn call_new<'tcx>(
+pub fn call_new(
     function_name: &str,
     index: usize,
-    destination: rustc_middle::mir::Place<'tcx>,
+    destination: rustc_middle::mir::Place,
     places: Places,
     net: &mut PetriNet,
-    memory: &mut Memory<'tcx>,
+    memory: &mut Memory,
 ) {
     call_foreign_function(function_name, index, places, net);
     // Create a new condvar
@@ -148,13 +148,13 @@ pub fn call_new<'tcx>(
 /// The reason is that any call may fail, which is equivalent to saying that the `notify_one`
 /// was never present in the program, leading to a false lost signal.
 /// In conclusion: Ignore the cleanup place, do not model it. Assume `notify_one` never unwinds.
-pub fn call_notify_one<'tcx>(
+pub fn call_notify_one(
     function_name: &str,
     index: usize,
-    args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand<'tcx>>],
+    args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand>],
     places: Places,
     net: &mut PetriNet,
-    memory: &Memory<'tcx>,
+    memory: &Memory,
 ) {
     let places = places.ignore_cleanup_place();
     let transitions = call_foreign_function(function_name, index, places, net);
@@ -189,7 +189,7 @@ pub fn call_wait<'tcx>(
     destination: rustc_middle::mir::Place<'tcx>,
     places: Places,
     net: &mut PetriNet,
-    memory: &mut Memory<'tcx>,
+    memory: &mut Memory,
 ) -> PostprocessingTask {
     // Retrieve the condvar from the local variable passed to the function as an argument.
     let self_ref = extract_nth_argument_as_place(args, 0).unwrap_or_else(|| {

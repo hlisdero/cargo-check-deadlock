@@ -10,9 +10,7 @@ use log::debug;
 use crate::data_structures::petri_net_interface::PetriNet;
 use crate::translator::function::{Places, PostprocessingTask};
 use crate::translator::mir_function::memory::Memory;
-use crate::utils::{
-    extract_nth_argument_as_place, get_field_number_in_projection, get_type_string,
-};
+use crate::utils::{extract_nth_argument_as_place, get_type_string};
 
 // Re-export the types that the module contains.
 // It does not make assumptions about how they are stored.
@@ -44,7 +42,7 @@ pub fn call_function<'tcx>(
     destination: rustc_middle::mir::Place<'tcx>,
     places: Places,
     net: &mut PetriNet,
-    memory: &mut Memory<'tcx>,
+    memory: &mut Memory,
 ) -> Option<PostprocessingTask> {
     match function_name {
         "std::sync::Condvar::new" => {
@@ -87,21 +85,6 @@ pub fn check_if_mutex_variable<'tcx>(
     ty_string.contains("std::sync::Mutex<") || ty_string.contains("std::sync::MutexGuard<")
 }
 
-/// Checks whether a place contains a sync variable
-/// (mutex, mutex guard, join handle or condition variable)
-pub fn check_if_sync_variable<'tcx>(
-    place: &rustc_middle::mir::Place<'tcx>,
-    caller_function_def_id: rustc_hir::def_id::DefId,
-    tcx: rustc_middle::ty::TyCtxt<'tcx>,
-) -> bool {
-    let ty_string = get_type_string(place, caller_function_def_id, tcx);
-
-    ty_string.contains("std::sync::Mutex<")
-        || ty_string.contains("std::sync::MutexGuard<")
-        || ty_string.contains("std::thread::JoinHandle<")
-        || ty_string.contains("std::sync::Condvar")
-}
-
 /// Checks whether the LHS place contains the same type as the RHS place
 /// or an aggregate which contains the same type inside.
 ///
@@ -137,17 +120,19 @@ pub fn check_aggregate_of_same_type<'tcx>(
 fn should_link_to_same_value<'tcx>(
     place_to_link: &rustc_middle::mir::Place<'tcx>,
     place_linked: &rustc_middle::mir::Place<'tcx>,
-    memory: &Memory<'tcx>,
+    memory: &Memory,
     caller_function_def_id: rustc_hir::def_id::DefId,
     tcx: rustc_middle::ty::TyCtxt<'tcx>,
 ) -> bool {
     let is_linked = memory.has_linked_value(place_linked);
     if !is_linked {
+        debug!("PLACE {place_linked:?} IS NOT LINKED SO PLACE {place_to_link:?} DOES NOT HAVE THE SAME VALUE");
         return false;
     }
     let has_same_type =
         check_aggregate_of_same_type(place_to_link, place_linked, caller_function_def_id, tcx);
     if !has_same_type {
+        debug!("THE TYPES OF PLACE {place_to_link:?} AND {place_linked:?} DO NOT MATCH SO AS TO HAVE THE SAME VALUE");
         return false;
     }
     true // has same type and the place is linked
@@ -165,10 +150,9 @@ fn should_link_to_same_value<'tcx>(
 pub fn handle_aggregate_assignment<'tcx>(
     place: &rustc_middle::mir::Place<'tcx>,
     operands: &Vec<rustc_middle::mir::Operand<'tcx>>,
-    memory: &mut Memory<'tcx>,
-    caller_function_def_id: rustc_hir::def_id::DefId,
-    tcx: rustc_middle::ty::TyCtxt<'tcx>,
+    memory: &mut Memory,
 ) {
+    let mut has_linked_value = false;
     let mut aggregate_fields: Vec<Option<rustc_middle::mir::Place<'tcx>>> = Vec::new();
 
     for operand in operands {
@@ -180,16 +164,16 @@ pub fn handle_aggregate_assignment<'tcx>(
             // Nothing to do if we found a constant as one of the operands.
             rustc_middle::mir::Operand::Constant(_) => continue,
         };
-        if check_if_sync_variable(rhs, caller_function_def_id, tcx) {
+        if memory.has_linked_value(rhs) {
+            has_linked_value = true;
             aggregate_fields.push(Some(*rhs));
         } else {
             aggregate_fields.push(None);
         }
     }
 
-    if !aggregate_fields.is_empty() {
+    if has_linked_value {
         memory.create_aggregate(*place, &aggregate_fields);
-        debug!("CREATED AGGREGATE AT {place:?} WITH PLACES {aggregate_fields:?}");
     }
 }
 
@@ -212,33 +196,10 @@ pub fn handle_aggregate_assignment<'tcx>(
 pub fn link_if_sync_variable<'tcx>(
     place_to_link: &rustc_middle::mir::Place<'tcx>,
     place_linked: &rustc_middle::mir::Place<'tcx>,
-    memory: &mut Memory<'tcx>,
+    memory: &mut Memory,
     caller_function_def_id: rustc_hir::def_id::DefId,
     tcx: rustc_middle::ty::TyCtxt<'tcx>,
 ) {
-    if !check_if_sync_variable(place_to_link, caller_function_def_id, tcx) {
-        return;
-    }
-    if place_linked.is_indirect() {
-        // Checks if the place has a `ProjectionElem::Deref`
-        let field_number = get_field_number_in_projection(place_linked);
-        // Create a new place without the projections
-        let mut base_place = *place_linked;
-        base_place.projection = rustc_middle::ty::List::empty();
-
-        if should_link_to_same_value(
-            place_to_link,
-            &base_place,
-            memory,
-            caller_function_def_id,
-            tcx,
-        ) {
-            debug!("ACCESS FIELD {field_number} AFTER DEREF IN BASE PLACE {base_place:?}");
-            memory.link_field_in_aggregate(*place_to_link, base_place, field_number);
-        }
-        return;
-    }
-
     if should_link_to_same_value(
         place_to_link,
         place_linked,
@@ -270,7 +231,7 @@ pub fn link_if_sync_variable<'tcx>(
 pub fn link_return_value_if_sync_variable<'tcx>(
     args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand<'tcx>>],
     return_value: rustc_middle::mir::Place<'tcx>,
-    memory: &mut Memory<'tcx>,
+    memory: &mut Memory,
     caller_function_def_id: rustc_hir::def_id::DefId,
     tcx: rustc_middle::ty::TyCtxt<'tcx>,
 ) {

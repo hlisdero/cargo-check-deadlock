@@ -46,7 +46,7 @@ use crate::utils::{
     extract_closure, extract_def_id_of_called_function_from_operand, extract_nth_argument_as_place,
 };
 use function::{Places, PostprocessingTask, Transitions};
-use mir_function::memory::MutexRef;
+use mir_function::memory::{MutexRef, Single, Value};
 use mir_function::MirFunction;
 use special_function::{
     call_diverging_function, call_foreign_function, call_panic_function, is_foreign_function,
@@ -69,7 +69,7 @@ pub struct Translator<'tcx> {
     program_panic: PlaceRef,
     /// The call stack of user-defined functions with a MIR representation.
     /// Other functions are translated in an abbreviated form.
-    call_stack: Stack<MirFunction<'tcx>>,
+    call_stack: Stack<MirFunction>,
     /// A counter that keeps track how many times each function was called so far.
     /// Functions are identified by their name.
     function_counter: HashMapCounter,
@@ -165,7 +165,7 @@ impl<'tcx> Translator<'tcx> {
 
             let new_function = self.call_stack.peek_mut();
             info!("Moving sync variables to the thread function...");
-            thread.move_sync_variables(&mut new_function.memory, self.tcx);
+            thread.move_sync_variables(&mut new_function.memory);
 
             self.translate_top_call_stack();
             info!("Finished translating thread {index}");
@@ -633,7 +633,9 @@ impl<'tcx> Translator<'tcx> {
         // The sync variables captured by the closure are aggregated together in a single value in memory
         // Get this vector of values that should be re-mapped in the new thread's memory.
         let memory = &mut current_function.memory;
-        let aggregate = closure.map_or_else(Vec::new, |place| memory.copy_aggregate(&place));
+        let aggregate = closure.map_or(Value::Single(Single::Other), |place| {
+            memory.get_copy_aggregate(&place)
+        });
 
         // Create a new thread
         let index = self.threads.len();

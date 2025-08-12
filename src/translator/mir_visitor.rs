@@ -50,13 +50,7 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
             }
             rustc_middle::mir::Rvalue::Aggregate(_, operands) => {
                 let function = self.call_stack.peek_mut();
-                handle_aggregate_assignment(
-                    place,
-                    &operands.raw,
-                    &mut function.memory,
-                    function.def_id,
-                    self.tcx,
-                );
+                handle_aggregate_assignment(place, &operands.raw, &mut function.memory);
             }
             // No need to do anything for the other cases for now.
             _ => {}
