@@ -12,8 +12,8 @@ jobs:
     env:
       RUSTUP_TOOLCHAIN: nightly
     steps:
-      - uses: actions/checkout@v4.1.0
-      - uses: actions-rust-lang/setup-rust-toolchain@v1
+      - uses: actions/checkout@v5.0.0
+      - uses: actions-rust-lang/setup-rust-toolchain@v1.14.1
         with:
           toolchain: nightly
           components: rust-src, rustc-dev, llvm-tools-preview
