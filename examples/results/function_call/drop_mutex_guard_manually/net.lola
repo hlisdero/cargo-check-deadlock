@@ -1,0 +1,117 @@
+PLACE
+    MUTEX_0,
+    PROGRAM_END,
+    PROGRAM_PANIC,
+    PROGRAM_START,
+    main_BB1,
+    main_BB2,
+    main_BB3,
+    try_drop_mutex_guard_manually_0_BB1,
+    try_drop_mutex_guard_manually_0_BB2,
+    try_drop_mutex_guard_manually_0_BB3,
+    try_drop_mutex_guard_manually_0_BB4,
+    try_drop_mutex_guard_manually_0_BB5,
+    try_drop_mutex_guard_manually_0_BB6,
+    try_drop_mutex_guard_manually_0_BB7,
+    try_drop_mutex_guard_manually_0_BB8,
+    try_drop_mutex_guard_manually_0_BB9;
+
+MARKING
+    MUTEX_0 : 1,
+    PROGRAM_END : 0,
+    PROGRAM_PANIC : 0,
+    PROGRAM_START : 1,
+    main_BB1 : 0,
+    main_BB2 : 0,
+    main_BB3 : 0,
+    try_drop_mutex_guard_manually_0_BB1 : 0,
+    try_drop_mutex_guard_manually_0_BB2 : 0,
+    try_drop_mutex_guard_manually_0_BB3 : 0,
+    try_drop_mutex_guard_manually_0_BB4 : 0,
+    try_drop_mutex_guard_manually_0_BB5 : 0,
+    try_drop_mutex_guard_manually_0_BB6 : 0,
+    try_drop_mutex_guard_manually_0_BB7 : 0,
+    try_drop_mutex_guard_manually_0_BB8 : 0,
+    try_drop_mutex_guard_manually_0_BB9 : 0;
+
+TRANSITION main_RETURN
+  CONSUME
+    main_BB3 : 1;
+  PRODUCE
+    PROGRAM_END : 1;
+TRANSITION std_mem_drop_0_CALL
+  CONSUME
+    try_drop_mutex_guard_manually_0_BB2 : 1;
+  PRODUCE
+    MUTEX_0 : 1,
+    try_drop_mutex_guard_manually_0_BB3 : 1;
+TRANSITION std_mem_drop_0_CALL_UNWIND
+  CONSUME
+    try_drop_mutex_guard_manually_0_BB2 : 1;
+  PRODUCE
+    MUTEX_0 : 1,
+    try_drop_mutex_guard_manually_0_BB8 : 1;
+TRANSITION std_ops_Deref_deref_0_CALL
+  CONSUME
+    main_BB2 : 1;
+  PRODUCE
+    try_drop_mutex_guard_manually_0_BB1 : 1;
+TRANSITION std_ops_Deref_deref_1_CALL
+  CONSUME
+    try_drop_mutex_guard_manually_0_BB3 : 1;
+  PRODUCE
+    try_drop_mutex_guard_manually_0_BB4 : 1;
+TRANSITION std_sync_Arc_T_new_0_CALL
+  CONSUME
+    main_BB1 : 1;
+  PRODUCE
+    main_BB2 : 1;
+TRANSITION std_sync_Mutex_T_lock_0_CALL
+  CONSUME
+    MUTEX_0 : 1,
+    try_drop_mutex_guard_manually_0_BB1 : 1;
+  PRODUCE
+    try_drop_mutex_guard_manually_0_BB2 : 1;
+TRANSITION std_sync_Mutex_T_lock_1_CALL
+  CONSUME
+    MUTEX_0 : 1,
+    try_drop_mutex_guard_manually_0_BB4 : 1;
+  PRODUCE
+    try_drop_mutex_guard_manually_0_BB5 : 1;
+TRANSITION std_sync_Mutex_T_new_0_CALL
+  CONSUME
+    PROGRAM_START : 1;
+  PRODUCE
+    main_BB1 : 1;
+TRANSITION try_drop_mutex_guard_manually_0_DROP_5
+  CONSUME
+    try_drop_mutex_guard_manually_0_BB5 : 1;
+  PRODUCE
+    MUTEX_0 : 1,
+    try_drop_mutex_guard_manually_0_BB6 : 1;
+TRANSITION try_drop_mutex_guard_manually_0_DROP_6
+  CONSUME
+    try_drop_mutex_guard_manually_0_BB6 : 1;
+  PRODUCE
+    try_drop_mutex_guard_manually_0_BB7 : 1;
+TRANSITION try_drop_mutex_guard_manually_0_DROP_8
+  CONSUME
+    try_drop_mutex_guard_manually_0_BB8 : 1;
+  PRODUCE
+    try_drop_mutex_guard_manually_0_BB9 : 1;
+TRANSITION try_drop_mutex_guard_manually_0_DROP_UNWIND_5
+  CONSUME
+    try_drop_mutex_guard_manually_0_BB5 : 1;
+  PRODUCE
+    MUTEX_0 : 1,
+    try_drop_mutex_guard_manually_0_BB8 : 1;
+TRANSITION try_drop_mutex_guard_manually_0_RETURN
+  CONSUME
+    try_drop_mutex_guard_manually_0_BB7 : 1;
+  PRODUCE
+    main_BB3 : 1;
+TRANSITION try_drop_mutex_guard_manually_0_UNWIND_9
+  CONSUME
+    try_drop_mutex_guard_manually_0_BB9 : 1;
+  PRODUCE
+    PROGRAM_PANIC : 1;

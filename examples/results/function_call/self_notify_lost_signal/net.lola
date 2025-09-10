@@ -1,0 +1,127 @@
+PLACE
+    CONDVAR_0_NOTIFY,
+    CONDVAR_0_WAIT_ENABLED,
+    MUTEX_0,
+    PROGRAM_END,
+    PROGRAM_PANIC,
+    PROGRAM_START,
+    main_BB1,
+    main_BB2,
+    main_BB3,
+    try_self_notify_0_BB1,
+    try_self_notify_0_BB2,
+    try_self_notify_0_BB3,
+    try_self_notify_0_BB4,
+    try_self_notify_0_BB5,
+    try_self_notify_0_BB6,
+    try_self_notify_0_BB7,
+    try_self_notify_0_BB8;
+
+MARKING
+    CONDVAR_0_NOTIFY : 0,
+    CONDVAR_0_WAIT_ENABLED : 1,
+    MUTEX_0 : 1,
+    PROGRAM_END : 0,
+    PROGRAM_PANIC : 0,
+    PROGRAM_START : 1,
+    main_BB1 : 0,
+    main_BB2 : 0,
+    main_BB3 : 0,
+    try_self_notify_0_BB1 : 0,
+    try_self_notify_0_BB2 : 0,
+    try_self_notify_0_BB3 : 0,
+    try_self_notify_0_BB4 : 0,
+    try_self_notify_0_BB5 : 0,
+    try_self_notify_0_BB6 : 0,
+    try_self_notify_0_BB7 : 0,
+    try_self_notify_0_BB8 : 0;
+
+TRANSITION CONDVAR_0_LOST_SIGNAL
+  CONSUME
+    CONDVAR_0_NOTIFY : 1,
+    CONDVAR_0_WAIT_ENABLED : 1;
+  PRODUCE
+    CONDVAR_0_WAIT_ENABLED : 1;
+TRANSITION CONDVAR_0_NOTIFY_RECEIVED
+  CONSUME
+    CONDVAR_0_NOTIFY : 1,
+    MUTEX_0 : 1;
+  PRODUCE
+    CONDVAR_0_WAIT_ENABLED : 1,
+    try_self_notify_0_BB4 : 1;
+TRANSITION CONDVAR_0_WAIT_START
+  CONSUME
+    CONDVAR_0_WAIT_ENABLED : 1,
+    try_self_notify_0_BB3 : 1;
+  PRODUCE
+    MUTEX_0 : 1;
+TRANSITION main_RETURN
+  CONSUME
+    main_BB3 : 1;
+  PRODUCE
+    PROGRAM_END : 1;
+TRANSITION std_result_Result_unwrap_0_CALL
+  CONSUME
+    try_self_notify_0_BB1 : 1;
+  PRODUCE
+    try_self_notify_0_BB2 : 1;
+TRANSITION std_sync_Condvar_new_0_CALL
+  CONSUME
+    main_BB1 : 1;
+  PRODUCE
+    main_BB2 : 1;
+TRANSITION std_sync_Condvar_notify_one_0_CALL
+  CONSUME
+    try_self_notify_0_BB2 : 1;
+  PRODUCE
+    CONDVAR_0_NOTIFY : 1,
+    try_self_notify_0_BB3 : 1;
+TRANSITION std_sync_Mutex_T_lock_0_CALL
+  CONSUME
+    MUTEX_0 : 1,
+    main_BB2 : 1;
+  PRODUCE
+    try_self_notify_0_BB1 : 1;
+TRANSITION std_sync_Mutex_T_new_0_CALL
+  CONSUME
+    PROGRAM_START : 1;
+  PRODUCE
+    main_BB1 : 1;
+TRANSITION try_self_notify_0_DROP_4
+  CONSUME
+    try_self_notify_0_BB4 : 1;
+  PRODUCE
+    MUTEX_0 : 1,
+    try_self_notify_0_BB5 : 1;
+TRANSITION try_self_notify_0_DROP_7
+  CONSUME
+    try_self_notify_0_BB7 : 1;
+  PRODUCE
+    MUTEX_0 : 1,
+    try_self_notify_0_BB6 : 1;
+TRANSITION try_self_notify_0_DROP_UNWIND_4
+  CONSUME
+    try_self_notify_0_BB4 : 1;
+  PRODUCE
+    MUTEX_0 : 1,
+    try_self_notify_0_BB8 : 1;
+TRANSITION try_self_notify_0_RETURN
+  CONSUME
+    try_self_notify_0_BB5 : 1;
+  PRODUCE
+    main_BB3 : 1;
+TRANSITION try_self_notify_0_SWITCH_INT_FROM_BB8_TO_BB6
+  CONSUME
+    try_self_notify_0_BB8 : 1;
+  PRODUCE
+    try_self_notify_0_BB6 : 1;
+TRANSITION try_self_notify_0_SWITCH_INT_FROM_BB8_TO_BB7
+  CONSUME
+    try_self_notify_0_BB8 : 1;
+  PRODUCE
+    try_self_notify_0_BB7 : 1;
+TRANSITION try_self_notify_0_UNWIND_6
+  CONSUME
+    try_self_notify_0_BB6 : 1;
+  PRODUCE
+    PROGRAM_PANIC : 1;

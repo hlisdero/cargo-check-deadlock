@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pnml xmlns="http://www.pnml.org/version-2009/grammar/pnml">
+  <net id="net0" type="http://www.pnml.org/version-2009/grammar/ptnet">
+    <page id="page0">
+      <place id="MUTEX_0">
+        <name>
+          <text>MUTEX_0</text>
+        </name>
+        <initialMarking>
+          <text>1</text>
+        </initialMarking>
+      </place>
+      <place id="PROGRAM_END">
+        <name>
+          <text>PROGRAM_END</text>
+        </name>
+      </place>
+      <place id="PROGRAM_PANIC">
+        <name>
+          <text>PROGRAM_PANIC</text>
+        </name>
+      </place>
+      <place id="PROGRAM_START">
+        <name>
+          <text>PROGRAM_START</text>
+        </name>
+        <initialMarking>
+          <text>1</text>
+        </initialMarking>
+      </place>
+      <place id="main_BB1">
+        <name>
+          <text>main_BB1</text>
+        </name>
+      </place>
+      <place id="main_BB2">
+        <name>
+          <text>main_BB2</text>
+        </name>
+      </place>
+      <place id="main_BB3">
+        <name>
+          <text>main_BB3</text>
+        </name>
+      </place>
+      <place id="try_drop_mutex_guard_manually_0_BB1">
+        <name>
+          <text>try_drop_mutex_guard_manually_0_BB1</text>
+        </name>
+      </place>
+      <place id="try_drop_mutex_guard_manually_0_BB2">
+        <name>
+          <text>try_drop_mutex_guard_manually_0_BB2</text>
+        </name>
+      </place>
+      <place id="try_drop_mutex_guard_manually_0_BB3">
+        <name>
+          <text>try_drop_mutex_guard_manually_0_BB3</text>
+        </name>
+      </place>
+      <place id="try_drop_mutex_guard_manually_0_BB4">
+        <name>
+          <text>try_drop_mutex_guard_manually_0_BB4</text>
+        </name>
+      </place>
+      <place id="try_drop_mutex_guard_manually_0_BB5">
+        <name>
+          <text>try_drop_mutex_guard_manually_0_BB5</text>
+        </name>
+      </place>
+      <place id="try_drop_mutex_guard_manually_0_BB6">
+        <name>
+          <text>try_drop_mutex_guard_manually_0_BB6</text>
+        </name>
+      </place>
+      <place id="try_drop_mutex_guard_manually_0_BB7">
+        <name>
+          <text>try_drop_mutex_guard_manually_0_BB7</text>
+        </name>
+      </place>
+      <place id="try_drop_mutex_guard_manually_0_BB8">
+        <name>
+          <text>try_drop_mutex_guard_manually_0_BB8</text>
+        </name>
+      </place>
+      <place id="try_drop_mutex_guard_manually_0_BB9">
+        <name>
+          <text>try_drop_mutex_guard_manually_0_BB9</text>
+        </name>
+      </place>
+      <transition id="main_RETURN">
+        <name>
+          <text>main_RETURN</text>
+        </name>
+      </transition>
+      <transition id="std_mem_drop_0_CALL">
+        <name>
+          <text>std_mem_drop_0_CALL</text>
+        </name>
+      </transition>
+      <transition id="std_mem_drop_0_CALL_UNWIND">
+        <name>
+          <text>std_mem_drop_0_CALL_UNWIND</text>
+        </name>
+      </transition>
+      <transition id="std_ops_Deref_deref_0_CALL">
+        <name>
+          <text>std_ops_Deref_deref_0_CALL</text>
+        </name>
+      </transition>
+      <transition id="std_ops_Deref_deref_1_CALL">
+        <name>
+          <text>std_ops_Deref_deref_1_CALL</text>
+        </name>
+      </transition>
+      <transition id="std_sync_Arc_T_new_0_CALL">
+        <name>
+          <text>std_sync_Arc_T_new_0_CALL</text>
+        </name>
+      </transition>
+      <transition id="std_sync_Mutex_T_lock_0_CALL">
+        <name>
+          <text>std_sync_Mutex_T_lock_0_CALL</text>
+        </name>
+      </transition>
+      <transition id="std_sync_Mutex_T_lock_1_CALL">
+        <name>
+          <text>std_sync_Mutex_T_lock_1_CALL</text>
+        </name>
+      </transition>
+      <transition id="std_sync_Mutex_T_new_0_CALL">
+        <name>
+          <text>std_sync_Mutex_T_new_0_CALL</text>
+        </name>
+      </transition>
+      <transition id="try_drop_mutex_guard_manually_0_DROP_5">
+        <name>
+          <text>try_drop_mutex_guard_manually_0_DROP_5</text>
+        </name>
+      </transition>
+      <transition id="try_drop_mutex_guard_manually_0_DROP_6">
+        <name>
+          <text>try_drop_mutex_guard_manually_0_DROP_6</text>
+        </name>
+      </transition>
+      <transition id="try_drop_mutex_guard_manually_0_DROP_8">
+        <name>
+          <text>try_drop_mutex_guard_manually_0_DROP_8</text>
+        </name>
+      </transition>
+      <transition id="try_drop_mutex_guard_manually_0_DROP_UNWIND_5">
+        <name>
+          <text>try_drop_mutex_guard_manually_0_DROP_UNWIND_5</text>
+        </name>
+      </transition>
+      <transition id="try_drop_mutex_guard_manually_0_RETURN">
+        <name>
+          <text>try_drop_mutex_guard_manually_0_RETURN</text>
+        </name>
+      </transition>
+      <transition id="try_drop_mutex_guard_manually_0_UNWIND_9">
+        <name>
+          <text>try_drop_mutex_guard_manually_0_UNWIND_9</text>
+        </name>
+      </transition>
+      <arc source="MUTEX_0" target="std_sync_Mutex_T_lock_0_CALL" id="(MUTEX_0, std_sync_Mutex_T_lock_0_CALL)">
+        <name>
+          <text>(MUTEX_0, std_sync_Mutex_T_lock_0_CALL)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="MUTEX_0" target="std_sync_Mutex_T_lock_1_CALL" id="(MUTEX_0, std_sync_Mutex_T_lock_1_CALL)">
+        <name>
+          <text>(MUTEX_0, std_sync_Mutex_T_lock_1_CALL)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="PROGRAM_START" target="std_sync_Mutex_T_new_0_CALL" id="(PROGRAM_START, std_sync_Mutex_T_new_0_CALL)">
+        <name>
+          <text>(PROGRAM_START, std_sync_Mutex_T_new_0_CALL)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main_BB1" target="std_sync_Arc_T_new_0_CALL" id="(main_BB1, std_sync_Arc_T_new_0_CALL)">
+        <name>
+          <text>(main_BB1, std_sync_Arc_T_new_0_CALL)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main_BB2" target="std_ops_Deref_deref_0_CALL" id="(main_BB2, std_ops_Deref_deref_0_CALL)">
+        <name>
+          <text>(main_BB2, std_ops_Deref_deref_0_CALL)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main_BB3" target="main_RETURN" id="(main_BB3, main_RETURN)">
+        <name>
+          <text>(main_BB3, main_RETURN)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="try_drop_mutex_guard_manually_0_BB1" target="std_sync_Mutex_T_lock_0_CALL" id="(try_drop_mutex_guard_manually_0_BB1, std_sync_Mutex_T_lock_0_CALL)">
+        <name>
+          <text>(try_drop_mutex_guard_manually_0_BB1, std_sync_Mutex_T_lock_0_CALL)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="try_drop_mutex_guard_manually_0_BB2" target="std_mem_drop_0_CALL" id="(try_drop_mutex_guard_manually_0_BB2, std_mem_drop_0_CALL)">
+        <name>
+          <text>(try_drop_mutex_guard_manually_0_BB2, std_mem_drop_0_CALL)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="try_drop_mutex_guard_manually_0_BB2" target="std_mem_drop_0_CALL_UNWIND" id="(try_drop_mutex_guard_manually_0_BB2, std_mem_drop_0_CALL_UNWIND)">
+        <name>
+          <text>(try_drop_mutex_guard_manually_0_BB2, std_mem_drop_0_CALL_UNWIND)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="try_drop_mutex_guard_manually_0_BB3" target="std_ops_Deref_deref_1_CALL" id="(try_drop_mutex_guard_manually_0_BB3, std_ops_Deref_deref_1_CALL)">
+        <name>
+          <text>(try_drop_mutex_guard_manually_0_BB3, std_ops_Deref_deref_1_CALL)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="try_drop_mutex_guard_manually_0_BB4" target="std_sync_Mutex_T_lock_1_CALL" id="(try_drop_mutex_guard_manually_0_BB4, std_sync_Mutex_T_lock_1_CALL)">
+        <name>
+          <text>(try_drop_mutex_guard_manually_0_BB4, std_sync_Mutex_T_lock_1_CALL)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="try_drop_mutex_guard_manually_0_BB5" target="try_drop_mutex_guard_manually_0_DROP_5" id="(try_drop_mutex_guard_manually_0_BB5, try_drop_mutex_guard_manually_0_DROP_5)">
+        <name>
+          <text>(try_drop_mutex_guard_manually_0_BB5, try_drop_mutex_guard_manually_0_DROP_5)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="try_drop_mutex_guard_manually_0_BB5" target="try_drop_mutex_guard_manually_0_DROP_UNWIND_5" id="(try_drop_mutex_guard_manually_0_BB5, try_drop_mutex_guard_manually_0_DROP_UNWIND_5)">
+        <name>
+          <text>(try_drop_mutex_guard_manually_0_BB5, try_drop_mutex_guard_manually_0_DROP_UNWIND_5)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="try_drop_mutex_guard_manually_0_BB6" target="try_drop_mutex_guard_manually_0_DROP_6" id="(try_drop_mutex_guard_manually_0_BB6, try_drop_mutex_guard_manually_0_DROP_6)">
+        <name>
+          <text>(try_drop_mutex_guard_manually_0_BB6, try_drop_mutex_guard_manually_0_DROP_6)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="try_drop_mutex_guard_manually_0_BB7" target="try_drop_mutex_guard_manually_0_RETURN" id="(try_drop_mutex_guard_manually_0_BB7, try_drop_mutex_guard_manually_0_RETURN)">
+        <name>
+          <text>(try_drop_mutex_guard_manually_0_BB7, try_drop_mutex_guard_manually_0_RETURN)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="try_drop_mutex_guard_manually_0_BB8" target="try_drop_mutex_guard_manually_0_DROP_8" id="(try_drop_mutex_guard_manually_0_BB8, try_drop_mutex_guard_manually_0_DROP_8)">
+        <name>
+          <text>(try_drop_mutex_guard_manually_0_BB8, try_drop_mutex_guard_manually_0_DROP_8)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="try_drop_mutex_guard_manually_0_BB9" target="try_drop_mutex_guard_manually_0_UNWIND_9" id="(try_drop_mutex_guard_manually_0_BB9, try_drop_mutex_guard_manually_0_UNWIND_9)">
+        <name>
+          <text>(try_drop_mutex_guard_manually_0_BB9, try_drop_mutex_guard_manually_0_UNWIND_9)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="main_RETURN" target="PROGRAM_END" id="(main_RETURN, PROGRAM_END)">
+        <name>
+          <text>(main_RETURN, PROGRAM_END)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="std_mem_drop_0_CALL" target="MUTEX_0" id="(std_mem_drop_0_CALL, MUTEX_0)">
+        <name>
+          <text>(std_mem_drop_0_CALL, MUTEX_0)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="std_mem_drop_0_CALL" target="try_drop_mutex_guard_manually_0_BB3" id="(std_mem_drop_0_CALL, try_drop_mutex_guard_manually_0_BB3)">
+        <name>
+          <text>(std_mem_drop_0_CALL, try_drop_mutex_guard_manually_0_BB3)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="std_mem_drop_0_CALL_UNWIND" target="MUTEX_0" id="(std_mem_drop_0_CALL_UNWIND, MUTEX_0)">
+        <name>
+          <text>(std_mem_drop_0_CALL_UNWIND, MUTEX_0)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="std_mem_drop_0_CALL_UNWIND" target="try_drop_mutex_guard_manually_0_BB8" id="(std_mem_drop_0_CALL_UNWIND, try_drop_mutex_guard_manually_0_BB8)">
+        <name>
+          <text>(std_mem_drop_0_CALL_UNWIND, try_drop_mutex_guard_manually_0_BB8)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="std_ops_Deref_deref_0_CALL" target="try_drop_mutex_guard_manually_0_BB1" id="(std_ops_Deref_deref_0_CALL, try_drop_mutex_guard_manually_0_BB1)">
+        <name>
+          <text>(std_ops_Deref_deref_0_CALL, try_drop_mutex_guard_manually_0_BB1)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="std_ops_Deref_deref_1_CALL" target="try_drop_mutex_guard_manually_0_BB4" id="(std_ops_Deref_deref_1_CALL, try_drop_mutex_guard_manually_0_BB4)">
+        <name>
+          <text>(std_ops_Deref_deref_1_CALL, try_drop_mutex_guard_manually_0_BB4)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="std_sync_Arc_T_new_0_CALL" target="main_BB2" id="(std_sync_Arc_T_new_0_CALL, main_BB2)">
+        <name>
+          <text>(std_sync_Arc_T_new_0_CALL, main_BB2)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="std_sync_Mutex_T_lock_0_CALL" target="try_drop_mutex_guard_manually_0_BB2" id="(std_sync_Mutex_T_lock_0_CALL, try_drop_mutex_guard_manually_0_BB2)">
+        <name>
+          <text>(std_sync_Mutex_T_lock_0_CALL, try_drop_mutex_guard_manually_0_BB2)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="std_sync_Mutex_T_lock_1_CALL" target="try_drop_mutex_guard_manually_0_BB5" id="(std_sync_Mutex_T_lock_1_CALL, try_drop_mutex_guard_manually_0_BB5)">
+        <name>
+          <text>(std_sync_Mutex_T_lock_1_CALL, try_drop_mutex_guard_manually_0_BB5)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="std_sync_Mutex_T_new_0_CALL" target="main_BB1" id="(std_sync_Mutex_T_new_0_CALL, main_BB1)">
+        <name>
+          <text>(std_sync_Mutex_T_new_0_CALL, main_BB1)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="try_drop_mutex_guard_manually_0_DROP_5" target="MUTEX_0" id="(try_drop_mutex_guard_manually_0_DROP_5, MUTEX_0)">
+        <name>
+          <text>(try_drop_mutex_guard_manually_0_DROP_5, MUTEX_0)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="try_drop_mutex_guard_manually_0_DROP_5" target="try_drop_mutex_guard_manually_0_BB6" id="(try_drop_mutex_guard_manually_0_DROP_5, try_drop_mutex_guard_manually_0_BB6)">
+        <name>
+          <text>(try_drop_mutex_guard_manually_0_DROP_5, try_drop_mutex_guard_manually_0_BB6)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="try_drop_mutex_guard_manually_0_DROP_6" target="try_drop_mutex_guard_manually_0_BB7" id="(try_drop_mutex_guard_manually_0_DROP_6, try_drop_mutex_guard_manually_0_BB7)">
+        <name>
+          <text>(try_drop_mutex_guard_manually_0_DROP_6, try_drop_mutex_guard_manually_0_BB7)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="try_drop_mutex_guard_manually_0_DROP_8" target="try_drop_mutex_guard_manually_0_BB9" id="(try_drop_mutex_guard_manually_0_DROP_8, try_drop_mutex_guard_manually_0_BB9)">
+        <name>
+          <text>(try_drop_mutex_guard_manually_0_DROP_8, try_drop_mutex_guard_manually_0_BB9)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="try_drop_mutex_guard_manually_0_DROP_UNWIND_5" target="MUTEX_0" id="(try_drop_mutex_guard_manually_0_DROP_UNWIND_5, MUTEX_0)">
+        <name>
+          <text>(try_drop_mutex_guard_manually_0_DROP_UNWIND_5, MUTEX_0)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="try_drop_mutex_guard_manually_0_DROP_UNWIND_5" target="try_drop_mutex_guard_manually_0_BB8" id="(try_drop_mutex_guard_manually_0_DROP_UNWIND_5, try_drop_mutex_guard_manually_0_BB8)">
+        <name>
+          <text>(try_drop_mutex_guard_manually_0_DROP_UNWIND_5, try_drop_mutex_guard_manually_0_BB8)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="try_drop_mutex_guard_manually_0_RETURN" target="main_BB3" id="(try_drop_mutex_guard_manually_0_RETURN, main_BB3)">
+        <name>
+          <text>(try_drop_mutex_guard_manually_0_RETURN, main_BB3)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="try_drop_mutex_guard_manually_0_UNWIND_9" target="PROGRAM_PANIC" id="(try_drop_mutex_guard_manually_0_UNWIND_9, PROGRAM_PANIC)">
+        <name>
+          <text>(try_drop_mutex_guard_manually_0_UNWIND_9, PROGRAM_PANIC)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+    </page>
+  </net>
+</pnml>
