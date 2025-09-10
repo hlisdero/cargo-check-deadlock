@@ -234,7 +234,7 @@ impl<'tcx> Memory {
     /// # Panics
     ///
     /// If the place is not linked to a value, then the function panics.
-    fn get_linked_value(&self, place: &Place<'tcx>) -> &Value {
+    pub fn get_linked_value(&self, place: &Place<'tcx>) -> &Value {
         let (local, field_numbers) = Self::extract_local_and_field_number(place);
         assert!(
             local < self.data.len(),

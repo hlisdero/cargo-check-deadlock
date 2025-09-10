@@ -416,7 +416,7 @@ impl<'tcx> Translator<'tcx> {
             return;
         }
         // Default case: A function with MIR representation
-        self.call_mir_function(function_def_id, function_name, places);
+        self.call_mir_function(function_def_id, function_name, args, places);
     }
 
     /// Checks whether the first argument (the self reference) is a mutex or a mutex guard.
@@ -441,6 +441,7 @@ impl<'tcx> Translator<'tcx> {
         &mut self,
         function_def_id: rustc_hir::def_id::DefId,
         function_name: &str,
+        args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand<'tcx>>],
         places: Places,
     ) {
         let index = self.function_counter.get_count(function_name);
@@ -458,27 +459,55 @@ impl<'tcx> Translator<'tcx> {
                     &indexed_mir_function_cleanup_label(function_name, index),
                 );
 
-                self.call_stack.push(MirFunction::new(
+                let mir_function = self.init_mir_function(
                     function_def_id,
-                    indexed_mir_function_name(function_name, index),
+                    function_name,
+                    args,
+                    index,
                     start_place,
                     end_place,
-                ));
+                );
+                self.call_stack.push(mir_function);
             }
             Places::Basic {
                 start_place,
                 end_place,
             } => {
-                self.call_stack.push(MirFunction::new(
+                let mir_function = self.init_mir_function(
                     function_def_id,
-                    indexed_mir_function_name(function_name, index),
+                    function_name,
+                    args,
+                    index,
                     start_place,
                     end_place,
-                ));
+                );
+                self.call_stack.push(mir_function);
             }
         }
         info!("Pushed function {function_name} to the translation call stack");
         self.translate_top_call_stack();
+    }
+
+    fn init_mir_function(
+        &self,
+        function_def_id: rustc_hir::def_id::DefId,
+        function_name: &str,
+        args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand<'tcx>>],
+        index: usize,
+        start_place: PlaceRef,
+        end_place: PlaceRef,
+    ) -> MirFunction {
+        let current_function = self.call_stack.peek();
+
+        let mut mir_function = MirFunction::new(
+            function_def_id,
+            indexed_mir_function_name(function_name, index),
+            start_place,
+            end_place,
+        );
+
+        mir_function.map_args_to_memory(args, &current_function.memory);
+        mir_function
     }
 
     /// Call to a foreign function. It is the default for standard and core library calls.
