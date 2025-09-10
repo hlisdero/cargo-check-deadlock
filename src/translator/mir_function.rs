@@ -16,6 +16,7 @@ mod basic_block;
 pub mod memory;
 mod terminator;
 
+use log::debug;
 use std::collections::HashMap;
 
 use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef};
@@ -57,6 +58,33 @@ impl MirFunction {
             active_block: None,
             basic_blocks: HashMap::new(),
             memory: Memory::default(),
+        }
+    }
+
+    pub fn map_args_to_memory(
+        &mut self,
+        args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand<'_>>],
+        calling_function_memory: &Memory,
+    ) {
+        for (index, arg) in args.iter().enumerate() {
+            let index = index + 1; // Place _0 is the return place, locals start at _1
+            let operand = &arg.node;
+            let linked_place = match operand {
+                rustc_middle::mir::Operand::Move(place)
+                | rustc_middle::mir::Operand::Copy(place) => *place,
+                rustc_middle::mir::Operand::Constant(_) => continue, // Constants are not mapped in memory
+            };
+
+            let place: rustc_middle::mir::Place<'_> = rustc_middle::mir::Place {
+                local: rustc_middle::mir::Local::from_usize(index),
+                projection: rustc_middle::ty::List::empty(),
+            };
+
+            if calling_function_memory.has_linked_value(&linked_place) {
+                let value = calling_function_memory.get_linked_value(&linked_place);
+                self.memory.link(place, value.clone());
+                debug!("LINKED PLACE {linked_place:?} IN CALLING FUNCTION TO PLACE {place:?} IN CALLED FUNCTION");
+            }
         }
     }
 
