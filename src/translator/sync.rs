@@ -10,7 +10,7 @@ use log::debug;
 use crate::data_structures::petri_net_interface::PetriNet;
 use crate::translator::function::{Places, PostprocessingTask};
 use crate::translator::mir_function::memory::Memory;
-use crate::utils::{extract_nth_argument_as_place, get_type_string};
+use crate::utils::get_type_string;
 
 // Re-export the types that the module contains.
 // It does not make assumptions about how they are stored.
@@ -208,45 +208,5 @@ pub fn link_if_sync_variable<'tcx>(
         tcx,
     ) {
         memory.link_place_to_same_value(*place_to_link, *place_linked);
-    }
-}
-
-/// Checks if the first argument for a function call contains a mutex, a mutex guard,
-/// a join handle or a condition variable, i.e. a synchronization variable.
-/// If the first argument contains a synchronization variable, links it to the return value.
-/// If there is no first argument or it is a constant,
-/// then there is nothing to check, therefore the function simply returns.
-///
-/// Why check only the first argument?
-/// Because most function in the standard library involving synchronization primitives
-/// receive it through the first argument. For instance:
-///  * `std::clone::Clone::clone`
-///  * `std::ops::Deref::deref`
-///  * `std::ops::DerefMut::deref_mut`
-///  * `std::result::Result::<T, E>::unwrap`
-///  * `std::sync::Arc::<T>::new`
-///
-/// Receives a reference to the memory of the caller function to
-/// link the return local variable to the synchronization variable.
-pub fn link_return_value_if_sync_variable<'tcx>(
-    args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand<'tcx>>],
-    return_value: rustc_middle::mir::Place<'tcx>,
-    memory: &mut Memory,
-    caller_function_def_id: rustc_hir::def_id::DefId,
-    tcx: rustc_middle::ty::TyCtxt<'tcx>,
-) {
-    let Some(first_argument) = extract_nth_argument_as_place(args, 0) else {
-        // Nothing to check: Either the first argument is not present or it is a constant.
-        return;
-    };
-
-    if should_link_to_same_value(
-        &return_value,
-        &first_argument,
-        memory,
-        caller_function_def_id,
-        tcx,
-    ) {
-        memory.link_place_to_same_value(return_value, first_argument);
     }
 }

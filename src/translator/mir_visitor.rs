@@ -13,6 +13,8 @@ use rustc_middle::mir::TerminatorKind::{
 };
 use rustc_middle::mir::UnwindAction;
 
+use log::debug;
+
 use super::sync::{handle_aggregate_assignment, link_if_sync_variable, mutex};
 use super::Translator;
 
@@ -126,9 +128,14 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
                 unwind,
                 fn_span: _,
                 call_source: _,
-            } => {
-                self.call_function(func, args, destination, target, unwind);
-            }
+            } => match self.call_function(func, args, destination, target, unwind) {
+                Some(return_value) => {
+                    let function = self.call_stack.peek_mut();
+                    function.memory.link(destination, return_value);
+                    debug!("LINKED PLACE {destination:?} TO RETURN VALUE OF FUNCTION {func:?}");
+                }
+                None => return,
+            },
             Assert {
                 cond: _,
                 expected: _,

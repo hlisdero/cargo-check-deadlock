@@ -289,6 +289,31 @@ impl<'tcx> Memory {
         panic!("BUG: A single value could not be found after traversing all field numbers");
     }
 
+    /// Returns the return value (PLACE `_0`) if the place is linked to a value, otherwise returns `None`.
+    pub fn get_return_value(&self) -> Option<Value> {
+        let return_place = rustc_middle::mir::Place {
+            local: rustc_middle::mir::Local::from_usize(0),
+            projection: rustc_middle::ty::List::empty(),
+        };
+
+        if self.has_linked_value(&return_place) {
+            Some(self.get_linked_value(&return_place).clone())
+        } else {
+            None
+        }
+    }
+
+    /// Returns a copy of the value linked to the given place.
+    /// If the place contains fields, it accesses the aggregates until it finds the value.
+    /// If the place is not linked, it returns `None`.
+    pub fn get_linked_value_or_none(&self, place: &Place<'tcx>) -> Option<Value> {
+        if self.has_linked_value(place) {
+            Some(self.get_linked_value(place).clone())
+        } else {
+            None
+        }
+    }
+
     /// Returns a reference to the mutex linked to the given place.
     pub fn get_mutex(&self, place: &Place<'tcx>) -> &MutexRef {
         match self.get_linked_value(place) {

@@ -42,6 +42,7 @@ use crate::data_structures::petri_net_interface::{connect_places, PetriNet, Plac
 use crate::data_structures::stack::Stack;
 use crate::naming::function::{indexed_mir_function_cleanup_label, indexed_mir_function_name};
 use crate::naming::{PROGRAM_END, PROGRAM_PANIC, PROGRAM_START};
+use crate::translator::mir_function::memory::Single;
 use crate::utils::{
     extract_closure, extract_def_id_of_called_function_from_operand, extract_nth_argument_as_place,
 };
@@ -221,15 +222,18 @@ impl<'tcx> Translator<'tcx> {
     /// Inside the MIR Visitor, when a call to another function happens, this method will be called again
     /// to jump to the new function. Eventually a "leaf function" will be reached, the functions will exit and the
     /// elements from the stack will be popped in order.
-    fn translate_top_call_stack(&mut self) {
+    fn translate_top_call_stack(&mut self) -> Option<Value> {
         let function = self.call_stack.peek();
         // Obtain the MIR representation of the function.
         let body = self.tcx.optimized_mir(function.def_id);
         // Visit the MIR body of the function using the methods of `rustc_middle::mir::visit::Visitor`.
         // <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/mir/visit/trait.Visitor.html>
         self.visit_body(body);
+        let function = self.call_stack.peek();
+        let value = function.memory.get_return_value();
         // Finished processing this function.
         self.call_stack.pop();
+        value
     }
 
     /// Jumps from the current function on the top of the stack
@@ -254,7 +258,7 @@ impl<'tcx> Translator<'tcx> {
         destination: rustc_middle::mir::Place<'tcx>,
         target: Option<rustc_middle::mir::BasicBlock>,
         unwind: UnwindAction,
-    ) {
+    ) -> Option<Value> {
         let current_function = self.call_stack.peek_mut();
         let function_def_id =
             extract_def_id_of_called_function_from_operand(func, current_function.def_id, self.tcx);
@@ -329,7 +333,7 @@ impl<'tcx> Translator<'tcx> {
                 } else {
                     call_diverging_function(&start_place, &function_name, &mut self.net);
                 }
-                return;
+                return None; // Diverging function do not return a value
             }
             (Some(return_block), UnwindAction::Unreachable) => {
                 // Support the unreachable case simply by matching the cleanup place to the program end place.
@@ -355,44 +359,48 @@ impl<'tcx> Translator<'tcx> {
             }
         };
 
-        self.start_function_call(function_def_id, &function_name, args, destination, places);
+        let return_value = self.translate_function_call(
+            function_def_id,
+            &function_name,
+            args,
+            destination,
+            places,
+        );
         self.function_counter.increment(&function_name);
+        return_value
     }
 
-    /// Starts the corresponding handler for the function call.
+    /// Finds and calls the corresponding handler for the function call.
     /// Checks if the function is one of the
     /// supported synchronization or multithreading functions,
     /// then if the function is a foreign function call and
     /// lastly handle the standard MIR function case.
-    pub fn start_function_call(
+    pub fn translate_function_call(
         &mut self,
         function_def_id: rustc_hir::def_id::DefId,
         function_name: &str,
         args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand<'tcx>>],
         destination: rustc_middle::mir::Place<'tcx>,
         places: Places,
-    ) {
+    ) -> Option<Value> {
         // Special cases
         if function_name == "std::mem::drop" {
-            self.call_mem_drop(function_name, args, destination, places);
-            return;
+            return self.call_mem_drop(function_name, args, places);
         }
         if (function_name == "std::ops::Deref::deref"
             || function_name == "std::ops::DerefMut::deref_mut")
             && self.is_self_ref_mutex(function_name, args)
         {
-            self.call_deref_mutex(function_name, args, destination, places);
-            return;
+            return self.call_deref_mutex(function_name, args, places);
         }
         if function_name == "std::result::Result::<T, E>::unwrap"
             && self.is_self_ref_mutex(function_name, args)
         {
-            self.call_unwrap_mutex(function_name, args, destination, places);
-            return;
+            return self.call_unwrap_mutex(function_name, args, places);
         }
         if function_name == "std::thread::spawn" {
-            self.call_thread_spawn(function_name, args, destination, places);
-            return;
+            let return_value = self.call_thread_spawn(function_name, args, destination, places);
+            return Some(return_value);
         }
         // Sync or multithreading function
         if sync::is_supported_function(function_name) {
@@ -408,15 +416,30 @@ impl<'tcx> Translator<'tcx> {
             {
                 self.postprocessing.push(task);
             }
-            return;
+            return None;
         }
         // Default case for standard and core library calls
         if is_foreign_function(function_def_id, function_name, self.tcx) {
-            self.call_foreign_function(function_name, args, destination, places);
-            return;
+            let index = self.function_counter.get_count(function_name);
+            call_foreign_function(function_name, index, places, &mut self.net);
+            return self.get_linked_value_in_first_argument(args);
         }
         // Default case: A function with MIR representation
-        self.call_mir_function(function_def_id, function_name, args, places);
+        self.call_mir_function(function_def_id, function_name, args, places)
+    }
+
+    /// Returns the value linked to the place pointed to by the first operand in the function call
+    /// if the place is linked to a value. Otherwise, returns `None`.
+    /// This handles several cases where the sync variable is just "passed" through a function that receives a single parameter.
+    fn get_linked_value_in_first_argument(
+        &mut self,
+        args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand<'tcx>>],
+    ) -> Option<Value> {
+        let Some(first_argument) = extract_nth_argument_as_place(args, 0) else {
+            return None; // Nothing to return: Either the first argument is not present or it is a constant.
+        };
+        let function = self.call_stack.peek_mut();
+        function.memory.get_linked_value_or_none(&first_argument)
     }
 
     /// Checks whether the first argument (the self reference) is a mutex or a mutex guard.
@@ -443,7 +466,7 @@ impl<'tcx> Translator<'tcx> {
         function_name: &str,
         args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand<'tcx>>],
         places: Places,
-    ) {
+    ) -> Option<Value> {
         let index = self.function_counter.get_count(function_name);
 
         match places {
@@ -485,7 +508,7 @@ impl<'tcx> Translator<'tcx> {
             }
         }
         info!("Pushed function {function_name} to the translation call stack");
-        self.translate_top_call_stack();
+        self.translate_top_call_stack()
     }
 
     fn init_mir_function(
@@ -510,53 +533,20 @@ impl<'tcx> Translator<'tcx> {
         mir_function
     }
 
-    /// Call to a foreign function. It is the default for standard and core library calls.
-    /// It is a non-recursive call for the translation process.
-    /// It is also reused by other handlers since this is the basic case.
-    ///
-    /// Translates a call to a function with given function name using
-    /// the same representation as in `special_function::call_foreign_function`.
+    /// Call to `std::mem::drop`.
+    /// Non-recursive call for the translation process.
+    /// Returns `None` as there is no return value from this function.
     ///
     /// A separate counter is incremented every time that
     /// the function is called to generate a unique label.
-    ///
-    /// Performs a check to keep track of synchronization primitives.
-    /// In case the first argument is a mutex, mutex guard, join handle or condition variable,
-    /// it links the first argument of the function to its return value.
-    ///
-    /// Returns the transitions representing the function call.
-    fn call_foreign_function(
-        &mut self,
-        function_name: &str,
-        args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand<'tcx>>],
-        destination: rustc_middle::mir::Place<'tcx>,
-        places: Places,
-    ) -> Transitions {
-        let index = self.function_counter.get_count(function_name);
-        let transitions = call_foreign_function(function_name, index, places, &mut self.net);
-
-        let current_function = self.call_stack.peek_mut();
-        sync::link_return_value_if_sync_variable(
-            args,
-            destination,
-            &mut current_function.memory,
-            current_function.def_id,
-            self.tcx,
-        );
-
-        transitions
-    }
-
-    /// Call to `std::mem::drop`.
-    /// Non-recursive call for the translation process.
     fn call_mem_drop(
         &mut self,
         function_name: &str,
         args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand<'tcx>>],
-        destination: rustc_middle::mir::Place<'tcx>,
         places: Places,
-    ) {
-        let transitions = self.call_foreign_function(function_name, args, destination, places);
+    ) -> Option<Value> {
+        let index = self.function_counter.get_count(function_name);
+        let transitions = call_foreign_function(function_name, index, places, &mut self.net);
 
         let dropped_place = extract_nth_argument_as_place(args, 0).unwrap_or_else(|| {
             panic!("BUG: `{function_name}` should receive the value to be dropped as a place")
@@ -574,6 +564,7 @@ impl<'tcx> Translator<'tcx> {
                 mutex::handle_mutex_guard_drop(dropped_place, &cleanup, net, memory);
             }
         }
+        None
     }
 
     /// Call to `std::ops::Deref::deref` or `std::ops::DerefMut::deref_mut`.
@@ -587,26 +578,34 @@ impl<'tcx> Translator<'tcx> {
     /// was never present in the program, leading to a false lost signal.
     /// In conclusion: Ignore the cleanup place, do not model it.
     /// Assume `deref` and `deref_mut` never unwind when dereferencing a variable linked to a mutex or a mutex guard.
+    ///
+    /// A separate counter is incremented every time that
+    /// the function is called to generate a unique label.
     fn call_deref_mutex(
         &mut self,
         function_name: &str,
         args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand<'tcx>>],
-        destination: rustc_middle::mir::Place<'tcx>,
         places: Places,
-    ) {
+    ) -> Option<Value> {
+        let index = self.function_counter.get_count(function_name);
         let places = places.ignore_cleanup_place();
-        let transitions = self.call_foreign_function(function_name, args, destination, places);
+        let transitions = call_foreign_function(function_name, index, places, &mut self.net);
         let transition = transitions.default();
 
+        let Some(first_argument) = extract_nth_argument_as_place(args, 0) else {
+            return None; // Nothing to return: Either the first argument is not present or it is a constant.
+        };
+        let current_function = self.call_stack.peek_mut();
+
         if function_name == "std::ops::DerefMut::deref_mut" {
-            let reference = extract_nth_argument_as_place(args, 0).unwrap_or_else(|| {
-                panic!("BUG: `{function_name}` should receive a reference as a place")
-            });
-            let function = self.call_stack.peek_mut();
-            let mutex_guard_ref = function.memory.get_mutex_guard(&reference);
+            let mutex_guard_ref = current_function.memory.get_mutex_guard(&first_argument);
             mutex_guard_ref.mutex.add_deref_mut_transition(transition);
             info!("Encountered a mutable dereference of a mutex guard");
         }
+
+        current_function
+            .memory
+            .get_linked_value_or_none(&first_argument)
     }
 
     /// Call to `std::result::Result::<T, E>::unwrap`.
@@ -618,15 +617,19 @@ impl<'tcx> Translator<'tcx> {
     /// was never present in the program, leading to a false lost signal.
     /// In conclusion: Ignore the cleanup place, do not model it.
     /// Assume `unwrap` never unwinds when applied to a variable linked to a mutex or a mutex guard.
+    ///
+    /// A separate counter is incremented every time that
+    /// the function is called to generate a unique label.
     fn call_unwrap_mutex(
         &mut self,
         function_name: &str,
         args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand<'tcx>>],
-        destination: rustc_middle::mir::Place<'tcx>,
         places: Places,
-    ) {
+    ) -> Option<Value> {
         let places = places.ignore_cleanup_place();
-        self.call_foreign_function(function_name, args, destination, places);
+        let index = self.function_counter.get_count(function_name);
+        call_foreign_function(function_name, index, places, &mut self.net);
+        self.get_linked_value_in_first_argument(args)
     }
 
     /// Call to `std::thread::spawn`.
@@ -637,14 +640,18 @@ impl<'tcx> Translator<'tcx> {
     /// - Gets the sync variables passed in to the closure.
     /// - Adds the thread to the `ThreadManager`.
     /// - Links the return place to the `ThreadRef`.
+    ///
+    /// A separate counter is incremented every time that
+    /// the function is called to generate a unique label.
     fn call_thread_spawn(
         &mut self,
         function_name: &str,
         args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand<'tcx>>],
         destination: rustc_middle::mir::Place<'tcx>,
         places: Places,
-    ) {
-        let transitions = self.call_foreign_function(function_name, args, destination, places);
+    ) -> Value {
+        let index = self.function_counter.get_count(function_name);
+        let transitions = call_foreign_function(function_name, index, places, &mut self.net);
         let transition = transitions.default();
 
         // Extract the definition ID of the thread function
@@ -676,5 +683,6 @@ impl<'tcx> Translator<'tcx> {
         // Add the thread to the translator
         self.threads.push_back(thread_ref.clone());
         info!("Found thread {index} and pushed it to the back of the thread translation queue");
+        Value::Single(Single::JoinHandle(thread_ref.clone()))
     }
 }
