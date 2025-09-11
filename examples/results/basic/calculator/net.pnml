@@ -225,64 +225,64 @@
           <text>main_BB9</text>
         </name>
       </place>
-      <transition id="core_fmt_rt_Argument__&apos;___new_display_0_CALL">
+      <transition id="core_fmt_rt_Argument__new_display_0_CALL">
         <name>
-          <text>core_fmt_rt_Argument__'___new_display_0_CALL</text>
+          <text>core_fmt_rt_Argument__new_display_0_CALL</text>
         </name>
       </transition>
-      <transition id="core_fmt_rt_Argument__&apos;___new_display_0_CALL_UNWIND">
+      <transition id="core_fmt_rt_Argument__new_display_0_CALL_UNWIND">
         <name>
-          <text>core_fmt_rt_Argument__'___new_display_0_CALL_UNWIND</text>
+          <text>core_fmt_rt_Argument__new_display_0_CALL_UNWIND</text>
         </name>
       </transition>
-      <transition id="core_fmt_rt_Argument__&apos;___new_display_1_CALL">
+      <transition id="core_fmt_rt_Argument__new_display_1_CALL">
         <name>
-          <text>core_fmt_rt_Argument__'___new_display_1_CALL</text>
+          <text>core_fmt_rt_Argument__new_display_1_CALL</text>
         </name>
       </transition>
-      <transition id="core_fmt_rt_Argument__&apos;___new_display_1_CALL_UNWIND">
+      <transition id="core_fmt_rt_Argument__new_display_1_CALL_UNWIND">
         <name>
-          <text>core_fmt_rt_Argument__'___new_display_1_CALL_UNWIND</text>
+          <text>core_fmt_rt_Argument__new_display_1_CALL_UNWIND</text>
         </name>
       </transition>
-      <transition id="core_fmt_rt_Argument__&apos;___new_display_2_CALL">
+      <transition id="core_fmt_rt_Argument__new_display_2_CALL">
         <name>
-          <text>core_fmt_rt_Argument__'___new_display_2_CALL</text>
+          <text>core_fmt_rt_Argument__new_display_2_CALL</text>
         </name>
       </transition>
-      <transition id="core_fmt_rt_Argument__&apos;___new_display_2_CALL_UNWIND">
+      <transition id="core_fmt_rt_Argument__new_display_2_CALL_UNWIND">
         <name>
-          <text>core_fmt_rt_Argument__'___new_display_2_CALL_UNWIND</text>
+          <text>core_fmt_rt_Argument__new_display_2_CALL_UNWIND</text>
         </name>
       </transition>
-      <transition id="core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_0_CALL">
+      <transition id="core_fmt_rt__impl_std_fmt_Arguments__new_v1_0_CALL">
         <name>
-          <text>core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_0_CALL</text>
+          <text>core_fmt_rt__impl_std_fmt_Arguments__new_v1_0_CALL</text>
         </name>
       </transition>
-      <transition id="core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_0_CALL_UNWIND">
+      <transition id="core_fmt_rt__impl_std_fmt_Arguments__new_v1_0_CALL_UNWIND">
         <name>
-          <text>core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_0_CALL_UNWIND</text>
+          <text>core_fmt_rt__impl_std_fmt_Arguments__new_v1_0_CALL_UNWIND</text>
         </name>
       </transition>
-      <transition id="core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_1_CALL">
+      <transition id="core_fmt_rt__impl_std_fmt_Arguments__new_v1_1_CALL">
         <name>
-          <text>core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_1_CALL</text>
+          <text>core_fmt_rt__impl_std_fmt_Arguments__new_v1_1_CALL</text>
         </name>
       </transition>
-      <transition id="core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_1_CALL_UNWIND">
+      <transition id="core_fmt_rt__impl_std_fmt_Arguments__new_v1_1_CALL_UNWIND">
         <name>
-          <text>core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_1_CALL_UNWIND</text>
+          <text>core_fmt_rt__impl_std_fmt_Arguments__new_v1_1_CALL_UNWIND</text>
         </name>
       </transition>
-      <transition id="core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_2_CALL">
+      <transition id="core_fmt_rt__impl_std_fmt_Arguments__new_v1_2_CALL">
         <name>
-          <text>core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_2_CALL</text>
+          <text>core_fmt_rt__impl_std_fmt_Arguments__new_v1_2_CALL</text>
         </name>
       </transition>
-      <transition id="core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_2_CALL_UNWIND">
+      <transition id="core_fmt_rt__impl_std_fmt_Arguments__new_v1_2_CALL_UNWIND">
         <name>
-          <text>core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_2_CALL_UNWIND</text>
+          <text>core_fmt_rt__impl_std_fmt_Arguments__new_v1_2_CALL_UNWIND</text>
         </name>
       </transition>
       <transition id="core_str__impl_str__parse_0_CALL">
@@ -777,17 +777,17 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB20" target="core_fmt_rt_Argument__&apos;___new_display_1_CALL" id="(main_BB20, core_fmt_rt_Argument__&apos;___new_display_1_CALL)">
+      <arc source="main_BB20" target="core_fmt_rt_Argument__new_display_1_CALL" id="(main_BB20, core_fmt_rt_Argument__new_display_1_CALL)">
         <name>
-          <text>(main_BB20, core_fmt_rt_Argument__'___new_display_1_CALL)</text>
+          <text>(main_BB20, core_fmt_rt_Argument__new_display_1_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB20" target="core_fmt_rt_Argument__&apos;___new_display_1_CALL_UNWIND" id="(main_BB20, core_fmt_rt_Argument__&apos;___new_display_1_CALL_UNWIND)">
+      <arc source="main_BB20" target="core_fmt_rt_Argument__new_display_1_CALL_UNWIND" id="(main_BB20, core_fmt_rt_Argument__new_display_1_CALL_UNWIND)">
         <name>
-          <text>(main_BB20, core_fmt_rt_Argument__'___new_display_1_CALL_UNWIND)</text>
+          <text>(main_BB20, core_fmt_rt_Argument__new_display_1_CALL_UNWIND)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -953,17 +953,17 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB32" target="core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_1_CALL" id="(main_BB32, core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_1_CALL)">
+      <arc source="main_BB32" target="core_fmt_rt__impl_std_fmt_Arguments__new_v1_1_CALL" id="(main_BB32, core_fmt_rt__impl_std_fmt_Arguments__new_v1_1_CALL)">
         <name>
-          <text>(main_BB32, core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_1_CALL)</text>
+          <text>(main_BB32, core_fmt_rt__impl_std_fmt_Arguments__new_v1_1_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB32" target="core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_1_CALL_UNWIND" id="(main_BB32, core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_1_CALL_UNWIND)">
+      <arc source="main_BB32" target="core_fmt_rt__impl_std_fmt_Arguments__new_v1_1_CALL_UNWIND" id="(main_BB32, core_fmt_rt__impl_std_fmt_Arguments__new_v1_1_CALL_UNWIND)">
         <name>
-          <text>(main_BB32, core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_1_CALL_UNWIND)</text>
+          <text>(main_BB32, core_fmt_rt__impl_std_fmt_Arguments__new_v1_1_CALL_UNWIND)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -993,33 +993,33 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB35" target="core_fmt_rt_Argument__&apos;___new_display_2_CALL" id="(main_BB35, core_fmt_rt_Argument__&apos;___new_display_2_CALL)">
+      <arc source="main_BB35" target="core_fmt_rt_Argument__new_display_2_CALL" id="(main_BB35, core_fmt_rt_Argument__new_display_2_CALL)">
         <name>
-          <text>(main_BB35, core_fmt_rt_Argument__'___new_display_2_CALL)</text>
+          <text>(main_BB35, core_fmt_rt_Argument__new_display_2_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB35" target="core_fmt_rt_Argument__&apos;___new_display_2_CALL_UNWIND" id="(main_BB35, core_fmt_rt_Argument__&apos;___new_display_2_CALL_UNWIND)">
+      <arc source="main_BB35" target="core_fmt_rt_Argument__new_display_2_CALL_UNWIND" id="(main_BB35, core_fmt_rt_Argument__new_display_2_CALL_UNWIND)">
         <name>
-          <text>(main_BB35, core_fmt_rt_Argument__'___new_display_2_CALL_UNWIND)</text>
+          <text>(main_BB35, core_fmt_rt_Argument__new_display_2_CALL_UNWIND)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB36" target="core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_2_CALL" id="(main_BB36, core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_2_CALL)">
+      <arc source="main_BB36" target="core_fmt_rt__impl_std_fmt_Arguments__new_v1_2_CALL" id="(main_BB36, core_fmt_rt__impl_std_fmt_Arguments__new_v1_2_CALL)">
         <name>
-          <text>(main_BB36, core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_2_CALL)</text>
+          <text>(main_BB36, core_fmt_rt__impl_std_fmt_Arguments__new_v1_2_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB36" target="core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_2_CALL_UNWIND" id="(main_BB36, core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_2_CALL_UNWIND)">
+      <arc source="main_BB36" target="core_fmt_rt__impl_std_fmt_Arguments__new_v1_2_CALL_UNWIND" id="(main_BB36, core_fmt_rt__impl_std_fmt_Arguments__new_v1_2_CALL_UNWIND)">
         <name>
-          <text>(main_BB36, core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_2_CALL_UNWIND)</text>
+          <text>(main_BB36, core_fmt_rt__impl_std_fmt_Arguments__new_v1_2_CALL_UNWIND)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -1089,33 +1089,33 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB5" target="core_fmt_rt_Argument__&apos;___new_display_0_CALL" id="(main_BB5, core_fmt_rt_Argument__&apos;___new_display_0_CALL)">
+      <arc source="main_BB5" target="core_fmt_rt_Argument__new_display_0_CALL" id="(main_BB5, core_fmt_rt_Argument__new_display_0_CALL)">
         <name>
-          <text>(main_BB5, core_fmt_rt_Argument__'___new_display_0_CALL)</text>
+          <text>(main_BB5, core_fmt_rt_Argument__new_display_0_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB5" target="core_fmt_rt_Argument__&apos;___new_display_0_CALL_UNWIND" id="(main_BB5, core_fmt_rt_Argument__&apos;___new_display_0_CALL_UNWIND)">
+      <arc source="main_BB5" target="core_fmt_rt_Argument__new_display_0_CALL_UNWIND" id="(main_BB5, core_fmt_rt_Argument__new_display_0_CALL_UNWIND)">
         <name>
-          <text>(main_BB5, core_fmt_rt_Argument__'___new_display_0_CALL_UNWIND)</text>
+          <text>(main_BB5, core_fmt_rt_Argument__new_display_0_CALL_UNWIND)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB6" target="core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_0_CALL" id="(main_BB6, core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_0_CALL)">
+      <arc source="main_BB6" target="core_fmt_rt__impl_std_fmt_Arguments__new_v1_0_CALL" id="(main_BB6, core_fmt_rt__impl_std_fmt_Arguments__new_v1_0_CALL)">
         <name>
-          <text>(main_BB6, core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_0_CALL)</text>
+          <text>(main_BB6, core_fmt_rt__impl_std_fmt_Arguments__new_v1_0_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB6" target="core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_0_CALL_UNWIND" id="(main_BB6, core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_0_CALL_UNWIND)">
+      <arc source="main_BB6" target="core_fmt_rt__impl_std_fmt_Arguments__new_v1_0_CALL_UNWIND" id="(main_BB6, core_fmt_rt__impl_std_fmt_Arguments__new_v1_0_CALL_UNWIND)">
         <name>
-          <text>(main_BB6, core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_0_CALL_UNWIND)</text>
+          <text>(main_BB6, core_fmt_rt__impl_std_fmt_Arguments__new_v1_0_CALL_UNWIND)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -1161,97 +1161,97 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="core_fmt_rt_Argument__&apos;___new_display_0_CALL" target="main_BB6" id="(core_fmt_rt_Argument__&apos;___new_display_0_CALL, main_BB6)">
+      <arc source="core_fmt_rt_Argument__new_display_0_CALL" target="main_BB6" id="(core_fmt_rt_Argument__new_display_0_CALL, main_BB6)">
         <name>
-          <text>(core_fmt_rt_Argument__'___new_display_0_CALL, main_BB6)</text>
+          <text>(core_fmt_rt_Argument__new_display_0_CALL, main_BB6)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="core_fmt_rt_Argument__&apos;___new_display_0_CALL_UNWIND" target="main_BB40" id="(core_fmt_rt_Argument__&apos;___new_display_0_CALL_UNWIND, main_BB40)">
+      <arc source="core_fmt_rt_Argument__new_display_0_CALL_UNWIND" target="main_BB40" id="(core_fmt_rt_Argument__new_display_0_CALL_UNWIND, main_BB40)">
         <name>
-          <text>(core_fmt_rt_Argument__'___new_display_0_CALL_UNWIND, main_BB40)</text>
+          <text>(core_fmt_rt_Argument__new_display_0_CALL_UNWIND, main_BB40)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="core_fmt_rt_Argument__&apos;___new_display_1_CALL" target="main_BB32" id="(core_fmt_rt_Argument__&apos;___new_display_1_CALL, main_BB32)">
+      <arc source="core_fmt_rt_Argument__new_display_1_CALL" target="main_BB32" id="(core_fmt_rt_Argument__new_display_1_CALL, main_BB32)">
         <name>
-          <text>(core_fmt_rt_Argument__'___new_display_1_CALL, main_BB32)</text>
+          <text>(core_fmt_rt_Argument__new_display_1_CALL, main_BB32)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="core_fmt_rt_Argument__&apos;___new_display_1_CALL_UNWIND" target="main_BB40" id="(core_fmt_rt_Argument__&apos;___new_display_1_CALL_UNWIND, main_BB40)">
+      <arc source="core_fmt_rt_Argument__new_display_1_CALL_UNWIND" target="main_BB40" id="(core_fmt_rt_Argument__new_display_1_CALL_UNWIND, main_BB40)">
         <name>
-          <text>(core_fmt_rt_Argument__'___new_display_1_CALL_UNWIND, main_BB40)</text>
+          <text>(core_fmt_rt_Argument__new_display_1_CALL_UNWIND, main_BB40)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="core_fmt_rt_Argument__&apos;___new_display_2_CALL" target="main_BB36" id="(core_fmt_rt_Argument__&apos;___new_display_2_CALL, main_BB36)">
+      <arc source="core_fmt_rt_Argument__new_display_2_CALL" target="main_BB36" id="(core_fmt_rt_Argument__new_display_2_CALL, main_BB36)">
         <name>
-          <text>(core_fmt_rt_Argument__'___new_display_2_CALL, main_BB36)</text>
+          <text>(core_fmt_rt_Argument__new_display_2_CALL, main_BB36)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="core_fmt_rt_Argument__&apos;___new_display_2_CALL_UNWIND" target="main_BB40" id="(core_fmt_rt_Argument__&apos;___new_display_2_CALL_UNWIND, main_BB40)">
+      <arc source="core_fmt_rt_Argument__new_display_2_CALL_UNWIND" target="main_BB40" id="(core_fmt_rt_Argument__new_display_2_CALL_UNWIND, main_BB40)">
         <name>
-          <text>(core_fmt_rt_Argument__'___new_display_2_CALL_UNWIND, main_BB40)</text>
+          <text>(core_fmt_rt_Argument__new_display_2_CALL_UNWIND, main_BB40)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_0_CALL" target="main_BB7" id="(core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_0_CALL, main_BB7)">
+      <arc source="core_fmt_rt__impl_std_fmt_Arguments__new_v1_0_CALL" target="main_BB7" id="(core_fmt_rt__impl_std_fmt_Arguments__new_v1_0_CALL, main_BB7)">
         <name>
-          <text>(core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_0_CALL, main_BB7)</text>
+          <text>(core_fmt_rt__impl_std_fmt_Arguments__new_v1_0_CALL, main_BB7)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_0_CALL_UNWIND" target="main_BB40" id="(core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_0_CALL_UNWIND, main_BB40)">
+      <arc source="core_fmt_rt__impl_std_fmt_Arguments__new_v1_0_CALL_UNWIND" target="main_BB40" id="(core_fmt_rt__impl_std_fmt_Arguments__new_v1_0_CALL_UNWIND, main_BB40)">
         <name>
-          <text>(core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_0_CALL_UNWIND, main_BB40)</text>
+          <text>(core_fmt_rt__impl_std_fmt_Arguments__new_v1_0_CALL_UNWIND, main_BB40)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_1_CALL" target="main_BB33" id="(core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_1_CALL, main_BB33)">
+      <arc source="core_fmt_rt__impl_std_fmt_Arguments__new_v1_1_CALL" target="main_BB33" id="(core_fmt_rt__impl_std_fmt_Arguments__new_v1_1_CALL, main_BB33)">
         <name>
-          <text>(core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_1_CALL, main_BB33)</text>
+          <text>(core_fmt_rt__impl_std_fmt_Arguments__new_v1_1_CALL, main_BB33)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_1_CALL_UNWIND" target="main_BB40" id="(core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_1_CALL_UNWIND, main_BB40)">
+      <arc source="core_fmt_rt__impl_std_fmt_Arguments__new_v1_1_CALL_UNWIND" target="main_BB40" id="(core_fmt_rt__impl_std_fmt_Arguments__new_v1_1_CALL_UNWIND, main_BB40)">
         <name>
-          <text>(core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_1_CALL_UNWIND, main_BB40)</text>
+          <text>(core_fmt_rt__impl_std_fmt_Arguments__new_v1_1_CALL_UNWIND, main_BB40)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_2_CALL" target="main_BB37" id="(core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_2_CALL, main_BB37)">
+      <arc source="core_fmt_rt__impl_std_fmt_Arguments__new_v1_2_CALL" target="main_BB37" id="(core_fmt_rt__impl_std_fmt_Arguments__new_v1_2_CALL, main_BB37)">
         <name>
-          <text>(core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_2_CALL, main_BB37)</text>
+          <text>(core_fmt_rt__impl_std_fmt_Arguments__new_v1_2_CALL, main_BB37)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_2_CALL_UNWIND" target="main_BB40" id="(core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_2_CALL_UNWIND, main_BB40)">
+      <arc source="core_fmt_rt__impl_std_fmt_Arguments__new_v1_2_CALL_UNWIND" target="main_BB40" id="(core_fmt_rt__impl_std_fmt_Arguments__new_v1_2_CALL_UNWIND, main_BB40)">
         <name>
-          <text>(core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_2_CALL_UNWIND, main_BB40)</text>
+          <text>(core_fmt_rt__impl_std_fmt_Arguments__new_v1_2_CALL_UNWIND, main_BB40)</text>
         </name>
         <inscription>
           <text>1</text>

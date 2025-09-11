@@ -23,7 +23,8 @@ pub const PROGRAM_PANIC: &str = "PROGRAM_PANIC";
 
 /// Sanitize the function name for the DOT and the `LoLA` format:
 /// - Replace generic types "<T>" with "T".
-/// - Replace lifetimes "'a" with simply "a".
+/// - Replace lifetimes "'a" with the empty string.
+/// - Replace generic lifetimes with the empty string.
 /// - Replace double colons with underscores.
 /// - Replace curly braces with underscores.
 /// - Replace pound sign with underscores.
@@ -35,7 +36,8 @@ fn sanitize(function_name: &str) -> String {
         .replace("<T>", "T")
         .replace("[T]", "T")
         .replace("<T, A>", "T_A")
-        .replace("<'a>", "a")
+        .replace("<'a>", "")
+        .replace("<'_>", "")
         .replace("::", "_")
         .replace("Result_<T, E>", "Result")
         .replace(['{', '}', '[', ']', '#', '<', '>', ' '], "_") // Catch-all case

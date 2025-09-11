@@ -30,9 +30,9 @@
           <text>main_BB2</text>
         </name>
       </place>
-      <transition id="core_fmt_rt__impl_std_fmt_Argumentsa__new_const_0_CALL">
+      <transition id="core_fmt_rt__impl_std_fmt_Arguments__new_const_0_CALL">
         <name>
-          <text>core_fmt_rt__impl_std_fmt_Argumentsa__new_const_0_CALL</text>
+          <text>core_fmt_rt__impl_std_fmt_Arguments__new_const_0_CALL</text>
         </name>
       </transition>
       <transition id="main_RETURN">
@@ -45,9 +45,9 @@
           <text>std_io__print_0_CALL</text>
         </name>
       </transition>
-      <arc source="PROGRAM_START" target="core_fmt_rt__impl_std_fmt_Argumentsa__new_const_0_CALL" id="(PROGRAM_START, core_fmt_rt__impl_std_fmt_Argumentsa__new_const_0_CALL)">
+      <arc source="PROGRAM_START" target="core_fmt_rt__impl_std_fmt_Arguments__new_const_0_CALL" id="(PROGRAM_START, core_fmt_rt__impl_std_fmt_Arguments__new_const_0_CALL)">
         <name>
-          <text>(PROGRAM_START, core_fmt_rt__impl_std_fmt_Argumentsa__new_const_0_CALL)</text>
+          <text>(PROGRAM_START, core_fmt_rt__impl_std_fmt_Arguments__new_const_0_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -69,9 +69,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="core_fmt_rt__impl_std_fmt_Argumentsa__new_const_0_CALL" target="main_BB1" id="(core_fmt_rt__impl_std_fmt_Argumentsa__new_const_0_CALL, main_BB1)">
+      <arc source="core_fmt_rt__impl_std_fmt_Arguments__new_const_0_CALL" target="main_BB1" id="(core_fmt_rt__impl_std_fmt_Arguments__new_const_0_CALL, main_BB1)">
         <name>
-          <text>(core_fmt_rt__impl_std_fmt_Argumentsa__new_const_0_CALL, main_BB1)</text>
+          <text>(core_fmt_rt__impl_std_fmt_Arguments__new_const_0_CALL, main_BB1)</text>
         </name>
         <inscription>
           <text>1</text>
