@@ -354,23 +354,6 @@ impl<'tcx> Memory {
         }
     }
 
-    /// Returns the aggregate linked to the given place.
-    ///
-    /// # Panics
-    ///
-    /// If the place is not linked to a value, then the function panics.
-    /// If the place is not linked to an aggregate, then the function panics.
-    pub fn get_copy_aggregate(&self, place: &Place<'tcx>) -> Value {
-        let value = self.get_linked_value(place);
-
-        match value {
-            Value::Single(_) | Value::None => {
-                panic!("BUG: The place {place:?} should be linked to an aggregate")
-            }
-            value @ Value::Aggregate(_) => value.clone(),
-        }
-    }
-
     /// Checks whether the place is linked to a mutex guard.
     pub fn is_mutex_guard(&self, place: &Place<'tcx>) -> bool {
         if !self.has_linked_value(place) {

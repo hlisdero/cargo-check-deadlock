@@ -43,7 +43,7 @@ pub struct MirFunction {
 
 impl MirFunction {
     /// Creates a new function.
-    /// Uses the `rustc_middle::ty::TyCtxt` to get the MIR body and the name of the function.
+    /// The function memory starts empty.
     pub fn new(
         def_id: rustc_hir::def_id::DefId,
         function_name: String,
@@ -61,7 +61,25 @@ impl MirFunction {
         }
     }
 
-    pub fn map_args_to_memory(
+    /// Initializes a MIR function:
+    /// - Creates the MIR function
+    /// - Maps the arguments to the memory of the new function
+    ///
+    /// Returns the new MIR function
+    pub fn new_with_mapped_args(
+        def_id: rustc_hir::def_id::DefId,
+        function_name: String,
+        start_place: PlaceRef,
+        end_place: PlaceRef,
+        args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand<'_>>],
+        calling_function_memory: &Memory,
+    ) -> Self {
+        let mut mir_function = Self::new(def_id, function_name, start_place, end_place);
+        mir_function.map_args_to_memory(args, calling_function_memory);
+        mir_function
+    }
+
+    fn map_args_to_memory(
         &mut self,
         args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand<'_>>],
         calling_function_memory: &Memory,
