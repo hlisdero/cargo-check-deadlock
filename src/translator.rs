@@ -43,9 +43,7 @@ use crate::data_structures::stack::Stack;
 use crate::naming::function::{indexed_mir_function_cleanup_label, indexed_mir_function_name};
 use crate::naming::{PROGRAM_END, PROGRAM_PANIC, PROGRAM_START};
 use crate::translator::mir_function::memory::Single;
-use crate::utils::{
-    extract_closure, extract_def_id_of_called_function_from_operand, extract_nth_argument_as_place,
-};
+use crate::utils::{extract_def_id_of_called_function_from_operand, extract_nth_argument_as_place};
 use function::{Places, PostprocessingTask, Transitions};
 use mir_function::memory::{MutexRef, Value};
 use mir_function::MirFunction;
@@ -129,11 +127,14 @@ impl<'tcx> Translator<'tcx> {
             .tcx
             .entry_fn(())
             .expect("ERROR: No main function found in the source code");
-        self.push_function_to_call_stack(
+        let function_name = self.tcx.def_path_str(main_function_id);
+        let function = MirFunction::new(
             main_function_id,
+            function_name,
             self.program_start.clone(),
             self.program_end.clone(),
         );
+        self.call_stack.push(function);
         info!("Pushed main function to the translation call stack");
         self.translate_top_call_stack();
         info!("Finished translating the main thread");
@@ -152,21 +153,14 @@ impl<'tcx> Translator<'tcx> {
             let index = thread.index;
 
             info!("Starting translating thread {index}");
-            let (thread_function_def_id, thread_start_place, thread_end_place) =
-                thread.prepare_for_translation(&mut self.net);
             // Replace the panic place so that unwind transitions and similar point to the thread's end place.
-            self.program_panic = thread_end_place.clone();
-
-            self.push_function_to_call_stack(
-                thread_function_def_id,
-                thread_start_place,
-                thread_end_place,
-            );
+            self.program_panic = thread.clone_end_place();
+            thread.create_arcs_for_transitions(&mut self.net);
+            let mir_function = Rc::into_inner(thread)
+                .expect("BUG: There should be only one reference to the thread by the time we translate it")
+                .take_mir_function();
+            self.call_stack.push(mir_function);
             info!("Pushed thread function to the translation call stack");
-
-            let new_function = self.call_stack.peek_mut();
-            info!("Moving sync variables to the thread function...");
-            thread.move_sync_variables(&mut new_function.memory);
 
             self.translate_top_call_stack();
             info!("Finished translating thread {index}");
@@ -202,19 +196,6 @@ impl<'tcx> Translator<'tcx> {
                 }
             }
         }
-    }
-
-    /// Pushes a new function frame to the call stack.
-    /// The call stack is the preferred way to pass information between `Translator` methods.
-    fn push_function_to_call_stack(
-        &mut self,
-        function_def_id: rustc_hir::def_id::DefId,
-        start_place: PlaceRef,
-        end_place: PlaceRef,
-    ) {
-        let function_name = self.tcx.def_path_str(function_def_id);
-        let function = MirFunction::new(function_def_id, function_name, start_place, end_place);
-        self.call_stack.push(function);
     }
 
     /// Main translation loop.
@@ -482,13 +463,13 @@ impl<'tcx> Translator<'tcx> {
                     &indexed_mir_function_cleanup_label(function_name, index),
                 );
 
-                let mir_function = self.init_mir_function(
+                let mir_function = MirFunction::new_with_mapped_args(
                     function_def_id,
-                    function_name,
-                    args,
-                    index,
+                    indexed_mir_function_name(function_name, index),
                     start_place,
                     end_place,
+                    args,
+                    &self.call_stack.peek().memory,
                 );
                 self.call_stack.push(mir_function);
             }
@@ -496,41 +477,19 @@ impl<'tcx> Translator<'tcx> {
                 start_place,
                 end_place,
             } => {
-                let mir_function = self.init_mir_function(
+                let mir_function = MirFunction::new_with_mapped_args(
                     function_def_id,
-                    function_name,
-                    args,
-                    index,
+                    indexed_mir_function_name(function_name, index),
                     start_place,
                     end_place,
+                    args,
+                    &self.call_stack.peek().memory,
                 );
                 self.call_stack.push(mir_function);
             }
         }
         info!("Pushed function {function_name} to the translation call stack");
         self.translate_top_call_stack()
-    }
-
-    fn init_mir_function(
-        &self,
-        function_def_id: rustc_hir::def_id::DefId,
-        function_name: &str,
-        args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand<'tcx>>],
-        index: usize,
-        start_place: PlaceRef,
-        end_place: PlaceRef,
-    ) -> MirFunction {
-        let current_function = self.call_stack.peek();
-
-        let mut mir_function = MirFunction::new(
-            function_def_id,
-            indexed_mir_function_name(function_name, index),
-            start_place,
-            end_place,
-        );
-
-        mir_function.map_args_to_memory(args, &current_function.memory);
-        mir_function
     }
 
     /// Call to `std::mem::drop`.
@@ -665,19 +624,25 @@ impl<'tcx> Translator<'tcx> {
             self.tcx,
         );
 
-        let closure = extract_closure(args);
-        // The sync variables captured by the closure are aggregated together in a single value in memory
-        // Get this vector of values that should be re-mapped in the new thread's memory.
-        let memory = &mut current_function.memory;
-        let aggregate = closure.map_or(Value::None, |place| memory.get_copy_aggregate(&place));
-
         // Create a new thread
         let index = self.threads.len();
-        let thread =
-            sync::thread::Thread::new(transition, thread_function_def_id, aggregate, index);
+        let (start_place, end_place) = Thread::create_start_and_end_places(&mut self.net, index);
+        let closure_name = self.tcx.def_path_str(thread_function_def_id);
+
+        let mir_function = MirFunction::new_with_mapped_args(
+            thread_function_def_id,
+            closure_name,
+            start_place,
+            end_place,
+            args,
+            &current_function.memory,
+        );
+        let thread = sync::thread::Thread::new(transition, mir_function, index);
 
         // The return value contains a new join handle. Link the local variable to it.
-        let thread_ref = memory.link_join_handle(destination, thread);
+        let thread_ref = current_function
+            .memory
+            .link_join_handle(destination, thread);
         debug!("NEW JOIN HANDLE: {destination:?}");
 
         // Add the thread to the translator

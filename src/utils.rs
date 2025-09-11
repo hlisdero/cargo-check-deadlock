@@ -67,49 +67,6 @@ pub fn extract_nth_argument_as_place<'tcx>(
     }
 }
 
-/// Extracts the closure passed as the 0-th argument to `std::thread::spawn`.
-/// Returns the place corresponding to that argument.
-///
-/// If a valid place cannot be found, then the operand was passed as a constant.
-/// If it is a `rustc_middle::mir::interpret::value::ConstValue::ZeroSized` return `None`.
-///
-/// # Panics
-///
-/// If the operand was passed a constant with user-defined type,
-/// a type constant (i.e. `T`) or an unevaluated constant, then the functions panics.
-pub fn extract_closure<'tcx>(
-    args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand<'tcx>>],
-) -> Option<rustc_middle::mir::Place<'tcx>> {
-    let spanned = args
-        .first()
-        .expect("BUG: `std::thread::spawn` should receive at least one argument");
-    let operand = &spanned.node;
-
-    match operand {
-        rustc_middle::mir::Operand::Move(place) | rustc_middle::mir::Operand::Copy(place) => {
-            Some(*place)
-        }
-        rustc_middle::mir::Operand::Constant(boxed_const) => {
-            let unboxed_const = **boxed_const;
-            assert!(unboxed_const.user_ty.is_none(), "BUG: The closure passed to `std::thread::spawn` should not be of type `Operand::Constant` with user-defined type");
-            match unboxed_const.const_ {
-                rustc_middle::mir::Const::Ty(_, _) => {
-                    panic!("BUG: The closure passed to `std::thread::spawn` should not be a constant containing a type");
-                }
-                rustc_middle::mir::Const::Unevaluated(_, _) => {
-                    panic!("BUG: The closure passed to `std::thread::spawn` should not be a unevaluated constant");
-                }
-                rustc_middle::mir::Const::Val(value, _ty) => {
-                    if value == rustc_middle::mir::ConstValue::ZeroSized {
-                        return None;
-                    }
-                    panic!("BUG: The closure passed to `std::thread::spawn` should not be a constant whose value is not a zero-sized type");
-                }
-            }
-        }
-    }
-}
-
 /// Get the type string for a given place.
 /// Uses the method `Place::ty` to get the type of the `place`.
 /// It finds the type of the place through the local declarations of the caller function where it is declared.

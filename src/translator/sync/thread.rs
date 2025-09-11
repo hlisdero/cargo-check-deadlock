@@ -20,7 +20,7 @@
 //! to translate the thread function and defer the translation.
 //! The function executed by the thread is translated to a Petri net just as any other.
 
-use log::{debug, info};
+use log::info;
 use std::cell::OnceCell;
 
 use crate::data_structures::petri_net_interface::{
@@ -29,17 +29,16 @@ use crate::data_structures::petri_net_interface::{
 use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef, TransitionRef};
 use crate::naming::thread::{end_place_label, start_place_label};
 use crate::translator::function::Places;
-use crate::translator::mir_function::memory::{Memory, Value};
+use crate::translator::mir_function::memory::Memory;
+use crate::translator::mir_function::MirFunction;
 use crate::translator::special_function::call_foreign_function;
 use crate::utils::extract_nth_argument_as_place;
 
 pub struct Thread {
     /// The transition from which the thread branches off at the start.
     spawn_transition: TransitionRef,
-    /// The definition ID that uniquely identifies the function run by the thread.
-    def_id: rustc_hir::def_id::DefId,
-    /// The aggregate value containing the sync variables passed to the thread.
-    aggregate: Value,
+    /// The MIR function that the thread will execute
+    mir_function: MirFunction,
     /// The transition to which the thread joins in at the end.
     join_transition: OnceCell<TransitionRef>,
     /// An index to identify the thread.
@@ -59,14 +58,12 @@ impl Thread {
     /// The join transition must be set later.
     pub const fn new(
         spawn_transition: TransitionRef,
-        thread_function_def_id: rustc_hir::def_id::DefId,
-        aggregate: Value,
+        mir_function: MirFunction,
         index: usize,
     ) -> Self {
         Self {
             spawn_transition,
-            def_id: thread_function_def_id,
-            aggregate,
+            mir_function,
             join_transition: OnceCell::new(),
             index,
         }
@@ -81,44 +78,32 @@ impl Thread {
         );
     }
 
-    /// Prepares the thread for translation.
-    /// Adds a start and end place for the thread to the Petri net.
-    /// Connects the spawn transition to the start place and the end place to the join transition (if available).
-    /// Returns a 3-tuple containing the definition ID, the start place and the end place.
-    pub fn prepare_for_translation(
-        &self,
-        net: &mut PetriNet,
-    ) -> (rustc_hir::def_id::DefId, PlaceRef, PlaceRef) {
-        let thread_start_place = net.add_place(&start_place_label(self.index));
-        let thread_end_place = net.add_place(&end_place_label(self.index));
-
-        add_arc_transition_place(net, &self.spawn_transition, &thread_start_place);
+    /// Connects:
+    /// - The spawn transition to the start place
+    /// - The end place to the join transition (if available).
+    pub fn create_arcs_for_transitions(&self, net: &mut PetriNet) {
+        add_arc_transition_place(net, &self.spawn_transition, &self.mir_function.start_place);
         if let Some(join_transition) = self.join_transition.get() {
-            add_arc_place_transition(net, &thread_end_place, join_transition);
+            add_arc_place_transition(net, &self.mir_function.end_place, join_transition);
         }
-
-        (self.def_id, thread_start_place, thread_end_place)
     }
 
-    /// Moves the aggregated value containing the sync variables to the new function's memory in local `_1`.
-    /// We are only interested in places of the form `_1.X` since `std::thread::spawn` only receives one argument.
-    /// <https://doc.rust-lang.org/stable/nightly-rustc/rustc_middle/mir/struct.VarDebugInfo.html>
-    ///
-    /// # Examples
-    ///
-    /// The following line in the MIR output indicates that `_1.0` contains a mutex.
-    /// `debug copy_data => (_1.0: std::sync::Arc<std::sync::Mutex<i32>>)`
-    pub fn move_sync_variables(&self, memory: &mut Memory) {
-        let place: rustc_middle::mir::Place<'_> = rustc_middle::mir::Place {
-            local: rustc_middle::mir::Local::from_usize(1),
-            projection: rustc_middle::ty::List::empty(),
-        };
-        memory.link(place, self.aggregate.clone());
-        debug!(
-            "MOVED AGGREGATE VALUE {place:?} WITH SYNC VARIABLES {:?} TO THE THREAD {}",
-            self.aggregate, self.index
-        );
-        debug!("{memory:?}");
+    /// Creates the correctly labelled places for the thread's function.
+    /// Returns the references to the start and end place.
+    pub fn create_start_and_end_places(net: &mut PetriNet, index: usize) -> (PlaceRef, PlaceRef) {
+        let start_place = net.add_place(&start_place_label(index));
+        let end_place = net.add_place(&end_place_label(index));
+        (start_place, end_place)
+    }
+
+    /// Returns the MIR function of the thread, consuming the thread in the process
+    pub fn take_mir_function(self) -> MirFunction {
+        self.mir_function
+    }
+
+    /// Returns a copy of the end place of the thread's MIR function
+    pub fn clone_end_place(&self) -> PlaceRef {
+        self.mir_function.end_place.clone()
     }
 }
 
