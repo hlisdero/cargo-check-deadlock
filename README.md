@@ -174,9 +174,9 @@ Particularly interesting examples are the [dining philosophers problem](./exampl
 
 Currently, the programs that the translator can deal with are fairly limited:
 
-- No `struct`s, `enum`s, or `impl` blocks are supported.
-- Passing synchronization variables between threads is okay but the support for passing them between user-defined functions is missing.
-- Arrays, vectors, and other data structures may cause the translation to fail.
+- Closures outside of `thread:spawn` are not supported.
+- Creating multiple threads in a loop is not supported.
+- Using arrays, `Vec`, and other data structures may cause the translation to give false results.
 - [Channels](https://doc.rust-lang.org/std/sync/mpsc/fn.channel.html) are not supported.
 - [RwLock](https://doc.rust-lang.org/std/sync/struct.RwLock.html) is not supported.
 - [Barrier](https://doc.rust-lang.org/std/sync/struct.Barrier.html) is not supported.
