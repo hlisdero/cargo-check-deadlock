@@ -14,6 +14,12 @@ mod thread {
     );
 
     super::utils::generate_tests_for_example_program!(
+        dining_philosophers_with_structs,
+        "./examples/programs/thread/dining_philosophers_with_structs.rs",
+        "./examples/results/thread/dining_philosophers_with_structs/"
+    );
+
+    super::utils::generate_tests_for_example_program!(
         dining_philosophers,
         "./examples/programs/thread/dining_philosophers.rs",
         "./examples/results/thread/dining_philosophers/"
@@ -51,6 +57,13 @@ mod lola {
         "./examples/programs/thread/detached.rs",
         "./examples/results/thread/detached/",
         false
+    );
+
+    super::utils::generate_lola_tests_for_example_program!(
+        dining_philosophers_with_structs,
+        "./examples/programs/thread/dining_philosophers_with_structs.rs",
+        "./examples/results/thread/dining_philosophers_with_structs/",
+        true
     );
 
     super::utils::generate_lola_tests_for_example_program!(

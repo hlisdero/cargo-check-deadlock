@@ -1,0 +1,2252 @@
+PLACE
+    MUTEX_0,
+    MUTEX_1,
+    MUTEX_2,
+    MUTEX_3,
+    MUTEX_4,
+    PROGRAM_END,
+    PROGRAM_PANIC,
+    PROGRAM_START,
+    Philosopher_dine_0_BB1,
+    Philosopher_dine_0_BB2,
+    Philosopher_dine_1_BB1,
+    Philosopher_dine_1_BB2,
+    Philosopher_dine_2_BB1,
+    Philosopher_dine_2_BB2,
+    Philosopher_dine_3_BB1,
+    Philosopher_dine_3_BB2,
+    Philosopher_dine_4_BB1,
+    Philosopher_dine_4_BB2,
+    Philosopher_eat_0_BB1,
+    Philosopher_eat_0_BB10,
+    Philosopher_eat_0_BB11,
+    Philosopher_eat_0_BB12,
+    Philosopher_eat_0_BB13,
+    Philosopher_eat_0_BB14,
+    Philosopher_eat_0_BB15,
+    Philosopher_eat_0_BB16,
+    Philosopher_eat_0_BB17,
+    Philosopher_eat_0_BB18,
+    Philosopher_eat_0_BB19,
+    Philosopher_eat_0_BB2,
+    Philosopher_eat_0_BB20,
+    Philosopher_eat_0_BB3,
+    Philosopher_eat_0_BB4,
+    Philosopher_eat_0_BB5,
+    Philosopher_eat_0_BB6,
+    Philosopher_eat_0_BB7,
+    Philosopher_eat_0_BB8,
+    Philosopher_eat_0_BB9,
+    Philosopher_eat_1_BB1,
+    Philosopher_eat_1_BB10,
+    Philosopher_eat_1_BB11,
+    Philosopher_eat_1_BB12,
+    Philosopher_eat_1_BB13,
+    Philosopher_eat_1_BB14,
+    Philosopher_eat_1_BB15,
+    Philosopher_eat_1_BB16,
+    Philosopher_eat_1_BB17,
+    Philosopher_eat_1_BB18,
+    Philosopher_eat_1_BB19,
+    Philosopher_eat_1_BB2,
+    Philosopher_eat_1_BB20,
+    Philosopher_eat_1_BB3,
+    Philosopher_eat_1_BB4,
+    Philosopher_eat_1_BB5,
+    Philosopher_eat_1_BB6,
+    Philosopher_eat_1_BB7,
+    Philosopher_eat_1_BB8,
+    Philosopher_eat_1_BB9,
+    Philosopher_eat_2_BB1,
+    Philosopher_eat_2_BB10,
+    Philosopher_eat_2_BB11,
+    Philosopher_eat_2_BB12,
+    Philosopher_eat_2_BB13,
+    Philosopher_eat_2_BB14,
+    Philosopher_eat_2_BB15,
+    Philosopher_eat_2_BB16,
+    Philosopher_eat_2_BB17,
+    Philosopher_eat_2_BB18,
+    Philosopher_eat_2_BB19,
+    Philosopher_eat_2_BB2,
+    Philosopher_eat_2_BB20,
+    Philosopher_eat_2_BB3,
+    Philosopher_eat_2_BB4,
+    Philosopher_eat_2_BB5,
+    Philosopher_eat_2_BB6,
+    Philosopher_eat_2_BB7,
+    Philosopher_eat_2_BB8,
+    Philosopher_eat_2_BB9,
+    Philosopher_eat_3_BB1,
+    Philosopher_eat_3_BB10,
+    Philosopher_eat_3_BB11,
+    Philosopher_eat_3_BB12,
+    Philosopher_eat_3_BB13,
+    Philosopher_eat_3_BB14,
+    Philosopher_eat_3_BB15,
+    Philosopher_eat_3_BB16,
+    Philosopher_eat_3_BB17,
+    Philosopher_eat_3_BB18,
+    Philosopher_eat_3_BB19,
+    Philosopher_eat_3_BB2,
+    Philosopher_eat_3_BB20,
+    Philosopher_eat_3_BB3,
+    Philosopher_eat_3_BB4,
+    Philosopher_eat_3_BB5,
+    Philosopher_eat_3_BB6,
+    Philosopher_eat_3_BB7,
+    Philosopher_eat_3_BB8,
+    Philosopher_eat_3_BB9,
+    Philosopher_eat_4_BB1,
+    Philosopher_eat_4_BB10,
+    Philosopher_eat_4_BB11,
+    Philosopher_eat_4_BB12,
+    Philosopher_eat_4_BB13,
+    Philosopher_eat_4_BB14,
+    Philosopher_eat_4_BB15,
+    Philosopher_eat_4_BB16,
+    Philosopher_eat_4_BB17,
+    Philosopher_eat_4_BB18,
+    Philosopher_eat_4_BB19,
+    Philosopher_eat_4_BB2,
+    Philosopher_eat_4_BB20,
+    Philosopher_eat_4_BB3,
+    Philosopher_eat_4_BB4,
+    Philosopher_eat_4_BB5,
+    Philosopher_eat_4_BB6,
+    Philosopher_eat_4_BB7,
+    Philosopher_eat_4_BB8,
+    Philosopher_eat_4_BB9,
+    Philosopher_think_0_BB1,
+    Philosopher_think_0_BB2,
+    Philosopher_think_0_BB3,
+    Philosopher_think_0_BB4,
+    Philosopher_think_0_BB5,
+    Philosopher_think_1_BB1,
+    Philosopher_think_1_BB2,
+    Philosopher_think_1_BB3,
+    Philosopher_think_1_BB4,
+    Philosopher_think_1_BB5,
+    Philosopher_think_2_BB1,
+    Philosopher_think_2_BB2,
+    Philosopher_think_2_BB3,
+    Philosopher_think_2_BB4,
+    Philosopher_think_2_BB5,
+    Philosopher_think_3_BB1,
+    Philosopher_think_3_BB2,
+    Philosopher_think_3_BB3,
+    Philosopher_think_3_BB4,
+    Philosopher_think_3_BB5,
+    Philosopher_think_4_BB1,
+    Philosopher_think_4_BB2,
+    Philosopher_think_4_BB3,
+    Philosopher_think_4_BB4,
+    Philosopher_think_4_BB5,
+    THREAD_0_END,
+    THREAD_0_START,
+    THREAD_1_END,
+    THREAD_1_START,
+    THREAD_2_END,
+    THREAD_2_START,
+    THREAD_3_END,
+    THREAD_3_START,
+    THREAD_4_END,
+    THREAD_4_START,
+    main_BB1,
+    main_BB10,
+    main_BB11,
+    main_BB12,
+    main_BB13,
+    main_BB14,
+    main_BB15,
+    main_BB16,
+    main_BB17,
+    main_BB18,
+    main_BB19,
+    main_BB2,
+    main_BB20,
+    main_BB21,
+    main_BB22,
+    main_BB23,
+    main_BB24,
+    main_BB25,
+    main_BB26,
+    main_BB27,
+    main_BB28,
+    main_BB29,
+    main_BB3,
+    main_BB30,
+    main_BB31,
+    main_BB32,
+    main_BB33,
+    main_BB34,
+    main_BB35,
+    main_BB36,
+    main_BB37,
+    main_BB38,
+    main_BB39,
+    main_BB4,
+    main_BB40,
+    main_BB41,
+    main_BB42,
+    main_BB43,
+    main_BB44,
+    main_BB45,
+    main_BB46,
+    main_BB47,
+    main_BB48,
+    main_BB49,
+    main_BB5,
+    main_BB50,
+    main_BB51,
+    main_BB52,
+    main_BB53,
+    main_BB54,
+    main_BB55,
+    main_BB56,
+    main_BB57,
+    main_BB58,
+    main_BB59,
+    main_BB6,
+    main_BB60,
+    main_BB61,
+    main_BB62,
+    main_BB63,
+    main_BB64,
+    main_BB65,
+    main_BB66,
+    main_BB67,
+    main_BB68,
+    main_BB69,
+    main_BB7,
+    main_BB70,
+    main_BB71,
+    main_BB72,
+    main_BB73,
+    main_BB74,
+    main_BB75,
+    main_BB76,
+    main_BB77,
+    main_BB78,
+    main_BB79,
+    main_BB8,
+    main_BB80,
+    main_BB81,
+    main_BB9,
+    main__closure_0__BB1,
+    main__closure_0__BB2,
+    main__closure_0__BB3,
+    main__closure_0__BB4,
+    main__closure_1__BB1,
+    main__closure_1__BB2,
+    main__closure_1__BB3,
+    main__closure_1__BB4,
+    main__closure_2__BB1,
+    main__closure_2__BB2,
+    main__closure_2__BB3,
+    main__closure_2__BB4,
+    main__closure_3__BB1,
+    main__closure_3__BB2,
+    main__closure_3__BB3,
+    main__closure_3__BB4,
+    main__closure_4__BB1,
+    main__closure_4__BB2,
+    main__closure_4__BB3,
+    main__closure_4__BB4;
+
+MARKING
+    MUTEX_0 : 1,
+    MUTEX_1 : 1,
+    MUTEX_2 : 1,
+    MUTEX_3 : 1,
+    MUTEX_4 : 1,
+    PROGRAM_END : 0,
+    PROGRAM_PANIC : 0,
+    PROGRAM_START : 1,
+    Philosopher_dine_0_BB1 : 0,
+    Philosopher_dine_0_BB2 : 0,
+    Philosopher_dine_1_BB1 : 0,
+    Philosopher_dine_1_BB2 : 0,
+    Philosopher_dine_2_BB1 : 0,
+    Philosopher_dine_2_BB2 : 0,
+    Philosopher_dine_3_BB1 : 0,
+    Philosopher_dine_3_BB2 : 0,
+    Philosopher_dine_4_BB1 : 0,
+    Philosopher_dine_4_BB2 : 0,
+    Philosopher_eat_0_BB1 : 0,
+    Philosopher_eat_0_BB10 : 0,
+    Philosopher_eat_0_BB11 : 0,
+    Philosopher_eat_0_BB12 : 0,
+    Philosopher_eat_0_BB13 : 0,
+    Philosopher_eat_0_BB14 : 0,
+    Philosopher_eat_0_BB15 : 0,
+    Philosopher_eat_0_BB16 : 0,
+    Philosopher_eat_0_BB17 : 0,
+    Philosopher_eat_0_BB18 : 0,
+    Philosopher_eat_0_BB19 : 0,
+    Philosopher_eat_0_BB2 : 0,
+    Philosopher_eat_0_BB20 : 0,
+    Philosopher_eat_0_BB3 : 0,
+    Philosopher_eat_0_BB4 : 0,
+    Philosopher_eat_0_BB5 : 0,
+    Philosopher_eat_0_BB6 : 0,
+    Philosopher_eat_0_BB7 : 0,
+    Philosopher_eat_0_BB8 : 0,
+    Philosopher_eat_0_BB9 : 0,
+    Philosopher_eat_1_BB1 : 0,
+    Philosopher_eat_1_BB10 : 0,
+    Philosopher_eat_1_BB11 : 0,
+    Philosopher_eat_1_BB12 : 0,
+    Philosopher_eat_1_BB13 : 0,
+    Philosopher_eat_1_BB14 : 0,
+    Philosopher_eat_1_BB15 : 0,
+    Philosopher_eat_1_BB16 : 0,
+    Philosopher_eat_1_BB17 : 0,
+    Philosopher_eat_1_BB18 : 0,
+    Philosopher_eat_1_BB19 : 0,
+    Philosopher_eat_1_BB2 : 0,
+    Philosopher_eat_1_BB20 : 0,
+    Philosopher_eat_1_BB3 : 0,
+    Philosopher_eat_1_BB4 : 0,
+    Philosopher_eat_1_BB5 : 0,
+    Philosopher_eat_1_BB6 : 0,
+    Philosopher_eat_1_BB7 : 0,
+    Philosopher_eat_1_BB8 : 0,
+    Philosopher_eat_1_BB9 : 0,
+    Philosopher_eat_2_BB1 : 0,
+    Philosopher_eat_2_BB10 : 0,
+    Philosopher_eat_2_BB11 : 0,
+    Philosopher_eat_2_BB12 : 0,
+    Philosopher_eat_2_BB13 : 0,
+    Philosopher_eat_2_BB14 : 0,
+    Philosopher_eat_2_BB15 : 0,
+    Philosopher_eat_2_BB16 : 0,
+    Philosopher_eat_2_BB17 : 0,
+    Philosopher_eat_2_BB18 : 0,
+    Philosopher_eat_2_BB19 : 0,
+    Philosopher_eat_2_BB2 : 0,
+    Philosopher_eat_2_BB20 : 0,
+    Philosopher_eat_2_BB3 : 0,
+    Philosopher_eat_2_BB4 : 0,
+    Philosopher_eat_2_BB5 : 0,
+    Philosopher_eat_2_BB6 : 0,
+    Philosopher_eat_2_BB7 : 0,
+    Philosopher_eat_2_BB8 : 0,
+    Philosopher_eat_2_BB9 : 0,
+    Philosopher_eat_3_BB1 : 0,
+    Philosopher_eat_3_BB10 : 0,
+    Philosopher_eat_3_BB11 : 0,
+    Philosopher_eat_3_BB12 : 0,
+    Philosopher_eat_3_BB13 : 0,
+    Philosopher_eat_3_BB14 : 0,
+    Philosopher_eat_3_BB15 : 0,
+    Philosopher_eat_3_BB16 : 0,
+    Philosopher_eat_3_BB17 : 0,
+    Philosopher_eat_3_BB18 : 0,
+    Philosopher_eat_3_BB19 : 0,
+    Philosopher_eat_3_BB2 : 0,
+    Philosopher_eat_3_BB20 : 0,
+    Philosopher_eat_3_BB3 : 0,
+    Philosopher_eat_3_BB4 : 0,
+    Philosopher_eat_3_BB5 : 0,
+    Philosopher_eat_3_BB6 : 0,
+    Philosopher_eat_3_BB7 : 0,
+    Philosopher_eat_3_BB8 : 0,
+    Philosopher_eat_3_BB9 : 0,
+    Philosopher_eat_4_BB1 : 0,
+    Philosopher_eat_4_BB10 : 0,
+    Philosopher_eat_4_BB11 : 0,
+    Philosopher_eat_4_BB12 : 0,
+    Philosopher_eat_4_BB13 : 0,
+    Philosopher_eat_4_BB14 : 0,
+    Philosopher_eat_4_BB15 : 0,
+    Philosopher_eat_4_BB16 : 0,
+    Philosopher_eat_4_BB17 : 0,
+    Philosopher_eat_4_BB18 : 0,
+    Philosopher_eat_4_BB19 : 0,
+    Philosopher_eat_4_BB2 : 0,
+    Philosopher_eat_4_BB20 : 0,
+    Philosopher_eat_4_BB3 : 0,
+    Philosopher_eat_4_BB4 : 0,
+    Philosopher_eat_4_BB5 : 0,
+    Philosopher_eat_4_BB6 : 0,
+    Philosopher_eat_4_BB7 : 0,
+    Philosopher_eat_4_BB8 : 0,
+    Philosopher_eat_4_BB9 : 0,
+    Philosopher_think_0_BB1 : 0,
+    Philosopher_think_0_BB2 : 0,
+    Philosopher_think_0_BB3 : 0,
+    Philosopher_think_0_BB4 : 0,
+    Philosopher_think_0_BB5 : 0,
+    Philosopher_think_1_BB1 : 0,
+    Philosopher_think_1_BB2 : 0,
+    Philosopher_think_1_BB3 : 0,
+    Philosopher_think_1_BB4 : 0,
+    Philosopher_think_1_BB5 : 0,
+    Philosopher_think_2_BB1 : 0,
+    Philosopher_think_2_BB2 : 0,
+    Philosopher_think_2_BB3 : 0,
+    Philosopher_think_2_BB4 : 0,
+    Philosopher_think_2_BB5 : 0,
+    Philosopher_think_3_BB1 : 0,
+    Philosopher_think_3_BB2 : 0,
+    Philosopher_think_3_BB3 : 0,
+    Philosopher_think_3_BB4 : 0,
+    Philosopher_think_3_BB5 : 0,
+    Philosopher_think_4_BB1 : 0,
+    Philosopher_think_4_BB2 : 0,
+    Philosopher_think_4_BB3 : 0,
+    Philosopher_think_4_BB4 : 0,
+    Philosopher_think_4_BB5 : 0,
+    THREAD_0_END : 0,
+    THREAD_0_START : 0,
+    THREAD_1_END : 0,
+    THREAD_1_START : 0,
+    THREAD_2_END : 0,
+    THREAD_2_START : 0,
+    THREAD_3_END : 0,
+    THREAD_3_START : 0,
+    THREAD_4_END : 0,
+    THREAD_4_START : 0,
+    main_BB1 : 0,
+    main_BB10 : 0,
+    main_BB11 : 0,
+    main_BB12 : 0,
+    main_BB13 : 0,
+    main_BB14 : 0,
+    main_BB15 : 0,
+    main_BB16 : 0,
+    main_BB17 : 0,
+    main_BB18 : 0,
+    main_BB19 : 0,
+    main_BB2 : 0,
+    main_BB20 : 0,
+    main_BB21 : 0,
+    main_BB22 : 0,
+    main_BB23 : 0,
+    main_BB24 : 0,
+    main_BB25 : 0,
+    main_BB26 : 0,
+    main_BB27 : 0,
+    main_BB28 : 0,
+    main_BB29 : 0,
+    main_BB3 : 0,
+    main_BB30 : 0,
+    main_BB31 : 0,
+    main_BB32 : 0,
+    main_BB33 : 0,
+    main_BB34 : 0,
+    main_BB35 : 0,
+    main_BB36 : 0,
+    main_BB37 : 0,
+    main_BB38 : 0,
+    main_BB39 : 0,
+    main_BB4 : 0,
+    main_BB40 : 0,
+    main_BB41 : 0,
+    main_BB42 : 0,
+    main_BB43 : 0,
+    main_BB44 : 0,
+    main_BB45 : 0,
+    main_BB46 : 0,
+    main_BB47 : 0,
+    main_BB48 : 0,
+    main_BB49 : 0,
+    main_BB5 : 0,
+    main_BB50 : 0,
+    main_BB51 : 0,
+    main_BB52 : 0,
+    main_BB53 : 0,
+    main_BB54 : 0,
+    main_BB55 : 0,
+    main_BB56 : 0,
+    main_BB57 : 0,
+    main_BB58 : 0,
+    main_BB59 : 0,
+    main_BB6 : 0,
+    main_BB60 : 0,
+    main_BB61 : 0,
+    main_BB62 : 0,
+    main_BB63 : 0,
+    main_BB64 : 0,
+    main_BB65 : 0,
+    main_BB66 : 0,
+    main_BB67 : 0,
+    main_BB68 : 0,
+    main_BB69 : 0,
+    main_BB7 : 0,
+    main_BB70 : 0,
+    main_BB71 : 0,
+    main_BB72 : 0,
+    main_BB73 : 0,
+    main_BB74 : 0,
+    main_BB75 : 0,
+    main_BB76 : 0,
+    main_BB77 : 0,
+    main_BB78 : 0,
+    main_BB79 : 0,
+    main_BB8 : 0,
+    main_BB80 : 0,
+    main_BB81 : 0,
+    main_BB9 : 0,
+    main__closure_0__BB1 : 0,
+    main__closure_0__BB2 : 0,
+    main__closure_0__BB3 : 0,
+    main__closure_0__BB4 : 0,
+    main__closure_1__BB1 : 0,
+    main__closure_1__BB2 : 0,
+    main__closure_1__BB3 : 0,
+    main__closure_1__BB4 : 0,
+    main__closure_2__BB1 : 0,
+    main__closure_2__BB2 : 0,
+    main__closure_2__BB3 : 0,
+    main__closure_2__BB4 : 0,
+    main__closure_3__BB1 : 0,
+    main__closure_3__BB2 : 0,
+    main__closure_3__BB3 : 0,
+    main__closure_3__BB4 : 0,
+    main__closure_4__BB1 : 0,
+    main__closure_4__BB2 : 0,
+    main__closure_4__BB3 : 0,
+    main__closure_4__BB4 : 0;
+
+TRANSITION Philosopher_dine_0_CALL_UNWIND
+  CONSUME
+    THREAD_0_START : 1;
+  PRODUCE
+    main__closure_0__BB3 : 1;
+TRANSITION Philosopher_dine_0_GOTO_0
+  CONSUME
+    THREAD_0_START : 1;
+  PRODUCE
+    Philosopher_dine_0_BB1 : 1;
+TRANSITION Philosopher_dine_1_CALL_UNWIND
+  CONSUME
+    THREAD_1_START : 1;
+  PRODUCE
+    main__closure_1__BB3 : 1;
+TRANSITION Philosopher_dine_1_GOTO_0
+  CONSUME
+    THREAD_1_START : 1;
+  PRODUCE
+    Philosopher_dine_1_BB1 : 1;
+TRANSITION Philosopher_dine_2_CALL_UNWIND
+  CONSUME
+    THREAD_2_START : 1;
+  PRODUCE
+    main__closure_2__BB3 : 1;
+TRANSITION Philosopher_dine_2_GOTO_0
+  CONSUME
+    THREAD_2_START : 1;
+  PRODUCE
+    Philosopher_dine_2_BB1 : 1;
+TRANSITION Philosopher_dine_3_CALL_UNWIND
+  CONSUME
+    THREAD_3_START : 1;
+  PRODUCE
+    main__closure_3__BB3 : 1;
+TRANSITION Philosopher_dine_3_GOTO_0
+  CONSUME
+    THREAD_3_START : 1;
+  PRODUCE
+    Philosopher_dine_3_BB1 : 1;
+TRANSITION Philosopher_dine_4_CALL_UNWIND
+  CONSUME
+    THREAD_4_START : 1;
+  PRODUCE
+    main__closure_4__BB3 : 1;
+TRANSITION Philosopher_dine_4_GOTO_0
+  CONSUME
+    THREAD_4_START : 1;
+  PRODUCE
+    Philosopher_dine_4_BB1 : 1;
+TRANSITION Philosopher_eat_0_DROP_15
+  CONSUME
+    Philosopher_eat_0_BB15 : 1;
+  PRODUCE
+    MUTEX_1 : 1,
+    Philosopher_eat_0_BB16 : 1;
+TRANSITION Philosopher_eat_0_DROP_16
+  CONSUME
+    Philosopher_eat_0_BB16 : 1;
+  PRODUCE
+    MUTEX_0 : 1,
+    Philosopher_eat_0_BB17 : 1;
+TRANSITION Philosopher_eat_0_DROP_18
+  CONSUME
+    Philosopher_eat_0_BB18 : 1;
+  PRODUCE
+    MUTEX_1 : 1,
+    Philosopher_eat_0_BB19 : 1;
+TRANSITION Philosopher_eat_0_DROP_19
+  CONSUME
+    Philosopher_eat_0_BB19 : 1;
+  PRODUCE
+    MUTEX_0 : 1,
+    Philosopher_eat_0_BB20 : 1;
+TRANSITION Philosopher_eat_0_DROP_UNWIND_15
+  CONSUME
+    Philosopher_eat_0_BB15 : 1;
+  PRODUCE
+    MUTEX_1 : 1,
+    Philosopher_eat_0_BB19 : 1;
+TRANSITION Philosopher_eat_0_RETURN
+  CONSUME
+    Philosopher_eat_0_BB17 : 1;
+  PRODUCE
+    Philosopher_dine_0_BB1 : 1;
+TRANSITION Philosopher_eat_0_UNWIND_20
+  CONSUME
+    Philosopher_eat_0_BB20 : 1;
+  PRODUCE
+    THREAD_0_END : 1;
+TRANSITION Philosopher_eat_1_DROP_15
+  CONSUME
+    Philosopher_eat_1_BB15 : 1;
+  PRODUCE
+    MUTEX_2 : 1,
+    Philosopher_eat_1_BB16 : 1;
+TRANSITION Philosopher_eat_1_DROP_16
+  CONSUME
+    Philosopher_eat_1_BB16 : 1;
+  PRODUCE
+    MUTEX_1 : 1,
+    Philosopher_eat_1_BB17 : 1;
+TRANSITION Philosopher_eat_1_DROP_18
+  CONSUME
+    Philosopher_eat_1_BB18 : 1;
+  PRODUCE
+    MUTEX_2 : 1,
+    Philosopher_eat_1_BB19 : 1;
+TRANSITION Philosopher_eat_1_DROP_19
+  CONSUME
+    Philosopher_eat_1_BB19 : 1;
+  PRODUCE
+    MUTEX_1 : 1,
+    Philosopher_eat_1_BB20 : 1;
+TRANSITION Philosopher_eat_1_DROP_UNWIND_15
+  CONSUME
+    Philosopher_eat_1_BB15 : 1;
+  PRODUCE
+    MUTEX_2 : 1,
+    Philosopher_eat_1_BB19 : 1;
+TRANSITION Philosopher_eat_1_RETURN
+  CONSUME
+    Philosopher_eat_1_BB17 : 1;
+  PRODUCE
+    Philosopher_dine_1_BB1 : 1;
+TRANSITION Philosopher_eat_1_UNWIND_20
+  CONSUME
+    Philosopher_eat_1_BB20 : 1;
+  PRODUCE
+    THREAD_1_END : 1;
+TRANSITION Philosopher_eat_2_DROP_15
+  CONSUME
+    Philosopher_eat_2_BB15 : 1;
+  PRODUCE
+    MUTEX_3 : 1,
+    Philosopher_eat_2_BB16 : 1;
+TRANSITION Philosopher_eat_2_DROP_16
+  CONSUME
+    Philosopher_eat_2_BB16 : 1;
+  PRODUCE
+    MUTEX_2 : 1,
+    Philosopher_eat_2_BB17 : 1;
+TRANSITION Philosopher_eat_2_DROP_18
+  CONSUME
+    Philosopher_eat_2_BB18 : 1;
+  PRODUCE
+    MUTEX_3 : 1,
+    Philosopher_eat_2_BB19 : 1;
+TRANSITION Philosopher_eat_2_DROP_19
+  CONSUME
+    Philosopher_eat_2_BB19 : 1;
+  PRODUCE
+    MUTEX_2 : 1,
+    Philosopher_eat_2_BB20 : 1;
+TRANSITION Philosopher_eat_2_DROP_UNWIND_15
+  CONSUME
+    Philosopher_eat_2_BB15 : 1;
+  PRODUCE
+    MUTEX_3 : 1,
+    Philosopher_eat_2_BB19 : 1;
+TRANSITION Philosopher_eat_2_RETURN
+  CONSUME
+    Philosopher_eat_2_BB17 : 1;
+  PRODUCE
+    Philosopher_dine_2_BB1 : 1;
+TRANSITION Philosopher_eat_2_UNWIND_20
+  CONSUME
+    Philosopher_eat_2_BB20 : 1;
+  PRODUCE
+    THREAD_2_END : 1;
+TRANSITION Philosopher_eat_3_DROP_15
+  CONSUME
+    Philosopher_eat_3_BB15 : 1;
+  PRODUCE
+    MUTEX_4 : 1,
+    Philosopher_eat_3_BB16 : 1;
+TRANSITION Philosopher_eat_3_DROP_16
+  CONSUME
+    Philosopher_eat_3_BB16 : 1;
+  PRODUCE
+    MUTEX_3 : 1,
+    Philosopher_eat_3_BB17 : 1;
+TRANSITION Philosopher_eat_3_DROP_18
+  CONSUME
+    Philosopher_eat_3_BB18 : 1;
+  PRODUCE
+    MUTEX_4 : 1,
+    Philosopher_eat_3_BB19 : 1;
+TRANSITION Philosopher_eat_3_DROP_19
+  CONSUME
+    Philosopher_eat_3_BB19 : 1;
+  PRODUCE
+    MUTEX_3 : 1,
+    Philosopher_eat_3_BB20 : 1;
+TRANSITION Philosopher_eat_3_DROP_UNWIND_15
+  CONSUME
+    Philosopher_eat_3_BB15 : 1;
+  PRODUCE
+    MUTEX_4 : 1,
+    Philosopher_eat_3_BB19 : 1;
+TRANSITION Philosopher_eat_3_RETURN
+  CONSUME
+    Philosopher_eat_3_BB17 : 1;
+  PRODUCE
+    Philosopher_dine_3_BB1 : 1;
+TRANSITION Philosopher_eat_3_UNWIND_20
+  CONSUME
+    Philosopher_eat_3_BB20 : 1;
+  PRODUCE
+    THREAD_3_END : 1;
+TRANSITION Philosopher_eat_4_DROP_15
+  CONSUME
+    Philosopher_eat_4_BB15 : 1;
+  PRODUCE
+    MUTEX_0 : 1,
+    Philosopher_eat_4_BB16 : 1;
+TRANSITION Philosopher_eat_4_DROP_16
+  CONSUME
+    Philosopher_eat_4_BB16 : 1;
+  PRODUCE
+    MUTEX_4 : 1,
+    Philosopher_eat_4_BB17 : 1;
+TRANSITION Philosopher_eat_4_DROP_18
+  CONSUME
+    Philosopher_eat_4_BB18 : 1;
+  PRODUCE
+    MUTEX_0 : 1,
+    Philosopher_eat_4_BB19 : 1;
+TRANSITION Philosopher_eat_4_DROP_19
+  CONSUME
+    Philosopher_eat_4_BB19 : 1;
+  PRODUCE
+    MUTEX_4 : 1,
+    Philosopher_eat_4_BB20 : 1;
+TRANSITION Philosopher_eat_4_DROP_UNWIND_15
+  CONSUME
+    Philosopher_eat_4_BB15 : 1;
+  PRODUCE
+    MUTEX_0 : 1,
+    Philosopher_eat_4_BB19 : 1;
+TRANSITION Philosopher_eat_4_RETURN
+  CONSUME
+    Philosopher_eat_4_BB17 : 1;
+  PRODUCE
+    Philosopher_dine_4_BB1 : 1;
+TRANSITION Philosopher_eat_4_UNWIND_20
+  CONSUME
+    Philosopher_eat_4_BB20 : 1;
+  PRODUCE
+    THREAD_4_END : 1;
+TRANSITION Philosopher_new_0_CALL_UNWIND
+  CONSUME
+    main_BB12 : 1;
+  PRODUCE
+    main_BB81 : 1;
+TRANSITION Philosopher_new_0_RETURN
+  CONSUME
+    main_BB12 : 1;
+  PRODUCE
+    main_BB13 : 1;
+TRANSITION Philosopher_new_1_CALL_UNWIND
+  CONSUME
+    main_BB15 : 1;
+  PRODUCE
+    main_BB77 : 1;
+TRANSITION Philosopher_new_1_RETURN
+  CONSUME
+    main_BB15 : 1;
+  PRODUCE
+    main_BB16 : 1;
+TRANSITION Philosopher_new_2_CALL_UNWIND
+  CONSUME
+    main_BB18 : 1;
+  PRODUCE
+    main_BB73 : 1;
+TRANSITION Philosopher_new_2_RETURN
+  CONSUME
+    main_BB18 : 1;
+  PRODUCE
+    main_BB19 : 1;
+TRANSITION Philosopher_new_3_CALL_UNWIND
+  CONSUME
+    main_BB21 : 1;
+  PRODUCE
+    main_BB69 : 1;
+TRANSITION Philosopher_new_3_RETURN
+  CONSUME
+    main_BB21 : 1;
+  PRODUCE
+    main_BB22 : 1;
+TRANSITION Philosopher_new_4_CALL_UNWIND
+  CONSUME
+    main_BB24 : 1;
+  PRODUCE
+    main_BB65 : 1;
+TRANSITION Philosopher_new_4_RETURN
+  CONSUME
+    main_BB24 : 1;
+  PRODUCE
+    main_BB25 : 1;
+TRANSITION Philosopher_think_0_RETURN
+  CONSUME
+    Philosopher_think_0_BB5 : 1;
+  PRODUCE
+    Philosopher_dine_0_BB2 : 1;
+TRANSITION Philosopher_think_1_RETURN
+  CONSUME
+    Philosopher_think_1_BB5 : 1;
+  PRODUCE
+    Philosopher_dine_1_BB2 : 1;
+TRANSITION Philosopher_think_2_RETURN
+  CONSUME
+    Philosopher_think_2_BB5 : 1;
+  PRODUCE
+    Philosopher_dine_2_BB2 : 1;
+TRANSITION Philosopher_think_3_RETURN
+  CONSUME
+    Philosopher_think_3_BB5 : 1;
+  PRODUCE
+    Philosopher_dine_3_BB2 : 1;
+TRANSITION Philosopher_think_4_RETURN
+  CONSUME
+    Philosopher_think_4_BB5 : 1;
+  PRODUCE
+    Philosopher_dine_4_BB2 : 1;
+TRANSITION core_fmt_rt_Argument__new_display_0_CALL
+  CONSUME
+    Philosopher_think_0_BB2 : 1;
+  PRODUCE
+    Philosopher_think_0_BB3 : 1;
+TRANSITION core_fmt_rt_Argument__new_display_10_CALL
+  CONSUME
+    Philosopher_eat_2_BB11 : 1;
+  PRODUCE
+    Philosopher_eat_2_BB12 : 1;
+TRANSITION core_fmt_rt_Argument__new_display_10_CALL_UNWIND
+  CONSUME
+    Philosopher_eat_2_BB11 : 1;
+  PRODUCE
+    Philosopher_eat_2_BB18 : 1;
+TRANSITION core_fmt_rt_Argument__new_display_11_CALL
+  CONSUME
+    Philosopher_eat_2_BB12 : 1;
+  PRODUCE
+    Philosopher_eat_2_BB13 : 1;
+TRANSITION core_fmt_rt_Argument__new_display_11_CALL_UNWIND
+  CONSUME
+    Philosopher_eat_2_BB12 : 1;
+  PRODUCE
+    Philosopher_eat_2_BB18 : 1;
+TRANSITION core_fmt_rt_Argument__new_display_12_CALL
+  CONSUME
+    Philosopher_think_3_BB2 : 1;
+  PRODUCE
+    Philosopher_think_3_BB3 : 1;
+TRANSITION core_fmt_rt_Argument__new_display_13_CALL
+  CONSUME
+    Philosopher_eat_3_BB10 : 1;
+  PRODUCE
+    Philosopher_eat_3_BB11 : 1;
+TRANSITION core_fmt_rt_Argument__new_display_13_CALL_UNWIND
+  CONSUME
+    Philosopher_eat_3_BB10 : 1;
+  PRODUCE
+    Philosopher_eat_3_BB18 : 1;
+TRANSITION core_fmt_rt_Argument__new_display_14_CALL
+  CONSUME
+    Philosopher_eat_3_BB11 : 1;
+  PRODUCE
+    Philosopher_eat_3_BB12 : 1;
+TRANSITION core_fmt_rt_Argument__new_display_14_CALL_UNWIND
+  CONSUME
+    Philosopher_eat_3_BB11 : 1;
+  PRODUCE
+    Philosopher_eat_3_BB18 : 1;
+TRANSITION core_fmt_rt_Argument__new_display_15_CALL
+  CONSUME
+    Philosopher_eat_3_BB12 : 1;
+  PRODUCE
+    Philosopher_eat_3_BB13 : 1;
+TRANSITION core_fmt_rt_Argument__new_display_15_CALL_UNWIND
+  CONSUME
+    Philosopher_eat_3_BB12 : 1;
+  PRODUCE
+    Philosopher_eat_3_BB18 : 1;
+TRANSITION core_fmt_rt_Argument__new_display_16_CALL
+  CONSUME
+    Philosopher_think_4_BB2 : 1;
+  PRODUCE
+    Philosopher_think_4_BB3 : 1;
+TRANSITION core_fmt_rt_Argument__new_display_17_CALL
+  CONSUME
+    Philosopher_eat_4_BB10 : 1;
+  PRODUCE
+    Philosopher_eat_4_BB11 : 1;
+TRANSITION core_fmt_rt_Argument__new_display_17_CALL_UNWIND
+  CONSUME
+    Philosopher_eat_4_BB10 : 1;
+  PRODUCE
+    Philosopher_eat_4_BB18 : 1;
+TRANSITION core_fmt_rt_Argument__new_display_18_CALL
+  CONSUME
+    Philosopher_eat_4_BB11 : 1;
+  PRODUCE
+    Philosopher_eat_4_BB12 : 1;
+TRANSITION core_fmt_rt_Argument__new_display_18_CALL_UNWIND
+  CONSUME
+    Philosopher_eat_4_BB11 : 1;
+  PRODUCE
+    Philosopher_eat_4_BB18 : 1;
+TRANSITION core_fmt_rt_Argument__new_display_19_CALL
+  CONSUME
+    Philosopher_eat_4_BB12 : 1;
+  PRODUCE
+    Philosopher_eat_4_BB13 : 1;
+TRANSITION core_fmt_rt_Argument__new_display_19_CALL_UNWIND
+  CONSUME
+    Philosopher_eat_4_BB12 : 1;
+  PRODUCE
+    Philosopher_eat_4_BB18 : 1;
+TRANSITION core_fmt_rt_Argument__new_display_1_CALL
+  CONSUME
+    Philosopher_eat_0_BB10 : 1;
+  PRODUCE
+    Philosopher_eat_0_BB11 : 1;
+TRANSITION core_fmt_rt_Argument__new_display_1_CALL_UNWIND
+  CONSUME
+    Philosopher_eat_0_BB10 : 1;
+  PRODUCE
+    Philosopher_eat_0_BB18 : 1;
+TRANSITION core_fmt_rt_Argument__new_display_2_CALL
+  CONSUME
+    Philosopher_eat_0_BB11 : 1;
+  PRODUCE
+    Philosopher_eat_0_BB12 : 1;
+TRANSITION core_fmt_rt_Argument__new_display_2_CALL_UNWIND
+  CONSUME
+    Philosopher_eat_0_BB11 : 1;
+  PRODUCE
+    Philosopher_eat_0_BB18 : 1;
+TRANSITION core_fmt_rt_Argument__new_display_3_CALL
+  CONSUME
+    Philosopher_eat_0_BB12 : 1;
+  PRODUCE
+    Philosopher_eat_0_BB13 : 1;
+TRANSITION core_fmt_rt_Argument__new_display_3_CALL_UNWIND
+  CONSUME
+    Philosopher_eat_0_BB12 : 1;
+  PRODUCE
+    Philosopher_eat_0_BB18 : 1;
+TRANSITION core_fmt_rt_Argument__new_display_4_CALL
+  CONSUME
+    Philosopher_think_1_BB2 : 1;
+  PRODUCE
+    Philosopher_think_1_BB3 : 1;
+TRANSITION core_fmt_rt_Argument__new_display_5_CALL
+  CONSUME
+    Philosopher_eat_1_BB10 : 1;
+  PRODUCE
+    Philosopher_eat_1_BB11 : 1;
+TRANSITION core_fmt_rt_Argument__new_display_5_CALL_UNWIND
+  CONSUME
+    Philosopher_eat_1_BB10 : 1;
+  PRODUCE
+    Philosopher_eat_1_BB18 : 1;
+TRANSITION core_fmt_rt_Argument__new_display_6_CALL
+  CONSUME
+    Philosopher_eat_1_BB11 : 1;
+  PRODUCE
+    Philosopher_eat_1_BB12 : 1;
+TRANSITION core_fmt_rt_Argument__new_display_6_CALL_UNWIND
+  CONSUME
+    Philosopher_eat_1_BB11 : 1;
+  PRODUCE
+    Philosopher_eat_1_BB18 : 1;
+TRANSITION core_fmt_rt_Argument__new_display_7_CALL
+  CONSUME
+    Philosopher_eat_1_BB12 : 1;
+  PRODUCE
+    Philosopher_eat_1_BB13 : 1;
+TRANSITION core_fmt_rt_Argument__new_display_7_CALL_UNWIND
+  CONSUME
+    Philosopher_eat_1_BB12 : 1;
+  PRODUCE
+    Philosopher_eat_1_BB18 : 1;
+TRANSITION core_fmt_rt_Argument__new_display_8_CALL
+  CONSUME
+    Philosopher_think_2_BB2 : 1;
+  PRODUCE
+    Philosopher_think_2_BB3 : 1;
+TRANSITION core_fmt_rt_Argument__new_display_9_CALL
+  CONSUME
+    Philosopher_eat_2_BB10 : 1;
+  PRODUCE
+    Philosopher_eat_2_BB11 : 1;
+TRANSITION core_fmt_rt_Argument__new_display_9_CALL_UNWIND
+  CONSUME
+    Philosopher_eat_2_BB10 : 1;
+  PRODUCE
+    Philosopher_eat_2_BB18 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Arguments__new_v1_0_CALL
+  CONSUME
+    Philosopher_think_0_BB3 : 1;
+  PRODUCE
+    Philosopher_think_0_BB4 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Arguments__new_v1_1_CALL
+  CONSUME
+    Philosopher_eat_0_BB13 : 1;
+  PRODUCE
+    Philosopher_eat_0_BB14 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Arguments__new_v1_1_CALL_UNWIND
+  CONSUME
+    Philosopher_eat_0_BB13 : 1;
+  PRODUCE
+    Philosopher_eat_0_BB18 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Arguments__new_v1_2_CALL
+  CONSUME
+    Philosopher_think_1_BB3 : 1;
+  PRODUCE
+    Philosopher_think_1_BB4 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Arguments__new_v1_3_CALL
+  CONSUME
+    Philosopher_eat_1_BB13 : 1;
+  PRODUCE
+    Philosopher_eat_1_BB14 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Arguments__new_v1_3_CALL_UNWIND
+  CONSUME
+    Philosopher_eat_1_BB13 : 1;
+  PRODUCE
+    Philosopher_eat_1_BB18 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Arguments__new_v1_4_CALL
+  CONSUME
+    Philosopher_think_2_BB3 : 1;
+  PRODUCE
+    Philosopher_think_2_BB4 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Arguments__new_v1_5_CALL
+  CONSUME
+    Philosopher_eat_2_BB13 : 1;
+  PRODUCE
+    Philosopher_eat_2_BB14 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Arguments__new_v1_5_CALL_UNWIND
+  CONSUME
+    Philosopher_eat_2_BB13 : 1;
+  PRODUCE
+    Philosopher_eat_2_BB18 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Arguments__new_v1_6_CALL
+  CONSUME
+    Philosopher_think_3_BB3 : 1;
+  PRODUCE
+    Philosopher_think_3_BB4 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Arguments__new_v1_7_CALL
+  CONSUME
+    Philosopher_eat_3_BB13 : 1;
+  PRODUCE
+    Philosopher_eat_3_BB14 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Arguments__new_v1_7_CALL_UNWIND
+  CONSUME
+    Philosopher_eat_3_BB13 : 1;
+  PRODUCE
+    Philosopher_eat_3_BB18 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Arguments__new_v1_8_CALL
+  CONSUME
+    Philosopher_think_4_BB3 : 1;
+  PRODUCE
+    Philosopher_think_4_BB4 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Arguments__new_v1_9_CALL
+  CONSUME
+    Philosopher_eat_4_BB13 : 1;
+  PRODUCE
+    Philosopher_eat_4_BB14 : 1;
+TRANSITION core_fmt_rt__impl_std_fmt_Arguments__new_v1_9_CALL_UNWIND
+  CONSUME
+    Philosopher_eat_4_BB13 : 1;
+  PRODUCE
+    Philosopher_eat_4_BB18 : 1;
+TRANSITION main_DROP_31
+  CONSUME
+    main_BB31 : 1;
+  PRODUCE
+    main_BB32 : 1;
+TRANSITION main_DROP_33
+  CONSUME
+    main_BB33 : 1;
+  PRODUCE
+    main_BB34 : 1;
+TRANSITION main_DROP_35
+  CONSUME
+    main_BB35 : 1;
+  PRODUCE
+    main_BB36 : 1;
+TRANSITION main_DROP_37
+  CONSUME
+    main_BB37 : 1;
+  PRODUCE
+    main_BB38 : 1;
+TRANSITION main_DROP_39
+  CONSUME
+    main_BB39 : 1;
+  PRODUCE
+    main_BB40 : 1;
+TRANSITION main_DROP_40
+  CONSUME
+    main_BB40 : 1;
+  PRODUCE
+    main_BB41 : 1;
+TRANSITION main_DROP_41
+  CONSUME
+    main_BB41 : 1;
+  PRODUCE
+    main_BB42 : 1;
+TRANSITION main_DROP_42
+  CONSUME
+    main_BB42 : 1;
+  PRODUCE
+    main_BB43 : 1;
+TRANSITION main_DROP_43
+  CONSUME
+    main_BB43 : 1;
+  PRODUCE
+    main_BB44 : 1;
+TRANSITION main_DROP_44
+  CONSUME
+    main_BB44 : 1;
+  PRODUCE
+    main_BB45 : 1;
+TRANSITION main_DROP_46
+  CONSUME
+    main_BB46 : 1;
+  PRODUCE
+    main_BB47 : 1;
+TRANSITION main_DROP_47
+  CONSUME
+    main_BB47 : 1;
+  PRODUCE
+    main_BB48 : 1;
+TRANSITION main_DROP_48
+  CONSUME
+    main_BB48 : 1;
+  PRODUCE
+    main_BB49 : 1;
+TRANSITION main_DROP_49
+  CONSUME
+    main_BB49 : 1;
+  PRODUCE
+    main_BB50 : 1;
+TRANSITION main_DROP_50
+  CONSUME
+    main_BB50 : 1;
+  PRODUCE
+    main_BB51 : 1;
+TRANSITION main_DROP_52
+  CONSUME
+    main_BB52 : 1;
+  PRODUCE
+    main_BB55 : 1;
+TRANSITION main_DROP_54
+  CONSUME
+    main_BB54 : 1;
+  PRODUCE
+    main_BB57 : 1;
+TRANSITION main_DROP_56
+  CONSUME
+    main_BB56 : 1;
+  PRODUCE
+    main_BB59 : 1;
+TRANSITION main_DROP_58
+  CONSUME
+    main_BB58 : 1;
+  PRODUCE
+    main_BB61 : 1;
+TRANSITION main_DROP_60
+  CONSUME
+    main_BB60 : 1;
+  PRODUCE
+    main_BB63 : 1;
+TRANSITION main_DROP_62
+  CONSUME
+    main_BB62 : 1;
+  PRODUCE
+    main_BB67 : 1;
+TRANSITION main_DROP_64
+  CONSUME
+    main_BB64 : 1;
+  PRODUCE
+    main_BB67 : 1;
+TRANSITION main_DROP_66
+  CONSUME
+    main_BB66 : 1;
+  PRODUCE
+    main_BB71 : 1;
+TRANSITION main_DROP_68
+  CONSUME
+    main_BB68 : 1;
+  PRODUCE
+    main_BB71 : 1;
+TRANSITION main_DROP_70
+  CONSUME
+    main_BB70 : 1;
+  PRODUCE
+    main_BB75 : 1;
+TRANSITION main_DROP_72
+  CONSUME
+    main_BB72 : 1;
+  PRODUCE
+    main_BB75 : 1;
+TRANSITION main_DROP_74
+  CONSUME
+    main_BB74 : 1;
+  PRODUCE
+    main_BB79 : 1;
+TRANSITION main_DROP_76
+  CONSUME
+    main_BB76 : 1;
+  PRODUCE
+    main_BB79 : 1;
+TRANSITION main_DROP_78
+  CONSUME
+    main_BB78 : 1;
+  PRODUCE
+    main_BB46 : 1;
+TRANSITION main_DROP_80
+  CONSUME
+    main_BB80 : 1;
+  PRODUCE
+    main_BB46 : 1;
+TRANSITION main_DROP_UNWIND_31
+  CONSUME
+    main_BB31 : 1;
+  PRODUCE
+    main_BB53 : 1;
+TRANSITION main_DROP_UNWIND_33
+  CONSUME
+    main_BB33 : 1;
+  PRODUCE
+    main_BB53 : 1;
+TRANSITION main_DROP_UNWIND_35
+  CONSUME
+    main_BB35 : 1;
+  PRODUCE
+    main_BB53 : 1;
+TRANSITION main_DROP_UNWIND_37
+  CONSUME
+    main_BB37 : 1;
+  PRODUCE
+    main_BB53 : 1;
+TRANSITION main_DROP_UNWIND_39
+  CONSUME
+    main_BB39 : 1;
+  PRODUCE
+    main_BB53 : 1;
+TRANSITION main_DROP_UNWIND_40
+  CONSUME
+    main_BB40 : 1;
+  PRODUCE
+    main_BB47 : 1;
+TRANSITION main_DROP_UNWIND_41
+  CONSUME
+    main_BB41 : 1;
+  PRODUCE
+    main_BB48 : 1;
+TRANSITION main_DROP_UNWIND_42
+  CONSUME
+    main_BB42 : 1;
+  PRODUCE
+    main_BB49 : 1;
+TRANSITION main_DROP_UNWIND_43
+  CONSUME
+    main_BB43 : 1;
+  PRODUCE
+    main_BB50 : 1;
+TRANSITION main_RETURN
+  CONSUME
+    main_BB45 : 1;
+  PRODUCE
+    PROGRAM_END : 1;
+TRANSITION main_SWITCH_INT_FROM_BB53_TO_BB52
+  CONSUME
+    main_BB53 : 1;
+  PRODUCE
+    main_BB52 : 1;
+TRANSITION main_SWITCH_INT_FROM_BB53_TO_BB55
+  CONSUME
+    main_BB53 : 1;
+  PRODUCE
+    main_BB55 : 1;
+TRANSITION main_SWITCH_INT_FROM_BB55_TO_BB54
+  CONSUME
+    main_BB55 : 1;
+  PRODUCE
+    main_BB54 : 1;
+TRANSITION main_SWITCH_INT_FROM_BB55_TO_BB57
+  CONSUME
+    main_BB55 : 1;
+  PRODUCE
+    main_BB57 : 1;
+TRANSITION main_SWITCH_INT_FROM_BB57_TO_BB56
+  CONSUME
+    main_BB57 : 1;
+  PRODUCE
+    main_BB56 : 1;
+TRANSITION main_SWITCH_INT_FROM_BB57_TO_BB59
+  CONSUME
+    main_BB57 : 1;
+  PRODUCE
+    main_BB59 : 1;
+TRANSITION main_SWITCH_INT_FROM_BB59_TO_BB58
+  CONSUME
+    main_BB59 : 1;
+  PRODUCE
+    main_BB58 : 1;
+TRANSITION main_SWITCH_INT_FROM_BB59_TO_BB61
+  CONSUME
+    main_BB59 : 1;
+  PRODUCE
+    main_BB61 : 1;
+TRANSITION main_SWITCH_INT_FROM_BB61_TO_BB60
+  CONSUME
+    main_BB61 : 1;
+  PRODUCE
+    main_BB60 : 1;
+TRANSITION main_SWITCH_INT_FROM_BB61_TO_BB63
+  CONSUME
+    main_BB61 : 1;
+  PRODUCE
+    main_BB63 : 1;
+TRANSITION main_SWITCH_INT_FROM_BB63_TO_BB62
+  CONSUME
+    main_BB63 : 1;
+  PRODUCE
+    main_BB62 : 1;
+TRANSITION main_SWITCH_INT_FROM_BB63_TO_BB67
+  CONSUME
+    main_BB63 : 1;
+  PRODUCE
+    main_BB67 : 1;
+TRANSITION main_SWITCH_INT_FROM_BB65_TO_BB64
+  CONSUME
+    main_BB65 : 1;
+  PRODUCE
+    main_BB64 : 1;
+TRANSITION main_SWITCH_INT_FROM_BB65_TO_BB67
+  CONSUME
+    main_BB65 : 1;
+  PRODUCE
+    main_BB67 : 1;
+TRANSITION main_SWITCH_INT_FROM_BB67_TO_BB66
+  CONSUME
+    main_BB67 : 1;
+  PRODUCE
+    main_BB66 : 1;
+TRANSITION main_SWITCH_INT_FROM_BB67_TO_BB71
+  CONSUME
+    main_BB67 : 1;
+  PRODUCE
+    main_BB71 : 1;
+TRANSITION main_SWITCH_INT_FROM_BB69_TO_BB68
+  CONSUME
+    main_BB69 : 1;
+  PRODUCE
+    main_BB68 : 1;
+TRANSITION main_SWITCH_INT_FROM_BB69_TO_BB71
+  CONSUME
+    main_BB69 : 1;
+  PRODUCE
+    main_BB71 : 1;
+TRANSITION main_SWITCH_INT_FROM_BB71_TO_BB70
+  CONSUME
+    main_BB71 : 1;
+  PRODUCE
+    main_BB70 : 1;
+TRANSITION main_SWITCH_INT_FROM_BB71_TO_BB75
+  CONSUME
+    main_BB71 : 1;
+  PRODUCE
+    main_BB75 : 1;
+TRANSITION main_SWITCH_INT_FROM_BB73_TO_BB72
+  CONSUME
+    main_BB73 : 1;
+  PRODUCE
+    main_BB72 : 1;
+TRANSITION main_SWITCH_INT_FROM_BB73_TO_BB75
+  CONSUME
+    main_BB73 : 1;
+  PRODUCE
+    main_BB75 : 1;
+TRANSITION main_SWITCH_INT_FROM_BB75_TO_BB74
+  CONSUME
+    main_BB75 : 1;
+  PRODUCE
+    main_BB74 : 1;
+TRANSITION main_SWITCH_INT_FROM_BB75_TO_BB79
+  CONSUME
+    main_BB75 : 1;
+  PRODUCE
+    main_BB79 : 1;
+TRANSITION main_SWITCH_INT_FROM_BB77_TO_BB76
+  CONSUME
+    main_BB77 : 1;
+  PRODUCE
+    main_BB76 : 1;
+TRANSITION main_SWITCH_INT_FROM_BB77_TO_BB79
+  CONSUME
+    main_BB77 : 1;
+  PRODUCE
+    main_BB79 : 1;
+TRANSITION main_SWITCH_INT_FROM_BB79_TO_BB46
+  CONSUME
+    main_BB79 : 1;
+  PRODUCE
+    main_BB46 : 1;
+TRANSITION main_SWITCH_INT_FROM_BB79_TO_BB78
+  CONSUME
+    main_BB79 : 1;
+  PRODUCE
+    main_BB78 : 1;
+TRANSITION main_SWITCH_INT_FROM_BB81_TO_BB46
+  CONSUME
+    main_BB81 : 1;
+  PRODUCE
+    main_BB46 : 1;
+TRANSITION main_SWITCH_INT_FROM_BB81_TO_BB80
+  CONSUME
+    main_BB81 : 1;
+  PRODUCE
+    main_BB80 : 1;
+TRANSITION main_UNWIND_51
+  CONSUME
+    main_BB51 : 1;
+  PRODUCE
+    PROGRAM_PANIC : 1;
+TRANSITION main__closure_0__DROP_1
+  CONSUME
+    main__closure_0__BB1 : 1;
+  PRODUCE
+    main__closure_0__BB2 : 1;
+TRANSITION main__closure_0__DROP_3
+  CONSUME
+    main__closure_0__BB3 : 1;
+  PRODUCE
+    main__closure_0__BB4 : 1;
+TRANSITION main__closure_0__RETURN
+  CONSUME
+    main__closure_0__BB2 : 1;
+  PRODUCE
+    THREAD_0_END : 1;
+TRANSITION main__closure_0__UNWIND_4
+  CONSUME
+    main__closure_0__BB4 : 1;
+  PRODUCE
+    THREAD_0_END : 1;
+TRANSITION main__closure_1__DROP_1
+  CONSUME
+    main__closure_1__BB1 : 1;
+  PRODUCE
+    main__closure_1__BB2 : 1;
+TRANSITION main__closure_1__DROP_3
+  CONSUME
+    main__closure_1__BB3 : 1;
+  PRODUCE
+    main__closure_1__BB4 : 1;
+TRANSITION main__closure_1__RETURN
+  CONSUME
+    main__closure_1__BB2 : 1;
+  PRODUCE
+    THREAD_1_END : 1;
+TRANSITION main__closure_1__UNWIND_4
+  CONSUME
+    main__closure_1__BB4 : 1;
+  PRODUCE
+    THREAD_1_END : 1;
+TRANSITION main__closure_2__DROP_1
+  CONSUME
+    main__closure_2__BB1 : 1;
+  PRODUCE
+    main__closure_2__BB2 : 1;
+TRANSITION main__closure_2__DROP_3
+  CONSUME
+    main__closure_2__BB3 : 1;
+  PRODUCE
+    main__closure_2__BB4 : 1;
+TRANSITION main__closure_2__RETURN
+  CONSUME
+    main__closure_2__BB2 : 1;
+  PRODUCE
+    THREAD_2_END : 1;
+TRANSITION main__closure_2__UNWIND_4
+  CONSUME
+    main__closure_2__BB4 : 1;
+  PRODUCE
+    THREAD_2_END : 1;
+TRANSITION main__closure_3__DROP_1
+  CONSUME
+    main__closure_3__BB1 : 1;
+  PRODUCE
+    main__closure_3__BB2 : 1;
+TRANSITION main__closure_3__DROP_3
+  CONSUME
+    main__closure_3__BB3 : 1;
+  PRODUCE
+    main__closure_3__BB4 : 1;
+TRANSITION main__closure_3__RETURN
+  CONSUME
+    main__closure_3__BB2 : 1;
+  PRODUCE
+    THREAD_3_END : 1;
+TRANSITION main__closure_3__UNWIND_4
+  CONSUME
+    main__closure_3__BB4 : 1;
+  PRODUCE
+    THREAD_3_END : 1;
+TRANSITION main__closure_4__DROP_1
+  CONSUME
+    main__closure_4__BB1 : 1;
+  PRODUCE
+    main__closure_4__BB2 : 1;
+TRANSITION main__closure_4__DROP_3
+  CONSUME
+    main__closure_4__BB3 : 1;
+  PRODUCE
+    main__closure_4__BB4 : 1;
+TRANSITION main__closure_4__RETURN
+  CONSUME
+    main__closure_4__BB2 : 1;
+  PRODUCE
+    THREAD_4_END : 1;
+TRANSITION main__closure_4__UNWIND_4
+  CONSUME
+    main__closure_4__BB4 : 1;
+  PRODUCE
+    THREAD_4_END : 1;
+TRANSITION std_clone_Clone_clone_0_CALL
+  CONSUME
+    main_BB10 : 1;
+  PRODUCE
+    main_BB11 : 1;
+TRANSITION std_clone_Clone_clone_0_CALL_UNWIND
+  CONSUME
+    main_BB10 : 1;
+  PRODUCE
+    main_BB46 : 1;
+TRANSITION std_clone_Clone_clone_1_CALL
+  CONSUME
+    main_BB11 : 1;
+  PRODUCE
+    main_BB12 : 1;
+TRANSITION std_clone_Clone_clone_1_CALL_UNWIND
+  CONSUME
+    main_BB11 : 1;
+  PRODUCE
+    main_BB81 : 1;
+TRANSITION std_clone_Clone_clone_2_CALL
+  CONSUME
+    main_BB13 : 1;
+  PRODUCE
+    main_BB14 : 1;
+TRANSITION std_clone_Clone_clone_2_CALL_UNWIND
+  CONSUME
+    main_BB13 : 1;
+  PRODUCE
+    main_BB79 : 1;
+TRANSITION std_clone_Clone_clone_3_CALL
+  CONSUME
+    main_BB14 : 1;
+  PRODUCE
+    main_BB15 : 1;
+TRANSITION std_clone_Clone_clone_3_CALL_UNWIND
+  CONSUME
+    main_BB14 : 1;
+  PRODUCE
+    main_BB77 : 1;
+TRANSITION std_clone_Clone_clone_4_CALL
+  CONSUME
+    main_BB16 : 1;
+  PRODUCE
+    main_BB17 : 1;
+TRANSITION std_clone_Clone_clone_4_CALL_UNWIND
+  CONSUME
+    main_BB16 : 1;
+  PRODUCE
+    main_BB75 : 1;
+TRANSITION std_clone_Clone_clone_5_CALL
+  CONSUME
+    main_BB17 : 1;
+  PRODUCE
+    main_BB18 : 1;
+TRANSITION std_clone_Clone_clone_5_CALL_UNWIND
+  CONSUME
+    main_BB17 : 1;
+  PRODUCE
+    main_BB73 : 1;
+TRANSITION std_clone_Clone_clone_6_CALL
+  CONSUME
+    main_BB19 : 1;
+  PRODUCE
+    main_BB20 : 1;
+TRANSITION std_clone_Clone_clone_6_CALL_UNWIND
+  CONSUME
+    main_BB19 : 1;
+  PRODUCE
+    main_BB71 : 1;
+TRANSITION std_clone_Clone_clone_7_CALL
+  CONSUME
+    main_BB20 : 1;
+  PRODUCE
+    main_BB21 : 1;
+TRANSITION std_clone_Clone_clone_7_CALL_UNWIND
+  CONSUME
+    main_BB20 : 1;
+  PRODUCE
+    main_BB69 : 1;
+TRANSITION std_clone_Clone_clone_8_CALL
+  CONSUME
+    main_BB22 : 1;
+  PRODUCE
+    main_BB23 : 1;
+TRANSITION std_clone_Clone_clone_8_CALL_UNWIND
+  CONSUME
+    main_BB22 : 1;
+  PRODUCE
+    main_BB67 : 1;
+TRANSITION std_clone_Clone_clone_9_CALL
+  CONSUME
+    main_BB23 : 1;
+  PRODUCE
+    main_BB24 : 1;
+TRANSITION std_clone_Clone_clone_9_CALL_UNWIND
+  CONSUME
+    main_BB23 : 1;
+  PRODUCE
+    main_BB65 : 1;
+TRANSITION std_io__print_0_CALL
+  CONSUME
+    Philosopher_think_0_BB4 : 1;
+  PRODUCE
+    Philosopher_think_0_BB5 : 1;
+TRANSITION std_io__print_1_CALL
+  CONSUME
+    Philosopher_eat_0_BB14 : 1;
+  PRODUCE
+    Philosopher_eat_0_BB15 : 1;
+TRANSITION std_io__print_1_CALL_UNWIND
+  CONSUME
+    Philosopher_eat_0_BB14 : 1;
+  PRODUCE
+    Philosopher_eat_0_BB18 : 1;
+TRANSITION std_io__print_2_CALL
+  CONSUME
+    Philosopher_think_1_BB4 : 1;
+  PRODUCE
+    Philosopher_think_1_BB5 : 1;
+TRANSITION std_io__print_3_CALL
+  CONSUME
+    Philosopher_eat_1_BB14 : 1;
+  PRODUCE
+    Philosopher_eat_1_BB15 : 1;
+TRANSITION std_io__print_3_CALL_UNWIND
+  CONSUME
+    Philosopher_eat_1_BB14 : 1;
+  PRODUCE
+    Philosopher_eat_1_BB18 : 1;
+TRANSITION std_io__print_4_CALL
+  CONSUME
+    Philosopher_think_2_BB4 : 1;
+  PRODUCE
+    Philosopher_think_2_BB5 : 1;
+TRANSITION std_io__print_5_CALL
+  CONSUME
+    Philosopher_eat_2_BB14 : 1;
+  PRODUCE
+    Philosopher_eat_2_BB15 : 1;
+TRANSITION std_io__print_5_CALL_UNWIND
+  CONSUME
+    Philosopher_eat_2_BB14 : 1;
+  PRODUCE
+    Philosopher_eat_2_BB18 : 1;
+TRANSITION std_io__print_6_CALL
+  CONSUME
+    Philosopher_think_3_BB4 : 1;
+  PRODUCE
+    Philosopher_think_3_BB5 : 1;
+TRANSITION std_io__print_7_CALL
+  CONSUME
+    Philosopher_eat_3_BB14 : 1;
+  PRODUCE
+    Philosopher_eat_3_BB15 : 1;
+TRANSITION std_io__print_7_CALL_UNWIND
+  CONSUME
+    Philosopher_eat_3_BB14 : 1;
+  PRODUCE
+    Philosopher_eat_3_BB18 : 1;
+TRANSITION std_io__print_8_CALL
+  CONSUME
+    Philosopher_think_4_BB4 : 1;
+  PRODUCE
+    Philosopher_think_4_BB5 : 1;
+TRANSITION std_io__print_9_CALL
+  CONSUME
+    Philosopher_eat_4_BB14 : 1;
+  PRODUCE
+    Philosopher_eat_4_BB15 : 1;
+TRANSITION std_io__print_9_CALL_UNWIND
+  CONSUME
+    Philosopher_eat_4_BB14 : 1;
+  PRODUCE
+    Philosopher_eat_4_BB18 : 1;
+TRANSITION std_ops_Deref_deref_0_CALL
+  CONSUME
+    Philosopher_dine_0_BB2 : 1;
+  PRODUCE
+    Philosopher_eat_0_BB1 : 1;
+TRANSITION std_ops_Deref_deref_10_CALL
+  CONSUME
+    Philosopher_eat_2_BB8 : 1;
+  PRODUCE
+    Philosopher_eat_2_BB9 : 1;
+TRANSITION std_ops_Deref_deref_11_CALL
+  CONSUME
+    Philosopher_eat_2_BB9 : 1;
+  PRODUCE
+    Philosopher_eat_2_BB10 : 1;
+TRANSITION std_ops_Deref_deref_12_CALL
+  CONSUME
+    Philosopher_dine_3_BB2 : 1;
+  PRODUCE
+    Philosopher_eat_3_BB1 : 1;
+TRANSITION std_ops_Deref_deref_13_CALL
+  CONSUME
+    Philosopher_eat_3_BB3 : 1;
+  PRODUCE
+    Philosopher_eat_3_BB4 : 1;
+TRANSITION std_ops_Deref_deref_14_CALL
+  CONSUME
+    Philosopher_eat_3_BB8 : 1;
+  PRODUCE
+    Philosopher_eat_3_BB9 : 1;
+TRANSITION std_ops_Deref_deref_15_CALL
+  CONSUME
+    Philosopher_eat_3_BB9 : 1;
+  PRODUCE
+    Philosopher_eat_3_BB10 : 1;
+TRANSITION std_ops_Deref_deref_16_CALL
+  CONSUME
+    Philosopher_dine_4_BB2 : 1;
+  PRODUCE
+    Philosopher_eat_4_BB1 : 1;
+TRANSITION std_ops_Deref_deref_17_CALL
+  CONSUME
+    Philosopher_eat_4_BB3 : 1;
+  PRODUCE
+    Philosopher_eat_4_BB4 : 1;
+TRANSITION std_ops_Deref_deref_18_CALL
+  CONSUME
+    Philosopher_eat_4_BB8 : 1;
+  PRODUCE
+    Philosopher_eat_4_BB9 : 1;
+TRANSITION std_ops_Deref_deref_19_CALL
+  CONSUME
+    Philosopher_eat_4_BB9 : 1;
+  PRODUCE
+    Philosopher_eat_4_BB10 : 1;
+TRANSITION std_ops_Deref_deref_1_CALL
+  CONSUME
+    Philosopher_eat_0_BB3 : 1;
+  PRODUCE
+    Philosopher_eat_0_BB4 : 1;
+TRANSITION std_ops_Deref_deref_2_CALL
+  CONSUME
+    Philosopher_eat_0_BB8 : 1;
+  PRODUCE
+    Philosopher_eat_0_BB9 : 1;
+TRANSITION std_ops_Deref_deref_3_CALL
+  CONSUME
+    Philosopher_eat_0_BB9 : 1;
+  PRODUCE
+    Philosopher_eat_0_BB10 : 1;
+TRANSITION std_ops_Deref_deref_4_CALL
+  CONSUME
+    Philosopher_dine_1_BB2 : 1;
+  PRODUCE
+    Philosopher_eat_1_BB1 : 1;
+TRANSITION std_ops_Deref_deref_5_CALL
+  CONSUME
+    Philosopher_eat_1_BB3 : 1;
+  PRODUCE
+    Philosopher_eat_1_BB4 : 1;
+TRANSITION std_ops_Deref_deref_6_CALL
+  CONSUME
+    Philosopher_eat_1_BB8 : 1;
+  PRODUCE
+    Philosopher_eat_1_BB9 : 1;
+TRANSITION std_ops_Deref_deref_7_CALL
+  CONSUME
+    Philosopher_eat_1_BB9 : 1;
+  PRODUCE
+    Philosopher_eat_1_BB10 : 1;
+TRANSITION std_ops_Deref_deref_8_CALL
+  CONSUME
+    Philosopher_dine_2_BB2 : 1;
+  PRODUCE
+    Philosopher_eat_2_BB1 : 1;
+TRANSITION std_ops_Deref_deref_9_CALL
+  CONSUME
+    Philosopher_eat_2_BB3 : 1;
+  PRODUCE
+    Philosopher_eat_2_BB4 : 1;
+TRANSITION std_result_Result_unwrap_0_CALL
+  CONSUME
+    Philosopher_eat_0_BB2 : 1;
+  PRODUCE
+    Philosopher_eat_0_BB3 : 1;
+TRANSITION std_result_Result_unwrap_1_CALL
+  CONSUME
+    Philosopher_eat_0_BB5 : 1;
+  PRODUCE
+    Philosopher_eat_0_BB6 : 1;
+TRANSITION std_result_Result_unwrap_2_CALL
+  CONSUME
+    Philosopher_eat_1_BB2 : 1;
+  PRODUCE
+    Philosopher_eat_1_BB3 : 1;
+TRANSITION std_result_Result_unwrap_3_CALL
+  CONSUME
+    Philosopher_eat_1_BB5 : 1;
+  PRODUCE
+    Philosopher_eat_1_BB6 : 1;
+TRANSITION std_result_Result_unwrap_4_CALL
+  CONSUME
+    Philosopher_eat_2_BB2 : 1;
+  PRODUCE
+    Philosopher_eat_2_BB3 : 1;
+TRANSITION std_result_Result_unwrap_5_CALL
+  CONSUME
+    Philosopher_eat_2_BB5 : 1;
+  PRODUCE
+    Philosopher_eat_2_BB6 : 1;
+TRANSITION std_result_Result_unwrap_6_CALL
+  CONSUME
+    Philosopher_eat_3_BB2 : 1;
+  PRODUCE
+    Philosopher_eat_3_BB3 : 1;
+TRANSITION std_result_Result_unwrap_7_CALL
+  CONSUME
+    Philosopher_eat_3_BB5 : 1;
+  PRODUCE
+    Philosopher_eat_3_BB6 : 1;
+TRANSITION std_result_Result_unwrap_8_CALL
+  CONSUME
+    Philosopher_eat_4_BB2 : 1;
+  PRODUCE
+    Philosopher_eat_4_BB3 : 1;
+TRANSITION std_result_Result_unwrap_9_CALL
+  CONSUME
+    Philosopher_eat_4_BB5 : 1;
+  PRODUCE
+    Philosopher_eat_4_BB6 : 1;
+TRANSITION std_sync_Arc_T_new_0_CALL
+  CONSUME
+    main_BB1 : 1;
+  PRODUCE
+    main_BB2 : 1;
+TRANSITION std_sync_Arc_T_new_1_CALL
+  CONSUME
+    main_BB3 : 1;
+  PRODUCE
+    main_BB4 : 1;
+TRANSITION std_sync_Arc_T_new_1_CALL_UNWIND
+  CONSUME
+    main_BB3 : 1;
+  PRODUCE
+    main_BB50 : 1;
+TRANSITION std_sync_Arc_T_new_2_CALL
+  CONSUME
+    main_BB5 : 1;
+  PRODUCE
+    main_BB6 : 1;
+TRANSITION std_sync_Arc_T_new_2_CALL_UNWIND
+  CONSUME
+    main_BB5 : 1;
+  PRODUCE
+    main_BB49 : 1;
+TRANSITION std_sync_Arc_T_new_3_CALL
+  CONSUME
+    main_BB7 : 1;
+  PRODUCE
+    main_BB8 : 1;
+TRANSITION std_sync_Arc_T_new_3_CALL_UNWIND
+  CONSUME
+    main_BB7 : 1;
+  PRODUCE
+    main_BB48 : 1;
+TRANSITION std_sync_Arc_T_new_4_CALL
+  CONSUME
+    main_BB9 : 1;
+  PRODUCE
+    main_BB10 : 1;
+TRANSITION std_sync_Arc_T_new_4_CALL_UNWIND
+  CONSUME
+    main_BB9 : 1;
+  PRODUCE
+    main_BB47 : 1;
+TRANSITION std_sync_Mutex_T_lock_0_CALL
+  CONSUME
+    MUTEX_0 : 1,
+    Philosopher_eat_0_BB1 : 1;
+  PRODUCE
+    Philosopher_eat_0_BB2 : 1;
+TRANSITION std_sync_Mutex_T_lock_1_CALL
+  CONSUME
+    MUTEX_1 : 1,
+    Philosopher_eat_0_BB4 : 1;
+  PRODUCE
+    Philosopher_eat_0_BB5 : 1;
+TRANSITION std_sync_Mutex_T_lock_2_CALL
+  CONSUME
+    MUTEX_1 : 1,
+    Philosopher_eat_1_BB1 : 1;
+  PRODUCE
+    Philosopher_eat_1_BB2 : 1;
+TRANSITION std_sync_Mutex_T_lock_3_CALL
+  CONSUME
+    MUTEX_2 : 1,
+    Philosopher_eat_1_BB4 : 1;
+  PRODUCE
+    Philosopher_eat_1_BB5 : 1;
+TRANSITION std_sync_Mutex_T_lock_4_CALL
+  CONSUME
+    MUTEX_2 : 1,
+    Philosopher_eat_2_BB1 : 1;
+  PRODUCE
+    Philosopher_eat_2_BB2 : 1;
+TRANSITION std_sync_Mutex_T_lock_5_CALL
+  CONSUME
+    MUTEX_3 : 1,
+    Philosopher_eat_2_BB4 : 1;
+  PRODUCE
+    Philosopher_eat_2_BB5 : 1;
+TRANSITION std_sync_Mutex_T_lock_6_CALL
+  CONSUME
+    MUTEX_3 : 1,
+    Philosopher_eat_3_BB1 : 1;
+  PRODUCE
+    Philosopher_eat_3_BB2 : 1;
+TRANSITION std_sync_Mutex_T_lock_7_CALL
+  CONSUME
+    MUTEX_4 : 1,
+    Philosopher_eat_3_BB4 : 1;
+  PRODUCE
+    Philosopher_eat_3_BB5 : 1;
+TRANSITION std_sync_Mutex_T_lock_8_CALL
+  CONSUME
+    MUTEX_4 : 1,
+    Philosopher_eat_4_BB1 : 1;
+  PRODUCE
+    Philosopher_eat_4_BB2 : 1;
+TRANSITION std_sync_Mutex_T_lock_9_CALL
+  CONSUME
+    MUTEX_0 : 1,
+    Philosopher_eat_4_BB4 : 1;
+  PRODUCE
+    Philosopher_eat_4_BB5 : 1;
+TRANSITION std_sync_Mutex_T_new_0_CALL
+  CONSUME
+    PROGRAM_START : 1;
+  PRODUCE
+    main_BB1 : 1;
+TRANSITION std_sync_Mutex_T_new_1_CALL
+  CONSUME
+    main_BB2 : 1;
+  PRODUCE
+    main_BB3 : 1;
+TRANSITION std_sync_Mutex_T_new_1_CALL_UNWIND
+  CONSUME
+    main_BB2 : 1;
+  PRODUCE
+    main_BB50 : 1;
+TRANSITION std_sync_Mutex_T_new_2_CALL
+  CONSUME
+    main_BB4 : 1;
+  PRODUCE
+    main_BB5 : 1;
+TRANSITION std_sync_Mutex_T_new_2_CALL_UNWIND
+  CONSUME
+    main_BB4 : 1;
+  PRODUCE
+    main_BB49 : 1;
+TRANSITION std_sync_Mutex_T_new_3_CALL
+  CONSUME
+    main_BB6 : 1;
+  PRODUCE
+    main_BB7 : 1;
+TRANSITION std_sync_Mutex_T_new_3_CALL_UNWIND
+  CONSUME
+    main_BB6 : 1;
+  PRODUCE
+    main_BB48 : 1;
+TRANSITION std_sync_Mutex_T_new_4_CALL
+  CONSUME
+    main_BB8 : 1;
+  PRODUCE
+    main_BB9 : 1;
+TRANSITION std_sync_Mutex_T_new_4_CALL_UNWIND
+  CONSUME
+    main_BB8 : 1;
+  PRODUCE
+    main_BB47 : 1;
+TRANSITION std_thread_JoinHandle_T_join_0_CALL
+  CONSUME
+    THREAD_0_END : 1,
+    main_BB30 : 1;
+  PRODUCE
+    main_BB31 : 1;
+TRANSITION std_thread_JoinHandle_T_join_1_CALL
+  CONSUME
+    THREAD_1_END : 1,
+    main_BB32 : 1;
+  PRODUCE
+    main_BB33 : 1;
+TRANSITION std_thread_JoinHandle_T_join_2_CALL
+  CONSUME
+    THREAD_2_END : 1,
+    main_BB34 : 1;
+  PRODUCE
+    main_BB35 : 1;
+TRANSITION std_thread_JoinHandle_T_join_3_CALL
+  CONSUME
+    THREAD_3_END : 1,
+    main_BB36 : 1;
+  PRODUCE
+    main_BB37 : 1;
+TRANSITION std_thread_JoinHandle_T_join_4_CALL
+  CONSUME
+    THREAD_4_END : 1,
+    main_BB38 : 1;
+  PRODUCE
+    main_BB39 : 1;
+TRANSITION std_thread_sleep_0_CALL
+  CONSUME
+    Philosopher_think_0_BB1 : 1;
+  PRODUCE
+    Philosopher_think_0_BB2 : 1;
+TRANSITION std_thread_sleep_1_CALL
+  CONSUME
+    Philosopher_eat_0_BB7 : 1;
+  PRODUCE
+    Philosopher_eat_0_BB8 : 1;
+TRANSITION std_thread_sleep_1_CALL_UNWIND
+  CONSUME
+    Philosopher_eat_0_BB7 : 1;
+  PRODUCE
+    Philosopher_eat_0_BB18 : 1;
+TRANSITION std_thread_sleep_2_CALL
+  CONSUME
+    Philosopher_think_1_BB1 : 1;
+  PRODUCE
+    Philosopher_think_1_BB2 : 1;
+TRANSITION std_thread_sleep_3_CALL
+  CONSUME
+    Philosopher_eat_1_BB7 : 1;
+  PRODUCE
+    Philosopher_eat_1_BB8 : 1;
+TRANSITION std_thread_sleep_3_CALL_UNWIND
+  CONSUME
+    Philosopher_eat_1_BB7 : 1;
+  PRODUCE
+    Philosopher_eat_1_BB18 : 1;
+TRANSITION std_thread_sleep_4_CALL
+  CONSUME
+    Philosopher_think_2_BB1 : 1;
+  PRODUCE
+    Philosopher_think_2_BB2 : 1;
+TRANSITION std_thread_sleep_5_CALL
+  CONSUME
+    Philosopher_eat_2_BB7 : 1;
+  PRODUCE
+    Philosopher_eat_2_BB8 : 1;
+TRANSITION std_thread_sleep_5_CALL_UNWIND
+  CONSUME
+    Philosopher_eat_2_BB7 : 1;
+  PRODUCE
+    Philosopher_eat_2_BB18 : 1;
+TRANSITION std_thread_sleep_6_CALL
+  CONSUME
+    Philosopher_think_3_BB1 : 1;
+  PRODUCE
+    Philosopher_think_3_BB2 : 1;
+TRANSITION std_thread_sleep_7_CALL
+  CONSUME
+    Philosopher_eat_3_BB7 : 1;
+  PRODUCE
+    Philosopher_eat_3_BB8 : 1;
+TRANSITION std_thread_sleep_7_CALL_UNWIND
+  CONSUME
+    Philosopher_eat_3_BB7 : 1;
+  PRODUCE
+    Philosopher_eat_3_BB18 : 1;
+TRANSITION std_thread_sleep_8_CALL
+  CONSUME
+    Philosopher_think_4_BB1 : 1;
+  PRODUCE
+    Philosopher_think_4_BB2 : 1;
+TRANSITION std_thread_sleep_9_CALL
+  CONSUME
+    Philosopher_eat_4_BB7 : 1;
+  PRODUCE
+    Philosopher_eat_4_BB8 : 1;
+TRANSITION std_thread_sleep_9_CALL_UNWIND
+  CONSUME
+    Philosopher_eat_4_BB7 : 1;
+  PRODUCE
+    Philosopher_eat_4_BB18 : 1;
+TRANSITION std_thread_spawn_0_CALL
+  CONSUME
+    main_BB25 : 1;
+  PRODUCE
+    THREAD_0_START : 1,
+    main_BB26 : 1;
+TRANSITION std_thread_spawn_0_CALL_UNWIND
+  CONSUME
+    main_BB25 : 1;
+  PRODUCE
+    main_BB63 : 1;
+TRANSITION std_thread_spawn_1_CALL
+  CONSUME
+    main_BB26 : 1;
+  PRODUCE
+    THREAD_1_START : 1,
+    main_BB27 : 1;
+TRANSITION std_thread_spawn_1_CALL_UNWIND
+  CONSUME
+    main_BB26 : 1;
+  PRODUCE
+    main_BB61 : 1;
+TRANSITION std_thread_spawn_2_CALL
+  CONSUME
+    main_BB27 : 1;
+  PRODUCE
+    THREAD_2_START : 1,
+    main_BB28 : 1;
+TRANSITION std_thread_spawn_2_CALL_UNWIND
+  CONSUME
+    main_BB27 : 1;
+  PRODUCE
+    main_BB59 : 1;
+TRANSITION std_thread_spawn_3_CALL
+  CONSUME
+    main_BB28 : 1;
+  PRODUCE
+    THREAD_3_START : 1,
+    main_BB29 : 1;
+TRANSITION std_thread_spawn_3_CALL_UNWIND
+  CONSUME
+    main_BB28 : 1;
+  PRODUCE
+    main_BB57 : 1;
+TRANSITION std_thread_spawn_4_CALL
+  CONSUME
+    main_BB29 : 1;
+  PRODUCE
+    THREAD_4_START : 1,
+    main_BB30 : 1;
+TRANSITION std_thread_spawn_4_CALL_UNWIND
+  CONSUME
+    main_BB29 : 1;
+  PRODUCE
+    main_BB55 : 1;
+TRANSITION std_time_Duration_from_millis_0_CALL
+  CONSUME
+    Philosopher_dine_0_BB1 : 1;
+  PRODUCE
+    Philosopher_think_0_BB1 : 1;
+TRANSITION std_time_Duration_from_millis_1_CALL
+  CONSUME
+    Philosopher_eat_0_BB6 : 1;
+  PRODUCE
+    Philosopher_eat_0_BB7 : 1;
+TRANSITION std_time_Duration_from_millis_1_CALL_UNWIND
+  CONSUME
+    Philosopher_eat_0_BB6 : 1;
+  PRODUCE
+    Philosopher_eat_0_BB18 : 1;
+TRANSITION std_time_Duration_from_millis_2_CALL
+  CONSUME
+    Philosopher_dine_1_BB1 : 1;
+  PRODUCE
+    Philosopher_think_1_BB1 : 1;
+TRANSITION std_time_Duration_from_millis_3_CALL
+  CONSUME
+    Philosopher_eat_1_BB6 : 1;
+  PRODUCE
+    Philosopher_eat_1_BB7 : 1;
+TRANSITION std_time_Duration_from_millis_3_CALL_UNWIND
+  CONSUME
+    Philosopher_eat_1_BB6 : 1;
+  PRODUCE
+    Philosopher_eat_1_BB18 : 1;
+TRANSITION std_time_Duration_from_millis_4_CALL
+  CONSUME
+    Philosopher_dine_2_BB1 : 1;
+  PRODUCE
+    Philosopher_think_2_BB1 : 1;
+TRANSITION std_time_Duration_from_millis_5_CALL
+  CONSUME
+    Philosopher_eat_2_BB6 : 1;
+  PRODUCE
+    Philosopher_eat_2_BB7 : 1;
+TRANSITION std_time_Duration_from_millis_5_CALL_UNWIND
+  CONSUME
+    Philosopher_eat_2_BB6 : 1;
+  PRODUCE
+    Philosopher_eat_2_BB18 : 1;
+TRANSITION std_time_Duration_from_millis_6_CALL
+  CONSUME
+    Philosopher_dine_3_BB1 : 1;
+  PRODUCE
+    Philosopher_think_3_BB1 : 1;
+TRANSITION std_time_Duration_from_millis_7_CALL
+  CONSUME
+    Philosopher_eat_3_BB6 : 1;
+  PRODUCE
+    Philosopher_eat_3_BB7 : 1;
+TRANSITION std_time_Duration_from_millis_7_CALL_UNWIND
+  CONSUME
+    Philosopher_eat_3_BB6 : 1;
+  PRODUCE
+    Philosopher_eat_3_BB18 : 1;
+TRANSITION std_time_Duration_from_millis_8_CALL
+  CONSUME
+    Philosopher_dine_4_BB1 : 1;
+  PRODUCE
+    Philosopher_think_4_BB1 : 1;
+TRANSITION std_time_Duration_from_millis_9_CALL
+  CONSUME
+    Philosopher_eat_4_BB6 : 1;
+  PRODUCE
+    Philosopher_eat_4_BB7 : 1;
+TRANSITION std_time_Duration_from_millis_9_CALL_UNWIND
+  CONSUME
+    Philosopher_eat_4_BB6 : 1;
+  PRODUCE
+    Philosopher_eat_4_BB18 : 1;
