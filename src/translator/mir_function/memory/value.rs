@@ -36,7 +36,7 @@ impl std::fmt::Display for Value {
                     .collect();
                 write!(f, "aggregate [{}]", formatted_values.join(", "))
             }
-            Self::None => write!(f, "other, not a sync primitive"),
+            Self::None => write!(f, "other (not a sync primitive)"),
         }
     }
 }
@@ -50,7 +50,7 @@ impl std::fmt::Debug for Value {
                     values.iter().map(|value| format!("{value:?}")).collect();
                 write!(f, "AGGREGATE [{}]", formatted_values.join(", "))
             }
-            Self::None => write!(f, "OTHER, NOT A SYNC PRIMITIVE"),
+            Self::None => write!(f, "OTHER (NOT A SYNC PRIMITIVE)"),
         }
     }
 }
