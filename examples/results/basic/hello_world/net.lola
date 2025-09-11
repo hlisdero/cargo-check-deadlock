@@ -12,7 +12,7 @@ MARKING
     main_BB1 : 0,
     main_BB2 : 0;
 
-TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_const_0_CALL
+TRANSITION core_fmt_rt__impl_std_fmt_Arguments__new_const_0_CALL
   CONSUME
     PROGRAM_START : 1;
   PRODUCE

@@ -90,62 +90,62 @@ MARKING
     main_BB8 : 0,
     main_BB9 : 0;
 
-TRANSITION core_fmt_rt_Argument__'___new_display_0_CALL
+TRANSITION core_fmt_rt_Argument__new_display_0_CALL
   CONSUME
     main_BB5 : 1;
   PRODUCE
     main_BB6 : 1;
-TRANSITION core_fmt_rt_Argument__'___new_display_0_CALL_UNWIND
+TRANSITION core_fmt_rt_Argument__new_display_0_CALL_UNWIND
   CONSUME
     main_BB5 : 1;
   PRODUCE
     main_BB40 : 1;
-TRANSITION core_fmt_rt_Argument__'___new_display_1_CALL
+TRANSITION core_fmt_rt_Argument__new_display_1_CALL
   CONSUME
     main_BB20 : 1;
   PRODUCE
     main_BB32 : 1;
-TRANSITION core_fmt_rt_Argument__'___new_display_1_CALL_UNWIND
+TRANSITION core_fmt_rt_Argument__new_display_1_CALL_UNWIND
   CONSUME
     main_BB20 : 1;
   PRODUCE
     main_BB40 : 1;
-TRANSITION core_fmt_rt_Argument__'___new_display_2_CALL
+TRANSITION core_fmt_rt_Argument__new_display_2_CALL
   CONSUME
     main_BB35 : 1;
   PRODUCE
     main_BB36 : 1;
-TRANSITION core_fmt_rt_Argument__'___new_display_2_CALL_UNWIND
+TRANSITION core_fmt_rt_Argument__new_display_2_CALL_UNWIND
   CONSUME
     main_BB35 : 1;
   PRODUCE
     main_BB40 : 1;
-TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_0_CALL
+TRANSITION core_fmt_rt__impl_std_fmt_Arguments__new_v1_0_CALL
   CONSUME
     main_BB6 : 1;
   PRODUCE
     main_BB7 : 1;
-TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_0_CALL_UNWIND
+TRANSITION core_fmt_rt__impl_std_fmt_Arguments__new_v1_0_CALL_UNWIND
   CONSUME
     main_BB6 : 1;
   PRODUCE
     main_BB40 : 1;
-TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_1_CALL
+TRANSITION core_fmt_rt__impl_std_fmt_Arguments__new_v1_1_CALL
   CONSUME
     main_BB32 : 1;
   PRODUCE
     main_BB33 : 1;
-TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_1_CALL_UNWIND
+TRANSITION core_fmt_rt__impl_std_fmt_Arguments__new_v1_1_CALL_UNWIND
   CONSUME
     main_BB32 : 1;
   PRODUCE
     main_BB40 : 1;
-TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_2_CALL
+TRANSITION core_fmt_rt__impl_std_fmt_Arguments__new_v1_2_CALL
   CONSUME
     main_BB36 : 1;
   PRODUCE
     main_BB37 : 1;
-TRANSITION core_fmt_rt__impl_std_fmt_Argumentsa__new_v1_2_CALL_UNWIND
+TRANSITION core_fmt_rt__impl_std_fmt_Arguments__new_v1_2_CALL_UNWIND
   CONSUME
     main_BB36 : 1;
   PRODUCE
