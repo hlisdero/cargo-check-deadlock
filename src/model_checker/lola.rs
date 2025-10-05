@@ -14,16 +14,12 @@ use std::process::Command;
 /// If the command `lola` is not found, then the function panics.
 /// If the command `lola` produces an extraneous output, then the function panics.
 #[must_use]
-pub fn check_deadlock(net_filepath: &std::path::PathBuf) -> bool {
-    let mut cmd = Command::new("lola");
-    let cmd = cmd
-        .arg(net_filepath)
-        .arg("--formula=EF (DEADLOCK AND (PROGRAM_END = 0 AND PROGRAM_PANIC = 0))");
-
-    let mut backup_cmd = Command::new("./assets/lola");
-    let backup_cmd = backup_cmd
-        .arg(net_filepath)
-        .arg("--formula=EF (DEADLOCK AND (PROGRAM_END = 0 AND PROGRAM_PANIC = 0))");
+pub fn check_deadlock(
+    net_filepath: &std::path::PathBuf,
+    witness_path: Option<&std::path::PathBuf>,
+) -> bool {
+    let mut cmd = initialize_command("lola", net_filepath, witness_path);
+    let mut backup_cmd = initialize_command("./assets/lola", net_filepath, witness_path);
 
     let output = match cmd.output() {
         Ok(output) => output,
@@ -50,4 +46,23 @@ pub fn check_deadlock(net_filepath: &std::path::PathBuf) -> bool {
         return false;
     }
     panic!("Unknown output in command `lola`: {stderr_string}");
+}
+
+/// Initialize the command for calling the model checker with the right arguments
+fn initialize_command(
+    program_filepath: &str,
+    net_filepath: &std::path::PathBuf,
+    witness_path: Option<&std::path::PathBuf>,
+) -> Command {
+    let mut cmd = Command::new(program_filepath);
+
+    cmd.arg(net_filepath)
+        .arg("--formula=EF (DEADLOCK AND (PROGRAM_END = 0 AND PROGRAM_PANIC = 0))");
+
+    if let Some(path) = witness_path {
+        let path = path.to_string_lossy();
+        cmd.arg(format!("--path={path}"));
+    }
+
+    cmd
 }

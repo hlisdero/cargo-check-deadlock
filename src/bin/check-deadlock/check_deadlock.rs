@@ -9,6 +9,7 @@ use cargo_check_deadlock::model_checker::lola;
 /// Convert a Rust source code file into a Petri net and export
 /// the resulting net in one of the supported formats.
 #[derive(Debug, Parser)]
+#[allow(clippy::struct_excessive_bools)] // We definitely need 3 bools here, the warning is excessive
 pub struct Args {
     /// The path to the Rust source code file to read.
     path: std::path::PathBuf,
@@ -34,6 +35,11 @@ pub struct Args {
     /// If set, the reachability analysis to find deadlocks is skipped.
     #[arg(long)]
     skip_analysis: bool,
+
+    /// If set, outputs the witness path, i.e., the series of transition firings that lead to the deadlock,
+    /// to a file named `witness-path.txt`.
+    #[arg(long)]
+    witness_path: bool,
 
     /// Verbosity flag.
     #[clap(flatten)]
@@ -116,7 +122,15 @@ impl Args {
         filepath.push(&self.filename);
         filepath.set_extension(OutputFormat::Lola.to_string());
 
-        let message = if lola::check_deadlock(&filepath) {
+        let witness_path = if self.witness_path {
+            let mut path = self.output_folder.clone();
+            path.push("witness-path.txt");
+            Some(path)
+        } else {
+            None
+        };
+
+        let message = if lola::check_deadlock(&filepath, witness_path.as_ref()) {
             "Deadlock can be reached according to the model checker `LoLA`"
         } else {
             "The program is deadlock-free according to the model checker `LoLA`"
