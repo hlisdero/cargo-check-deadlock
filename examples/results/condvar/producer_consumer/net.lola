@@ -240,26 +240,6 @@ TRANSITION core_fmt_rt_Argument__new_display_1_CALL_UNWIND
     main__closure_1__BB12 : 1;
   PRODUCE
     main__closure_1__BB21 : 1;
-TRANSITION core_fmt_rt__impl_std_fmt_Arguments__new_v1_0_CALL
-  CONSUME
-    main__closure_0__BB17 : 1;
-  PRODUCE
-    main__closure_0__BB18 : 1;
-TRANSITION core_fmt_rt__impl_std_fmt_Arguments__new_v1_0_CALL_UNWIND
-  CONSUME
-    main__closure_0__BB17 : 1;
-  PRODUCE
-    main__closure_0__BB26 : 1;
-TRANSITION core_fmt_rt__impl_std_fmt_Arguments__new_v1_1_CALL
-  CONSUME
-    main__closure_1__BB13 : 1;
-  PRODUCE
-    main__closure_1__BB14 : 1;
-TRANSITION core_fmt_rt__impl_std_fmt_Arguments__new_v1_1_CALL_UNWIND
-  CONSUME
-    main__closure_1__BB13 : 1;
-  PRODUCE
-    main__closure_1__BB21 : 1;
 TRANSITION main_DROP_10
   CONSUME
     main_BB10 : 1;
@@ -521,6 +501,26 @@ TRANSITION std_clone_Clone_clone_1_CALL_UNWIND
     main_BB5 : 1;
   PRODUCE
     main_BB18 : 1;
+TRANSITION std_fmt_Arguments__new_0_CALL
+  CONSUME
+    main__closure_0__BB17 : 1;
+  PRODUCE
+    main__closure_0__BB18 : 1;
+TRANSITION std_fmt_Arguments__new_0_CALL_UNWIND
+  CONSUME
+    main__closure_0__BB17 : 1;
+  PRODUCE
+    main__closure_0__BB26 : 1;
+TRANSITION std_fmt_Arguments__new_1_CALL
+  CONSUME
+    main__closure_1__BB13 : 1;
+  PRODUCE
+    main__closure_1__BB14 : 1;
+TRANSITION std_fmt_Arguments__new_1_CALL_UNWIND
+  CONSUME
+    main__closure_1__BB13 : 1;
+  PRODUCE
+    main__closure_1__BB21 : 1;
 TRANSITION std_io__print_0_CALL
   CONSUME
     main__closure_0__BB18 : 1;

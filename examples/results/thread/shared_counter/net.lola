@@ -144,16 +144,6 @@ TRANSITION core_fmt_rt_Argument__new_display_0_CALL_UNWIND
     main_BB14 : 1;
   PRODUCE
     main_BB20 : 1;
-TRANSITION core_fmt_rt__impl_std_fmt_Arguments__new_v1_0_CALL
-  CONSUME
-    main_BB15 : 1;
-  PRODUCE
-    main_BB16 : 1;
-TRANSITION core_fmt_rt__impl_std_fmt_Arguments__new_v1_0_CALL_UNWIND
-  CONSUME
-    main_BB15 : 1;
-  PRODUCE
-    main_BB20 : 1;
 TRANSITION main_DROP_17
   CONSUME
     main_BB17 : 1;
@@ -422,6 +412,16 @@ TRANSITION std_clone_Clone_clone_1_CALL_UNWIND
     main_BB3 : 1;
   PRODUCE
     main_BB30 : 1;
+TRANSITION std_fmt_Arguments__new_0_CALL
+  CONSUME
+    main_BB15 : 1;
+  PRODUCE
+    main_BB16 : 1;
+TRANSITION std_fmt_Arguments__new_0_CALL_UNWIND
+  CONSUME
+    main_BB15 : 1;
+  PRODUCE
+    main_BB20 : 1;
 TRANSITION std_io__print_0_CALL
   CONSUME
     main_BB16 : 1;

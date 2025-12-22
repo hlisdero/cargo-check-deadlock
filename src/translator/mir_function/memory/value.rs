@@ -22,7 +22,7 @@ pub type ThreadRef = std::rc::Rc<Thread>;
 pub enum Value {
     None,
     Single(Single),
-    Aggregate(Vec<Value>),
+    Aggregate(Vec<Self>),
 }
 
 impl std::fmt::Display for Value {

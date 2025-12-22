@@ -31,10 +31,7 @@ impl BasicBlock {
         place: Option<PlaceRef>,
         net: &mut PetriNet,
     ) -> Self {
-        let place = place.map_or_else(
-            || net.add_place(&place_label(function_name, index)),
-            |place: PlaceRef| place,
-        );
+        let place = place.unwrap_or_else(|| net.add_place(&place_label(function_name, index)));
         Self {
             function_name: function_name.to_string(),
             index,

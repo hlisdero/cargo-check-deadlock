@@ -30,14 +30,14 @@
           <text>main_BB2</text>
         </name>
       </place>
-      <transition id="core_fmt_rt__impl_std_fmt_Arguments__new_const_0_CALL">
-        <name>
-          <text>core_fmt_rt__impl_std_fmt_Arguments__new_const_0_CALL</text>
-        </name>
-      </transition>
       <transition id="main_RETURN">
         <name>
           <text>main_RETURN</text>
+        </name>
+      </transition>
+      <transition id="std_fmt_Arguments__from_str_0_CALL">
+        <name>
+          <text>std_fmt_Arguments__from_str_0_CALL</text>
         </name>
       </transition>
       <transition id="std_io__print_0_CALL">
@@ -45,9 +45,9 @@
           <text>std_io__print_0_CALL</text>
         </name>
       </transition>
-      <arc source="PROGRAM_START" target="core_fmt_rt__impl_std_fmt_Arguments__new_const_0_CALL" id="(PROGRAM_START, core_fmt_rt__impl_std_fmt_Arguments__new_const_0_CALL)">
+      <arc source="PROGRAM_START" target="std_fmt_Arguments__from_str_0_CALL" id="(PROGRAM_START, std_fmt_Arguments__from_str_0_CALL)">
         <name>
-          <text>(PROGRAM_START, core_fmt_rt__impl_std_fmt_Arguments__new_const_0_CALL)</text>
+          <text>(PROGRAM_START, std_fmt_Arguments__from_str_0_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -69,17 +69,17 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="core_fmt_rt__impl_std_fmt_Arguments__new_const_0_CALL" target="main_BB1" id="(core_fmt_rt__impl_std_fmt_Arguments__new_const_0_CALL, main_BB1)">
+      <arc source="main_RETURN" target="PROGRAM_END" id="(main_RETURN, PROGRAM_END)">
         <name>
-          <text>(core_fmt_rt__impl_std_fmt_Arguments__new_const_0_CALL, main_BB1)</text>
+          <text>(main_RETURN, PROGRAM_END)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_RETURN" target="PROGRAM_END" id="(main_RETURN, PROGRAM_END)">
+      <arc source="std_fmt_Arguments__from_str_0_CALL" target="main_BB1" id="(std_fmt_Arguments__from_str_0_CALL, main_BB1)">
         <name>
-          <text>(main_RETURN, PROGRAM_END)</text>
+          <text>(std_fmt_Arguments__from_str_0_CALL, main_BB1)</text>
         </name>
         <inscription>
           <text>1</text>

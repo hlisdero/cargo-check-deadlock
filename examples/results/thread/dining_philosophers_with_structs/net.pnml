@@ -1765,81 +1765,6 @@
           <text>core_fmt_rt_Argument__new_display_9_CALL_UNWIND</text>
         </name>
       </transition>
-      <transition id="core_fmt_rt__impl_std_fmt_Arguments__new_v1_0_CALL">
-        <name>
-          <text>core_fmt_rt__impl_std_fmt_Arguments__new_v1_0_CALL</text>
-        </name>
-      </transition>
-      <transition id="core_fmt_rt__impl_std_fmt_Arguments__new_v1_1_CALL">
-        <name>
-          <text>core_fmt_rt__impl_std_fmt_Arguments__new_v1_1_CALL</text>
-        </name>
-      </transition>
-      <transition id="core_fmt_rt__impl_std_fmt_Arguments__new_v1_1_CALL_UNWIND">
-        <name>
-          <text>core_fmt_rt__impl_std_fmt_Arguments__new_v1_1_CALL_UNWIND</text>
-        </name>
-      </transition>
-      <transition id="core_fmt_rt__impl_std_fmt_Arguments__new_v1_2_CALL">
-        <name>
-          <text>core_fmt_rt__impl_std_fmt_Arguments__new_v1_2_CALL</text>
-        </name>
-      </transition>
-      <transition id="core_fmt_rt__impl_std_fmt_Arguments__new_v1_3_CALL">
-        <name>
-          <text>core_fmt_rt__impl_std_fmt_Arguments__new_v1_3_CALL</text>
-        </name>
-      </transition>
-      <transition id="core_fmt_rt__impl_std_fmt_Arguments__new_v1_3_CALL_UNWIND">
-        <name>
-          <text>core_fmt_rt__impl_std_fmt_Arguments__new_v1_3_CALL_UNWIND</text>
-        </name>
-      </transition>
-      <transition id="core_fmt_rt__impl_std_fmt_Arguments__new_v1_4_CALL">
-        <name>
-          <text>core_fmt_rt__impl_std_fmt_Arguments__new_v1_4_CALL</text>
-        </name>
-      </transition>
-      <transition id="core_fmt_rt__impl_std_fmt_Arguments__new_v1_5_CALL">
-        <name>
-          <text>core_fmt_rt__impl_std_fmt_Arguments__new_v1_5_CALL</text>
-        </name>
-      </transition>
-      <transition id="core_fmt_rt__impl_std_fmt_Arguments__new_v1_5_CALL_UNWIND">
-        <name>
-          <text>core_fmt_rt__impl_std_fmt_Arguments__new_v1_5_CALL_UNWIND</text>
-        </name>
-      </transition>
-      <transition id="core_fmt_rt__impl_std_fmt_Arguments__new_v1_6_CALL">
-        <name>
-          <text>core_fmt_rt__impl_std_fmt_Arguments__new_v1_6_CALL</text>
-        </name>
-      </transition>
-      <transition id="core_fmt_rt__impl_std_fmt_Arguments__new_v1_7_CALL">
-        <name>
-          <text>core_fmt_rt__impl_std_fmt_Arguments__new_v1_7_CALL</text>
-        </name>
-      </transition>
-      <transition id="core_fmt_rt__impl_std_fmt_Arguments__new_v1_7_CALL_UNWIND">
-        <name>
-          <text>core_fmt_rt__impl_std_fmt_Arguments__new_v1_7_CALL_UNWIND</text>
-        </name>
-      </transition>
-      <transition id="core_fmt_rt__impl_std_fmt_Arguments__new_v1_8_CALL">
-        <name>
-          <text>core_fmt_rt__impl_std_fmt_Arguments__new_v1_8_CALL</text>
-        </name>
-      </transition>
-      <transition id="core_fmt_rt__impl_std_fmt_Arguments__new_v1_9_CALL">
-        <name>
-          <text>core_fmt_rt__impl_std_fmt_Arguments__new_v1_9_CALL</text>
-        </name>
-      </transition>
-      <transition id="core_fmt_rt__impl_std_fmt_Arguments__new_v1_9_CALL_UNWIND">
-        <name>
-          <text>core_fmt_rt__impl_std_fmt_Arguments__new_v1_9_CALL_UNWIND</text>
-        </name>
-      </transition>
       <transition id="main_DROP_31">
         <name>
           <text>main_DROP_31</text>
@@ -2393,6 +2318,81 @@
       <transition id="std_clone_Clone_clone_9_CALL_UNWIND">
         <name>
           <text>std_clone_Clone_clone_9_CALL_UNWIND</text>
+        </name>
+      </transition>
+      <transition id="std_fmt_Arguments__new_0_CALL">
+        <name>
+          <text>std_fmt_Arguments__new_0_CALL</text>
+        </name>
+      </transition>
+      <transition id="std_fmt_Arguments__new_1_CALL">
+        <name>
+          <text>std_fmt_Arguments__new_1_CALL</text>
+        </name>
+      </transition>
+      <transition id="std_fmt_Arguments__new_1_CALL_UNWIND">
+        <name>
+          <text>std_fmt_Arguments__new_1_CALL_UNWIND</text>
+        </name>
+      </transition>
+      <transition id="std_fmt_Arguments__new_2_CALL">
+        <name>
+          <text>std_fmt_Arguments__new_2_CALL</text>
+        </name>
+      </transition>
+      <transition id="std_fmt_Arguments__new_3_CALL">
+        <name>
+          <text>std_fmt_Arguments__new_3_CALL</text>
+        </name>
+      </transition>
+      <transition id="std_fmt_Arguments__new_3_CALL_UNWIND">
+        <name>
+          <text>std_fmt_Arguments__new_3_CALL_UNWIND</text>
+        </name>
+      </transition>
+      <transition id="std_fmt_Arguments__new_4_CALL">
+        <name>
+          <text>std_fmt_Arguments__new_4_CALL</text>
+        </name>
+      </transition>
+      <transition id="std_fmt_Arguments__new_5_CALL">
+        <name>
+          <text>std_fmt_Arguments__new_5_CALL</text>
+        </name>
+      </transition>
+      <transition id="std_fmt_Arguments__new_5_CALL_UNWIND">
+        <name>
+          <text>std_fmt_Arguments__new_5_CALL_UNWIND</text>
+        </name>
+      </transition>
+      <transition id="std_fmt_Arguments__new_6_CALL">
+        <name>
+          <text>std_fmt_Arguments__new_6_CALL</text>
+        </name>
+      </transition>
+      <transition id="std_fmt_Arguments__new_7_CALL">
+        <name>
+          <text>std_fmt_Arguments__new_7_CALL</text>
+        </name>
+      </transition>
+      <transition id="std_fmt_Arguments__new_7_CALL_UNWIND">
+        <name>
+          <text>std_fmt_Arguments__new_7_CALL_UNWIND</text>
+        </name>
+      </transition>
+      <transition id="std_fmt_Arguments__new_8_CALL">
+        <name>
+          <text>std_fmt_Arguments__new_8_CALL</text>
+        </name>
+      </transition>
+      <transition id="std_fmt_Arguments__new_9_CALL">
+        <name>
+          <text>std_fmt_Arguments__new_9_CALL</text>
+        </name>
+      </transition>
+      <transition id="std_fmt_Arguments__new_9_CALL_UNWIND">
+        <name>
+          <text>std_fmt_Arguments__new_9_CALL_UNWIND</text>
         </name>
       </transition>
       <transition id="std_io__print_0_CALL">
@@ -3209,17 +3209,17 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="Philosopher_eat_0_BB13" target="core_fmt_rt__impl_std_fmt_Arguments__new_v1_1_CALL" id="(Philosopher_eat_0_BB13, core_fmt_rt__impl_std_fmt_Arguments__new_v1_1_CALL)">
+      <arc source="Philosopher_eat_0_BB13" target="std_fmt_Arguments__new_1_CALL" id="(Philosopher_eat_0_BB13, std_fmt_Arguments__new_1_CALL)">
         <name>
-          <text>(Philosopher_eat_0_BB13, core_fmt_rt__impl_std_fmt_Arguments__new_v1_1_CALL)</text>
+          <text>(Philosopher_eat_0_BB13, std_fmt_Arguments__new_1_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="Philosopher_eat_0_BB13" target="core_fmt_rt__impl_std_fmt_Arguments__new_v1_1_CALL_UNWIND" id="(Philosopher_eat_0_BB13, core_fmt_rt__impl_std_fmt_Arguments__new_v1_1_CALL_UNWIND)">
+      <arc source="Philosopher_eat_0_BB13" target="std_fmt_Arguments__new_1_CALL_UNWIND" id="(Philosopher_eat_0_BB13, std_fmt_Arguments__new_1_CALL_UNWIND)">
         <name>
-          <text>(Philosopher_eat_0_BB13, core_fmt_rt__impl_std_fmt_Arguments__new_v1_1_CALL_UNWIND)</text>
+          <text>(Philosopher_eat_0_BB13, std_fmt_Arguments__new_1_CALL_UNWIND)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -3433,17 +3433,17 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="Philosopher_eat_1_BB13" target="core_fmt_rt__impl_std_fmt_Arguments__new_v1_3_CALL" id="(Philosopher_eat_1_BB13, core_fmt_rt__impl_std_fmt_Arguments__new_v1_3_CALL)">
+      <arc source="Philosopher_eat_1_BB13" target="std_fmt_Arguments__new_3_CALL" id="(Philosopher_eat_1_BB13, std_fmt_Arguments__new_3_CALL)">
         <name>
-          <text>(Philosopher_eat_1_BB13, core_fmt_rt__impl_std_fmt_Arguments__new_v1_3_CALL)</text>
+          <text>(Philosopher_eat_1_BB13, std_fmt_Arguments__new_3_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="Philosopher_eat_1_BB13" target="core_fmt_rt__impl_std_fmt_Arguments__new_v1_3_CALL_UNWIND" id="(Philosopher_eat_1_BB13, core_fmt_rt__impl_std_fmt_Arguments__new_v1_3_CALL_UNWIND)">
+      <arc source="Philosopher_eat_1_BB13" target="std_fmt_Arguments__new_3_CALL_UNWIND" id="(Philosopher_eat_1_BB13, std_fmt_Arguments__new_3_CALL_UNWIND)">
         <name>
-          <text>(Philosopher_eat_1_BB13, core_fmt_rt__impl_std_fmt_Arguments__new_v1_3_CALL_UNWIND)</text>
+          <text>(Philosopher_eat_1_BB13, std_fmt_Arguments__new_3_CALL_UNWIND)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -3657,17 +3657,17 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="Philosopher_eat_2_BB13" target="core_fmt_rt__impl_std_fmt_Arguments__new_v1_5_CALL" id="(Philosopher_eat_2_BB13, core_fmt_rt__impl_std_fmt_Arguments__new_v1_5_CALL)">
+      <arc source="Philosopher_eat_2_BB13" target="std_fmt_Arguments__new_5_CALL" id="(Philosopher_eat_2_BB13, std_fmt_Arguments__new_5_CALL)">
         <name>
-          <text>(Philosopher_eat_2_BB13, core_fmt_rt__impl_std_fmt_Arguments__new_v1_5_CALL)</text>
+          <text>(Philosopher_eat_2_BB13, std_fmt_Arguments__new_5_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="Philosopher_eat_2_BB13" target="core_fmt_rt__impl_std_fmt_Arguments__new_v1_5_CALL_UNWIND" id="(Philosopher_eat_2_BB13, core_fmt_rt__impl_std_fmt_Arguments__new_v1_5_CALL_UNWIND)">
+      <arc source="Philosopher_eat_2_BB13" target="std_fmt_Arguments__new_5_CALL_UNWIND" id="(Philosopher_eat_2_BB13, std_fmt_Arguments__new_5_CALL_UNWIND)">
         <name>
-          <text>(Philosopher_eat_2_BB13, core_fmt_rt__impl_std_fmt_Arguments__new_v1_5_CALL_UNWIND)</text>
+          <text>(Philosopher_eat_2_BB13, std_fmt_Arguments__new_5_CALL_UNWIND)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -3881,17 +3881,17 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="Philosopher_eat_3_BB13" target="core_fmt_rt__impl_std_fmt_Arguments__new_v1_7_CALL" id="(Philosopher_eat_3_BB13, core_fmt_rt__impl_std_fmt_Arguments__new_v1_7_CALL)">
+      <arc source="Philosopher_eat_3_BB13" target="std_fmt_Arguments__new_7_CALL" id="(Philosopher_eat_3_BB13, std_fmt_Arguments__new_7_CALL)">
         <name>
-          <text>(Philosopher_eat_3_BB13, core_fmt_rt__impl_std_fmt_Arguments__new_v1_7_CALL)</text>
+          <text>(Philosopher_eat_3_BB13, std_fmt_Arguments__new_7_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="Philosopher_eat_3_BB13" target="core_fmt_rt__impl_std_fmt_Arguments__new_v1_7_CALL_UNWIND" id="(Philosopher_eat_3_BB13, core_fmt_rt__impl_std_fmt_Arguments__new_v1_7_CALL_UNWIND)">
+      <arc source="Philosopher_eat_3_BB13" target="std_fmt_Arguments__new_7_CALL_UNWIND" id="(Philosopher_eat_3_BB13, std_fmt_Arguments__new_7_CALL_UNWIND)">
         <name>
-          <text>(Philosopher_eat_3_BB13, core_fmt_rt__impl_std_fmt_Arguments__new_v1_7_CALL_UNWIND)</text>
+          <text>(Philosopher_eat_3_BB13, std_fmt_Arguments__new_7_CALL_UNWIND)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -4105,17 +4105,17 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="Philosopher_eat_4_BB13" target="core_fmt_rt__impl_std_fmt_Arguments__new_v1_9_CALL" id="(Philosopher_eat_4_BB13, core_fmt_rt__impl_std_fmt_Arguments__new_v1_9_CALL)">
+      <arc source="Philosopher_eat_4_BB13" target="std_fmt_Arguments__new_9_CALL" id="(Philosopher_eat_4_BB13, std_fmt_Arguments__new_9_CALL)">
         <name>
-          <text>(Philosopher_eat_4_BB13, core_fmt_rt__impl_std_fmt_Arguments__new_v1_9_CALL)</text>
+          <text>(Philosopher_eat_4_BB13, std_fmt_Arguments__new_9_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="Philosopher_eat_4_BB13" target="core_fmt_rt__impl_std_fmt_Arguments__new_v1_9_CALL_UNWIND" id="(Philosopher_eat_4_BB13, core_fmt_rt__impl_std_fmt_Arguments__new_v1_9_CALL_UNWIND)">
+      <arc source="Philosopher_eat_4_BB13" target="std_fmt_Arguments__new_9_CALL_UNWIND" id="(Philosopher_eat_4_BB13, std_fmt_Arguments__new_9_CALL_UNWIND)">
         <name>
-          <text>(Philosopher_eat_4_BB13, core_fmt_rt__impl_std_fmt_Arguments__new_v1_9_CALL_UNWIND)</text>
+          <text>(Philosopher_eat_4_BB13, std_fmt_Arguments__new_9_CALL_UNWIND)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -4289,9 +4289,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="Philosopher_think_0_BB3" target="core_fmt_rt__impl_std_fmt_Arguments__new_v1_0_CALL" id="(Philosopher_think_0_BB3, core_fmt_rt__impl_std_fmt_Arguments__new_v1_0_CALL)">
+      <arc source="Philosopher_think_0_BB3" target="std_fmt_Arguments__new_0_CALL" id="(Philosopher_think_0_BB3, std_fmt_Arguments__new_0_CALL)">
         <name>
-          <text>(Philosopher_think_0_BB3, core_fmt_rt__impl_std_fmt_Arguments__new_v1_0_CALL)</text>
+          <text>(Philosopher_think_0_BB3, std_fmt_Arguments__new_0_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -4329,9 +4329,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="Philosopher_think_1_BB3" target="core_fmt_rt__impl_std_fmt_Arguments__new_v1_2_CALL" id="(Philosopher_think_1_BB3, core_fmt_rt__impl_std_fmt_Arguments__new_v1_2_CALL)">
+      <arc source="Philosopher_think_1_BB3" target="std_fmt_Arguments__new_2_CALL" id="(Philosopher_think_1_BB3, std_fmt_Arguments__new_2_CALL)">
         <name>
-          <text>(Philosopher_think_1_BB3, core_fmt_rt__impl_std_fmt_Arguments__new_v1_2_CALL)</text>
+          <text>(Philosopher_think_1_BB3, std_fmt_Arguments__new_2_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -4369,9 +4369,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="Philosopher_think_2_BB3" target="core_fmt_rt__impl_std_fmt_Arguments__new_v1_4_CALL" id="(Philosopher_think_2_BB3, core_fmt_rt__impl_std_fmt_Arguments__new_v1_4_CALL)">
+      <arc source="Philosopher_think_2_BB3" target="std_fmt_Arguments__new_4_CALL" id="(Philosopher_think_2_BB3, std_fmt_Arguments__new_4_CALL)">
         <name>
-          <text>(Philosopher_think_2_BB3, core_fmt_rt__impl_std_fmt_Arguments__new_v1_4_CALL)</text>
+          <text>(Philosopher_think_2_BB3, std_fmt_Arguments__new_4_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -4409,9 +4409,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="Philosopher_think_3_BB3" target="core_fmt_rt__impl_std_fmt_Arguments__new_v1_6_CALL" id="(Philosopher_think_3_BB3, core_fmt_rt__impl_std_fmt_Arguments__new_v1_6_CALL)">
+      <arc source="Philosopher_think_3_BB3" target="std_fmt_Arguments__new_6_CALL" id="(Philosopher_think_3_BB3, std_fmt_Arguments__new_6_CALL)">
         <name>
-          <text>(Philosopher_think_3_BB3, core_fmt_rt__impl_std_fmt_Arguments__new_v1_6_CALL)</text>
+          <text>(Philosopher_think_3_BB3, std_fmt_Arguments__new_6_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -4449,9 +4449,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="Philosopher_think_4_BB3" target="core_fmt_rt__impl_std_fmt_Arguments__new_v1_8_CALL" id="(Philosopher_think_4_BB3, core_fmt_rt__impl_std_fmt_Arguments__new_v1_8_CALL)">
+      <arc source="Philosopher_think_4_BB3" target="std_fmt_Arguments__new_8_CALL" id="(Philosopher_think_4_BB3, std_fmt_Arguments__new_8_CALL)">
         <name>
-          <text>(Philosopher_think_4_BB3, core_fmt_rt__impl_std_fmt_Arguments__new_v1_8_CALL)</text>
+          <text>(Philosopher_think_4_BB3, std_fmt_Arguments__new_8_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -6777,126 +6777,6 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="core_fmt_rt__impl_std_fmt_Arguments__new_v1_0_CALL" target="Philosopher_think_0_BB4" id="(core_fmt_rt__impl_std_fmt_Arguments__new_v1_0_CALL, Philosopher_think_0_BB4)">
-        <name>
-          <text>(core_fmt_rt__impl_std_fmt_Arguments__new_v1_0_CALL, Philosopher_think_0_BB4)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="core_fmt_rt__impl_std_fmt_Arguments__new_v1_1_CALL" target="Philosopher_eat_0_BB14" id="(core_fmt_rt__impl_std_fmt_Arguments__new_v1_1_CALL, Philosopher_eat_0_BB14)">
-        <name>
-          <text>(core_fmt_rt__impl_std_fmt_Arguments__new_v1_1_CALL, Philosopher_eat_0_BB14)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="core_fmt_rt__impl_std_fmt_Arguments__new_v1_1_CALL_UNWIND" target="Philosopher_eat_0_BB18" id="(core_fmt_rt__impl_std_fmt_Arguments__new_v1_1_CALL_UNWIND, Philosopher_eat_0_BB18)">
-        <name>
-          <text>(core_fmt_rt__impl_std_fmt_Arguments__new_v1_1_CALL_UNWIND, Philosopher_eat_0_BB18)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="core_fmt_rt__impl_std_fmt_Arguments__new_v1_2_CALL" target="Philosopher_think_1_BB4" id="(core_fmt_rt__impl_std_fmt_Arguments__new_v1_2_CALL, Philosopher_think_1_BB4)">
-        <name>
-          <text>(core_fmt_rt__impl_std_fmt_Arguments__new_v1_2_CALL, Philosopher_think_1_BB4)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="core_fmt_rt__impl_std_fmt_Arguments__new_v1_3_CALL" target="Philosopher_eat_1_BB14" id="(core_fmt_rt__impl_std_fmt_Arguments__new_v1_3_CALL, Philosopher_eat_1_BB14)">
-        <name>
-          <text>(core_fmt_rt__impl_std_fmt_Arguments__new_v1_3_CALL, Philosopher_eat_1_BB14)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="core_fmt_rt__impl_std_fmt_Arguments__new_v1_3_CALL_UNWIND" target="Philosopher_eat_1_BB18" id="(core_fmt_rt__impl_std_fmt_Arguments__new_v1_3_CALL_UNWIND, Philosopher_eat_1_BB18)">
-        <name>
-          <text>(core_fmt_rt__impl_std_fmt_Arguments__new_v1_3_CALL_UNWIND, Philosopher_eat_1_BB18)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="core_fmt_rt__impl_std_fmt_Arguments__new_v1_4_CALL" target="Philosopher_think_2_BB4" id="(core_fmt_rt__impl_std_fmt_Arguments__new_v1_4_CALL, Philosopher_think_2_BB4)">
-        <name>
-          <text>(core_fmt_rt__impl_std_fmt_Arguments__new_v1_4_CALL, Philosopher_think_2_BB4)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="core_fmt_rt__impl_std_fmt_Arguments__new_v1_5_CALL" target="Philosopher_eat_2_BB14" id="(core_fmt_rt__impl_std_fmt_Arguments__new_v1_5_CALL, Philosopher_eat_2_BB14)">
-        <name>
-          <text>(core_fmt_rt__impl_std_fmt_Arguments__new_v1_5_CALL, Philosopher_eat_2_BB14)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="core_fmt_rt__impl_std_fmt_Arguments__new_v1_5_CALL_UNWIND" target="Philosopher_eat_2_BB18" id="(core_fmt_rt__impl_std_fmt_Arguments__new_v1_5_CALL_UNWIND, Philosopher_eat_2_BB18)">
-        <name>
-          <text>(core_fmt_rt__impl_std_fmt_Arguments__new_v1_5_CALL_UNWIND, Philosopher_eat_2_BB18)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="core_fmt_rt__impl_std_fmt_Arguments__new_v1_6_CALL" target="Philosopher_think_3_BB4" id="(core_fmt_rt__impl_std_fmt_Arguments__new_v1_6_CALL, Philosopher_think_3_BB4)">
-        <name>
-          <text>(core_fmt_rt__impl_std_fmt_Arguments__new_v1_6_CALL, Philosopher_think_3_BB4)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="core_fmt_rt__impl_std_fmt_Arguments__new_v1_7_CALL" target="Philosopher_eat_3_BB14" id="(core_fmt_rt__impl_std_fmt_Arguments__new_v1_7_CALL, Philosopher_eat_3_BB14)">
-        <name>
-          <text>(core_fmt_rt__impl_std_fmt_Arguments__new_v1_7_CALL, Philosopher_eat_3_BB14)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="core_fmt_rt__impl_std_fmt_Arguments__new_v1_7_CALL_UNWIND" target="Philosopher_eat_3_BB18" id="(core_fmt_rt__impl_std_fmt_Arguments__new_v1_7_CALL_UNWIND, Philosopher_eat_3_BB18)">
-        <name>
-          <text>(core_fmt_rt__impl_std_fmt_Arguments__new_v1_7_CALL_UNWIND, Philosopher_eat_3_BB18)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="core_fmt_rt__impl_std_fmt_Arguments__new_v1_8_CALL" target="Philosopher_think_4_BB4" id="(core_fmt_rt__impl_std_fmt_Arguments__new_v1_8_CALL, Philosopher_think_4_BB4)">
-        <name>
-          <text>(core_fmt_rt__impl_std_fmt_Arguments__new_v1_8_CALL, Philosopher_think_4_BB4)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="core_fmt_rt__impl_std_fmt_Arguments__new_v1_9_CALL" target="Philosopher_eat_4_BB14" id="(core_fmt_rt__impl_std_fmt_Arguments__new_v1_9_CALL, Philosopher_eat_4_BB14)">
-        <name>
-          <text>(core_fmt_rt__impl_std_fmt_Arguments__new_v1_9_CALL, Philosopher_eat_4_BB14)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="core_fmt_rt__impl_std_fmt_Arguments__new_v1_9_CALL_UNWIND" target="Philosopher_eat_4_BB18" id="(core_fmt_rt__impl_std_fmt_Arguments__new_v1_9_CALL_UNWIND, Philosopher_eat_4_BB18)">
-        <name>
-          <text>(core_fmt_rt__impl_std_fmt_Arguments__new_v1_9_CALL_UNWIND, Philosopher_eat_4_BB18)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
       <arc source="main_DROP_31" target="main_BB32" id="(main_DROP_31, main_BB32)">
         <name>
           <text>(main_DROP_31, main_BB32)</text>
@@ -7780,6 +7660,126 @@
       <arc source="std_clone_Clone_clone_9_CALL_UNWIND" target="main_BB65" id="(std_clone_Clone_clone_9_CALL_UNWIND, main_BB65)">
         <name>
           <text>(std_clone_Clone_clone_9_CALL_UNWIND, main_BB65)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="std_fmt_Arguments__new_0_CALL" target="Philosopher_think_0_BB4" id="(std_fmt_Arguments__new_0_CALL, Philosopher_think_0_BB4)">
+        <name>
+          <text>(std_fmt_Arguments__new_0_CALL, Philosopher_think_0_BB4)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="std_fmt_Arguments__new_1_CALL" target="Philosopher_eat_0_BB14" id="(std_fmt_Arguments__new_1_CALL, Philosopher_eat_0_BB14)">
+        <name>
+          <text>(std_fmt_Arguments__new_1_CALL, Philosopher_eat_0_BB14)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="std_fmt_Arguments__new_1_CALL_UNWIND" target="Philosopher_eat_0_BB18" id="(std_fmt_Arguments__new_1_CALL_UNWIND, Philosopher_eat_0_BB18)">
+        <name>
+          <text>(std_fmt_Arguments__new_1_CALL_UNWIND, Philosopher_eat_0_BB18)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="std_fmt_Arguments__new_2_CALL" target="Philosopher_think_1_BB4" id="(std_fmt_Arguments__new_2_CALL, Philosopher_think_1_BB4)">
+        <name>
+          <text>(std_fmt_Arguments__new_2_CALL, Philosopher_think_1_BB4)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="std_fmt_Arguments__new_3_CALL" target="Philosopher_eat_1_BB14" id="(std_fmt_Arguments__new_3_CALL, Philosopher_eat_1_BB14)">
+        <name>
+          <text>(std_fmt_Arguments__new_3_CALL, Philosopher_eat_1_BB14)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="std_fmt_Arguments__new_3_CALL_UNWIND" target="Philosopher_eat_1_BB18" id="(std_fmt_Arguments__new_3_CALL_UNWIND, Philosopher_eat_1_BB18)">
+        <name>
+          <text>(std_fmt_Arguments__new_3_CALL_UNWIND, Philosopher_eat_1_BB18)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="std_fmt_Arguments__new_4_CALL" target="Philosopher_think_2_BB4" id="(std_fmt_Arguments__new_4_CALL, Philosopher_think_2_BB4)">
+        <name>
+          <text>(std_fmt_Arguments__new_4_CALL, Philosopher_think_2_BB4)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="std_fmt_Arguments__new_5_CALL" target="Philosopher_eat_2_BB14" id="(std_fmt_Arguments__new_5_CALL, Philosopher_eat_2_BB14)">
+        <name>
+          <text>(std_fmt_Arguments__new_5_CALL, Philosopher_eat_2_BB14)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="std_fmt_Arguments__new_5_CALL_UNWIND" target="Philosopher_eat_2_BB18" id="(std_fmt_Arguments__new_5_CALL_UNWIND, Philosopher_eat_2_BB18)">
+        <name>
+          <text>(std_fmt_Arguments__new_5_CALL_UNWIND, Philosopher_eat_2_BB18)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="std_fmt_Arguments__new_6_CALL" target="Philosopher_think_3_BB4" id="(std_fmt_Arguments__new_6_CALL, Philosopher_think_3_BB4)">
+        <name>
+          <text>(std_fmt_Arguments__new_6_CALL, Philosopher_think_3_BB4)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="std_fmt_Arguments__new_7_CALL" target="Philosopher_eat_3_BB14" id="(std_fmt_Arguments__new_7_CALL, Philosopher_eat_3_BB14)">
+        <name>
+          <text>(std_fmt_Arguments__new_7_CALL, Philosopher_eat_3_BB14)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="std_fmt_Arguments__new_7_CALL_UNWIND" target="Philosopher_eat_3_BB18" id="(std_fmt_Arguments__new_7_CALL_UNWIND, Philosopher_eat_3_BB18)">
+        <name>
+          <text>(std_fmt_Arguments__new_7_CALL_UNWIND, Philosopher_eat_3_BB18)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="std_fmt_Arguments__new_8_CALL" target="Philosopher_think_4_BB4" id="(std_fmt_Arguments__new_8_CALL, Philosopher_think_4_BB4)">
+        <name>
+          <text>(std_fmt_Arguments__new_8_CALL, Philosopher_think_4_BB4)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="std_fmt_Arguments__new_9_CALL" target="Philosopher_eat_4_BB14" id="(std_fmt_Arguments__new_9_CALL, Philosopher_eat_4_BB14)">
+        <name>
+          <text>(std_fmt_Arguments__new_9_CALL, Philosopher_eat_4_BB14)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="std_fmt_Arguments__new_9_CALL_UNWIND" target="Philosopher_eat_4_BB18" id="(std_fmt_Arguments__new_9_CALL_UNWIND, Philosopher_eat_4_BB18)">
+        <name>
+          <text>(std_fmt_Arguments__new_9_CALL_UNWIND, Philosopher_eat_4_BB18)</text>
         </name>
         <inscription>
           <text>1</text>

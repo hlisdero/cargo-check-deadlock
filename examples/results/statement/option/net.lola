@@ -55,16 +55,6 @@ TRANSITION core_fmt_rt_Argument__new_display_0_CALL_UNWIND
     main_BB7 : 1;
   PRODUCE
     main_BB12 : 1;
-TRANSITION core_fmt_rt__impl_std_fmt_Arguments__new_v1_0_CALL
-  CONSUME
-    main_BB8 : 1;
-  PRODUCE
-    main_BB9 : 1;
-TRANSITION core_fmt_rt__impl_std_fmt_Arguments__new_v1_0_CALL_UNWIND
-  CONSUME
-    main_BB8 : 1;
-  PRODUCE
-    main_BB12 : 1;
 TRANSITION core_slice__impl_T__get_0_CALL
   CONSUME
     main_BB3 : 1;
@@ -130,6 +120,16 @@ TRANSITION main_UNWIND_13
     main_BB13 : 1;
   PRODUCE
     PROGRAM_PANIC : 1;
+TRANSITION std_fmt_Arguments__new_0_CALL
+  CONSUME
+    main_BB8 : 1;
+  PRODUCE
+    main_BB9 : 1;
+TRANSITION std_fmt_Arguments__new_0_CALL_UNWIND
+  CONSUME
+    main_BB8 : 1;
+  PRODUCE
+    main_BB12 : 1;
 TRANSITION std_io__print_0_CALL
   CONSUME
     main_BB9 : 1;

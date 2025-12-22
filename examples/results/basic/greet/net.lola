@@ -60,26 +60,6 @@ TRANSITION core_fmt_rt_Argument__new_display_1_CALL_UNWIND
     main_BB10 : 1;
   PRODUCE
     main_BB15 : 1;
-TRANSITION core_fmt_rt__impl_std_fmt_Arguments__new_v1_0_CALL
-  CONSUME
-    main_BB6 : 1;
-  PRODUCE
-    main_BB7 : 1;
-TRANSITION core_fmt_rt__impl_std_fmt_Arguments__new_v1_0_CALL_UNWIND
-  CONSUME
-    main_BB6 : 1;
-  PRODUCE
-    main_BB15 : 1;
-TRANSITION core_fmt_rt__impl_std_fmt_Arguments__new_v1_1_CALL
-  CONSUME
-    main_BB11 : 1;
-  PRODUCE
-    main_BB12 : 1;
-TRANSITION core_fmt_rt__impl_std_fmt_Arguments__new_v1_1_CALL_UNWIND
-  CONSUME
-    main_BB11 : 1;
-  PRODUCE
-    main_BB15 : 1;
 TRANSITION main_DROP_13
   CONSUME
     main_BB13 : 1;
@@ -115,6 +95,26 @@ TRANSITION std_env_args_0_CALL
     PROGRAM_START : 1;
   PRODUCE
     main_BB1 : 1;
+TRANSITION std_fmt_Arguments__new_0_CALL
+  CONSUME
+    main_BB6 : 1;
+  PRODUCE
+    main_BB7 : 1;
+TRANSITION std_fmt_Arguments__new_0_CALL_UNWIND
+  CONSUME
+    main_BB6 : 1;
+  PRODUCE
+    main_BB15 : 1;
+TRANSITION std_fmt_Arguments__new_1_CALL
+  CONSUME
+    main_BB11 : 1;
+  PRODUCE
+    main_BB12 : 1;
+TRANSITION std_fmt_Arguments__new_1_CALL_UNWIND
+  CONSUME
+    main_BB11 : 1;
+  PRODUCE
+    main_BB15 : 1;
 TRANSITION std_io__eprint_0_CALL
   CONSUME
     main_BB7 : 1;

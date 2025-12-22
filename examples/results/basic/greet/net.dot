@@ -22,10 +22,6 @@ digraph petrinet {
     core_fmt_rt_Argument__new_display_0_CALL_UNWIND [shape="box" xlabel="" label="core_fmt_rt_Argument__new_display_0_CALL_UNWIND"];
     core_fmt_rt_Argument__new_display_1_CALL [shape="box" xlabel="" label="core_fmt_rt_Argument__new_display_1_CALL"];
     core_fmt_rt_Argument__new_display_1_CALL_UNWIND [shape="box" xlabel="" label="core_fmt_rt_Argument__new_display_1_CALL_UNWIND"];
-    core_fmt_rt__impl_std_fmt_Arguments__new_v1_0_CALL [shape="box" xlabel="" label="core_fmt_rt__impl_std_fmt_Arguments__new_v1_0_CALL"];
-    core_fmt_rt__impl_std_fmt_Arguments__new_v1_0_CALL_UNWIND [shape="box" xlabel="" label="core_fmt_rt__impl_std_fmt_Arguments__new_v1_0_CALL_UNWIND"];
-    core_fmt_rt__impl_std_fmt_Arguments__new_v1_1_CALL [shape="box" xlabel="" label="core_fmt_rt__impl_std_fmt_Arguments__new_v1_1_CALL"];
-    core_fmt_rt__impl_std_fmt_Arguments__new_v1_1_CALL_UNWIND [shape="box" xlabel="" label="core_fmt_rt__impl_std_fmt_Arguments__new_v1_1_CALL_UNWIND"];
     main_DROP_13 [shape="box" xlabel="" label="main_DROP_13"];
     main_DROP_15 [shape="box" xlabel="" label="main_DROP_15"];
     main_RETURN [shape="box" xlabel="" label="main_RETURN"];
@@ -33,6 +29,10 @@ digraph petrinet {
     main_SWITCH_INT_FROM_BB3_TO_BB9 [shape="box" xlabel="" label="main_SWITCH_INT_FROM_BB3_TO_BB9"];
     main_UNWIND_16 [shape="box" xlabel="" label="main_UNWIND_16"];
     std_env_args_0_CALL [shape="box" xlabel="" label="std_env_args_0_CALL"];
+    std_fmt_Arguments__new_0_CALL [shape="box" xlabel="" label="std_fmt_Arguments__new_0_CALL"];
+    std_fmt_Arguments__new_0_CALL_UNWIND [shape="box" xlabel="" label="std_fmt_Arguments__new_0_CALL_UNWIND"];
+    std_fmt_Arguments__new_1_CALL [shape="box" xlabel="" label="std_fmt_Arguments__new_1_CALL"];
+    std_fmt_Arguments__new_1_CALL_UNWIND [shape="box" xlabel="" label="std_fmt_Arguments__new_1_CALL_UNWIND"];
     std_io__eprint_0_CALL [shape="box" xlabel="" label="std_io__eprint_0_CALL"];
     std_io__eprint_0_CALL_UNWIND [shape="box" xlabel="" label="std_io__eprint_0_CALL_UNWIND"];
     std_io__print_0_CALL [shape="box" xlabel="" label="std_io__print_0_CALL"];
@@ -49,8 +49,8 @@ digraph petrinet {
     main_BB1 -> std_iter_Iterator_collect_0_CALL;
     main_BB10 -> core_fmt_rt_Argument__new_display_1_CALL;
     main_BB10 -> core_fmt_rt_Argument__new_display_1_CALL_UNWIND;
-    main_BB11 -> core_fmt_rt__impl_std_fmt_Arguments__new_v1_1_CALL;
-    main_BB11 -> core_fmt_rt__impl_std_fmt_Arguments__new_v1_1_CALL_UNWIND;
+    main_BB11 -> std_fmt_Arguments__new_1_CALL;
+    main_BB11 -> std_fmt_Arguments__new_1_CALL_UNWIND;
     main_BB12 -> std_io__print_0_CALL;
     main_BB12 -> std_io__print_0_CALL_UNWIND;
     main_BB13 -> main_DROP_13;
@@ -65,8 +65,8 @@ digraph petrinet {
     main_BB4 -> std_ops_Index_index_0_CALL_UNWIND;
     main_BB5 -> core_fmt_rt_Argument__new_display_0_CALL;
     main_BB5 -> core_fmt_rt_Argument__new_display_0_CALL_UNWIND;
-    main_BB6 -> core_fmt_rt__impl_std_fmt_Arguments__new_v1_0_CALL;
-    main_BB6 -> core_fmt_rt__impl_std_fmt_Arguments__new_v1_0_CALL_UNWIND;
+    main_BB6 -> std_fmt_Arguments__new_0_CALL;
+    main_BB6 -> std_fmt_Arguments__new_0_CALL_UNWIND;
     main_BB7 -> std_io__eprint_0_CALL;
     main_BB7 -> std_io__eprint_0_CALL_UNWIND;
     main_BB8 -> std_process_exit_0_CALL;
@@ -76,10 +76,6 @@ digraph petrinet {
     core_fmt_rt_Argument__new_display_0_CALL_UNWIND -> main_BB15;
     core_fmt_rt_Argument__new_display_1_CALL -> main_BB11;
     core_fmt_rt_Argument__new_display_1_CALL_UNWIND -> main_BB15;
-    core_fmt_rt__impl_std_fmt_Arguments__new_v1_0_CALL -> main_BB7;
-    core_fmt_rt__impl_std_fmt_Arguments__new_v1_0_CALL_UNWIND -> main_BB15;
-    core_fmt_rt__impl_std_fmt_Arguments__new_v1_1_CALL -> main_BB12;
-    core_fmt_rt__impl_std_fmt_Arguments__new_v1_1_CALL_UNWIND -> main_BB15;
     main_DROP_13 -> main_BB14;
     main_DROP_15 -> main_BB16;
     main_RETURN -> PROGRAM_END;
@@ -87,6 +83,10 @@ digraph petrinet {
     main_SWITCH_INT_FROM_BB3_TO_BB9 -> main_BB9;
     main_UNWIND_16 -> PROGRAM_PANIC;
     std_env_args_0_CALL -> main_BB1;
+    std_fmt_Arguments__new_0_CALL -> main_BB7;
+    std_fmt_Arguments__new_0_CALL_UNWIND -> main_BB15;
+    std_fmt_Arguments__new_1_CALL -> main_BB12;
+    std_fmt_Arguments__new_1_CALL_UNWIND -> main_BB15;
     std_io__eprint_0_CALL -> main_BB8;
     std_io__eprint_0_CALL_UNWIND -> main_BB15;
     std_io__print_0_CALL -> main_BB13;
