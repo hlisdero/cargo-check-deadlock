@@ -10,7 +10,7 @@
 //! <https://rustc-dev-guide.rust-lang.org/rustc-driver.html>
 
 use rustc_errors::registry;
-use std::sync::atomic::AtomicBool;
+use std::{collections::HashMap, sync::atomic::AtomicBool};
 
 pub static USING_INTERNAL_FEATURES: AtomicBool = AtomicBool::new(false);
 
@@ -33,7 +33,7 @@ pub fn prepare_rustc_config(
         ice_file: None,
         file_loader: None,
         locale_resources: Vec::new(),
-        lint_caps: rustc_hash::FxHashMap::default(),
+        lint_caps: HashMap::default(),
         psess_created: None,
         register_lints: None,
         override_queries: None,
