@@ -1,12 +1,12 @@
-use assert_cmd::prelude::*; // Add methods on commands
-use predicates::prelude::*; // Used for writing assertions
-use std::path::PathBuf;
-use std::process::Command; // Run programs
 #[expect(
     deprecated,
     reason = "cargo_bin is deprecated, cargo_bin! is not, `use` does not differenciate them"
 )]
 use assert_cmd::cargo::cargo_bin;
+use assert_cmd::prelude::*; // Add methods on commands
+use predicates::prelude::*; // Used for writing assertions
+use std::path::PathBuf;
+use std::process::Command; // Run programs
 
 /// Asserts that the contents of the output files correspond to the expected file contents
 /// after running `cargo-check-deadlock` on the given source code file.

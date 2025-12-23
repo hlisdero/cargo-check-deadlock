@@ -1,12 +1,12 @@
-use assert_cmd::prelude::*; // Add methods on commands
-use assert_fs::prelude::*; // Used for creating temp files
-use predicates::prelude::*; // Used for writing assertions
-use std::process::Command; // Run programs
 #[expect(
     deprecated,
     reason = "cargo_bin is deprecated, cargo_bin! is not, `use` does not differenciate them"
 )]
 use assert_cmd::cargo::cargo_bin;
+use assert_cmd::prelude::*; // Add methods on commands
+use assert_fs::prelude::*; // Used for creating temp files
+use predicates::prelude::*; // Used for writing assertions
+use std::process::Command; // Run programs
 
 #[test]
 fn file_does_not_exist() {
