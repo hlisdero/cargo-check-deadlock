@@ -28,6 +28,9 @@ pub fn extract_def_id_of_called_function_from_operand<'tcx>(
             place_ty.ty
         }
         rustc_middle::mir::Operand::Constant(constant) => constant.ty(),
+        rustc_middle::mir::Operand::RuntimeChecks(_) => {
+            panic!("RuntimeChecks found in an operand which was expected to contain a place")
+        } // We don't care about this case
     };
     match function_type.kind() {
         rustc_middle::ty::TyKind::FnPtr(_, _) => {
@@ -63,7 +66,9 @@ pub fn extract_nth_argument_as_place<'tcx>(
         rustc_middle::mir::Operand::Move(place) | rustc_middle::mir::Operand::Copy(place) => {
             Some(*place)
         }
-        rustc_middle::mir::Operand::Constant(_) => None,
+        rustc_middle::mir::Operand::Constant(_) | rustc_middle::mir::Operand::RuntimeChecks(_) => {
+            None
+        }
     }
 }
 

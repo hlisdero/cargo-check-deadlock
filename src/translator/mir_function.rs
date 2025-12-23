@@ -90,7 +90,9 @@ impl MirFunction {
             let linked_place = match operand {
                 rustc_middle::mir::Operand::Move(place)
                 | rustc_middle::mir::Operand::Copy(place) => *place,
-                rustc_middle::mir::Operand::Constant(_) => continue, // Constants are not mapped in memory
+                // Constants and runtime checks are not mapped in memory. We don't care about this case
+                rustc_middle::mir::Operand::Constant(_)
+                | rustc_middle::mir::Operand::RuntimeChecks(_) => continue,
             };
 
             let place: rustc_middle::mir::Place<'_> = rustc_middle::mir::Place {

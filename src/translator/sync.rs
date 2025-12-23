@@ -161,8 +161,9 @@ pub fn handle_aggregate_assignment<'tcx>(
             rustc_middle::mir::Operand::Copy(place) | rustc_middle::mir::Operand::Move(place) => {
                 place
             }
-            // Nothing to do if we found a constant as one of the operands.
-            rustc_middle::mir::Operand::Constant(_) => continue,
+            // Nothing to do if we found a constant or runtime checks as one of the operands. We don't care about these cases
+            rustc_middle::mir::Operand::Constant(_)
+            | rustc_middle::mir::Operand::RuntimeChecks(_) => continue,
         };
         if memory.has_linked_value(rhs) {
             has_linked_value = true;
