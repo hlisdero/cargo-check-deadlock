@@ -2,10 +2,15 @@ use assert_cmd::prelude::*; // Add methods on commands
 use assert_fs::prelude::*; // Used for creating temp files
 use predicates::prelude::*; // Used for writing assertions
 use std::process::Command; // Run programs
+#[expect(
+    deprecated,
+    reason = "cargo_bin is deprecated, cargo_bin! is not, `use` does not differenciate them"
+)]
+use assert_cmd::cargo::cargo_bin;
 
 #[test]
 fn file_does_not_exist() {
-    let mut cmd = Command::cargo_bin("cargo-check-deadlock").expect("Command not found");
+    let mut cmd = Command::new(cargo_bin!("cargo-check-deadlock"));
 
     cmd.arg("check-deadlock")
         .arg("test/file/doesnt/exist")
@@ -22,7 +27,7 @@ fn output_folder_does_not_exist() {
     file.write_str("fn main {}")
         .expect("Could not write test file contents");
 
-    let mut cmd = Command::cargo_bin("cargo-check-deadlock").expect("Command not found");
+    let mut cmd = Command::new(cargo_bin!("cargo-check-deadlock"));
     cmd.arg("check-deadlock")
         .arg(file.path())
         .arg("--output-folder=test/folder/doesnt/exist");
@@ -38,7 +43,7 @@ fn format_is_not_valid() {
     file.write_str("fn main() {}")
         .expect("Could not write test file contents");
 
-    let mut cmd = Command::cargo_bin("cargo-check-deadlock").expect("Command not found");
+    let mut cmd = Command::new(cargo_bin!("cargo-check-deadlock"));
     cmd.arg("check-deadlock").arg(file.path()).arg("--csv");
     cmd.assert().failure().stderr(predicate::str::contains(
         "unexpected argument '--csv' found",
@@ -52,8 +57,7 @@ fn generates_lola_output_by_default() {
     file.write_str("fn main() {}")
         .expect("Could not write test file contents");
 
-    let mut cmd = Command::cargo_bin("cargo-check-deadlock").expect("Command not found");
-
+    let mut cmd = Command::new(cargo_bin!("cargo-check-deadlock"));
     cmd.arg("check-deadlock")
         .arg(file.path())
         .arg("--filename=does_not_generate_output_by_default")

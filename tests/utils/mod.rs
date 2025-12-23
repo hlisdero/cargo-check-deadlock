@@ -2,6 +2,11 @@ use assert_cmd::prelude::*; // Add methods on commands
 use predicates::prelude::*; // Used for writing assertions
 use std::path::PathBuf;
 use std::process::Command; // Run programs
+#[expect(
+    deprecated,
+    reason = "cargo_bin is deprecated, cargo_bin! is not, `use` does not differenciate them"
+)]
+use assert_cmd::cargo::cargo_bin;
 
 /// Asserts that the contents of the output files correspond to the expected file contents
 /// after running `cargo-check-deadlock` on the given source code file.
@@ -15,7 +20,7 @@ use std::process::Command; // Run programs
 /// If the output file contents cannot be read, then the function panics.
 #[allow(dead_code)]
 pub fn assert_output_files(source_code_file: &str, output_folder: &str) {
-    let mut cmd = Command::cargo_bin("cargo-check-deadlock").expect("Command not found");
+    let mut cmd = Command::new(cargo_bin!("cargo-check-deadlock"));
 
     // Current workdir is always the project root folder
     cmd.arg("check-deadlock")
@@ -63,7 +68,7 @@ pub fn assert_lola_result(
     output_folder: &str,
     output_should_have_deadlock: bool,
 ) {
-    let mut cmd = Command::cargo_bin("cargo-check-deadlock").expect("Command not found");
+    let mut cmd = Command::new(cargo_bin!("cargo-check-deadlock"));
 
     // Current workdir is always the project root folder
     cmd.arg("check-deadlock")
