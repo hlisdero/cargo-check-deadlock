@@ -28,15 +28,44 @@ extern crate rustc_middle;
 extern crate rustc_session;
 extern crate rustc_span;
 
-mod compiler_config;
 mod data_structures;
 pub mod model_checker;
 mod naming;
-mod sysroot;
 mod translator;
 mod utils;
 
 pub use data_structures::petri_net_interface::PetriNet;
+
+use std::collections::HashMap;
+
+/// The Config struct is documented here:
+/// <https://doc.rust-lang.org/stable/nightly-rustc/rustc_interface/interface/struct.Config.html>
+///
+/// It includes command-line options as well as internal rustc options.
+/// The relevant parts in this case is only the input file.
+///
+/// See the rustc driver examples for other possible example configurations:
+/// <https://rustc-dev-guide.rust-lang.org/rustc-driver.html>
+fn prepare_rustc_config(source_code_filepath: std::path::PathBuf) -> rustc_interface::Config {
+    rustc_interface::Config {
+        opts: rustc_session::config::Options::default(),
+        crate_cfg: Vec::new(),
+        crate_check_cfg: Vec::new(),
+        input: rustc_session::config::Input::File(source_code_filepath),
+        output_dir: None,
+        output_file: None,
+        hash_untracked_state: None,
+        ice_file: None,
+        file_loader: None,
+        lint_caps: HashMap::default(),
+        psess_created: None,
+        register_lints: None,
+        override_queries: None,
+        make_codegen_backend: None,
+        using_internal_features: &rustc_driver::USING_INTERNAL_FEATURES,
+        extra_symbols: Vec::new(),
+    }
+}
 
 /// Entry point for the translation of the Rust code to a Petri net.
 ///
@@ -51,8 +80,7 @@ pub use data_structures::petri_net_interface::PetriNet;
 ///
 /// If the translation failed due to a bug, then the function panics.
 pub fn run(source_code_filepath: std::path::PathBuf) -> Result<PetriNet, &'static str> {
-    let sysroot = sysroot::get_from_rustc()?;
-    let config = compiler_config::prepare_rustc_config(sysroot, source_code_filepath);
+    let config = prepare_rustc_config(source_code_filepath);
     let mut translation_result: Result<PetriNet, &'static str> = Err("Translation did not run");
 
     rustc_interface::run_compiler(config, |compiler| {
