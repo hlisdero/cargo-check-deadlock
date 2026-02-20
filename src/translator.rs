@@ -32,21 +32,21 @@ mod special_function;
 mod sync;
 
 use log::{debug, info};
-use rustc_middle::mir::visit::Visitor;
 use rustc_middle::mir::UnwindAction;
+use rustc_middle::mir::visit::Visitor;
 use std::collections::{BinaryHeap, VecDeque};
 use std::rc::Rc;
 
 use crate::data_structures::hash_map_counter::HashMapCounter;
-use crate::data_structures::petri_net_interface::{connect_places, PetriNet, PlaceRef};
+use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef, connect_places};
 use crate::data_structures::stack::Stack;
 use crate::naming::function::{indexed_mir_function_cleanup_label, indexed_mir_function_name};
 use crate::naming::{PROGRAM_END, PROGRAM_PANIC, PROGRAM_START};
 use crate::translator::mir_function::memory::Single;
 use crate::utils::{extract_def_id_of_called_function_from_operand, extract_nth_argument_as_place};
 use function::{Places, PostprocessingTask, Transitions};
-use mir_function::memory::{MutexRef, Value};
 use mir_function::MirFunction;
+use mir_function::memory::{MutexRef, Value};
 use special_function::{
     call_diverging_function, call_foreign_function, call_panic_function, is_foreign_function,
     is_panic_function,

@@ -6,7 +6,7 @@
 //! For example: Calls to standard library methods, iterators, etc.
 
 use crate::data_structures::petri_net_interface::{
-    add_arc_place_transition, connect_places, PetriNet, PlaceRef,
+    PetriNet, PlaceRef, add_arc_place_transition, connect_places,
 };
 use crate::naming::function::{
     diverging_call_transition_label, foreign_call_transition_labels, panic_transition_label,

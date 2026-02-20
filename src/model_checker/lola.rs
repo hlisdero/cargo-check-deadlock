@@ -25,7 +25,9 @@ pub fn check_deadlock(
         Ok(output) => output,
         Err(err) => {
             if err.kind() == std::io::ErrorKind::NotFound {
-                info!("`lola` was not found in the $PATH. Please check that the program is installed and added to the $PATH");
+                info!(
+                    "`lola` was not found in the $PATH. Please check that the program is installed and added to the $PATH"
+                );
             } else {
                 panic!("There was an unknown error while executing `lola`: {err}");
             }

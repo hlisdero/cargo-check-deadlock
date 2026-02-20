@@ -15,10 +15,10 @@
 use log::debug;
 use std::cell::RefCell;
 
+use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef, TransitionRef};
 use crate::data_structures::petri_net_interface::{
     add_arc_place_transition, add_arc_transition_place, connect_places,
 };
-use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef, TransitionRef};
 use crate::naming::condvar::wait_skip_label;
 use crate::naming::mutex::{condition_place_labels, place_label};
 use crate::translator::function::{Places, PostprocessingTask};

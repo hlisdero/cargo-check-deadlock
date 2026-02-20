@@ -4,7 +4,7 @@
 use super::MirFunction;
 
 use crate::data_structures::petri_net_interface::{
-    connect_places, PetriNet, PlaceRef, TransitionRef,
+    PetriNet, PlaceRef, TransitionRef, connect_places,
 };
 use crate::naming::function::return_transition_label;
 

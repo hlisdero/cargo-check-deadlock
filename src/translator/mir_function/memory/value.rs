@@ -67,28 +67,28 @@ pub enum Single {
 impl Single {
     pub const fn unpack_mutex(&self) -> Option<&MutexRef> {
         match self {
-            Self::Mutex(ref mutex_ref) => Some(mutex_ref),
+            Self::Mutex(mutex_ref) => Some(mutex_ref),
             _ => None,
         }
     }
 
     pub const fn unpack_mutex_guard(&self) -> Option<&MutexGuardRef> {
         match self {
-            Self::MutexGuard(ref mutex_guard_ref) => Some(mutex_guard_ref),
+            Self::MutexGuard(mutex_guard_ref) => Some(mutex_guard_ref),
             _ => None,
         }
     }
 
     pub const fn unpack_join_handle(&self) -> Option<&ThreadRef> {
         match self {
-            Self::JoinHandle(ref thread_ref) => Some(thread_ref),
+            Self::JoinHandle(thread_ref) => Some(thread_ref),
             _ => None,
         }
     }
 
     pub const fn unpack_condvar(&self) -> Option<&CondvarRef> {
         match self {
-            Self::Condvar(ref condvar_ref) => Some(condvar_ref),
+            Self::Condvar(condvar_ref) => Some(condvar_ref),
             _ => None,
         }
     }

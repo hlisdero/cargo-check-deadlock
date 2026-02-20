@@ -126,13 +126,17 @@ fn should_link_to_same_value<'tcx>(
 ) -> bool {
     let is_linked = memory.has_linked_value(place_linked);
     if !is_linked {
-        debug!("PLACE {place_linked:?} IS NOT LINKED SO PLACE {place_to_link:?} DOES NOT HAVE THE SAME VALUE");
+        debug!(
+            "PLACE {place_linked:?} IS NOT LINKED SO PLACE {place_to_link:?} DOES NOT HAVE THE SAME VALUE"
+        );
         return false;
     }
     let has_same_type =
         check_aggregate_of_same_type(place_to_link, place_linked, caller_function_def_id, tcx);
     if !has_same_type {
-        debug!("THE TYPES OF PLACE {place_to_link:?} AND {place_linked:?} DO NOT MATCH SO AS TO HAVE THE SAME VALUE");
+        debug!(
+            "THE TYPES OF PLACE {place_to_link:?} AND {place_linked:?} DO NOT MATCH SO AS TO HAVE THE SAME VALUE"
+        );
         return false;
     }
     true // has same type and the place is linked

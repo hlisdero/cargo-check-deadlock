@@ -103,7 +103,9 @@ impl MirFunction {
             if calling_function_memory.has_linked_value(&linked_place) {
                 let value = calling_function_memory.get_linked_value(&linked_place);
                 self.memory.link(place, value.clone());
-                debug!("LINKED PLACE {linked_place:?} IN CALLING FUNCTION TO PLACE {place:?} IN CALLED FUNCTION");
+                debug!(
+                    "LINKED PLACE {linked_place:?} IN CALLING FUNCTION TO PLACE {place:?} IN CALLED FUNCTION"
+                );
             }
         }
     }
@@ -143,10 +145,9 @@ impl MirFunction {
         let active_block_index = self.active_block.expect(
             "BUG: Function should have an active basic block set before calling methods that modify it.",
         );
-        let active_block = self.basic_blocks.get(&active_block_index).expect(
+        self.basic_blocks.get(&active_block_index).expect(
             "BUG: The basic block cannot be retrieved. The index for the active block is invalid.",
-        );
-        active_block
+        )
     }
 
     /// Adds a new basic block to the function.

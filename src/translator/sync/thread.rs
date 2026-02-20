@@ -23,14 +23,14 @@
 use log::info;
 use std::cell::OnceCell;
 
+use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef, TransitionRef};
 use crate::data_structures::petri_net_interface::{
     add_arc_place_transition, add_arc_transition_place,
 };
-use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef, TransitionRef};
 use crate::naming::thread::{end_place_label, start_place_label};
 use crate::translator::function::Places;
-use crate::translator::mir_function::memory::Memory;
 use crate::translator::mir_function::MirFunction;
+use crate::translator::mir_function::memory::Memory;
 use crate::translator::special_function::call_foreign_function;
 use crate::utils::extract_nth_argument_as_place;
 

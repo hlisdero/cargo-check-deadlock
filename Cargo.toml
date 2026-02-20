@@ -15,7 +15,7 @@ keywords = [
   "lost-signals",
 ]
 categories = ["command-line-utilities"]
-edition = "2021"
+edition = "2024"
 exclude = [".github/**", ".vscode/**", "assets/**", "scripts/**"]
 
 [[bin]]

@@ -6,17 +6,17 @@
 //! For an introduction to MIR see:
 //! <https://rustc-dev-guide.rust-lang.org/mir/index.html>
 
-use rustc_middle::mir::visit::Visitor;
 use rustc_middle::mir::TerminatorKind::{
     Assert, Call, CoroutineDrop, Drop, FalseEdge, FalseUnwind, Goto, InlineAsm, Return, SwitchInt,
     TailCall, Unreachable, UnwindResume, UnwindTerminate, Yield,
 };
 use rustc_middle::mir::UnwindAction;
+use rustc_middle::mir::visit::Visitor;
 
 use log::debug;
 
-use super::sync::{handle_aggregate_assignment, link_if_sync_variable, mutex};
 use super::Translator;
+use super::sync::{handle_aggregate_assignment, link_if_sync_variable, mutex};
 
 impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
     /// Entering a new basic block of the current MIR function.

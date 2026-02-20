@@ -271,19 +271,23 @@ impl<'tcx> Memory {
             let next_index = field_numbers[index];
 
             match current_values.get(next_index) {
-                None => panic!("BUG: A single value in {current_values:?} with field number {next_index} cannot be found"),
+                None => panic!(
+                    "BUG: A single value in {current_values:?} with field number {next_index} cannot be found"
+                ),
                 Some(value) => {
                     if index == last_index {
                         return value;
                     }
                     match value {
-                        Value::Single(_) | Value::None => panic!("BUG: Encountered a single value where an aggregate was expected"),
+                        Value::Single(_) | Value::None => panic!(
+                            "BUG: Encountered a single value where an aggregate was expected"
+                        ),
                         Value::Aggregate(next_values) => {
                             current_values = next_values;
                             index += 1;
                         }
                     }
-                },
+                }
             }
         }
         panic!("BUG: A single value could not be found after traversing all field numbers");

@@ -22,10 +22,10 @@
 use log::debug;
 use std::cell::OnceCell;
 
+use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef, TransitionRef};
 use crate::data_structures::petri_net_interface::{
     add_arc_place_transition, add_arc_transition_place,
 };
-use crate::data_structures::petri_net_interface::{PetriNet, PlaceRef, TransitionRef};
 use crate::naming::condvar::{place_labels, transition_labels};
 use crate::translator::function::{Places, PostprocessingTask};
 use crate::translator::mir_function::memory::{Memory, MutexGuardRef};
