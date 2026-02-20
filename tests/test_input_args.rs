@@ -67,17 +67,20 @@ fn generates_lola_output_by_default() {
         .stdout(predicate::str::is_empty())
         .stderr(predicate::str::is_empty());
     // Check that the default output exists
-    if !std::path::Path::new("./does_not_generate_output_by_default.lola").exists() {
-        panic!("Should generate a .lola file by default");
-    }
+    assert!(
+        std::path::Path::new("./does_not_generate_output_by_default.lola").exists(),
+        "Should generate a .lola file by default"
+    );
     std::fs::remove_file("./does_not_generate_output_by_default.lola")
         .expect("Could not delete output file");
 
     // Check that the other formats were not generated
-    if std::path::Path::new("./does_not_generate_output_by_default.dot").exists() {
-        panic!("Should not generate a .dot file by default");
-    }
-    if std::path::Path::new("./does_not_generate_output_by_default.pnml").exists() {
-        panic!("Should not generate a .pnml file by default");
-    }
+    assert!(
+        !std::path::Path::new("./does_not_generate_output_by_default.dot").exists(),
+        "Should not generate a .dot file by default"
+    );
+    assert!(
+        !std::path::Path::new("./does_not_generate_output_by_default.pnml").exists(),
+        "Should not generate a .pnml file by default"
+    );
 }

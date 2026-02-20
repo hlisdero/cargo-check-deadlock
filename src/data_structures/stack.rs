@@ -141,7 +141,7 @@ mod stack_tests {
 
         assert!(result.is_none());
         assert!(stack.stack.is_empty());
-        assert_eq!(stack.stack.len(), 0)
+        assert_eq!(stack.stack.len(), 0);
     }
 
     #[test]

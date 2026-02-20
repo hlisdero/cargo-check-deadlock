@@ -10,7 +10,7 @@ use std::process::Command; // Run programs
 
 /// Asserts that the contents of the output files correspond to the expected file contents
 /// after running `cargo-check-deadlock` on the given source code file.
-/// Checks all formats: LoLA, DOT and PNML.
+/// Checks all formats: `LoLA`, DOT and PNML.
 ///
 /// # Panics
 ///
@@ -43,13 +43,12 @@ pub fn assert_output_files(source_code_file: &str, output_folder: &str) {
         let expected_file_contents = std::fs::read_to_string(&expected_output_path)
             .expect("Could not read file with expected contents to string");
 
-        if file_contents != expected_file_contents {
-            panic!(
-                "The contents of {} do not match the contents of {}",
-                output_path.to_string_lossy(),
-                expected_output_path.to_string_lossy()
-            );
-        }
+        assert!(
+            file_contents == expected_file_contents,
+            "The contents of {} do not match the contents of {}",
+            output_path.to_string_lossy(),
+            expected_output_path.to_string_lossy()
+        );
 
         std::fs::remove_file(output_path).expect("Could not delete output file");
     }

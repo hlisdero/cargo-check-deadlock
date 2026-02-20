@@ -92,7 +92,7 @@ mod tests {
     #[test]
     fn mir_locals_vec_debug_formatting_works() {
         let vec = MirLocalsVec::default();
-        let debug_str = format!("{:?}", vec);
+        let debug_str = format!("{vec:?}");
         assert!(debug_str.contains("Index"));
         assert!(debug_str.contains("Value"));
         assert!(debug_str.contains("_0"));
