@@ -63,8 +63,7 @@ This proves extremely useful to get feedback on the types, compiler errors, etc.
 
 As time goes on and the compiler internals change, the code will inevitably need changes to work again.
 
-**The current state of the repository compiles without warnings and with all tests passing with**
-`rustc 1.92.0-nightly (5c7ae0c7e 2025-10-02)`
+**See the [`rust-toolchain.toml`](./rust-toolchain.toml) for the latest version for which the code builds and all tests pass.**
 
 ### Installation
 
