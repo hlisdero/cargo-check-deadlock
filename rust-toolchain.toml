@@ -2,4 +2,4 @@
 
 [toolchain]
 channel = "nightly-2026-02-20"
-components = ["llvm-tools", "rustc-dev", "rust-src"]
+components = ["rustfmt", "clippy", "llvm-tools", "rustc-dev", "rust-src"]
