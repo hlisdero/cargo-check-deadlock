@@ -18,7 +18,6 @@ digraph petrinet {
     main_BB7 [shape="circle" xlabel="main_BB7" label=""];
     main_BB8 [shape="circle" xlabel="main_BB8" label=""];
     main_BB9 [shape="circle" xlabel="main_BB9" label=""];
-    alloc_alloc_exchange_malloc_0_CALL [shape="box" xlabel="" label="alloc_alloc_exchange_malloc_0_CALL"];
     core_fmt_rt_Argument__new_display_0_CALL [shape="box" xlabel="" label="core_fmt_rt_Argument__new_display_0_CALL"];
     core_fmt_rt_Argument__new_display_0_CALL_UNWIND [shape="box" xlabel="" label="core_fmt_rt_Argument__new_display_0_CALL_UNWIND"];
     core_slice__impl_T__get_0_CALL [shape="box" xlabel="" label="core_slice__impl_T__get_0_CALL"];
@@ -34,6 +33,8 @@ digraph petrinet {
     main_UNREACHABLE_1 [shape="box" xlabel="" label="main_UNREACHABLE_1"];
     main_UNREACHABLE_14 [shape="box" xlabel="" label="main_UNREACHABLE_14"];
     main_UNWIND_13 [shape="box" xlabel="" label="main_UNWIND_13"];
+    std_boxed_Box_T_new_uninit_0_CALL [shape="box" xlabel="" label="std_boxed_Box_T_new_uninit_0_CALL"];
+    std_boxed_box_assume_init_into_vec_unsafe_0_CALL [shape="box" xlabel="" label="std_boxed_box_assume_init_into_vec_unsafe_0_CALL"];
     std_fmt_Arguments__new_0_CALL [shape="box" xlabel="" label="std_fmt_Arguments__new_0_CALL"];
     std_fmt_Arguments__new_0_CALL_UNWIND [shape="box" xlabel="" label="std_fmt_Arguments__new_0_CALL_UNWIND"];
     std_io__print_0_CALL [shape="box" xlabel="" label="std_io__print_0_CALL"];
@@ -44,8 +45,7 @@ digraph petrinet {
     std_option_Option_T_is_some_0_CALL_UNWIND [shape="box" xlabel="" label="std_option_Option_T_is_some_0_CALL_UNWIND"];
     std_option_Option_T_unwrap_0_CALL [shape="box" xlabel="" label="std_option_Option_T_unwrap_0_CALL"];
     std_option_Option_T_unwrap_0_CALL_UNWIND [shape="box" xlabel="" label="std_option_Option_T_unwrap_0_CALL_UNWIND"];
-    std_slice__impl_T__into_vec_0_CALL [shape="box" xlabel="" label="std_slice__impl_T__into_vec_0_CALL"];
-    PROGRAM_START -> alloc_alloc_exchange_malloc_0_CALL;
+    PROGRAM_START -> std_boxed_Box_T_new_uninit_0_CALL;
     main_BB1 -> main_ASSERT_1;
     main_BB1 -> main_UNREACHABLE_1;
     main_BB10 -> main_DROP_10;
@@ -54,7 +54,7 @@ digraph petrinet {
     main_BB13 -> main_UNWIND_13;
     main_BB14 -> main_ASSERT_14;
     main_BB14 -> main_UNREACHABLE_14;
-    main_BB15 -> std_slice__impl_T__into_vec_0_CALL;
+    main_BB15 -> std_boxed_box_assume_init_into_vec_unsafe_0_CALL;
     main_BB16 -> main_GOTO_16;
     main_BB2 -> std_ops_Deref_deref_0_CALL;
     main_BB2 -> std_ops_Deref_deref_0_CALL_UNWIND;
@@ -72,7 +72,6 @@ digraph petrinet {
     main_BB8 -> std_fmt_Arguments__new_0_CALL_UNWIND;
     main_BB9 -> std_io__print_0_CALL;
     main_BB9 -> std_io__print_0_CALL_UNWIND;
-    alloc_alloc_exchange_malloc_0_CALL -> main_BB1;
     core_fmt_rt_Argument__new_display_0_CALL -> main_BB8;
     core_fmt_rt_Argument__new_display_0_CALL_UNWIND -> main_BB12;
     core_slice__impl_T__get_0_CALL -> main_BB4;
@@ -88,6 +87,8 @@ digraph petrinet {
     main_UNREACHABLE_1 -> PROGRAM_END;
     main_UNREACHABLE_14 -> PROGRAM_END;
     main_UNWIND_13 -> PROGRAM_PANIC;
+    std_boxed_Box_T_new_uninit_0_CALL -> main_BB1;
+    std_boxed_box_assume_init_into_vec_unsafe_0_CALL -> main_BB2;
     std_fmt_Arguments__new_0_CALL -> main_BB9;
     std_fmt_Arguments__new_0_CALL_UNWIND -> main_BB12;
     std_io__print_0_CALL -> main_BB16;
@@ -98,5 +99,4 @@ digraph petrinet {
     std_option_Option_T_is_some_0_CALL_UNWIND -> main_BB12;
     std_option_Option_T_unwrap_0_CALL -> main_BB7;
     std_option_Option_T_unwrap_0_CALL_UNWIND -> main_BB12;
-    std_slice__impl_T__into_vec_0_CALL -> main_BB2;
 }

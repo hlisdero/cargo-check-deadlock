@@ -9,10 +9,7 @@
 //! See the rustc driver examples for other possible example configurations:
 //! <https://rustc-dev-guide.rust-lang.org/rustc-driver.html>
 
-use rustc_errors::registry;
-use std::{collections::HashMap, sync::atomic::AtomicBool};
-
-pub static USING_INTERNAL_FEATURES: AtomicBool = AtomicBool::new(false);
+use std::collections::HashMap;
 
 pub fn prepare_rustc_config(
     sysroot: std::path::PathBuf,
@@ -32,14 +29,12 @@ pub fn prepare_rustc_config(
         hash_untracked_state: None,
         ice_file: None,
         file_loader: None,
-        locale_resources: Vec::new(),
         lint_caps: HashMap::default(),
         psess_created: None,
         register_lints: None,
         override_queries: None,
         make_codegen_backend: None,
-        registry: registry::Registry::new(rustc_errors::codes::DIAGNOSTICS),
-        using_internal_features: &USING_INTERNAL_FEATURES,
+        using_internal_features: &rustc_driver::USING_INTERNAL_FEATURES,
         extra_symbols: Vec::new(),
     }
 }

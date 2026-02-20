@@ -64,11 +64,6 @@ MARKING
     main_BB8 : 0,
     main_BB9 : 0;
 
-TRANSITION alloc_alloc_exchange_malloc_0_CALL
-  CONSUME
-    PROGRAM_START : 1;
-  PRODUCE
-    main_BB1 : 1;
 TRANSITION core_fmt_rt_Argument__new_display_0_CALL
   CONSUME
     main_BB5 : 1;
@@ -214,6 +209,16 @@ TRANSITION main_UNWIND_13
     main_BB13 : 1;
   PRODUCE
     PROGRAM_PANIC : 1;
+TRANSITION std_boxed_Box_T_new_uninit_0_CALL
+  CONSUME
+    PROGRAM_START : 1;
+  PRODUCE
+    main_BB1 : 1;
+TRANSITION std_boxed_box_assume_init_into_vec_unsafe_0_CALL
+  CONSUME
+    main_BB15 : 1;
+  PRODUCE
+    main_BB2 : 1;
 TRANSITION std_fmt_Arguments__from_str_0_CALL
   CONSUME
     main_BB8 : 1;
@@ -274,8 +279,3 @@ TRANSITION std_ops_Deref_deref_0_CALL_UNWIND
     main_BB2 : 1;
   PRODUCE
     main_BB12 : 1;
-TRANSITION std_slice__impl_T__into_vec_0_CALL
-  CONSUME
-    main_BB15 : 1;
-  PRODUCE
-    main_BB2 : 1;

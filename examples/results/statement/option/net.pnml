@@ -100,11 +100,6 @@
           <text>main_BB9</text>
         </name>
       </place>
-      <transition id="alloc_alloc_exchange_malloc_0_CALL">
-        <name>
-          <text>alloc_alloc_exchange_malloc_0_CALL</text>
-        </name>
-      </transition>
       <transition id="core_fmt_rt_Argument__new_display_0_CALL">
         <name>
           <text>core_fmt_rt_Argument__new_display_0_CALL</text>
@@ -180,6 +175,16 @@
           <text>main_UNWIND_13</text>
         </name>
       </transition>
+      <transition id="std_boxed_Box_T_new_uninit_0_CALL">
+        <name>
+          <text>std_boxed_Box_T_new_uninit_0_CALL</text>
+        </name>
+      </transition>
+      <transition id="std_boxed_box_assume_init_into_vec_unsafe_0_CALL">
+        <name>
+          <text>std_boxed_box_assume_init_into_vec_unsafe_0_CALL</text>
+        </name>
+      </transition>
       <transition id="std_fmt_Arguments__new_0_CALL">
         <name>
           <text>std_fmt_Arguments__new_0_CALL</text>
@@ -230,14 +235,9 @@
           <text>std_option_Option_T_unwrap_0_CALL_UNWIND</text>
         </name>
       </transition>
-      <transition id="std_slice__impl_T__into_vec_0_CALL">
+      <arc source="PROGRAM_START" target="std_boxed_Box_T_new_uninit_0_CALL" id="(PROGRAM_START, std_boxed_Box_T_new_uninit_0_CALL)">
         <name>
-          <text>std_slice__impl_T__into_vec_0_CALL</text>
-        </name>
-      </transition>
-      <arc source="PROGRAM_START" target="alloc_alloc_exchange_malloc_0_CALL" id="(PROGRAM_START, alloc_alloc_exchange_malloc_0_CALL)">
-        <name>
-          <text>(PROGRAM_START, alloc_alloc_exchange_malloc_0_CALL)</text>
+          <text>(PROGRAM_START, std_boxed_Box_T_new_uninit_0_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -307,9 +307,9 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="main_BB15" target="std_slice__impl_T__into_vec_0_CALL" id="(main_BB15, std_slice__impl_T__into_vec_0_CALL)">
+      <arc source="main_BB15" target="std_boxed_box_assume_init_into_vec_unsafe_0_CALL" id="(main_BB15, std_boxed_box_assume_init_into_vec_unsafe_0_CALL)">
         <name>
-          <text>(main_BB15, std_slice__impl_T__into_vec_0_CALL)</text>
+          <text>(main_BB15, std_boxed_box_assume_init_into_vec_unsafe_0_CALL)</text>
         </name>
         <inscription>
           <text>1</text>
@@ -451,14 +451,6 @@
           <text>1</text>
         </inscription>
       </arc>
-      <arc source="alloc_alloc_exchange_malloc_0_CALL" target="main_BB1" id="(alloc_alloc_exchange_malloc_0_CALL, main_BB1)">
-        <name>
-          <text>(alloc_alloc_exchange_malloc_0_CALL, main_BB1)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
       <arc source="core_fmt_rt_Argument__new_display_0_CALL" target="main_BB8" id="(core_fmt_rt_Argument__new_display_0_CALL, main_BB8)">
         <name>
           <text>(core_fmt_rt_Argument__new_display_0_CALL, main_BB8)</text>
@@ -579,6 +571,22 @@
           <text>1</text>
         </inscription>
       </arc>
+      <arc source="std_boxed_Box_T_new_uninit_0_CALL" target="main_BB1" id="(std_boxed_Box_T_new_uninit_0_CALL, main_BB1)">
+        <name>
+          <text>(std_boxed_Box_T_new_uninit_0_CALL, main_BB1)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
+      <arc source="std_boxed_box_assume_init_into_vec_unsafe_0_CALL" target="main_BB2" id="(std_boxed_box_assume_init_into_vec_unsafe_0_CALL, main_BB2)">
+        <name>
+          <text>(std_boxed_box_assume_init_into_vec_unsafe_0_CALL, main_BB2)</text>
+        </name>
+        <inscription>
+          <text>1</text>
+        </inscription>
+      </arc>
       <arc source="std_fmt_Arguments__new_0_CALL" target="main_BB9" id="(std_fmt_Arguments__new_0_CALL, main_BB9)">
         <name>
           <text>(std_fmt_Arguments__new_0_CALL, main_BB9)</text>
@@ -654,14 +662,6 @@
       <arc source="std_option_Option_T_unwrap_0_CALL_UNWIND" target="main_BB12" id="(std_option_Option_T_unwrap_0_CALL_UNWIND, main_BB12)">
         <name>
           <text>(std_option_Option_T_unwrap_0_CALL_UNWIND, main_BB12)</text>
-        </name>
-        <inscription>
-          <text>1</text>
-        </inscription>
-      </arc>
-      <arc source="std_slice__impl_T__into_vec_0_CALL" target="main_BB2" id="(std_slice__impl_T__into_vec_0_CALL, main_BB2)">
-        <name>
-          <text>(std_slice__impl_T__into_vec_0_CALL, main_BB2)</text>
         </name>
         <inscription>
           <text>1</text>
