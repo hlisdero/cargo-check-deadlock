@@ -1,40 +1,40 @@
-on: [push, pull_request]
-
 name: Continuous integration
 
+on: [push, pull_request]
+
+permissions:
+  contents: read
+
 jobs:
-  test:
-    name: Test Suite
+  ci:
+    name: CI
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5.0.0
-      - uses: actions-rust-lang/setup-rust-toolchain@v1.14.1
-      - uses: actions-rs/cargo@v1.0.1
-        with:
-          command: test
 
-  fmt:
-    name: Rustfmt
-    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5.0.0
-      - uses: actions-rust-lang/setup-rust-toolchain@v1.14.1
-        with:
-          components: rustfmt
-      - uses: actions-rs/cargo@v1.0.1
-        with:
-          command: fmt
-          args: --all -- --check
+      - uses: actions/checkout@v6.0.2
 
-  clippy:
-    name: Clippy
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5.0.0
-      - uses: actions-rust-lang/setup-rust-toolchain@v1.14.1
+      - name: Install Rust
+        uses: actions-rust-lang/setup-rust-toolchain@v1.15.2
         with:
-          components: clippy
-      - uses: actions-rs/cargo@v1.0.1
-        with:
-          command: clippy
-          args: -- -Dclippy::pedantic -Dclippy::suspicious -Dclippy::nursery -Dclippy::complexity -Dclippy::perf -Dclippy::cargo
+          # toolchain: use toolchain file if no value is provided
+          cache: true
+
+      - name: Check formatting
+        run: cargo fmt --all -- --check
+
+      - name: Run clippy
+        run: >
+          cargo clippy
+          --all-targets
+          --all-features
+          --
+          -Dclippy::complexity
+          -Dclippy::correctness
+          -Dclippy::nursery
+          -Dclippy::pedantic
+          -Dclippy::perf
+          -Dclippy::suspicious
+          -Dclippy::style
+
+      - name: Run tests
+        run: cargo test --all-targets --all-features

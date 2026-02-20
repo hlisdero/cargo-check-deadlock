@@ -1,22 +1,27 @@
+name: "Schedule: Compile and test with the latest nightly on the 1st and the 16th of every month"
+
 on:
   schedule:
     # At 8:00am on the 1st and the 16th.
     - cron: "0 8 1,16 * *"
 
-name: "Schedule: Compile and test with the latest nightly on the 1st and the 16th of every month"
+permissions:
+  contents: read
 
 jobs:
-  test:
-    name: Test Suite
+  ci:
+    name: CI
     runs-on: ubuntu-latest
-    env:
-      RUSTUP_TOOLCHAIN: nightly
+
     steps:
-      - uses: actions/checkout@v5.0.0
-      - uses: actions-rust-lang/setup-rust-toolchain@v1.14.1
+      - uses: actions/checkout@v6.0.2
+
+      - name: Install Rust
+        uses: actions-rust-lang/setup-rust-toolchain@v1.15.2
         with:
           toolchain: nightly
           components: rust-src, rustc-dev, llvm-tools-preview
-      - uses: actions-rs/cargo@v1.0.1
-        with:
-          command: test
+          cache: true
+
+      - name: Run tests
+        run: cargo test --all-targets --all-features
