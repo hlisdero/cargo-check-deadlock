@@ -12,6 +12,9 @@ jobs:
     if: github.actor == 'dependabot[bot]'
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+
       - name: Fetch Dependabot metadata
         id: metadata
         uses: dependabot/fetch-metadata@v2.5.0
@@ -22,9 +25,7 @@ jobs:
         if: |
           steps.metadata.outputs.update-type == 'version-update:semver-patch' ||
           steps.metadata.outputs.update-type == 'version-update:semver-minor'
-        run: |
-          gh pr merge ${{ github.event.pull_request.number }} \
-            --auto \
-            --squash
+        run: gh pr merge --auto --merge "$PR_URL"
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{github.event.pull_request.html_url}}
+          GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
