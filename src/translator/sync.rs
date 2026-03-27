@@ -38,7 +38,7 @@ pub fn is_supported_function(function_name: &str) -> bool {
 pub fn call_function<'tcx>(
     function_name: &str,
     index: usize,
-    args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand<'tcx>>],
+    args: &[rustc_span::Spanned<rustc_middle::mir::Operand<'tcx>>],
     destination: rustc_middle::mir::Place<'tcx>,
     places: Places,
     net: &mut PetriNet,

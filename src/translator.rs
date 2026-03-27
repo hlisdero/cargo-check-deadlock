@@ -235,7 +235,7 @@ impl<'tcx> Translator<'tcx> {
     fn call_function(
         &mut self,
         func: &rustc_middle::mir::Operand<'tcx>,
-        args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand<'tcx>>],
+        args: &[rustc_span::Spanned<rustc_middle::mir::Operand<'tcx>>],
         destination: rustc_middle::mir::Place<'tcx>,
         target: Option<rustc_middle::mir::BasicBlock>,
         unwind: UnwindAction,
@@ -360,7 +360,7 @@ impl<'tcx> Translator<'tcx> {
         &mut self,
         function_def_id: rustc_hir::def_id::DefId,
         function_name: &str,
-        args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand<'tcx>>],
+        args: &[rustc_span::Spanned<rustc_middle::mir::Operand<'tcx>>],
         destination: rustc_middle::mir::Place<'tcx>,
         places: Places,
     ) -> Option<Value> {
@@ -414,7 +414,7 @@ impl<'tcx> Translator<'tcx> {
     /// This handles several cases where the sync variable is just "passed" through a function that receives a single parameter.
     fn get_linked_value_in_first_argument(
         &mut self,
-        args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand<'tcx>>],
+        args: &[rustc_span::Spanned<rustc_middle::mir::Operand<'tcx>>],
     ) -> Option<Value> {
         let Some(first_argument) = extract_nth_argument_as_place(args, 0) else {
             return None; // Nothing to return: Either the first argument is not present or it is a constant.
@@ -427,7 +427,7 @@ impl<'tcx> Translator<'tcx> {
     fn is_self_ref_mutex(
         &self,
         function_name: &str,
-        args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand<'tcx>>],
+        args: &[rustc_span::Spanned<rustc_middle::mir::Operand<'tcx>>],
     ) -> bool {
         let self_ref = extract_nth_argument_as_place(args, 0).unwrap_or_else(|| {
             panic!("BUG: `{function_name}` should receive a reference as a place")
@@ -445,7 +445,7 @@ impl<'tcx> Translator<'tcx> {
         &mut self,
         function_def_id: rustc_hir::def_id::DefId,
         function_name: &str,
-        args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand<'tcx>>],
+        args: &[rustc_span::Spanned<rustc_middle::mir::Operand<'tcx>>],
         places: Places,
     ) -> Option<Value> {
         let index = self.function_counter.get_count(function_name);
@@ -501,7 +501,7 @@ impl<'tcx> Translator<'tcx> {
     fn call_mem_drop(
         &mut self,
         function_name: &str,
-        args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand<'tcx>>],
+        args: &[rustc_span::Spanned<rustc_middle::mir::Operand<'tcx>>],
         places: Places,
     ) -> Option<Value> {
         let index = self.function_counter.get_count(function_name);
@@ -543,7 +543,7 @@ impl<'tcx> Translator<'tcx> {
     fn call_deref_mutex(
         &mut self,
         function_name: &str,
-        args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand<'tcx>>],
+        args: &[rustc_span::Spanned<rustc_middle::mir::Operand<'tcx>>],
         places: Places,
     ) -> Option<Value> {
         let index = self.function_counter.get_count(function_name);
@@ -582,7 +582,7 @@ impl<'tcx> Translator<'tcx> {
     fn call_unwrap_mutex(
         &mut self,
         function_name: &str,
-        args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand<'tcx>>],
+        args: &[rustc_span::Spanned<rustc_middle::mir::Operand<'tcx>>],
         places: Places,
     ) -> Option<Value> {
         let places = places.ignore_cleanup_place();
@@ -605,7 +605,7 @@ impl<'tcx> Translator<'tcx> {
     fn call_thread_spawn(
         &mut self,
         function_name: &str,
-        args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand<'tcx>>],
+        args: &[rustc_span::Spanned<rustc_middle::mir::Operand<'tcx>>],
         destination: rustc_middle::mir::Place<'tcx>,
         places: Places,
     ) -> Value {

@@ -71,7 +71,7 @@ impl MirFunction {
         function_name: String,
         start_place: PlaceRef,
         end_place: PlaceRef,
-        args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand<'_>>],
+        args: &[rustc_span::Spanned<rustc_middle::mir::Operand<'_>>],
         calling_function_memory: &Memory,
     ) -> Self {
         let mut mir_function = Self::new(def_id, function_name, start_place, end_place);
@@ -81,7 +81,7 @@ impl MirFunction {
 
     fn map_args_to_memory(
         &mut self,
-        args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand<'_>>],
+        args: &[rustc_span::Spanned<rustc_middle::mir::Operand<'_>>],
         calling_function_memory: &Memory,
     ) {
         for (index, arg) in args.iter().enumerate() {

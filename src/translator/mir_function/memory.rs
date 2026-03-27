@@ -176,7 +176,7 @@ impl<'tcx> Memory {
     ) {
         let value = self.get_linked_value(&place_linked);
         self.link(place_to_link, value.clone());
-        debug!("SAME VALUE: {place_to_link:?} = {place_linked:?}",);
+        debug!("SAME VALUE: {place_to_link:?} = {place_linked:?}");
     }
 
     // Checks if the place is linked to a value, i.e, it contains a sync variable

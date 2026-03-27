@@ -121,7 +121,7 @@ impl Thread {
 pub fn call_join(
     function_name: &str,
     index: usize,
-    args: &[rustc_span::source_map::Spanned<rustc_middle::mir::Operand>],
+    args: &[rustc_span::Spanned<rustc_middle::mir::Operand>],
     places: Places,
     net: &mut PetriNet,
     memory: &Memory,

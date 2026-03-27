@@ -54,7 +54,7 @@ fn prepare_rustc_config(source_code_filepath: std::path::PathBuf) -> rustc_inter
         input: rustc_session::config::Input::File(source_code_filepath),
         output_dir: None,
         output_file: None,
-        hash_untracked_state: None,
+        track_state: None,
         ice_file: None,
         file_loader: None,
         lint_caps: HashMap::default(),
