@@ -32,12 +32,12 @@ impl<T> Stack<T> {
     ///
     /// If the stack is empty, then the function panics.
     pub fn peek(&self) -> &T {
-        if self.stack.is_empty() {
-            panic!("BUG: `peek` should not be called on an empty stack");
-        } else {
-            let len = self.stack.len();
-            &self.stack[len - 1]
-        }
+        assert!(
+            !self.stack.is_empty(),
+            "BUG: `peek` should not be called on an empty stack"
+        );
+        let len = self.stack.len();
+        &self.stack[len - 1]
     }
 
     /// Returns a mutable reference to the top element of the stack.
@@ -47,12 +47,12 @@ impl<T> Stack<T> {
     ///
     /// If the stack is empty, then the function panics.
     pub fn peek_mut(&mut self) -> &mut T {
-        if self.stack.is_empty() {
-            panic!("BUG: `peek_mut` should not be called on an empty stack");
-        } else {
-            let len = self.stack.len();
-            &mut self.stack[len - 1]
-        }
+        assert!(
+            !self.stack.is_empty(),
+            "BUG: `peek_mut` should not be called on an empty stack"
+        );
+        let len = self.stack.len();
+        &mut self.stack[len - 1]
     }
 }
 

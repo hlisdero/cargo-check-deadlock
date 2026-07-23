@@ -45,6 +45,7 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
         match rvalue {
             rustc_middle::mir::Rvalue::Use(
                 rustc_middle::mir::Operand::Copy(rhs) | rustc_middle::mir::Operand::Move(rhs),
+                _,
             )
             | rustc_middle::mir::Rvalue::Ref(_, _, rhs) => {
                 let function = self.call_stack.peek_mut();
@@ -96,7 +97,6 @@ impl<'tcx> Visitor<'tcx> for Translator<'tcx> {
                 unwind,
                 replace: _,
                 drop: _,
-                async_fut: _,
             } => {
                 let (transition, cleanup_transition) = match unwind {
                     UnwindAction::Cleanup(cleanup) => {

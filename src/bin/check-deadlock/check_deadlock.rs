@@ -62,7 +62,7 @@ impl Args {
         if !self.path.exists() {
             let err_str = format!(
                 "Source code file at {} does not exist",
-                &self.path.to_string_lossy()
+                self.path.to_string_lossy()
             );
             return CargoResult::SourceFileNotFound(err_str);
         }
@@ -76,7 +76,7 @@ impl Args {
         if !self.output_folder.exists() {
             let err_str = format!(
                 "Output folder at {} does not exist",
-                &self.output_folder.to_string_lossy()
+                self.output_folder.to_string_lossy()
             );
             return CargoResult::OutputFolderNotFound(err_str);
         }
